@@ -697,8 +697,8 @@ def pack(input_folder, repack_data):
             else:
                 emit_command(0x0031, [coin_amount * i[7]], Variables[0x300B])
                 Variables[i[len(i) - 1]] = 1.0
-            if 0xCD20 <= i[5] < 0xCDA0:
-                set_actor_attribute(object, 0x5C, 0.0)
+            #if 0xCD20 <= i[5] < 0xCDA0:
+            #    set_actor_attribute(object, 0x5C, 0.0)
             if i[6] < 0x1000:
                 say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
             else:

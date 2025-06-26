@@ -148,7 +148,7 @@ def randomize():
 def credit():
     #Idk why I had to make this but ok, sure
     showinfo("Categorize Help",
-              "This program is made under the GPL license.\n" +
+              "This program is made under the GNU General Public License v3.0.\n" +
              "UI design: Dimitri Bee\n" +
              "FMap data and some cutscene flags: Pixiuchu\n" +
              "Based on code by: DimiDimit\n\n" +
