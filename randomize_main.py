@@ -427,7 +427,9 @@ def randomize_data(input_folder, stat_mult):
                                 spottype = 5
                             elif item_locals[i][5] == 0:
                                 spottype = 1
-                            repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6] + 0xD000, attack_piece_pool[nitem][1], attack_piece_pool[nitem][0]])
+                            repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6] + 0xD000,
+                                                attack_piece_pool[nitem][1], attack_piece_pool[nitem][0], 0xCD20 + attackcut])
+                            attackcut += 1
                             del attack_piece_pool[nitem]
                             del item_locals[i]
                             del item_logic[i]
@@ -470,7 +472,7 @@ def randomize_data(input_folder, stat_mult):
                                 nitem = random.randint(0, len(attack_piece_pool) - 1)
                                 repack_data.append(
                                     [6, key_item_info[i], 0, 0, 0, 0xCD20 + attackcut, attack_piece_pool[nitem][1],
-                                     attack_piece_pool[nitem][0]])
+                                     attack_piece_pool[nitem][0], 0xCD20 + attackcut])
                                 attackcut += 1
                                 del attack_piece_pool[nitem]
                                 del key_item_info[i]
@@ -503,6 +505,8 @@ def randomize_data(input_folder, stat_mult):
                         del key_item_pool[spot]
                     else:
                         repack_data[repack_spot][6] = 0xE005
+                        if len(key_item_pool_checked) > 0:
+                            key_item_pool_checked[0] = [0xE005, 5]
                 else:
                     old_spot_x = 0
                     repack_spot = None
@@ -542,11 +546,6 @@ def randomize_data(input_folder, stat_mult):
     print("Repacking enemy stats...")
     #Packs enemy stats
     save_enemy_stats(enemy_stats, code_bin=code_bin_path)
-
-    hammer_local = find_index_in_2d_list(repack_data, 0xE001)
-    print(repack_data[hammer_local[0]])
-    hammer_local = find_index_in_2d_list(repack_data, 0xE002)
-    print(repack_data[hammer_local[0]])
 
     print("Repacking FMap...")
     for b in new_item_locals:

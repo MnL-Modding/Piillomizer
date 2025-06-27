@@ -134,7 +134,6 @@ def randomize():
 
     #Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats)
-    randomize_music.shuffle(window.romfs, True)
     if window.option.get() == 2:
         print("Randomizing custom music...")
         randomize_music.import_random(5, window.romfs, window.all_songs, window.categorize.get())
@@ -149,11 +148,9 @@ def credit():
     #Credits for the license and my peers who helped me
     showinfo("Categorize Help",
               "This program is made under the GNU General Public License v3.0.\n" +
-             "UI design: Dimitri Bee\n" +
+             "UI design and general coding: Dimitri Bee\n" +
              "FMap data and some cutscene flags: Pixiuchu\n" +
-             "Based on code by: DimiDimit\n\n" +
-             "The source code can be found at:\n" +
-             "https://drive.google.com/drive/folders/1_Szx76RY9rBb_1EQe5PgSoG3oUNvtoJR?usp=drive_link")
+             "Mnlscript and some pointers: DimiDimit\n\n")
 
 #Creates tabs
 window.menu = ttk.Notebook(window)

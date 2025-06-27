@@ -665,8 +665,7 @@ def pack(input_folder, repack_data):
             if i[6] > 0xC000:
                 branch_if(Variables[i[6]], '==', 1.0, 'label_0')
             elif i[6] > 0xB0E0 or i[6] < 0xB000:
-                if i[5] >= 0xCDA0 or i[5] < 0xCD20:
-                    branch_if(Variables[i[len(i)-1]], '==', 1.0, 'label_0')
+                branch_if(Variables[i[len(i)-1]], '==', 1.0, 'label_0')
             else:
                 Variables[0xCD99] = Variables[i[6]] | i[7]
                 branch_if(Variables[0xCD99], '==', i[7], 'label_0')
@@ -700,7 +699,7 @@ def pack(input_folder, repack_data):
             if i[6] < 0x1000:
                 say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
-            elif i[6] < 0xC020 or i[6] >= 0xC0A0:
+            else:
                 say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
