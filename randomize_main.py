@@ -437,12 +437,8 @@ def randomize_data(input_folder, stat_mult):
                             elif rand_array == 1 and len(key_item_pool) > 0:
                                 # Code for if an ability is in another location
                                 nitem = random.randint(0, len(key_item_pool) - 1)
-                                if key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004:
-                                    repack_data.append([6, key_item_info[i], 0, 0, 0, key_item_pool[nitem][0], key_item_pool[nitem][0]])
-                                else:
-                                    repack_data.append(
-                                        [6, key_item_info[i], 0, 0, 0, 0xC0A0 + itemcut, key_item_pool[nitem][0], 0xC0A0 + itemcut])
-                                    itemcut += 1
+                                repack_data.append([6, key_item_info[i], 0, 0, 0, 0xC0A0 + itemcut, key_item_pool[nitem][0], 0xC0A0 + itemcut])
+                                itemcut += 1
                                 key_item_check[key_item_pool[nitem][1]] += 1
                                 key_item_pool_checked.append(key_item_pool[nitem])
                                 del key_item_pool[nitem]

@@ -290,7 +290,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE002] = 1.0
         #Variables[0xE003] = 1.0
         #Variables[0xE004] = 1.0
-        #Variables[0xE005] = 1.0
+        Variables[0xE005] = 1.0
         #Variables[0xE00A] = 1.0
         #Variables[0xE00D] = 1.0
         #Variables[0xE00E] = 1.0
@@ -299,7 +299,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        #change_room(0x007f, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x0001, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
