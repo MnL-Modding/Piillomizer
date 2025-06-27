@@ -111,8 +111,8 @@ def pack(input_folder, repack_data):
         Variables[0xC30E] = 1.0 #Boss Brickle is saved
         Variables[0xC30C] = 1.0 #Boss Brickle is saved
         Variables[0xC92E] = 1.0 #Boss Brickle under attack cutscene
-        Variables[0xC954] = 1.0 #Grobot Battle Start
-        Variables[0xC92F] = 1.0 #Grobot Defeated
+        #Variables[0xC954] = 1.0 #Grobot Battle Start
+        #Variables[0xC92F] = 1.0 #Grobot Defeated
         Variables[0xC930] = 1.0 #Cutscene before entering Eldream's pillow
         Variables[0xC000] = 1.0 #Eldream Dream World Enter
         Variables[0xC001] = 1.0 #Boss Brickle declares you his rivals
@@ -153,7 +153,7 @@ def pack(input_folder, repack_data):
         Variables[0xE014] = 1.0 #Can exit Luiginary Stack
         Variables[0xC334] = 1.0 #Cutscene for getting first Dozite
         Variables[0xC342] = 1.0 #Got first Dozite
-        Variables[0xE0A0] = 1.0 #Bridge is up
+        #Variables[0xE0A0] = 1.0 #Bridge is up
         Variables[0xC33D] = 1.0 #Britta appears
         Variables[0xC33E] = 1.0 #Another talk with Britta
         Variables[0xC340] = 1.0 #First drilldigger tutorial
@@ -180,7 +180,7 @@ def pack(input_folder, repack_data):
         Variables[0xC0A5] = 1.0 #Defeated Drilldozer
         Variables[0xC3B8] = 1.0 #Accepting tours for Mount Pajamaja cutscene
         #Variables[0xC369] = 1.0 #Opens side rooms in Pi'illo Castle platform area and fixes bridge in Blimport
-        Variables[0xC960] = 1.0 #Tree blocking Wakeport has been removed
+        #Variables[0xC960] = 1.0 #Tree blocking Wakeport has been removed
         Variables[0xC961] = 1.0 #Wakeport intro watched
         Variables[0xC9E3] = 1.0 #Popple is introduced
         Variables[0xC978] = 1.0 #Badge campaign
@@ -290,7 +290,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE002] = 1.0
         #Variables[0xE003] = 1.0
         #Variables[0xE004] = 1.0
-        Variables[0xE005] = 1.0
+        #Variables[0xE005] = 1.0
         #Variables[0xE00A] = 1.0
         #Variables[0xE00D] = 1.0
         #Variables[0xE00E] = 1.0
@@ -299,7 +299,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        change_room(0x0001, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        #change_room(0x0001, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -699,9 +699,10 @@ def pack(input_folder, repack_data):
                 Variables[i[len(i) - 1]] = 1.0
             if i[6] < 0x1000:
                 say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-            else:
+                branch('label_0')
+            elif i[6] < 0xC020 or i[6] >= 0xC0A0:
                 say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-            branch('label_0')
+                branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004:
                 label('label_1', manager=fevent_manager)
@@ -722,6 +723,9 @@ def pack(input_folder, repack_data):
                 branch('label_0')
 
             label('label_0', manager=fevent_manager)
+
+        #Gives the subroutine a unique name to prevent crashes
+        cast(SubroutineExt, get_item).name = f'sub_0x{len(script.subroutines) - 1:x}'
 
         if i[0] == 0:
             #Updates triggers if it's an overworld block

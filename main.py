@@ -146,7 +146,7 @@ def randomize():
 
 #Shows credits
 def credit():
-    #Idk why I had to make this but ok, sure
+    #Credits for the license and my peers who helped me
     showinfo("Categorize Help",
               "This program is made under the GNU General Public License v3.0.\n" +
              "UI design: Dimitri Bee\n" +

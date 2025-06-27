@@ -1,10 +1,4 @@
-import io
-import os
-import pathlib
 import struct
-import sys
-import math
-import binascii
 import random
 import randomize_repack
 from mnllib.n3ds import fs_std_code_bin_path
@@ -26,18 +20,19 @@ def is_available(logic, key):
     was_true = False
     multi = [0, 0]
     for d in range(len(logic)-1):
-        #Checks if you have the items needed for the check
-        if key[logic[d+1]] < 1:
-            available = False
         #Updates hammers with either mini mario or mole mario
         if logic[d+1] == 1 or logic[d+1] == 2:
             if key[0] < 1:
                 key[0] += 1
                 logic[d+1] -= 1
-        #Updates the side drill if the spin jump hasn't been grabbed
+        #Updates the tornado if a progressive spin has been grabbed
         if logic[d+1] == 4:
             if key[3] < 1:
-                available = False
+                key[3] += 1
+                logic[d+1] -= 1
+        #Checks if you have the items needed for the check
+        if key[logic[d+1]] < 1:
+            available = False
         #If it's an or statement, it resets the generation for the next statement
         #while setting wasTrue depending on whether the chunk was true or not
         if logic[d+1] < 0:
@@ -263,7 +258,22 @@ def randomize_data(input_folder, stat_mult):
         elif i < 182:
             offset = 0x01F3DD88 - (12 * 180)
             room = 0x049
-        if i < 182 and (i < 70 or i > 73) and i != 154:
+        elif i < 186:
+            offset = 0x02000448 - (12 * 182)
+            room = 0x04A
+        elif i < 189:
+            offset = 0x0207802C - (12 * 186)
+            room = 0x04B
+        elif i < 194:
+            offset = 0x02114498 - (12 * 189)
+            room = 0x04C
+        elif i < 198:
+            offset = 0x021CE2CC - (12 * 194)
+            room = 0x04D
+        elif i < 202:
+            offset = 0x022ADA10 - (12 * 198)
+            room = 0x04F
+        if i < 202 and (i < 70 or i > 73) and i != 154:
             offset = offset + (i * 12)
             item_locals.append([room, offset, itemdata[offset + 0x1] * 0x100 + itemdata[offset],
                                 itemdata[offset + 0x5] * 0x100 + itemdata[offset + 0x4],
@@ -271,7 +281,8 @@ def randomize_data(input_folder, stat_mult):
                                 itemdata[offset + 0x9] * 0x100 + itemdata[offset + 0x8],
                                 itemdata[offset + 0xB] * 0x100 + itemdata[offset + 0xA]])
 
-            item_pool.append(itemdata[offset + 0x3] * 0x100 + itemdata[offset + 0x2])
+            item_pool.append([itemdata[offset + 0x1] * 0x100 + itemdata[offset],
+                             itemdata[offset + 0x3] * 0x100 + itemdata[offset + 0x2]])
 
     #for item in item_locals:
     #   print(str(item) + "\n")
@@ -307,20 +318,24 @@ def randomize_data(input_folder, stat_mult):
                   [2393, 15, 6], [144, 15, 6], [145, 15, 6], [146, 15, 6], [147, 15, 6], [152, 15, 6], [2394, 15, 6], [2395, 15, 6], [151, 15, 6],
                   [153, 15, 27, 1, 6, 7], [154, 15, 27, 1, 6, 7], [155, 15, 27, 1, 6, 7],
 
-                  [1511, 15, 22, 3], [1512, 15, 22, 2, 3], [1513, 15, 22, 2, 3], [1514, 15, 22], [1515, 15, 22, 2], [1516, 15, 22, 2, 5],
-                  [1517, 15, 22, 2], [1518, 15, 22, 2], [1519, 15, 22], [1520, 15, 22, 2], [1521, 15, 22, 2], [1522, 15, 22, 1], [1523, 15, 22],
-                  [1524, 15, 22, 1], [1525, 15, 22, 2], [1549, 15, 16, 1], [1550, 15, 16], [1551, 15, 16, 1], [1552, 15, 16, 2], [1527, 15, 22],
-                  [1528, 15, 22], [1529, 15, 22], [1530, 15, 22], [1531, 15, 22], [1532, 15, 22], [1553, 15, 16, 1], [1554, 15, 16, 1, 3],
-                  [2331, 15, 16, 1, 3], [2332, 15, 16, 1, 3], [1562, 15, 16, 1, 3], [1539, 15, 22, 3], [1540, 15, 22], [1541, 15, 22], [1542, 15, 22],
-                  [1566, 15, 16, 1, 3], [1567, 15, 16, 1, 3], [1568, 15, 16, 1, 3], [1569, 15, 16, 1, 3], [1570, 15, 16, 1, 3, 5], [1571, 15, 16, 1, 2, 3],
-                  [1572, 15, 16, 1, 2, 3],]
+                  [1511, 15, 16, 22, 3], [1512, 15, 16, 22, 2, 3], [1513, 15, 16, 22, 2, 3], [1514, 15, 16, 22], [1515, 15, 16, 22, 2], [1516, 15, 16, 22, 2, 5],
+                  [1517, 15, 16, 22, 2], [1518, 15, 16, 22, 2], [1519, 15, 16, 22], [1520, 15, 16, 22, 2], [1521, 15, 16, 22, 2], [1522, 15, 16, 22, 1], [1523, 15, 16, 22],
+                  [1524, 15, 16, 22, 1], [1525, 15, 16, 22, 2], [1549, 15, 16, 22, 1], [1550, 15, 16, 22], [1551, 15, 16, 22, 1], [1552, 15, 16, 22, 2], [1527, 15, 16, 22],
+                  [1528, 15, 16, 22], [1529, 15, 16, 22], [1530, 15, 16, 22], [1531, 15, 16, 22], [1532, 15, 16, 22], [1553, 15, 16, 22, 1], [1554, 15, 16, 22, 1, 3],
+                  [2331, 15, 16, 22, 1, 3], [2332, 15, 16, 22, 1, 3], [1562, 15, 16, 22, 1, 3], [1539, 15, 16, 22, 3], [1540, 15, 22], [1541, 15, 22], [1542, 15, 22],
+                  [1566, 15, 16, 22, 1, 3], [1567, 15, 16, 22, 1, 3], [1568, 15, 16, 22, 1, 3], [1569, 15, 16, 22, 1, 3], [1570, 15, 16, 22, 1, 3, 5], [1571, 15, 16, 22, 1, 2, 3],
+                  [1572, 15, 16, 22, 1, 2, 3], [1543, 15, 16, 1], [1544, 15, 16, 1], [1545, 15, 16, 1], [2398, 15, 16, 1], [2399, 15, 16],
+                  [1547, 15, 16], [1548, 15, 16, 2], [1555, 15, 16, 22, 1, 4], [1556, 15, 16, 22, 1, 4], [1557, 15, 16, 22, 1, 2, 4], [2400, 15, 16, 22, 1, 2, 4],
+                  [1558, 15, 16, 22, 1, 3], [1559, 15, 16, 22, 1, 3], [1560, 15, 16, 22, 1, 2, 3], [1561, 15, 16, 22, 1, 2, 3], [2401, 15, 16, 22, 1, 2, 3],
+                  [1563, 15, 16, 22, 1, 4, -1, 15, 16, 22, 3, 5], [1564, 15, 16, 22, 1, 4, -1, 15, 16, 22, 3, 5], [1565, 15, 16, 22, 1, 2, 4, -1, 15, 16, 22, 2, 4, 5],
+                  [988, 15, 16, 22, 1, 2, 4, -1, 15, 16, 22, 2, 3, 5],]
 
     #Creates an array with the ability info
     key_item_info = [0x001, 0x012, -1, 0x06C, 0x075, 0x10C, 0x13D, 0x0F5, 0x0C6, -1, 0x1E7, 0x1F8, 0x0F6, 0x0FA,
                      -1, -1, -1, -1, -1, 0x019, 0x1DC, 0x101, -1, -1, 0x177, 0x17A, 0x17D, -1]
 
     #Creates an item pool for the key items
-    key_item_pool = [[0xE001, 0], [0xE001, 1], [0xE002, 2], [0xE003, 3], [0xE004, 4], [0xE005, 5], [0xE00A, 6], [0xE00D, 7],
+    key_item_pool = [[0xE001, 1], [0xE001, 1], [0xE002, 2], [0xE004, 4], [0xE004, 4], [0xE005, 5], [0xE00A, 6], [0xE00D, 7],
                      [0xE00E, 8], [0xE00F, 9], [0xE010, 10], [0xE011, 11], [0xE012, 12], [0xE013, 13], [0xE075, 14], [0xC369, 15],
                      [0xCABF, 16], [0xE0A0, 17], [0xC343, 18], [0xC344, 19], [0xC345, 20], [0xC346, 21], [0xC960, 22], [0xC3B9, 23],
                      [0xB0F7, 24], [0xB0F7, 25], [0xB0F7, 26], [0xC47E, 27]]
@@ -356,7 +371,6 @@ def randomize_data(input_folder, stat_mult):
     key_item_pool_checked = []
 
     while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
-        temp = len(item_locals)
         prevlen = len(item_pool) + len(key_item_pool) + len(attack_piece_pool)
         item_logic_len = len(item_logic)
         for i in range(item_logic_len):
@@ -367,8 +381,12 @@ def randomize_data(input_folder, stat_mult):
                         if rand_array == 0 and len(item_pool) > 0 and item_logic[i][1] != -1:
                             #Code for randomizing blocks and bean spots with just eachother
                             nitem = random.randint(0, len(item_pool) - 1)
-                            narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem],
-                                    item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            if item_pool[nitem][0] // 0xA0 % 2 == 1 and item_locals[i][2] != 0x0012 and item_locals[i][2] != 0x0013:
+                                narray = [item_locals[i][0], item_locals[i][1], item_pool[nitem][0], item_pool[nitem][1],
+                                        item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            else:
+                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
+                                        item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                             new_item_locals.append(narray)
                             del item_pool[nitem]
                             del item_locals[i]
@@ -376,8 +394,12 @@ def randomize_data(input_folder, stat_mult):
                         elif rand_array == 1 and len(key_item_pool) > 0:
                             #Code for putting key items in blocks and bean spots
                             nitem = random.randint(0, len(key_item_pool) - 1)
-                            narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
-                                    item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            if item_locals[i][2] // 0xA0 % 2 == 1:
+                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2] - 0x90, 0,
+                                        item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            else:
+                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
+                                        item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                             new_item_locals.append(narray)
                             spottype = 0
                             if item_locals[i][2] == 0x0012 or item_locals[i][2] == 0x0013:
@@ -405,8 +427,7 @@ def randomize_data(input_folder, stat_mult):
                                 spottype = 5
                             elif item_locals[i][5] == 0:
                                 spottype = 1
-                            repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], 0xCD20 + attackcut, attack_piece_pool[nitem][1], attack_piece_pool[nitem][0]])
-                            attackcut += 1
+                            repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6] + 0xD000, attack_piece_pool[nitem][1], attack_piece_pool[nitem][0]])
                             del attack_piece_pool[nitem]
                             del item_locals[i]
                             del item_logic[i]
@@ -421,14 +442,14 @@ def randomize_data(input_folder, stat_mult):
                             if rand_array == 0 and len(item_pool) > 0:
                                 # Code for if a block or bean spot's contents are in an ability cutscene
                                 nitem = random.randint(0, len(item_pool) - 1)
-                                if (item_pool[nitem] != 0x0000 and item_pool[nitem] != 0x0002 and
-                                        item_pool[nitem] != 0x0004 and item_pool[nitem] != 0x0006 and item_pool[nitem] != 0x0008):
+                                if (item_pool[nitem][1] != 0x0000 and item_pool[nitem][1] != 0x0002 and
+                                        item_pool[nitem][1] != 0x0004 and item_pool[nitem][1] != 0x0006 and item_pool[nitem][1] != 0x0008):
                                     repack_data.append(
-                                        [6, key_item_info[i], 0, 0, 0, 0xC0A0 + itemcut, item_pool[nitem],
+                                        [6, key_item_info[i], 0, 0, 0, 0xC0A0 + itemcut, item_pool[nitem][1],
                                          0xC0A0 + itemcut])
                                 else:
                                     repack_data.append(
-                                        [6, key_item_info[i], 0, 0, 0, 0xC0A0 + itemcut, item_pool[nitem], 1,
+                                        [6, key_item_info[i], 0, 0, 0, 0xC0A0 + itemcut, item_pool[nitem][1], 1 + 9 * (item_pool[nitem][0] // 0xA0 % 2),
                                          0xC0A0 + itemcut])
                                 itemcut += 1
                                 del item_pool[nitem]
@@ -468,15 +489,20 @@ def randomize_data(input_folder, stat_mult):
                             failed = True
                         break
                 if not failed:
-                    old_spot = find_index_in_2d_list(key_item_pool_checked, repack_data[repack_spot][6])
-                    key_item_check[key_item_pool_checked[old_spot[0]][1]] -= 1
-                    key_item_pool.append(key_item_pool_checked[old_spot[0]])
-                    del key_item_pool_checked[old_spot[0]]
-                    spot = random.randint(1, len(key_item_pool) - 1)
-                    repack_data[repack_spot][6] = key_item_pool[spot][0]
-                    key_item_check[key_item_pool[spot][1]] += 1
-                    key_item_pool_checked.append(key_item_pool[spot])
-                    del key_item_pool[spot]
+                    if repack_data[repack_spot][6] != 0xE001 and repack_data[repack_spot][6] != 0xE002 and repack_data[repack_spot][6] != 0xE004:
+                        old_spot = find_index_in_2d_list(key_item_pool_checked, repack_data[repack_spot][6])
+                        key_item_check[key_item_pool_checked[old_spot[0]][1]] -= 1
+                        key_item_pool.append(key_item_pool_checked[old_spot[0]])
+                        del key_item_pool_checked[old_spot[0]]
+                        spot = random.randint(0, len(key_item_pool) - 1)
+                        while 1 <= key_item_pool[spot][1] <= 4:
+                            spot = random.randint(0, len(key_item_pool) - 1)
+                        repack_data[repack_spot][6] = key_item_pool[spot][0]
+                        key_item_check[key_item_pool[spot][1]] += 1
+                        key_item_pool_checked.append(key_item_pool[spot])
+                        del key_item_pool[spot]
+                    else:
+                        repack_data[repack_spot][6] = 0xE005
                 else:
                     old_spot_x = 0
                     repack_spot = None
@@ -491,7 +517,7 @@ def randomize_data(input_folder, stat_mult):
                                         new_item_locals[old_spot[0]][7]])
                     item_logic.append([0])
                     if repack_data[repack_spot[0]][6] < 0xB000:
-                        item_pool.append(repack_data[repack_spot[0]][6])
+                        item_pool.append([new_item_locals[old_spot[0]][2], repack_data[repack_spot[0]][6]])
                     else:
                         attack_piece_pool.append([repack_data[repack_spot[0]][6], repack_data[repack_spot[0]][7]])
                     del new_item_locals[old_spot[0]]
@@ -516,6 +542,11 @@ def randomize_data(input_folder, stat_mult):
     print("Repacking enemy stats...")
     #Packs enemy stats
     save_enemy_stats(enemy_stats, code_bin=code_bin_path)
+
+    hammer_local = find_index_in_2d_list(repack_data, 0xE001)
+    print(repack_data[hammer_local[0]])
+    hammer_local = find_index_in_2d_list(repack_data, 0xE002)
+    print(repack_data[hammer_local[0]])
 
     print("Repacking FMap...")
     for b in new_item_locals:
