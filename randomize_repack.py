@@ -635,13 +635,13 @@ def pack(input_folder, repack_data):
             item = "the first [Color #2C65FF]" + addon
         elif i[6] == 0xC960 or i[6] == 0xE075 or i[6] == 0xC3B9 or i[6] == 0xC47E:
             item = "access to [Color #2C65FF]" + addon
-        elif (i[6] == 0xCABF or i[6] == 0xC369 or i[6] == 0xE004 or i[6] == 0xE005 or (0xE00D <= i[6] <= 0xE013) ):
-            item = "the " + addon
+        elif (i[6] == 0xCABF or i[6] == 0xC369 or i[6] == 0xE004 or i[6] == 0xE005 or (0xE00D <= i[6] <= 0xE013)):
+            item = "the [Color #2C65FF]" + addon
         elif 0xB030 <= i[6] <= 0xB05C:
             item = "an Attack Piece for [Color #2C65FF]" + addon
         elif i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE00A:
             item = "[Color #2C65FF]" + addon
-        elif addon[0:1] == 'A' or addon[0:1] == 'E' or addon[0:1] == 'I' or addon[0:1] == 'O' or addon[0:1] == 'U' or addon[0:1] == 'HP':
+        elif addon[0:1] == 'A' or addon[0:1] == 'E' or addon[0:1] == 'I' or addon[0:1] == 'O' or addon[0:1] == 'U' or addon[0:2] == 'HP':
             item = "an [Color #2C65FF]" + addon
         else:
             item = "a [Color #2C65FF]" + addon
@@ -655,13 +655,6 @@ def pack(input_folder, repack_data):
         def get_item(sub: Subroutine):
             if i[5] < 0xC000 or i[5] > 0xCFFF:
                 branch_if(Variables[i[5]], '==', 0.0, 'label_0')
-            if i[6] == 0xE001 or i[6] == 0xE002:
-                branch_if(Variables[0xE000], '==', 0.0, 'label_1')
-                branch_if(Variables[invi], '==', 0.0, 'label_2')
-                branch_if(Variables[i[7]], '==', 1.0, 'label_0')
-            elif i[6] == 0xE004:
-                branch_if(Variables[0xE003], '==', 0.0, 'label_1')
-                branch_if(Variables[i[7]], '==', 1.0, 'label_0')
             if i[6] > 0xC000:
                 branch_if(Variables[i[6]], '==', 1.0, 'label_0')
             elif i[6] > 0xB0E0 or i[6] < 0xB000:
@@ -669,6 +662,13 @@ def pack(input_folder, repack_data):
             else:
                 Variables[0xCD99] = Variables[i[6]] | i[7]
                 branch_if(Variables[0xCD99], '==', i[7], 'label_0')
+            if i[6] == 0xE001 or i[6] == 0xE002:
+                branch_if(Variables[i[7]], '==', 1.0, 'label_0')
+                branch_if(Variables[0xE000], '==', 0.0, 'label_1')
+                branch_if(Variables[invi], '==', 0.0, 'label_2')
+            elif i[6] == 0xE004:
+                branch_if(Variables[0xE003], '==', 0.0, 'label_1')
+                branch_if(Variables[i[7]], '==', 1.0, 'label_0')
             if i[6] > 0xC000:
                 Variables[i[6]] = 1.0
                 if i[6] < 0xD000:
@@ -680,8 +680,8 @@ def pack(input_folder, repack_data):
             elif i[6] > 0xB000:
                 Variables[i[6]] |= i[7]
                 say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                branch_if(check_1, '==', 0x1F, 'label_0', invert=True)
-                branch_if(check_2, '==', 0x1F, 'label_0', invert=True)
+                branch_if(Variables[check_1], '==', 0x1F, 'label_0', invert=True)
+                branch_if(Variables[check_2], '==', 0x1F, 'label_0', invert=True)
                 Variables[attack_id] = 1.0
                 say(None, TextboxSoundsPreset.SILENT,
                     "You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 90]",
@@ -705,20 +705,20 @@ def pack(input_folder, repack_data):
 
             if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004:
                 label('label_1', manager=fevent_manager)
-                if i[6] == 0xE004:
-                    say(None, TextboxSoundsPreset.SILENT, "You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                    Variables[0xE003] = 1.0
-                else:
-                    say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                    Variables[0xE000] = 1.0
                 Variables[i[7]] = 1.0
+                if i[6] == 0xE004:
+                    Variables[0xE003] = 1.0
+                    say(None, TextboxSoundsPreset.SILENT, "You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                else:
+                    Variables[0xE000] = 1.0
+                    say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002:
                 label('label_2', manager=fevent_manager)
-                say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + invi_name[invi - 0xE001] + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                Variables[invi] = 1.0
                 Variables[i[7]] = 1.0
+                Variables[invi] = 1.0
+                say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + invi_name[invi - 0xE001] + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             label('label_0', manager=fevent_manager)
@@ -746,17 +746,30 @@ def pack(input_folder, repack_data):
             #Updates triggers if it's a regular dream world block
             script.header.triggers.append((((i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
                                            ((i[3] - 0x40) * 0x10000) + (i[3] - 0x56), len(script.subroutines) - 1, 0x00078022))
-        elif i[0] < 5:
+        elif i[0] == 2 or i[0] == 8 or i[0] == 9:
             #Updates triggers if it's a rotated dream world block
             if i[0] == 2:
                 script.header.triggers.append((((i[2])-0x56), ((i[4]+0x10)*0x10000 + (i[2])-0x40), 0x00000000, 0x00000000,
                                                ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
-            elif i[0] == 3:
+            elif i[0] == 8:
                 script.header.triggers.append((((i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
                                                ((i[3] + 0x56) * 0x10000) + (i[3] + 0x40), len(script.subroutines) - 1, 0x00078022))
             else:
                 script.header.triggers.append((((i[2])+0x40), ((i[4]+0x10)*0x10000 + (i[2])+0x56), 0x00000000, 0x00000000,
                                                 ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
+        elif i[0] == 3:
+            #Updates the trigger if it's a mini mario block
+            if i[3] > 0x46:
+                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                               ((i[3] - 0x31) * 0x10000) + (i[3] - 0x47), len(script.subroutines) - 1, 0x00078022))
+            else:
+                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                               ((i[3] - 0x31) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+        elif i[0] == 4:
+            #Updates the trigger if it's a high up dream world block
+            script.header.triggers.append((((i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                           ((i[3] - 0x4F) * 0x10000) + (i[3] - 0x65), len(script.subroutines) - 1, 0x00078022))
+
         elif i[0] == 7:
             script.header.actors[actor] = cast(tuple[int, int, int, int, int, int], script.header.actors[actor][:4]
                                                                 + (len(script.subroutines) - 1,) + script.header.actors[actor][5:])
