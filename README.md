@@ -1,3 +1,7 @@
+How to run:
+1) Install Python
+2) Run "python3 -m mldtr" in the directory
+
 How to use:
 1) Click "Open Dump", then locate to your extracted game data (note: it must have a RomFS AND an ExeFS)
 2) Select whatever settings you want
