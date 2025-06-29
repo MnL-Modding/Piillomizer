@@ -671,7 +671,7 @@ def pack(input_folder, repack_data):
                 branch_if(Variables[i[7]], '==', 1.0, 'label_0')
             if i[6] > 0xC000:
                 Variables[i[6]] = 1.0
-                if i[6] < 0xD000:
+                if i[5] < 0xD000:
                     Variables[i[5]] = 1.0
             elif i[6] > 0xB0E0:
                 add_in_place(1.0, Variables[0xB0F7])

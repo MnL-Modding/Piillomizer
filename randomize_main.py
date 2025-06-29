@@ -527,8 +527,9 @@ def randomize_data(input_folder, stat_mult):
                             attack_piece_pool.append([repack_data[attack_spot[0]][7], repack_data[attack_spot[0]][6]])
                         else:
                             key_spot = find_index_in_2d_list(key_item_pool_checked, repack_data[attack_spot[0]][6])
-                            key_item_pool.append(key_item_pool_checked[key_spot[0]])
-                            del key_item_pool_checked[key_spot[0]]
+                            if key_spot is not None:
+                                key_item_pool.append(key_item_pool_checked[key_spot[0]])
+                                del key_item_pool_checked[key_spot[0]]
                         del repack_data[attack_spot[0]]
                     else:
                         item_pool.append([new_item_locals[0][2], new_item_locals[0][3]])
