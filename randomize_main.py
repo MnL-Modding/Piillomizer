@@ -72,45 +72,104 @@ def randomize_data(input_folder, stat_mult):
     # Opens code.bin for enemy stat randomization
     code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
     enemy_stats = load_enemy_stats(code_bin=code_bin_path)
-    for enemy in enemy_stats:
+    enemy_stats_rand = []
+    dream_enemy_stats_rand = []
+    boss_stats_rand = []
+    dream_boss_stats_rand = []
+    filler_stats_rand = []
+    for enemy in range(len(enemy_stats)):
         if stat_mult[0] > -1:
-            enemy.power *= stat_mult[0]
-            if enemy.power > 0xFFFF:
-                enemy.power = 0xFFFF
+            enemy_stats[enemy].power *= stat_mult[0]
+            if enemy_stats[enemy].power > 0xFFFF:
+                enemy_stats[enemy].power = 0xFFFF
         else:
-            enemy.power = 0xFFFF
+            enemy_stats[enemy].power = 0xFFFF
         if stat_mult[1] > 0:
-            enemy.exp *= stat_mult[1]
-            if enemy.exp > 0xFFFF:
-                enemy.exp = 0xFFFF
+            enemy_stats[enemy].exp *= stat_mult[1]
+            if enemy_stats[enemy].exp > 0xFFFF:
+                enemy_stats[enemy].exp = 0xFFFF
+        if (enemy > 12 and not(14 <= enemy <= 16) and enemy != 20 and
+                enemy != 22 and enemy != 24 and enemy != 26 and
+                enemy != 28 and enemy != 32 and enemy != 34 and
+                enemy != 40 and enemy != 43 and enemy != 44 and
+                enemy != 48 and enemy != 51 and not(53 <= enemy <= 56) and
+                enemy != 63 and enemy != 83 and enemy != 97 and
+                enemy != 103 and enemy != 105 and enemy != 114 and
+                enemy != 132 and not(134 <= enemy <= 136) and enemy < 139):
+            #Appends data to enemy array if it's an enemy
+            if (enemy == 13 or enemy == 18 or enemy == 25 or
+                    enemy == 27 or enemy == 29 or enemy == 38 or
+                    enemy == 39 or enemy == 41 or (58 <= enemy <= 61) or
+                    (68 <= enemy <= 71) or (85 <= enemy <= 94) or
+                    (100 <= enemy <= 102) or enemy == 104 or enemy == 106 or
+                    enemy == 113 or (115 <= enemy <= 120)):
+                enemy_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+                                         enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                         enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type])
+            #Appends data to boss array if it's a boss
+            elif (enemy == 17 or enemy == 30 or enemy == 42 or
+                  enemy == 62 or enemy == 95 or enemy == 96 or
+                  enemy == 107 or enemy == 108):
+                boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+                                         enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                         enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type])
+            #Appends data to dream enemy array if it's a dream enemy
+            elif (enemy == 19 or enemy == 21 or enemy == 31 or
+                  enemy == 33 or enemy == 35 or enemy == 45 or
+                  enemy == 46 or enemy == 47 or enemy == 49 or
+                  enemy == 50 or (64 <= enemy <= 67) or (72 <= enemy <= 78) or
+                  enemy == 84 or enemy == 98 or enemy == 99 or
+                  (110 <= enemy <= 112) or (121 <= enemy <= 125) or enemy == 133):
+                dream_enemy_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+                                         enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                         enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type])
+            #Appends data to dream boss array if it's a dream boss
+            elif (enemy == 23 or enemy == 36 or enemy == 52 or
+                  (79 <= enemy <= 81) or (126 <= enemy <= 131) or enemy == 137):
+                dream_boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+                                         enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                         enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type])
+            #Appends data to filler array if it's a "filler" enemy (one used in bosses that only exists for spectacle)
+            else:
+                filler_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+                                         enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                         enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type])
 
-    # Grabs enemy stats from code.bin (note that they're stored as strings, not hex values)
-
-    #Logic for enemies
-    enemy_logic = [[13], [18, 15, 5, -1, 15, 6], [19], [21], [25, 15, 0], [27, 15, 0], [29, 15, 0], [31, 15, 6], [33, 15, 6], [35, 15, 6],
-                   [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2], [45, 15, 16], [46, 15, 16], [47, 15, 16, 17],
-                   [48, 15], [49, 15, 22, 6], [50, 15, 22, 6], [51, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, 4, 6, -1, 1, 5],
-                   [63, 23, 1, -1, 1, 5], [64, 23, 1, 6, -1, 1, 5, 6], [65, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [66, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
-                   [67, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [68, 15, 16, 1, -1, 15, 16, 5], [69, 15, 16, 1, -1, 15, 16, 5], [70, 15, 16, 1, -1, 15, 16, 5],
-                   [71, 15, 16, 1, -1, 15, 16, 5], [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                   [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
-                   [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                   [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5], [87, 15, -1, 1, 4, 5],
+    #Logic for real world enemies
+    enemy_logic = [[13], [18, 15, 5, -1, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0],
+                   [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2],
+                   [48, 15, 22], [51, 1], [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, 4, 6, -1, 1, 5],
+                   [68, 15, 16, 1, -1, 15, 16, 5], [69, 15, 16, 1, -1, 15, 16, 5], [70, 15, 16, 1, -1, 15, 16, 5],
+                   [71, 15, 16, 1, -1, 15, 16, 5], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5], [87, 15, -1, 1, 4, 5],
                    [88, 15, -1, 1, 4, 5], [89, 15, -1, 1, 4, 5], [90, 1, 4, 5], [91, 15, 16, 2, 4], [92, 15], [93, 15],
-                   [94, 15, 16, 5], [98, 22, 1, 2, 4, 5, 6], [99, 22, 1, 2, 4, 5, 6], [100, 15, 1, 3, 5], [101, 15, 1, 5], [102, 15, 1, 5], [103, 15, 1, 5],
-                   [105, 15, 1, 5], [106, 15, 1, 5], [110, 15, 1, 3, 5, 6], [111, 15, 1, 3, 5, 6], [112, 15, 1, 2, 3, 5, 6], [113, 15, 27, 1, 5], [115, 15, 27, 1, 5],
-                   [116, 15, 27, 1, 5], [117, 15, 27, 1, 4, 5], [118, 15, 27, 1, 4, 5], [119, 15, 27, 1, 4, 5], [120, 15, 27, 1, 4, 5], [121, 15, 27, 1, 5, 6],
-                   [122, 15, 27, 1, 4, 5, 6], [123, 15, 27, 1, 4, 5, 6], [124, 15, 27, 1, 5, 6], [125, 15, 27, 1, 5, 6], [133, 15, 27, 1, 4, 5, 6],]
+                   [94, 15, 16, 5], [100, 15, 1, 3, 5], [101, 15, 1, 5], [102, 15, 1, 5], [104, 15, 1, 5],
+                   [106, 15, 1, 5], [113, 15, 27, 1, 5], [115, 15, 27, 1, 5],
+                   [116, 15, 27, 1, 5], [117, 15, 27, 1, 4, 5], [118, 15, 27, 1, 4, 5], [119, 15, 27, 1, 4, 5], [120, 15, 27, 1, 4, 5],]
+
+    #Logic for dream world enemies
+    dream_enemy_logic = [[19], [21], [31, 15, 6], [33, 15, 6], [35, 15, 6], [45, 15, 16], [46, 15, 16], [47, 15, 16, 17],
+                         [49, 15, 22, 6], [50, 15, 22, 6], [64, 23, 1, 6, -1, 1, 5, 6], [65, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
+                         [66, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [67, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
+                         [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
+                         [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
+                         [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
+                         [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6], [98, 22, 1, 2, 4, 5, 6], [99, 22, 1, 2, 4, 5, 6],
+                         [110, 15, 1, 3, 5, 6], [111, 15, 1, 3, 5, 6], [112, 15, 1, 2, 3, 5, 6],  [121, 15, 27, 1, 5, 6],
+                         [122, 15, 27, 1, 4, 5, 6], [123, 15, 27, 1, 4, 5, 6], [124, 15, 27, 1, 5, 6], [125, 15, 27, 1, 5, 6], [133, 15, 27, 1, 4, 5, 6],]
 
     #Logic for bosses
-    boss_logic = [[17, 14], [23], [30, 15], [36, 15, 6], [37, 15, 6], [42, 15, 16, 17, 18, 19, 20, 21], [52, 15, 22, 6],
-                  [53, 15, 22, 6], [54, 15, 22, 6], [55, 15, 22, 6], [56, 15, 22, 6], [57, 15, 22, 6], [62, 23, 1, 4, 6, -1, 1, 5],
-                  [79, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6], [80, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
-                  [81, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6], [82, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
-                  [83, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6], [95, 22, 5], [96, 22, 5], [107, 15, 1, 2, 3, 5, 6],
-                  [108, 15, 1, 2, 3, 5, 6], [109, 15, 1, 2, 3, 5, 6], [126, 15, 27, 1, 5, 6], [127, 15, 27, 1, 4, 5, 6],
-                  [128, 15, 27, 1, 4, 5, 6], [129, 15, 27, 1, 4, 5, 6], [130, 15, 27, 1, 4, 5, 6], [131, 15, 27, 1, 4, 5, 6],
-                  [137, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], [138, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],]
+    boss_logic = [[17, 14], [30, 15], [42, 15, 16, 17, 18, 19, 20, 21], [62, 23, 1, 4, 6, -1, 1, 5],
+                  [95, 15, 22, 5], [96, 15, 22, 5], [107, 15, 1, 2, 3, 5, 6], [108, 15, 1, 2, 3, 5, 6],]
+
+    #Logic for dream world bosses
+    dream_boss_logic = [[23], [36, 15, 6], [52, 15, 22, 6], [79, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
+                        [80, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6], [81, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
+                        [126, 15, 27, 1, 5, 6], [127, 15, 27, 1, 4, 5, 6], [128, 15, 27, 1, 4, 5, 6], [129, 15, 27, 1, 4, 5, 6], [130, 15, 27, 1, 4, 5, 6],
+                        [131, 15, 27, 1, 4, 5, 6], [137, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],]
+
+    #Logic for "filler" enemies
+    filler_logic = [[37, 15, 6], [57, 15, 22, 6], [82, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
+                    [109, 15, 1, 2, 3, 5, 6], [138, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],]
 
     # Opens the FMapDat.dat file
     with open(input_folder + '/romfs/FMap/FMapDat.dat', 'rb') as f:
@@ -355,17 +414,17 @@ def randomize_data(input_folder, stat_mult):
                   [2393, 15, 6], [144, 15, 6], [145, 15, 6], [146, 15, 6], [147, 15, 6], [152, 15, 6], [2394, 15, 6], [2395, 15, 6], [151, 15, 6],
                   [153, 15, 27, 1, 6, 7], [154, 15, 27, 1, 6, 7], [155, 15, 27, 1, 6, 7],
 
-                  [1511, 15, 16, 3], [1512, 15, 16, 2, 3], [1513, 15, 16, 2, 3], [1514, 15, 16, 22], [1515, 15, 16, 22, 2], [1516, 15, 16, 22, 2, 5],
-                  [1517, 15, 16, 22, 2], [1518, 15, 16, 22, 2], [1519, 15, 16, 22], [1520, 15, 16, 22, 2], [1521, 15, 16, 22, 2], [1522, 15, 16, 22, 1], [1523, 15, 16, 22],
-                  [1524, 15, 16, 22, 1], [1525, 15, 16, 22, 2], [1549, 15, 16, 1], [1550, 15, 16], [1551, 15, 16, 1], [1552, 15, 16, 2], [1527, 15, 16, 22],
-                  [1528, 15, 16, 22], [1529, 15, 16, 22], [1530, 15, 16, 22], [1531, 15, 16, 22], [1532, 15, 16, 22], [1553, 15, 16, 22, 1], [1554, 15, 16, 22, 1, 3],
-                  [2331, 15, 16, 22, 1, 3], [2332, 15, 16, 22, 1, 3], [1562, 15, 16, 22, 1, 3], [1539, 15, 16, 22, 3], [1540, 15, 22], [1541, 15, 22], [1542, 15, 22],
-                  [1566, 15, 16, 22, 1, 3], [1567, 15, 16, 22, 1, 3], [1568, 15, 16, 22, 1, 3], [1569, 15, 16, 22, 1, 3], [1570, 15, 16, 22, 1, 3, 5], [1571, 15, 16, 22, 1, 2, 3],
-                  [1572, 15, 16, 22, 1, 2, 3], [1543, 15, 16, 1], [1544, 15, 16, 1], [1545, 15, 16, 1], [2398, 15, 16, 1], [2399, 15, 16],
-                  [1547, 15, 16], [1548, 15, 16, 2], [1555, 15, 16, 22, 1, 4], [1556, 15, 16, 22, 1, 4], [1557, 15, 16, 22, 1, 2, 4], [2400, 15, 16, 22, 1, 2, 4],
-                  [1558, 15, 16, 22, 1, 3], [1559, 15, 16, 22, 1, 3], [1560, 15, 16, 22, 1, 2, 3], [1561, 15, 16, 22, 1, 2, 3], [2401, 15, 16, 22, 1, 2, 3],
-                  [1563, 15, 16, 22, 1, 4, -1, 15, 16, 22, 3, 5], [1564, 15, 16, 22, 1, 4, -1, 15, 16, 22, 3, 5], [1565, 15, 16, 22, 1, 2, 4, -1, 15, 16, 22, 2, 4, 5],
-                  [988, 15, 16, 22, 1, 2, 4, -1, 15, 16, 22, 2, 3, 5],
+                  [1511, 15, 3], [1512, 15, 2, 3], [1513, 15, 2, 3], [1514, 15, 22], [1515, 15, 22, 2], [1516, 15, 22, 2, 5],
+                  [1517, 15, 22, 2], [1518, 15, 22, 2], [1519, 15, 22], [1520, 15, 22, 2], [1521, 15, 22, 2], [1522, 15, 22, 1], [1523, 15, 22],
+                  [1524, 15, 22, 1], [1525, 15, 22, 2], [1549, 15, 16, 1], [1550, 15, 16], [1551, 15, 16, 1], [1552, 15, 16, 2], [1527, 15, 22],
+                  [1528, 15, 22], [1529, 15, 22], [1530, 15, 22], [1531, 15, 22], [1532, 15, 22], [1553, 15, 16, 1], [1554, 15, 16, 1, 3],
+                  [2331, 15, 16, 1, 3], [2332, 15, 16, 1, 3], [1562, 15, 16, 1, 3], [1539, 15, 22, 3], [1540, 15, 22], [1541, 15, 22], [1542, 15, 22],
+                  [1566, 15, 16, 1, 3], [1567, 15, 16, 1, 3], [1568, 15, 16, 1, 3], [1569, 15, 16, 1, 3], [1570, 15, 16, 1, 3, 5], [1571, 15, 16, 1, 2, 3],
+                  [1572, 15, 16, 1, 2, 3], [1543, 15, 16, 1], [1544, 15, 16, 1], [1545, 15, 16, 1], [2398, 15, 16, 1], [2399, 15, 16],
+                  [1547, 15, 16], [1548, 15, 16, 2], [1555, 15, 16, 1, 4], [1556, 15, 16, 1, 4], [1557, 15, 16, 1, 2, 4], [2400, 15, 16, 1, 2, 4],
+                  [1558, 15, 16, 1, 3], [1559, 15, 16, 1, 3], [1560, 15, 16, 1, 2, 3], [1561, 15, 16, 1, 2, 3], [2401, 15, 16, 1, 2, 3],
+                  [1563, 15, 16, 1, 4, -1, 15, 16, 3, 5], [1564, 15, 16, 1, 4, -1, 15, 16, 3, 5], [1565, 15, 16, 1, 2, 4, -1, 15, 16, 2, 4, 5],
+                  [988, 15, 16, 1, 2, 4, -1, 15, 16, 2, 3, 5],
 
                   [7], [8], [9], [10], [11], [12], [13], [14], [17], [18, 2], [19], [20, 2], [21, 2], [22, 2], [23, 2],
 
@@ -410,6 +469,7 @@ def randomize_data(input_folder, stat_mult):
     itemcut = 0
     attackcut = 0
     key_item_pool_checked = []
+    new_enemy_stats = []
 
     while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
         prevlen = len(item_pool) + len(key_item_pool) + len(attack_piece_pool)
@@ -475,6 +535,72 @@ def randomize_data(input_folder, stat_mult):
                                 del attack_piece_pool[nitem]
                                 del key_item_info[i]
                                 del key_item_logic[i]
+                except IndexError:
+                    break
+        #Randomizes enemy stats
+        for i in range(len(enemy_logic)):
+            if len(enemy_logic) > 0:
+                try:
+                    if is_available(enemy_logic[i], key_item_check):
+                        temp = enemy_stats_rand[i]
+                        for n in range(len(enemy_stats_rand[0])-1):
+                            enemy_stats_rand[i][n+1] = enemy_stats_rand[0][n+1]
+                            enemy_stats_rand[0][n+1] = temp[n+1]
+                        new_enemy_stats.append(enemy_stats_rand[i])
+                        del enemy_stats_rand[i]
+                        del enemy_logic[i]
+                except IndexError:
+                    break
+        for i in range(len(boss_logic)):
+            if len(boss_logic) > 0:
+                try:
+                    if is_available(boss_logic[i], key_item_check):
+                        temp = boss_stats_rand[i]
+                        for n in range(len(boss_stats_rand[0])-1):
+                            boss_stats_rand[i][n+1] = boss_stats_rand[0][n+1]
+                            boss_stats_rand[0][n+1] = temp[n+1]
+                        new_enemy_stats.append(boss_stats_rand[i])
+                        del boss_stats_rand[i]
+                        del boss_logic[i]
+                except IndexError:
+                    break
+        for i in range(len(dream_enemy_logic)):
+            if len(dream_enemy_logic) > 0:
+                try:
+                    if is_available(dream_enemy_logic[i], key_item_check):
+                        temp = dream_enemy_stats_rand[i]
+                        for n in range(len(dream_enemy_stats_rand[0])-1):
+                            dream_enemy_stats_rand[i][n+1] = dream_enemy_stats_rand[0][n+1]
+                            dream_enemy_stats_rand[0][n+1] = temp[n+1]
+                        new_enemy_stats.append(dream_enemy_stats_rand[i])
+                        del dream_enemy_stats_rand[i]
+                        del dream_enemy_logic[i]
+                except IndexError:
+                    break
+        for i in range(len(dream_boss_logic)):
+            if len(dream_boss_logic) > 0:
+                try:
+                    if is_available(dream_boss_logic[i], key_item_check):
+                        temp = dream_boss_stats_rand[i]
+                        for n in range(len(dream_boss_stats_rand[0])-1):
+                            dream_boss_stats_rand[i][n+1] = dream_boss_stats_rand[0][n+1]
+                            dream_boss_stats_rand[0][n+1] = temp[n+1]
+                        new_enemy_stats.append(dream_boss_stats_rand[i])
+                        del dream_boss_stats_rand[i]
+                        del dream_boss_logic[i]
+                except IndexError:
+                    break
+        for i in range(len(filler_logic)):
+            if len(filler_logic) > 0:
+                try:
+                    if is_available(filler_logic[i], key_item_check):
+                        temp = filler_stats_rand[i]
+                        for n in range(len(filler_stats_rand[0])-1):
+                            filler_stats_rand[i][n+1] = filler_stats_rand[0][n+1]
+                            filler_stats_rand[0][n+1] = temp[n+1]
+                        new_enemy_stats.append(filler_stats_rand[i])
+                        del filler_stats_rand[i]
+                        del filler_logic[i]
                 except IndexError:
                     break
         # Checks if more items can be randomized
@@ -550,9 +676,20 @@ def randomize_data(input_folder, stat_mult):
     #hammer_local = find_index_in_2d_list(repack_data, 0xE001)
     #print(repack_data[hammer_local[0]])
 
-    #Todo: shuffle enemy stats
-
     print("Repacking enemy stats...")
+    #Repackages randomized enemy stats
+    for enemy in range(len(new_enemy_stats)):
+        enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
+        enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
+        enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
+        enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
+        enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
+        enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
+        enemy_stats[new_enemy_stats[enemy][0]].coin_rate = new_enemy_stats[enemy][7]
+        enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
+        enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
+        enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
+        enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
     #Packs enemy stats
     save_enemy_stats(enemy_stats, code_bin=code_bin_path)
 
