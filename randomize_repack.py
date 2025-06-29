@@ -660,8 +660,8 @@ def pack(input_folder, repack_data):
             elif i[6] > 0xB0E0 or i[6] < 0xB000:
                 branch_if(Variables[i[len(i)-1]], '==', 1.0, 'label_0')
             else:
-                Variables[0xCD99] = Variables[i[6]] | i[7]
-                branch_if(Variables[0xCD99], '==', i[7], 'label_0')
+                branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
+                Variables[i[-1]] = 1.0
             if i[6] == 0xE001 or i[6] == 0xE002:
                 branch_if(Variables[i[7]], '==', 1.0, 'label_0')
                 branch_if(Variables[0xE000], '==', 0.0, 'label_1')
@@ -678,14 +678,10 @@ def pack(input_folder, repack_data):
                 add_in_place(1.0, Variables[0xB02D])
                 Variables[i[len(i) - 1]] = 1.0
             elif i[6] > 0xB000:
+                branch_if(Variables[check_1], '==', 0x1F, 'label_1')
+                branch_if(Variables[check_2], '==', 0x1F, 'label_1')
                 Variables[i[6]] |= i[7]
                 say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                branch_if(Variables[check_1], '==', 0x1F, 'label_0', invert=True)
-                branch_if(Variables[check_2], '==', 0x1F, 'label_0', invert=True)
-                Variables[attack_id] = 1.0
-                say(None, TextboxSoundsPreset.SILENT,
-                    "You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 90]",
-                    offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             elif i[6] >= 0x6000:
                 emit_command(0x0033, [int(math.floor((i[6] - 0x4000) / 2)) + 0x28, 0x01], Variables[0x300B])
@@ -703,15 +699,21 @@ def pack(input_folder, repack_data):
                 say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
-            if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004:
+            if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xCD20 <= i[-1] < 0xCDA0):
                 label('label_1', manager=fevent_manager)
-                Variables[i[7]] = 1.0
-                if i[6] == 0xE004:
-                    Variables[0xE003] = 1.0
-                    say(None, TextboxSoundsPreset.SILENT, "You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                if 0xE001 <= i[6] <= 0xE004:
+                    Variables[i[7]] = 1.0
+                    if i[6] == 0xE004:
+                        Variables[0xE003] = 1.0
+                        say(None, TextboxSoundsPreset.SILENT, "You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    else:
+                        Variables[0xE000] = 1.0
+                        say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 else:
-                    Variables[0xE000] = 1.0
-                    say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    Variables[attack_id] = 1.0
+                    say(None, TextboxSoundsPreset.SILENT,
+                        "You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 90]",
+                        offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002:
@@ -724,7 +726,8 @@ def pack(input_folder, repack_data):
             label('label_0', manager=fevent_manager)
 
         #Gives the subroutine a unique name to prevent crashes
-        cast(SubroutineExt, get_item).name = f'sub_0x{len(script.subroutines) - 1:x}'
+        sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
+        cast(SubroutineExt, get_item).name = sub_name
 
         if i[0] == 0:
             #Updates triggers if it's an overworld block
@@ -786,12 +789,17 @@ def pack(input_folder, repack_data):
             elif i[1] == 0x1E7:
                 script.header.triggers[9] = cast(tuple[int, int, int, int, int, int, int],
                                              script.header.triggers[9][:5] + (len(script.subroutines) - 1,) + script.header.triggers[9][6:])
-            elif i[1] == 0x019:
-                script.subroutines[0x11f].commands[44] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xCC10], 1.0, 0x01, len(script.subroutines)-1])
-            elif i[1] == 0x1DC:
-                script.subroutines[0x8d].commands[179] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xCC10], 1.0, 0x01, len(script.subroutines)-1])
-            elif i[1] == 0x101:
-                script.subroutines[0x73].commands[38] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xCC10], 1.0, 0x01, len(script.subroutines)-1])
+            elif i[1] == 0x13E:
+                for j in range(3):
+                    script.subroutines[0x80 + j].commands[28] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
+            elif i[1] == 0x0B2:
+                script.subroutines[0xa0].commands[26] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
+            elif i[1] == 0x0B5:
+                script.subroutines[0x95].commands[26] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
+            elif i[1] == 0x0B6:
+                script.subroutines[0x75].commands[23] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
+            elif i[1] == 0x0B7:
+                script.subroutines[0x8d].commands[23] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
             else:
                 script.header.triggers[0] = cast(tuple[int, int, int, int, int, int, int],
                                              script.header.triggers[0][:5] + (len(script.subroutines) - 1,) + script.header.triggers[0][6:])

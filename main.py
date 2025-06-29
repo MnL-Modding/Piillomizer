@@ -108,6 +108,7 @@ def help():
 
 def randomize():
     #Sets enemy stats to what you selected
+    window.enemy_stats[0] = 1
     if window.attack_mode.get() == "0.5x - Easy":
         window.enemy_stats[0] = 0.5
     if window.attack_mode.get() == "1x - Normal":
@@ -121,6 +122,7 @@ def randomize():
     if window.attack_mode.get() == "Maxed Out - The Perfect Run":
         window.enemy_stats[0] = -1
 
+    window.enemy_stats[1] = 2
     if window.exp_mode.get() == "0.5x - Grinder's Delight":
         window.enemy_stats[1] = 0.5
     if window.exp_mode.get() == "1x - Normal":
