@@ -1,7 +1,7 @@
 import struct
 import random
 from mldtr import randomize_repack
-from mnllib.n3ds import fs_std_code_bin_path
+from mnllib.n3ds import fs_std_code_bin_path, fs_std_romfs_path
 from mnllib.dt import load_enemy_stats, save_enemy_stats
 
 #input_folder = 'C:/Users/Dimit/AppData/Roaming/Azahar/load/mods/00040000000D5A00'
@@ -172,7 +172,7 @@ def randomize_data(input_folder, stat_mult):
                     [109, 15, 1, 2, 3, 5, 6], [138, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],]
 
     # Opens the FMapDat.dat file
-    with open(input_folder + '/romfs/FMap/FMapDat.dat', 'rb') as f:
+    with fs_std_romfs_path('FMap/FMapDat.dat', data_dir=input_folder).open('rb') as f:
         itemdata = f.read()
 
     #Initializes the item pool
@@ -698,7 +698,7 @@ def randomize_data(input_folder, stat_mult):
         if b[3] < 0xC000:
             itemdata = itemdata[:b[1]] + struct.pack('<HHHHHH',b[2], b[3], b[4], b[5], b[6], b[7]) + itemdata[b[1]+12:]
 
-    with open(input_folder + '/romfs/FMap/FMapDat.dat', 'wb') as f:
+    with fs_std_romfs_path('FMap/FMapDat.dat', data_dir=input_folder).open('wb') as f:
         f.write(itemdata)
 
     randomize_repack.pack(input_folder, repack_data)

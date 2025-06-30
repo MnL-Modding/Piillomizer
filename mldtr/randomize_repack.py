@@ -51,7 +51,7 @@ def pack(input_folder, repack_data):
             )
 
     #Import the msbt for the item names
-    item_msgs = msbt_from_file(lambda: DTLMSAdapter('US_English'), f'{input_folder}/romfs/Message/US_English/Item.msbt')
+    item_msgs = msbt_from_file(lambda: DTLMSAdapter('US_English'), fs_std_romfs_path('Message/US_English/Item.msbt', data_dir=input_folder))
 
     #Initializes the first room using the subroutine below
     script = fevent_manager.parsed_script(0x028C, 0)
