@@ -5,10 +5,13 @@ import struct
 import sys
 import random
 
+from mnllib.n3ds import fs_std_romfs_path
+from mnllib.dt import SOUND_DATA_PATH
+
 #For just shuffling the music already in the game
-def shuffle(romfs, mode):
+def shuffle(input_folder, mode):
     OFFSET = 0x034A3E2C
-    with open(f'{romfs}/romfs/Sound/SoundData.arc', 'r+b') as file:
+    with fs_std_romfs_path(SOUND_DATA_PATH, data_dir=input_folder).open('r+b') as file:
         file.seek(OFFSET + 0x04)
         record_count, = struct.unpack('<I', file.read(4))
         file.seek(OFFSET + 0x20)
@@ -64,7 +67,7 @@ def shuffle(romfs, mode):
 #For randomly importing based on a directory
 def import_random(section, input_folder, filenames_all, mode):
     folder = pathlib.Path(input_folder)
-    with open(input_folder + '/romfs/Sound/SoundData.arc', 'r+b') as sound_data:
+    with fs_std_romfs_path(SOUND_DATA_PATH, data_dir=folder).open('r+b') as sound_data:
         while (section_type := int.from_bytes(sound_data.read(4), 'little')) != section:
             sound_data.seek(0x4, os.SEEK_CUR)
             if (next_section_offset_data := sound_data.read(4)) == b'':
