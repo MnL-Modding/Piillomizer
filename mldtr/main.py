@@ -96,13 +96,15 @@ def help():
 
 
 def randomize(window):
-    #Makes a copy of the RomFS in case something goes wrong
+    #Moves the data to a copy of the folder
     parent_folder = os.path.dirname(window.romfs) + "/"
     copy_num = 0
-    while os.path.exists(parent_folder + "backup" + str(copy_num)):
+    while os.path.exists(parent_folder + "00040000000D5A00-seed" + str(copy_num)):
         copy_num += 1
-    backup_folder = parent_folder + "backup" + str(copy_num)
-    shutil.copytree(window.romfs, backup_folder)
+    seed_folder = parent_folder + "00040000000D5A00-seed" + str(copy_num)
+    shutil.copytree(window.romfs, seed_folder)
+    old_romfs = window.romfs
+    window.romfs = seed_folder
 
     # Sets enemy stats to what you selected
     window.enemy_stats[0] = 1
@@ -139,6 +141,9 @@ def randomize(window):
     if window.option.get() == 1:
         print("Randomizing music...")
         randomize_music.shuffle(window.romfs, window.categorize.get())
+
+    #When it's complete, sets romfs back to the base folder and gives a success message
+    window.romfs = old_romfs
     print("Done!")
     showinfo("Yay!", "Success!")
 
