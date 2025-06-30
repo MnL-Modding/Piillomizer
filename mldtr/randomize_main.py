@@ -501,6 +501,7 @@ def randomize_data(input_folder, stat_mult):
                             del attack_piece_pool[nitem]
                             del item_locals[i]
                             del item_logic[i]
+                        i -= 1
             except IndexError:
                 break
         for i in range(len(key_item_info)):
@@ -535,6 +536,7 @@ def randomize_data(input_folder, stat_mult):
                                 del attack_piece_pool[nitem]
                                 del key_item_info[i]
                                 del key_item_logic[i]
+                            i -= 1
                 except IndexError:
                     break
         #Randomizes enemy stats
@@ -545,10 +547,14 @@ def randomize_data(input_folder, stat_mult):
                         temp = enemy_stats_rand[i]
                         for n in range(len(enemy_stats_rand[0])-1):
                             enemy_stats_rand[i][n+1] = enemy_stats_rand[0][n+1]
-                            enemy_stats_rand[0][n+1] = temp[n+1]
+                            for j in range(i-1):
+                                enemy_stats_rand[j][n+1] = enemy_stats_rand[j+1][n+1]
+                            if i > 0:
+                                enemy_stats_rand[i-1][n+1] = temp[n+1]
                         new_enemy_stats.append(enemy_stats_rand[i])
                         del enemy_stats_rand[i]
                         del enemy_logic[i]
+                        i -= 1
                 except IndexError:
                     break
         for i in range(len(boss_logic)):
@@ -558,10 +564,14 @@ def randomize_data(input_folder, stat_mult):
                         temp = boss_stats_rand[i]
                         for n in range(len(boss_stats_rand[0])-1):
                             boss_stats_rand[i][n+1] = boss_stats_rand[0][n+1]
-                            boss_stats_rand[0][n+1] = temp[n+1]
+                            for j in range(i-1):
+                                boss_stats_rand[j][n+1] = boss_stats_rand[j+1][n+1]
+                            if i > 0:
+                                boss_stats_rand[i-1][n+1] = temp[n+1]
                         new_enemy_stats.append(boss_stats_rand[i])
                         del boss_stats_rand[i]
                         del boss_logic[i]
+                        i -= 1
                 except IndexError:
                     break
         for i in range(len(dream_enemy_logic)):
@@ -571,10 +581,14 @@ def randomize_data(input_folder, stat_mult):
                         temp = dream_enemy_stats_rand[i]
                         for n in range(len(dream_enemy_stats_rand[0])-1):
                             dream_enemy_stats_rand[i][n+1] = dream_enemy_stats_rand[0][n+1]
-                            dream_enemy_stats_rand[0][n+1] = temp[n+1]
+                            for j in range(i-1):
+                                dream_enemy_stats_rand[j][n+1] = dream_enemy_stats_rand[j+1][n+1]
+                            if i > 0:
+                                dream_enemy_stats_rand[i-1][n+1] = temp[n+1]
                         new_enemy_stats.append(dream_enemy_stats_rand[i])
                         del dream_enemy_stats_rand[i]
                         del dream_enemy_logic[i]
+                        i -= 1
                 except IndexError:
                     break
         for i in range(len(dream_boss_logic)):
@@ -584,10 +598,14 @@ def randomize_data(input_folder, stat_mult):
                         temp = dream_boss_stats_rand[i]
                         for n in range(len(dream_boss_stats_rand[0])-1):
                             dream_boss_stats_rand[i][n+1] = dream_boss_stats_rand[0][n+1]
-                            dream_boss_stats_rand[0][n+1] = temp[n+1]
+                            for j in range(i-1):
+                                dream_boss_stats_rand[j][n+1] = dream_boss_stats_rand[j+1][n+1]
+                            if i > 0:
+                                dream_boss_stats_rand[i-1][n+1] = temp[n+1]
                         new_enemy_stats.append(dream_boss_stats_rand[i])
                         del dream_boss_stats_rand[i]
                         del dream_boss_logic[i]
+                        i -= 1
                 except IndexError:
                     break
         for i in range(len(filler_logic)):
@@ -597,10 +615,14 @@ def randomize_data(input_folder, stat_mult):
                         temp = filler_stats_rand[i]
                         for n in range(len(filler_stats_rand[0])-1):
                             filler_stats_rand[i][n+1] = filler_stats_rand[0][n+1]
-                            filler_stats_rand[0][n+1] = temp[n+1]
+                            for j in range(i-1):
+                                filler_stats_rand[j][n+1] = filler_stats_rand[j+1][n+1]
+                            if i > 0:
+                                filler_stats_rand[i-1][n+1] = temp[n+1]
                         new_enemy_stats.append(filler_stats_rand[i])
                         del filler_stats_rand[i]
                         del filler_logic[i]
+                        i -= 1
                 except IndexError:
                     break
         # Checks if more items can be randomized

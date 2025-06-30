@@ -257,6 +257,9 @@ def pack(input_folder, repack_data):
         Variables[0xC9B3] = 1.0 #Ultibed in Mushrise Park start
         Variables[0xC9F3] = 1.0 #Guy lets you into a rock area
         Variables[0xC9F4] = 1.0 #Tree blocking other rock area is removed
+        Variables[0xC9E1] = 1.0 #Wiggler first cutscene watched
+        Variables[0xC9E2] = 1.0 #Wiggler second cutscene watched
+        #Variables[0xC9E0] = 1.0 #Wiggler is defeated
         Variables[0xC9EA] = 1.0 #Bedsmith appears
         Variables[0xC59F] = 1.0 #Cog to enter Somnom Woods is available
         Variables[0xE0F9] = 1.0 #Stairs to switch in Somnom Woods are up
