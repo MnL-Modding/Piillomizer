@@ -1,8 +1,9 @@
+import itertools
 import struct
 import random
 from mldtr import randomize_repack
-from mnllib.n3ds import fs_std_code_bin_path
-from mnllib.dt import load_enemy_stats, save_enemy_stats
+from mnllib.n3ds import fs_std_code_bin_path, fs_std_romfs_path
+from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_OF_ROOMS, determine_version_from_code_bin, load_enemy_stats, save_enemy_stats
 
 #input_folder = 'C:/Users/Dimit/AppData/Roaming/Azahar/load/mods/00040000000D5A00'
 #stat_mult = [5, 5]
@@ -171,214 +172,29 @@ def randomize_data(input_folder, stat_mult):
     filler_logic = [[37, 15, 6], [57, 15, 22, 6], [82, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
                     [109, 15, 1, 2, 3, 5, 6], [138, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],]
 
-    # Opens the FMapDat.dat file
-    with open(input_folder + '/romfs/FMap/FMapDat.dat', 'rb') as f:
-        itemdata = f.read()
-
     #Initializes the item pool
     item_pool = []
 
     # Creates an item_data array with all the blocks and bean spots
     item_locals = []
-    for i in range(2216):
-        offset = 0
-        room = 0
-        if i < 2:
-            offset = 0x00002964
-            room = 0x000
-        elif i < 11:
-            offset = 0x00069D70 - 24
-            room = 0x001
-        elif i < 13:
-            offset = 0x00152B30 - (12 * 11)
-            room = 0x002
-        elif i < 15:
-            offset = 0x001DED24 - (12 * 13)
-            room = 0x003
-        elif i < 17:
-            offset = 0x002366C8 - (12 * 15)
-            room = 0x004
-        elif i < 21:
-            offset = 0x002C2AC0 - (12 * 17)
-            room = 0x005
-        elif i < 27:
-            offset = 0x00364A34 - (12 * 21)
-            room = 0x006
-        elif i < 35:
-            offset = 0x003E5E30 - (12 * 27)
-            room = 0x007
-        elif i < 40:
-            offset = 0x004C3044 - (12 * 35)
-            room = 0x008
-        elif i < 42:
-            offset = 0x0054794C - (12 * 40)
-            room = 0x009
-        elif i < 52:
-            offset = 0x005EFC20 - (12 * 42)
-            room = 0x00A
-        elif i < 61:
-            offset = 0x00692DB0 - (12 * 52)
-            room = 0x00B
-        elif i < 64:
-            offset = 0x0074123C - (12 * 61)
-            room = 0x00C
-        elif i < 65:
-            offset = 0x0082C2AC - (12 * 64)
-            room = 0x00E
-        elif i < 70:
-            offset = 0x008DFAAC - (12 * 65)
-            room = 0x010
-        elif 73 < i < 81:
-            offset = 0x00A4C790 - (12 * 74)
-            room = 0x013
-        elif i < 87:
-            offset = 0x00B121B4 - (12 * 81)
-            room = 0x014
-        elif i < 93:
-            offset = 0x00B87490 - (12 * 87)
-            room = 0x015
-        elif i < 97:
-            offset = 0x00CD32B0 - (12 * 93)
-            room = 0x017
-        elif i < 99:
-            offset = 0x00D2BAA8 - (12 * 97)
-            room = 0x018
-        elif i < 106:
-            offset = 0x00E0160C - (12 * 99)
-            room = 0x019
-        elif i < 108:
-            offset = 0x00EC3010 - (12 * 106)
-            room = 0x01A
-        elif i < 110:
-            offset = 0x00EF951C - (12 * 108)
-            room = 0x01B
-        elif i < 114:
-            offset = 0x01087128 - (12 * 110)
-            room = 0x020
-        elif i < 116:
-            offset = 0x010C0524 - (12 * 114)
-            room = 0x021
-        elif i < 117:
-            offset = 0x010F5358 - (12 * 116)
-            room = 0x022
-        elif i < 119:
-            offset = 0x0112A494 - (12 * 117)
-            room = 0x023
-        elif i < 127:
-            offset = 0x01144664 - (12 * 119)
-            room = 0x024
-        elif i < 128:
-            offset = 0x0119A374 - (12 * 127)
-            room = 0x025
-        elif i < 130:
-            offset = 0x01251ED0 - (12 * 128)
-            room = 0x028
-        elif i < 131:
-            offset = 0x012C7254 - (12 * 130)
-            room = 0x029
-        elif i < 132:
-            offset = 0x0131D2E8 - (12 * 131)
-            room = 0x02A
-        elif i < 133:
-            offset = 0x0134AE68 - (12 * 132)
-            room = 0x02B
-        elif i < 134:
-            offset = 0x01385D10 - (12 * 133)
-            room = 0x02C
-        elif i < 136:
-            offset = 0x013BB514 - (12 * 134)
-            room = 0x02D
-        elif i < 137:
-            offset = 0x013D267C - (12 * 136)
-            room = 0x02E
-        elif i < 140:
-            offset = 0x0144311C - (12 * 137)
-            room = 0x031
-        elif i < 143:
-            offset = 0x014D2594 - (12 * 140)
-            room = 0x033
-        elif i < 145:
-            offset = 0x015409A4 - (12 * 143)
-            room = 0x034
-        elif i < 149:
-            offset = 0x0161BB40 - (12 * 145)
-            room = 0x035
-        elif i < 155:
-            offset = 0x017074D8 - (12 * 149)
-            room = 0x036
-        elif 156 < i < 160:
-            offset = 0x0189E470 - (12 * 156)
-            room = 0x038
-        elif i < 166:
-            offset = 0x0196F0D8 - (12 * 160)
-            room = 0x039
-        elif i < 170:
-            offset = 0x01A47D68 - (12 * 166)
-            room = 0x03A
-        elif i < 171:
-            offset = 0x01ADED58 - (12 * 170)
-            room = 0x03B
-        elif i < 172:
-            offset = 0x01B5592C - (12 * 171)
-            room = 0x03C
-        elif i < 173:
-            offset = 0x01B8A054 - (12 * 172)
-            room = 0x03D
-        elif i < 174:
-            offset = 0x01BA8738 - (12 * 173)
-            room = 0x03E
-        elif i < 175:
-            offset = 0x01BDD62C - (12 * 174)
-            room = 0x03F
-        elif i < 179:
-            offset = 0x01DE1220 - (12 * 175)
-            room = 0x047
-        elif i < 180:
-            offset = 0x01E8EA9C - (12 * 179)
-            room = 0x048
-        elif i < 182:
-            offset = 0x01F3DD88 - (12 * 180)
-            room = 0x049
-        elif i < 186:
-            offset = 0x02000448 - (12 * 182)
-            room = 0x04A
-        elif i < 189:
-            offset = 0x0207802C - (12 * 186)
-            room = 0x04B
-        elif i < 194:
-            offset = 0x02114498 - (12 * 189)
-            room = 0x04C
-        elif i < 198:
-            offset = 0x021CE2CC - (12 * 194)
-            room = 0x04D
-        elif i < 202:
-            offset = 0x022ADA10 - (12 * 198)
-            room = 0x04F
-        elif i < 220:
-            offset = 0x024F1410 - (12 * 216)
-            room = 0x56
-        elif i < 224:
-            offset = 0x025A9B58 - (12 * 220)
-            room = 0x58
-        elif i < 226:
-            offset = 0x027170E4 - (12 * 224)
-            room = 0x5B
-        elif i < 231:
-            offset = 0x027860F0 - (12 * 226)
-            room = 0x5C
-        elif i < 236:
-            offset = 0x0281BB18 - (12 * 231)
-            room = 0x5D
-        if i < 236 and (i < 70 or i > 73) and i != 154 and (i < 202 or i > 215):
-            offset = offset + (i * 12)
-            item_locals.append([room, offset, itemdata[offset + 0x1] * 0x100 + itemdata[offset],
-                                itemdata[offset + 0x5] * 0x100 + itemdata[offset + 0x4],
-                                itemdata[offset + 0x7] * 0x100 + itemdata[offset + 0x6],
-                                itemdata[offset + 0x9] * 0x100 + itemdata[offset + 0x8],
-                                itemdata[offset + 0xB] * 0x100 + itemdata[offset + 0xA]])
-
-            item_pool.append([itemdata[offset + 0x1] * 0x100 + itemdata[offset],
-                             itemdata[offset + 0x3] * 0x100 + itemdata[offset + 0x2]])
+    with (
+        code_bin_path.open('rb') as code_bin,
+        fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('rb') as fmapdat,
+    ):
+        version_pair = determine_version_from_code_bin(code_bin)
+        code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
+        for room in range(NUMBER_OF_ROOMS):
+            fmapdat_chunk_offset, fmapdat_chunk_len = struct.unpack('<II', code_bin.read(4 * 2))
+            fmapdat.seek(fmapdat_chunk_offset + 7 * 4 * 2)
+            treasure_data_offset, treasure_data_len = struct.unpack('<II', fmapdat.read(4 * 2))
+            treasure_data_absolute_offset = fmapdat_chunk_offset + treasure_data_offset
+            fmapdat.seek(treasure_data_absolute_offset)
+            treasure_data = fmapdat.read(treasure_data_len)
+            for treasure_index, treasure in enumerate(itertools.batched(treasure_data, 12, strict=True)):
+                treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', bytes(treasure))
+                item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
+                if room < 0x004D:  # TODO
+                    item_pool.append([treasure_type, item_id])
 
     #for item in item_locals:
     #   print(str(item) + "\n")
@@ -716,12 +532,11 @@ def randomize_data(input_folder, stat_mult):
     save_enemy_stats(enemy_stats, code_bin=code_bin_path)
 
     print("Repacking FMap...")
-    for b in new_item_locals:
-        if b[3] < 0xC000:
-            itemdata = itemdata[:b[1]] + struct.pack('<HHHHHH',b[2], b[3], b[4], b[5], b[6], b[7]) + itemdata[b[1]+12:]
-
-    with open(input_folder + '/romfs/FMap/FMapDat.dat', 'wb') as f:
-        f.write(itemdata)
+    with fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('r+b') as f:
+        for b in new_item_locals:
+            if b[3] < 0xC000:
+                f.seek(b[1])
+                f.write(struct.pack('<HHHHHH', *b[2:8]))
 
     randomize_repack.pack(input_folder, repack_data)
 
