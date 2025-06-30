@@ -2,7 +2,7 @@ from pymsbmnl import LMSDocument, msbt_from_file
 from mnllib.n3ds import fs_std_romfs_path
 from mnllib import Subroutine, RawDataCommand
 from mnllib.dt import FEventScriptManager, FMES_NUMBER_OF_CHUNKS, MESSAGE_DIR_PATH, DTLMSAdapter, read_msbt_archive, write_msbt_archive
-from mnlscript import CodeCommandWithOffsets, emit_command, subroutine, update_commands_with_offsets, Screen, label, \
+from mnlscript import CodeCommandWithOffsets, emit_command, update_commands_with_offsets, Screen, label, \
     SubroutineExt
 from mnlscript.dt import PLACEHOLDER_OFFSET, Variables, change_room, MusicFlag, set_action_icons_shown, \
     set_actor_attribute, Actors, tint_screen, set_blocked_buttons, ButtonFlags, set_movement_multipliers, \
@@ -10,6 +10,21 @@ from mnlscript.dt import PLACEHOLDER_OFFSET, Variables, change_room, MusicFlag, 
     add_in_place
 from typing import cast
 import math
+import functools
+import inspect
+import mnlscript
+
+# Workaround for dynamic scope in Nuitka
+def subroutine(*args, **kwargs):
+    def decorator(function):
+        @mnlscript.subroutine(*args, **kwargs)
+        @functools.wraps(function)
+        def subroutine(sub: Subroutine):
+            if '__compiled__' in globals():
+                inspect.currentframe().f_locals['sub'] = sub
+            function(sub=sub)
+        return subroutine
+    return decorator
 
 def find_element_2d_array(matrix, target):
     for row_index, row in enumerate(matrix):
@@ -383,6 +398,11 @@ def pack(input_folder, repack_data):
     #Blocks Dream World in the Summit until you have the needed abilities
     script = fevent_manager.parsed_script(0x007F, 0)
     script_index = 0x007F * 2
+
+    # Workaround for dynamic scope in Nuitka
+    if '__compiled__' in globals():
+        inspect.currentframe().f_locals['script_index'] = script_index
+
     cast(SubroutineExt, script.subroutines[0x52]).name = 'sub_0x52'
     @subroutine(subs=script.subroutines, hdr=script.header)
     def summit_access(sub: Subroutine):
@@ -403,6 +423,11 @@ def pack(input_folder, repack_data):
     #Adds a trigger right before Bowser in Neo Bowser Castle that warps you out if you haven't defeated all bosses
     script = fevent_manager.parsed_script(0x015E, 0)
     script_index = 0x015E * 2
+
+    # Workaround for dynamic scope in Nuitka
+    if '__compiled__' in globals():
+        inspect.currentframe().f_locals['script_index'] = script_index
+
     @subroutine(subs=script.subroutines, hdr=script.header)
     def defeat_all_bosses(sub: Subroutine):
         branch_if(Variables[0xCC28], '==', 0.0, 'label_0')
@@ -464,6 +489,10 @@ def pack(input_folder, repack_data):
 
         #Doubles the script index for the message file
         script_index = i[1] * 2
+
+        # Workaround for dynamic scope in Nuitka
+        if '__compiled__' in globals():
+            inspect.currentframe().f_locals['script_index'] = script_index
 
         #Sets up the subroutine to give an item
         addon = ""
