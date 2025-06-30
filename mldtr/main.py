@@ -1,5 +1,6 @@
 # Imports the necessary modules
-import os.path
+import os
+import shutil
 import functools
 from mldtr import randomize_music, randomize_main
 
@@ -95,6 +96,14 @@ def help():
 
 
 def randomize(window):
+    #Makes a copy of the RomFS in case something goes wrong
+    parent_folder = os.path.dirname(window.romfs) + "/"
+    copy_num = 0
+    while os.path.exists(parent_folder + "backup" + str(copy_num)):
+        copy_num += 1
+    backup_folder = parent_folder + "backup" + str(copy_num)
+    shutil.copytree(window.romfs, backup_folder)
+
     # Sets enemy stats to what you selected
     window.enemy_stats[0] = 1
     if window.attack_mode.get() == "0.5x - Easy":
