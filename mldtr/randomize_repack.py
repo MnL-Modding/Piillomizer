@@ -238,6 +238,7 @@ def pack(input_folder, repack_data):
         Variables[0xCC7F] = 1.0 #Peach is in Driftwood Shores Cutscene
         Variables[0xCC80] = 1.0 #Part of same cutscene as above?
         Variables[0xCC81] = 1.0 #Allows you to talk to the guys that let you into Driftwood Shores
+        Variables[0xCC4E] = 1.0 #Broque is faking liking you
         Variables[0xCC4F] = 1.0 #Can access Driftwood Shores
         Variables[0xE0C1] = 1.0 #Removes invisible wall blocking Driftwood Shores
         Variables[0xCC51] = 1.0 #Broque Madame intro
@@ -317,7 +318,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        #change_room(0x0001, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x0097, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -779,18 +780,19 @@ def pack(input_folder, repack_data):
                                                ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
         elif i[0] == 1:
             #Updates triggers if it's a regular dream world block
-            script.header.triggers.append((((i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                           ((i[3] - 0x40) * 0x10000) + (i[3] - 0x56), len(script.subroutines) - 1, 0x00078022))
+            #print(i[3] - 0x92)
+            script.header.triggers.append(((0xFFF00000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                           ((i[3] - 0x80) * 0x10000) + (i[3] - 0x97), len(script.subroutines) - 1, 0x00078022))
         elif i[0] == 2 or i[0] == 8 or i[0] == 9:
             #Updates triggers if it's a rotated dream world block
             if i[0] == 2:
-                script.header.triggers.append((((i[2])-0x56), ((i[4]+0x10)*0x10000 + (i[2])-0x40), 0x00000000, 0x00000000,
+                script.header.triggers.append(((0xFFF00000 + (i[2])-0x56), ((i[4]+0x10)*0x10000 + (i[2])-0x40), 0x00000000, 0x00000000,
                                                ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
             elif i[0] == 8:
-                script.header.triggers.append((((i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                script.header.triggers.append(((0xFFF00000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
                                                ((i[3] + 0x56) * 0x10000) + (i[3] + 0x40), len(script.subroutines) - 1, 0x00078022))
             else:
-                script.header.triggers.append((((i[2])+0x40), ((i[4]+0x10)*0x10000 + (i[2])+0x56), 0x00000000, 0x00000000,
+                script.header.triggers.append(((0xFFF00000 + (i[2])+0x40), ((i[4]+0x10)*0x10000 + (i[2])+0x56), 0x00000000, 0x00000000,
                                                 ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
         elif i[0] == 3:
             #Updates the trigger if it's a mini mario block

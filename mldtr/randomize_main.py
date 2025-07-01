@@ -192,7 +192,7 @@ def randomize_data(input_folder, stat_mult):
             for treasure_index, treasure in enumerate(itertools.batched(treasure_data, 12, strict=True)):
                 treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', bytes(treasure))
                 if (room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
-                        room != 0x054 and treasure_type != 0x16 and treasure_type != 0x17):
+                        room != 0x054 and treasure_type != 0x16 and treasure_type != 0x17 and treasure_type != 0xC16 and treasure_type != 0xC17):
                     item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
                     if room < 0x0AD:  # TODO
                         item_pool.append([treasure_type, item_id])
@@ -261,7 +261,7 @@ def randomize_data(input_folder, stat_mult):
                   [1617, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1618, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 4, 5], [2361, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 4, 5], [2362, 1, 3, 5],
                   [1619, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 3, 5], [1620, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 3, 5], [1621, 1, 3, 5], [2296, 1, 2, 3, 5], [1623, 1, 3, 5],
 
-                  [24], [25], [26], [27, 3, -1, 5], [28], [29], [30], [31, 15], [32, 15], [33], [34, 15], [35, 15], [157], [158], [159], [160],
+                  [24], [25], [26], [27, 3, -1, 5], [28], [29], [30], [31, 15], [32, 15], [33], [34, 15], [35, 15], [157], [158], [159],
                   [161], [162], [163], [164], [165]]
 
     #for item in range(len(item_logic)):
@@ -354,12 +354,12 @@ def randomize_data(input_folder, stat_mult):
                                 if (item_pool[nitem][1] != 0x0000 and item_pool[nitem][1] != 0x0002 and
                                         item_pool[nitem][1] != 0x0004 and item_pool[nitem][1] != 0x0006 and item_pool[nitem][1] != 0x0008):
                                     repack_data.append(
-                                        [6, key_item_info[i], 0, 0, 0, 0xC0A0 + itemcut, item_pool[nitem][1],
-                                         0xC0A0 + itemcut])
+                                        [6, key_item_info[i], 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1],
+                                         0xCDA0 + itemcut])
                                 else:
                                     repack_data.append(
-                                        [6, key_item_info[i], 0, 0, 0, 0xC0A0 + itemcut, item_pool[nitem][1], 1 + 9 * (item_pool[nitem][0] // 0xA0 % 2),
-                                         0xC0A0 + itemcut])
+                                        [6, key_item_info[i], 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1], 1 + 9 * (item_pool[nitem][0] // 0xA0 % 2),
+                                         0xCDA0 + itemcut])
                                 itemcut += 1
                                 del item_pool[nitem]
                                 del key_item_info[i]
@@ -531,7 +531,7 @@ def randomize_data(input_folder, stat_mult):
             item = 0
             while new_item_locals[item][3] != 0:
                 item += 1
-            item_locals.append([new_item_locals[item][0], new_item_locals[item][1], new_item_locals[item][2], new_item_locals[item][4], new_item_locals[item][5], new_item_locals[item][6], new_item_locals[item][7]])
+            item_locals[len(item_logic)] = [new_item_locals[item][0], new_item_locals[item][1], new_item_locals[item][2], new_item_locals[item][4], new_item_locals[item][5], new_item_locals[item][6], new_item_locals[item][7]]
             item_logic.append([0, 0])
 
     #hammer_local = find_index_in_2d_list(repack_data, 0xC369)
