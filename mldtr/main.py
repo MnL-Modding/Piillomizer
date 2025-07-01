@@ -98,10 +98,13 @@ def help():
 def randomize(window):
     #Moves the data to a copy of the folder
     parent_folder = os.path.dirname(window.romfs) + "/"
-    copy_num = 0
-    while os.path.exists(parent_folder + "00040000000D5A00-seed" + str(copy_num)):
-        copy_num += 1
-    seed_folder = parent_folder + "00040000000D5A00-seed" + str(copy_num)
+    if os.path.exists(parent_folder + "00040000000D5A00"):
+        copy_num = 0
+        while os.path.exists(parent_folder + "00040000000D5A00-seed" + str(copy_num)):
+            copy_num += 1
+        seed_folder = parent_folder + "00040000000D5A00-seed" + str(copy_num)
+    else:
+        seed_folder = parent_folder + "00040000000D5A00"
     shutil.copytree(window.romfs, seed_folder)
     old_romfs = window.romfs
     window.romfs = seed_folder

@@ -698,6 +698,17 @@ def pack(input_folder, repack_data):
             elif i[6] == 0xE004:
                 branch_if(Variables[0xE003], '==', 0.0, 'label_1')
                 branch_if(Variables[i[7]], '==', 1.0, 'label_0')
+            elif i[6] == 0xC363:
+                Variables[i[6]] = 1.0
+                branch_if(Variables[0xC343], '==', 0.0, 'label_1')
+                branch_if(Variables[0xC344], '==', 0.0, 'label_1')
+                branch_if(Variables[0xC345], '==', 0.0, 'label_1')
+                branch_if(Variables[0xC346], '==', 0.0, 'label_1')
+                Variables[0xE09F] = 1.0
+                say(None, TextboxSoundsPreset.SILENT,
+                    "You got the final [Color #2C65FF]" + addon + "[Color #000000]![Pause 90]",
+                    offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                branch('label_0')
             if i[6] > 0xC000:
                 Variables[i[6]] = 1.0
                 if i[5] < 0xD000:
@@ -730,7 +741,7 @@ def pack(input_folder, repack_data):
                 say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
-            if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xCD20 <= i[-1] < 0xCDA0):
+            if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xCD20 <= i[-1] < 0xCDA0) or (0xC343 <= i[6] <= 0xC346):
                 label('label_1', manager=fevent_manager)
                 if 0xE001 <= i[6] <= 0xE004:
                     Variables[i[7]] = 1.0
@@ -741,7 +752,8 @@ def pack(input_folder, repack_data):
                         Variables[0xE000] = 1.0
                         say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 else:
-                    Variables[i[6]] |= i[7]
+                    if 0xCD20 <= i[-1] < 0xCDA0:
+                        Variables[i[6]] |= i[7]
                     say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
