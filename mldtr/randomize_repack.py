@@ -711,10 +711,12 @@ def pack(input_folder, repack_data):
                 add_in_place(1.0, Variables[0xB02D])
                 Variables[i[len(i) - 1]] = 1.0
             elif i[6] > 0xB000:
-                branch_if(Variables[check_1], '==', 0x1F, 'label_1')
-                branch_if(Variables[check_2], '==', 0x1F, 'label_1')
-                Variables[i[6]] |= i[7]
-                say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                branch_if(Variables[check_1], '!=', 0x1F, 'label_1')
+                branch_if(Variables[check_2], '!=', 0x1F, 'label_1')
+                Variables[attack_id] = 1.0
+                say(None, TextboxSoundsPreset.SILENT,
+                    "You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 90]",
+                    offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             elif i[6] >= 0x6000:
                 emit_command(0x0033, [int(math.floor((i[6] - 0x4000) / 2)) + 0x28, 0x01], Variables[0x300B])
@@ -728,7 +730,7 @@ def pack(input_folder, repack_data):
             if i[6] < 0x1000:
                 say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
-            else:
+            elif i[-1] < 0xC020 or i[-1] >= 0xC0A0:
                 say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
@@ -743,10 +745,8 @@ def pack(input_folder, repack_data):
                         Variables[0xE000] = 1.0
                         say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 else:
-                    Variables[attack_id] = 1.0
-                    say(None, TextboxSoundsPreset.SILENT,
-                        "You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 90]",
-                        offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    Variables[i[6]] |= i[7]
+                    say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002:
