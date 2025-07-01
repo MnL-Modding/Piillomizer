@@ -32,7 +32,6 @@ def is_available(logic, key):
     #Sets up the variables to check the logic
     available = True
     was_true = False
-    multi = [0, 0]
     for d in range(len(logic)-1):
         #Updates hammers if mini or mole mario have been grabbed, along with updating the other if one has been grabbed multiple times
         if (logic[d+1] == 1 or logic[d+1] == 2) and key[logic[d+1]] > 0:
@@ -64,7 +63,6 @@ def is_available(logic, key):
                 available = True
             else:
                 was_true = True
-            multi = [0, 0]
     if was_true:
         available = True
     return available
@@ -193,7 +191,8 @@ def randomize_data(input_folder, stat_mult):
             treasure_data = fmapdat.read(treasure_data_len)
             for treasure_index, treasure in enumerate(itertools.batched(treasure_data, 12, strict=True)):
                 treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', bytes(treasure))
-                if room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x054 and treasure_type != 22:
+                if (room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
+                        room != 0x054 and treasure_type != 0x16 and treasure_type != 0x17):
                     item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
                     if room < 0x06E:  # TODO
                         item_pool.append([treasure_type, item_id])
@@ -252,6 +251,10 @@ def randomize_data(input_folder, stat_mult):
                   [1580, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1581, 23, 1, -1, 1, 5], [1582, 23, 1, -1, 1, 5], [1583, 23, 1, 2, 4, -1, 1, 2, 4, 5], [2402, 23, 1, 2, 4, -1, 1, 2, 4, 5],
                   [1584, 23, 1, -1, 1, 5], [1585, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1586, 23, 1, 3, -1, 1, 5], [1587, 23, 1, 3, -1, 1, 3, 5], [1588, 23, 1, -1, 1, 5],
                   [1589, 23, 1, -1, 1, 5], [1590, 23, 1, -1, 1, 5], [1591, 23, 1, 2, 3, -1, 1, 2, 3, 5],]
+
+    #for item in range(len(item_logic)):
+    #    if item_locals[item][6] == item_logic[item][0]:
+    #        print(item_locals[item][6])
 
     #Creates an array with the ability info
     key_item_info = [0x001, 0x012, -1, 0x06C, 0x075, 0x10C, 0x13D, 0x0F5, 0x0C6, -1, 0x1E7, 0x1F8, 0x0F6, 0x0FA,
@@ -501,12 +504,13 @@ def randomize_data(input_folder, stat_mult):
                             if key_spot is not None:
                                 key_item_pool.append(key_item_pool_checked[key_spot[0]])
                                 del key_item_pool_checked[key_spot[0]]
+                                key_item_check[key_item_pool[-1][1]] -= 1
                         del repack_data[attack_spot[0]]
                     else:
                         item_pool.append([new_item_locals[0][2], new_item_locals[0][3]])
-                    item_locals.append([new_item_locals[0][0], new_item_locals[0][1], new_item_locals[0][2],
+                    item_locals[len(item_logic)] = [new_item_locals[0][0], new_item_locals[0][1], new_item_locals[0][2],
                                         new_item_locals[0][4], new_item_locals[0][5], new_item_locals[0][6],
-                                        new_item_locals[0][7]])
+                                        new_item_locals[0][7]]
                     item_logic.append([0])
                     del new_item_locals[0]
 
