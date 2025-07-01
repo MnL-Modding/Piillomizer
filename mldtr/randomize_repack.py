@@ -318,7 +318,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        #change_room(0x0097, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        #change_room(0x0010, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -467,21 +467,17 @@ def pack(input_folder, repack_data):
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Edits every room with attack piece blocks so they're all activated by default
-    attack_dat = [[0x0004, 4, 0x0E, 0x0101, 3], [0x0005, 4, 0x08, 0xe1, 9]]
+    attack_dat = [[0x004, 4, 0x0E, 0x101, 3], [0x005, 4, 0x08, 0xE1, 9], [0x010, 1, 0x16, 0xDF, 6], [0x011, 1, 0x0D, 0xDD, 11], [0x012, 1, 0x03, 0xEA, 8],
+                  [0x013, 1, 0x20, 0xFF, 6], [0x014, 1, 0x16, 0xDD, 6], [0x017, 2, 0x03, 0xBC, -1], [0x019, 2, 0x18, 0x103, 6], [0x062, 1, 0x03, 0xBC, -1, 0]]
     for i in attack_dat:
         script = fevent_manager.parsed_script(i[0], 0)
-        @subroutine(subs=script.subroutines, hdr=script.header)
+        cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
+        script.header.init_subroutine = None
+        @subroutine(subs=script.subroutines, hdr=script.header, init=True)
         def attack_flag(sub: Subroutine):
             for a in range(i[1]):
                 set_actor_attribute(i[2]+a, 0x5C, 0.0)
-            tint_screen('00000000', initial='------FF', transition_duration=16)
-            set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
-            set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
-            set_movement_multipliers(Screen.TOP, 1.0, 1.0)
-            set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
-
-        script.subroutines[i[3]].commands[i[4]] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xCC10], 1.0, 0x01,
-                                                                                                         PLACEHOLDER_OFFSET], offset_arguments={4: 'attack_flag'})
+            call('init')
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     print("Repacking randomized data...")

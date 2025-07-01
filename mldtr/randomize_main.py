@@ -273,7 +273,7 @@ def randomize_data(input_folder, stat_mult):
                      -1, -1, -1, 0x13E, 0x0B2, 0x0B5, 0x0B6, 0x0B7, -1, -1, 0x177, 0x17A, 0x17D, -1]
 
     #Creates an item pool for the key items
-    key_item_pool = [[0xE002, 2], [0xE002, 2], [0xE002, 2], [0xE004, 4], [0xE004, 4], [0xE005, 5], [0xE00A, 6], [0xE00D, 7],
+    key_item_pool = [[0xE002, 0], [0xE002, 1], [0xE002, 2], [0xE004, 3], [0xE004, 4], [0xE005, 5], [0xE00A, 6], [0xE00D, 7],
                      [0xE00E, 8], [0xE00F, 9], [0xE010, 10], [0xE011, 11], [0xE012, 12], [0xE013, 13], [0xE075, 14], [0xC369, 15],
                      [0xCABF, 16], [0xE0A0, 17], [0xC343, 18], [0xC344, 19], [0xC345, 20], [0xC346, 21], [0xC960, 22], [0xC3B9, 23],
                      [0xB0F7, 24], [0xB0F7, 25], [0xB0F7, 26], [0xC47E, 27]]
@@ -300,6 +300,11 @@ def randomize_data(input_folder, stat_mult):
                          [0x02, 0xB031], [0x04, 0xB031], [0x08, 0xB031], [0x10, 0xB031], [0x01, 0xB059], [0x02, 0xB059],
                          [0x04, 0xB059], [0x08, 0xB059], [0x10, 0xB059], [0x01, 0xB05A], [0x02, 0xB05A], [0x04, 0xB05A],
                          [0x08, 0xB05A], [0x10, 0xB05A]]
+
+    #Logic for the key items, so they only spawn when others are already in the pool
+    logic_logic = [[0], [1, 0], [2, 1], [3], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5], [6], [7, 6], [8, 6], [9, 6], [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10],
+                   [12, 7], [13, 7], [14], [15], [16, 15], [17, 15, 16], [18, 15, 16], [19, 15, 16], [20, 15, 16], [21, 15, 16], [22, 15], [23, 1],
+                   [24, 1, 3, 6], [25, 1, 3, 6], [26, 1, 3, 6], [27, 15, 1]]
 
     print("Randomizing...")
     new_item_locals = []
@@ -485,6 +490,8 @@ def randomize_data(input_folder, stat_mult):
 
                     # Code for putting key items in blocks and bean spots
                     nitem = random.randint(0, len(key_item_pool) - 1)
+                    while not is_available(logic_logic[key_item_pool[nitem][1]], key_item_check):
+                        nitem = random.randint(0, len(key_item_pool) - 1)
                     narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
                               item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                     new_item_locals[old_spot] = narray
