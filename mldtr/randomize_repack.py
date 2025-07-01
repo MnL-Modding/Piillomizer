@@ -318,7 +318,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        change_room(0x0097, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        #change_room(0x0097, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -780,7 +780,8 @@ def pack(input_folder, repack_data):
                                                ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
         elif i[0] == 1:
             #Updates triggers if it's a regular dream world block
-            #print(i[3] - 0x92)
+            if i[3] - 0x92 < 0:
+                i[3] = 0xFFFF + (i[3] - 0x92)
             script.header.triggers.append(((0xFFF00000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
                                            ((i[3] - 0x80) * 0x10000) + (i[3] - 0x97), len(script.subroutines) - 1, 0x00078022))
         elif i[0] == 2 or i[0] == 8 or i[0] == 9:
