@@ -195,7 +195,7 @@ def randomize_data(input_folder, stat_mult):
                 treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', bytes(treasure))
                 if room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x054 and treasure_type != 22:
                     item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
-                    if room < 0x005D:  # TODO
+                    if room < 0x06E:  # TODO
                         item_pool.append([treasure_type, item_id])
 
     #for item in item_locals:
@@ -244,7 +244,14 @@ def randomize_data(input_folder, stat_mult):
 
                   [7], [8], [9], [10], [11], [12], [13], [14], [17], [18, 2], [19], [20, 2], [21, 2], [22, 2], [23, 2],
 
-                  [254, 15, 16, 2], [255, 15, 16, 17, 18, 19, 20, 21, 1, 2, -1, 15, 16, 5], [256, 15, 16], [257, 15, 16], [258, 15, 16],]
+                  [254, 15, 16, 2], [255, 15, 16, 17, 18, 19, 20, 21, 1, 2, -1, 15, 16, 5], [256, 15, 16], [257, 15, 16], [258, 15, 16],
+                  [259, 15, 16, 17, 2, -1, 15, 16, 2, 5], [260, 15, 16, 17, -1, 15, 16, 5], [261, 15, 16, 5], [262, 15, 16, 5],
+                  [263, 15, 16, 2, 5], [264, 15, 16, 2, 5], [268, 15, 16, 2], [269, 15, 16], [270, 15, 16],
+
+                  [1573, 1], [1574, 1], [1575, 1], [1576, 23, 1, -1, 1, 5], [1577, 23, 1, -1, 1, 5], [1578, 23, 1, 3, -1, 1, 5], [1579, 23, 1, 2, 3, -1, 1, 2, 3, 5],
+                  [1580, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1581, 23, 1, -1, 1, 5], [1582, 23, 1, -1, 1, 5], [1583, 23, 1, 2, 4, -1, 1, 2, 4, 5], [2402, 23, 1, 2, 4, -1, 1, 2, 4, 5],
+                  [1584, 23, 1, -1, 1, 5], [1585, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1586, 23, 1, 3, -1, 1, 5], [1587, 23, 1, 3, -1, 1, 3, 5], [1588, 23, 1, -1, 1, 5],
+                  [1589, 23, 1, -1, 1, 5], [1590, 23, 1, -1, 1, 5], [1591, 23, 1, 2, 3, -1, 1, 2, 3, 5],]
 
     #Creates an array with the ability info
     key_item_info = [0x001, 0x012, -1, 0x06C, 0x075, 0x10C, 0x13D, 0x0F5, 0x0C6, -1, 0x1E7, 0x1F8, 0x0F6, 0x0FA,
@@ -292,7 +299,7 @@ def randomize_data(input_folder, stat_mult):
         item_logic_len = len(item_logic)
         for i in range(item_logic_len):
             try:
-                if len(item_locals) > 0:
+                if len(item_logic) > 0:
                     if is_available(item_logic[i], key_item_check):
                         rand_array = random.randint(0, 1)
                         if rand_array == 0 and len(item_pool) > 0:
@@ -320,8 +327,8 @@ def randomize_data(input_folder, stat_mult):
                         i -= 1
             except IndexError:
                 break
-        for i in range(len(key_item_info)):
-            if len(key_item_info) > 0:
+        for i in range(len(key_item_logic)):
+            if len(key_item_logic) > 0:
                 try:
                     if key_item_info[i] > -1:
                         if is_available(key_item_logic[i], key_item_check):
@@ -511,7 +518,7 @@ def randomize_data(input_folder, stat_mult):
             item_locals.append([new_item_locals[item][0], new_item_locals[item][1], new_item_locals[item][2], new_item_locals[item][4], new_item_locals[item][5], new_item_locals[item][6], new_item_locals[item][7]])
             item_logic.append([0, 0])
 
-    #hammer_local = find_index_in_2d_list(repack_data, 0xE001)
+    #hammer_local = find_index_in_2d_list(repack_data, 0xC369)
     #print(repack_data[hammer_local[0]])
 
     print("Repacking enemy stats...")
