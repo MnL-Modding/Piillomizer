@@ -13,7 +13,7 @@ def get_spot_type(spot):
         return 5
     elif spot[5] == 0:
         return 1
-    elif (spot[6] == 74 or spot[6] == 312 or (303 <= spot[6] <= 306) or
+    elif (spot[6] == 74 or spot[6] == 282 or spot[6] == 312 or (303 <= spot[6] <= 306) or
           spot[6] == 312 or  spot[6] == 1522 or spot[6] == 1524 or
           spot[6] == 1581 or (1543 <= spot[6] <= 1545) or spot[6] == 1549 or
           spot[6] == 1567 or (1673 <= spot[6] <= 1675) or spot[6] == 2125 or
@@ -192,9 +192,10 @@ def randomize_data(input_folder, stat_mult):
             treasure_data = fmapdat.read(treasure_data_len)
             for treasure_index, treasure in enumerate(itertools.batched(treasure_data, 12, strict=True)):
                 treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', bytes(treasure))
-                item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
-                if room < 0x004D:  # TODO
-                    item_pool.append([treasure_type, item_id])
+                if room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x054 and treasure_type != 22:
+                    item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
+                    if room < 0x005D:  # TODO
+                        item_pool.append([treasure_type, item_id])
 
     #for item in item_locals:
     #   print(str(item) + "\n")
@@ -210,7 +211,9 @@ def randomize_data(input_folder, stat_mult):
                   [108, 15, 0, 2], [109, 15, 0, 2], [110, 15, 0, 2], [111, 15, 0, 2], [112, 15, 0], [113, 15, 0], [114, 15, 0],
 
                   [253, 15, 16, 2], [271, 15, 16, 17, 2, -1, 15, 16, 2, 5], [272, 15, 16, 17, 2, -1, 15, 16, 2, 5], [273, 15, 16, 17, 2, -1, 15, 16, 2, 5],
-                  [274, 15, 16, 17, 2, -1, 15, 16, 2, 5], [275, 15, 16, 17, 2, -1, 15, 16, 2, 5], [285, 15, 16, 17, 2, -1, 15, 16, 2, 5], [286, 15, 16, 17, 2, -1, 15, 16, 2, 5],
+                  [274, 15, 16, 17, 2, -1, 15, 16, 2, 5], [275, 15, 16, 17, 2, -1, 15, 16, 2, 5], [276, 15, 16, 17, 2, -1, 15, 16, 2, 5], [969, 15, 16, 17, 2, -1, 15, 16, 2, 5],
+                  [277, 15, 16, 17, -1, 15, 16, 5], [278, 15, 16, 17, -1, 15, 16, 5], [279, 15, 16, 2], [281, 15, 16, 2], [282, 15, 16, 1], [283, 15, 16, 17, -1, 15, 16, 5],
+                  [284, 15, 16, 2], [285, 15, 16, 17, 2, -1, 15, 16, 2, 5], [286, 15, 16, 17, 2, -1, 15, 16, 2, 5],
                   [287, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [288, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5],
                   [289, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [290, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5],
                   [291, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [292, 15, 16, 17, 2, -1, 15, 16, 2, 5],
