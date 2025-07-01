@@ -192,7 +192,8 @@ def randomize_data(input_folder, stat_mult):
             for treasure_index, treasure in enumerate(itertools.batched(treasure_data, 12, strict=True)):
                 treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', bytes(treasure))
                 if (room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
-                        room != 0x054 and treasure_type != 0x16 and treasure_type != 0x17 and treasure_type != 0xC16 and treasure_type != 0xC17):
+                        room != 0x054 and treasure_type != 0x16 and treasure_type != 0x17 and treasure_type != 0xC16 and treasure_type != 0xC17
+                        and treasure_id != 157 and treasure_id != 161):
                     item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
                     if room < 0x0AD:  # TODO
                         item_pool.append([treasure_type, item_id])
@@ -261,8 +262,7 @@ def randomize_data(input_folder, stat_mult):
                   [1617, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1618, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 4, 5], [2361, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 4, 5], [2362, 1, 3, 5],
                   [1619, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 3, 5], [1620, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 3, 5], [1621, 1, 3, 5], [2296, 1, 2, 3, 5], [1623, 1, 3, 5],
 
-                  [24], [25], [26], [27, 3, -1, 5], [28], [29], [30], [31, 15], [32, 15], [33], [34, 15], [35, 15], [157], [158], [159],
-                  [161], [162], [163], [164], [165]]
+                  [24], [25], [26], [27, 3, -1, 5], [28], [29], [30], [31, 15], [32, 15], [33], [34, 15], [35, 15], [158], [159], [162], [163], [164], [165]]
 
     #for item in range(len(item_logic)):
     #    if item_locals[item][6] == item_logic[item][0]:
