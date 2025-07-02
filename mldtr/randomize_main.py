@@ -11,13 +11,13 @@ from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_
 def get_spot_type(spot):
     if spot[2] == 0x0012 or spot[2] == 0x0013:
         return 5
-    elif spot[5] == 0:
+    elif spot[-2] == 0:
         return 1
-    elif (spot[6] == 74 or spot[6] == 282 or spot[6] == 312 or (303 <= spot[6] <= 306) or
-          spot[6] == 312 or  spot[6] == 1522 or spot[6] == 1524 or
-          spot[6] == 1581 or (1543 <= spot[6] <= 1545) or spot[6] == 1549 or
-          spot[6] == 1567 or (1673 <= spot[6] <= 1675) or spot[6] == 2125 or
-          spot[6] == 2398):
+    elif (spot[-1] == 74 or spot[-1] == 282 or spot[-1] == 312 or (303 <= spot[-1] <= 306) or
+          spot[-1] == 312 or  spot[-1] == 1522 or spot[-1] == 1524 or
+          spot[-1] == 1581 or (1543 <= spot[-1] <= 1545) or spot[-1] == 1549 or
+          spot[-1] == 1567 or (1673 <= spot[-1] <= 1675) or spot[-1] == 2125 or
+          spot[-1] == 2398):
         return 3
     return 0
 
@@ -254,13 +254,13 @@ def randomize_data(input_folder, stat_mult):
                   [1589, 23, 1, -1, 1, 5], [1590, 23, 1, -1, 1, 5], [1591, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1592, 23, 1, 3, -1, 1, 3, 5], [2403, 23, 1, 3, -1, 1, 5],
                   [1593, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1594, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1595, 23, 1, 3, 6, -1, 1, 3, 5, 6], [1596, 23, 1, 3, -1, 1, 3, 5],
                   [1597, 23, 1, 3, -1, 1, 3, 5], [1598, 1, 3, 5], [1599, 1, 3, 5], [2333, 23, 1, 3, -1, 1, 3, 5], [1546, 23, 1, 3, -1, 1, 3, 5], [2219, 23, 1, 3, -1, 1, 3, 5],
-                  [1600, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1601, 23, 1, 2, 3, -1, 1, 2, 3, 5], [2334, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1602, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5],
-                  [1603, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1604, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5, 6], [1605, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1606, 23, 1, 4, 6, 9, 10, -1, 1, 5],
-                  [1607, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 5], [1608, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1609, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1610, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5],
-                  [2359, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 4, 5], [2360, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 4, 5], [2375, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1611, 1, 4, 5],
-                  [1612, 1, 4, 5], [1613, 1, 2, 4, 5], [1614, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1615, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1616, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5],
-                  [1617, 23, 1, 4, 6, 9, 10, -1, 1, 4, 5], [1618, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 4, 5], [2361, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 4, 5], [2362, 1, 3, 5],
-                  [1619, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 3, 5], [1620, 23, 1, 2, 4, 6, 9, 10, -1, 1, 2, 3, 5], [1621, 1, 3, 5], [2296, 1, 2, 3, 5], [1623, 1, 3, 5],
+                  [1600, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1601, 23, 1, 2, 3, -1, 1, 2, 3, 5], [2334, 23, 1, 2, 3, -1, 1, 2, 3, 5], [1602, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5],
+                  [1603, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1604, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5, 6], [1605, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1606, 23, 1, 4, 6, 8, 10, -1, 1, 5],
+                  [1607, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 5], [1608, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1609, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1610, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5],
+                  [2359, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 4, 5], [2360, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 4, 5], [2375, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1611, 1, 4, 5],
+                  [1612, 1, 4, 5], [1613, 1, 2, 4, 5], [1614, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1615, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1616, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5],
+                  [1617, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1618, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 4, 5], [2361, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 4, 5], [2362, 1, 3, 5],
+                  [1619, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 3, 5], [1620, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 3, 5], [1621, 1, 3, 5], [2296, 1, 2, 3, 5], [1623, 1, 3, 5],
 
                   [24], [25], [26], [27, 3, -1, 5], [28], [29], [30], [31, 15], [32, 15], [33], [34, 15], [35, 15], [158], [159], [162], [163], [164], [165]]
 
@@ -299,7 +299,8 @@ def randomize_data(input_folder, stat_mult):
     attack_piece_pool = [[0x01, 0xB030], [0x02, 0xB030], [0x04, 0xB030], [0x08, 0xB030], [0x10, 0xB030], [0x01, 0xB031],
                          [0x02, 0xB031], [0x04, 0xB031], [0x08, 0xB031], [0x10, 0xB031], [0x01, 0xB059], [0x02, 0xB059],
                          [0x04, 0xB059], [0x08, 0xB059], [0x10, 0xB059], [0x01, 0xB05A], [0x02, 0xB05A], [0x04, 0xB05A],
-                         [0x08, 0xB05A], [0x10, 0xB05A]]
+                         [0x08, 0xB05A], [0x10, 0xB05A], [0x01, 0xB037], [0x02, 0xB037], [0x04, 0xB037], [0x08, 0xB037],
+                         [0x10, 0xB037], [0x01, 0xB038], [0x02, 0xB038], [0x04, 0xB038], [0x08, 0xB038], [0x10, 0xB038]]
 
     #Logic for the key items, so they only spawn when others are already in the pool
     logic_logic = [[0], [1, 0], [2, 1], [3], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5], [6], [7, 6], [8, 6], [9, 6], [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10],
@@ -570,6 +571,114 @@ def randomize_data(input_folder, stat_mult):
             if b[3] < 0xC000:
                 f.seek(b[1])
                 f.write(struct.pack('<HHHHHH', *b[2:8]))
+
+    print("Generating spoiler log...")
+    #Names for all the locations
+    item_local_names = ["Mushrise Park Entrance", "Mushrise Park Hammer Room", "Mushrise Park West Hammer Room", "Mushrise Park River Rocks",
+                        "Mushrise Park Upper Attack Piece Room", "Mushrise Park Lower Attack Piece Room", "Mushrise Park Gate Room",
+                        "Mushrise Park Fountain Room", "Mushrise Park Lower Rock Room", "Mushrise Park Right of Hammer Room", "Mushrise Park Maintenance Hut", "Mushrise Park Many Enemy Room",
+                        "Mushrise Park Early Hammer Room", "Dozing Sands Outside", "Mushrise Park Mushrise Treeboard Room", "Dozing Sands Western Track Room",
+                        "Dozing Sands Drill Machine Tutorial Room", "Dozing Sands Mini/Mole Mario Tutorial Room", "Dozing Sands Middle Track Room", "Dozing Sands Lower Track Room",
+                        "Dozing Sands Upper Track Room", "Dozing Sands Early First Track Room", "Dozing Sands Early Main Track Room", "Dozing Sands Mini Mario Room",
+                        "Mushrise Park Underground", "Dozing Sands Bottom Right Track Room", "Dozing Sands East of Dreamstone", "Blimport West of Pi'illo Castle",
+                        "Blimport In Front of Pi'illo Castle", "Dreamy Mushrise Park Test Room", "Dreamy Mushrise Park Eldream Room 1",
+                        "Dreamy Mushrise Park Eldream Room 2", "Dreamy Mushrise Park Eldream Room 3", "Dreamy Mushrise Park Eldream Room 4",
+                        "Dreamy Mushrise Park Eldream Room 5", "Dreamy Mushrise Park Eldream Item Detour Room", "Dreamy Mushrise Park Eldream Fountain Room",
+                        "Dreamy Mushrise Park Eldream Room 7", "Dreamy Mushrise Park Eldream Bouncy Flower Room", "Dreamy Mushrise Park Eldream Pipe to Sewers",
+                        ""]
+
+    #Names for items
+    item_names = [["Coin", "5 Coins", "10 Coins", "50 Coins", "100 Coins"],
+
+                  ["Mushroom", "Super Mushroom", "Ultra Mushroom", "Max Mushroom", "Nut", "Super Nut", "Ultra Nut", "Max Nut", "Syrup Jar", "Supersyrup Jar", "Ultrasyrup Jar", "Max Syrup Jar",
+                   "Candy", "Super Candy", "Ultra Candy", "Max Candy", "1-Up Mushroom", "1-Up Deluxe", "Refreshing Herb", "Heart Bean", "Bros. Bean", "Power Bean", "Defense Bean", "Speed Bean",
+                   "Stache Bean", "Taunt Ball", "Shock Bomb", "Boo Biscuit", "Secret Box", "Heart Bean DX", "Bros Bean DX", "Power Bean DX", "Defense Bean DX", "Speed Bean DX", "Stache Bean DX"],
+
+                  ["Starter Badge", "Master Badge", "Expert Badge", "Bronze Badge", "Silver Badge", "Gold Badge", "Mush Badge", "Strike Badge", "Guard Badge", "Virus Badge", "Risk Badge", "Miracle Badge"],
+
+                  ["Run-Down Boots", "Discount Boots", "So-So Boots", "Sandwich Boots", "Bare Boots", "Iron-Ball Boots", "Trusty Boots", "Snare Boots", "Coin Boots", "Super Boots", "EXP Boots",
+                   "Knockout Boots", "Heart Boots", "Elite Boots", "Anti-air Boots", "Action Boots", "Bros. Boots", "Singular Boots", "Glass Boots", "Coin Boots DX", "Iron-Ball Boots DX", "VIP Boots",
+                   "EXP Boots DX", "Anti-air Boots DX", "Bare Boots DX", "Star Boots", "Dark Boots", "Crystal Boots", "Wellington Boots", "Pro Boots", "Supreme Boots", "Challenge Boots", "Hiking Boots",
+                   "DoB Boots", "MINI Boots", "Run-Down Hammer", "Discount Hammer", "So-So Hammer", "Picnic Hammer", "Bare Hammer", "Iron-Ball Hammer", "Steady Hammer", "Fighter Hammer", "Sap Hammer",
+                   "Super Hammer", "Soft Hammer", "Knockout Hammer", "Flame Hammer", "Elite Hammer", "Blunt Hammer", "Action Hammer", "Spin Hammer", "Singular Hammer", "Glass Hammer", "Sap Hammer DX",
+                   "Iron-Ball Hammer DX", "VIP Hammer", "Flame Hammer DX", "Blunt Hammer DX", "Bare Hammer DX", "Star Hammer", "Dark Hammer", "Crystal Hammer", "Soft Hammer DX", "Pro Hammer", "Supreme Hammer",
+                   "Challenge Hammer", "Golden Hammer", "DoB Hammer", "MINI Hammer", "Thin Wear", "Picnic Wear", "Cozy Wear", "So-So Wear", "Retribution Wear", "Singular Wear", "Rally Wear", "Filler Wear",
+                   "Super Wear", "Fighter Wear", "Koopa Troopa Wear", "VIP Wear", "Counter Wear", "Safety Wear", "Fancy Wear", "Hero Wear", "Bros. Wear", "Metal Wear", "Snare Wear", "Heart Wear", "Boost Wear",
+                   "Star Wear", "Ironclad Wear", "King Wear", "Angel Wear", "Pro Wear", "Legendary Wear", "Challenge Wear", "Golden Wear", "DoB Wear", "Thick Gloves", "Shell Gloves", "Metal Gloves", "HP Gloves",
+                   "HP Gloves DX", "BP Gloves", "BP Gloves DX", "POW Gloves", "POW Gloves DX", "Speed Gloves", "Stache Gloves", "Lucky Gloves", "Lucky Gloves DX", "Gift Gloves", "Gift Gloves DX", "Filler Gloves",
+                   "Filler Gloves DX", "Strike Gloves", "Mushroom Gloves", "1-Up Gloves", "Pro Gloves", "Rookie Gloves", "Perfect POW Gloves", "Perfect Bro Gloves", "Coin Bro Gloves", "Coin Bro Gloves DX", "EXP Bro Gloves",
+                   "EXP Bro Gloves DX", "Bottomless Gloves", "MINI Gloves", "HP Scarf", "HP Scarf DX", "BP Scarf", "BP Scarf DX", "POW Scarf", "POW Scarf DX", "Speed Scarf", "Stache Scarf", "Bros. Ring", "HP Bangle",
+                   "HP Bangle DX", "BP Bangle", "BP Bangle DX", "Angel Bangle", "HP Knockout Bangle", "BP Knockout Bangle", "Healthy Ring", "Guard Shell", "Guard Shell DX", "Rally Belt", "Counter Belt", "POW Mush Jam",
+                   "DEF Mush Jam", "Duplex Crown", " -- ", "Mushroom Amulet", "DoB Ring", "Mini Ring", "Silver Statue", "Gold Statue"]]
+
+    #Names for key items
+    key_item_names = ["Progressive Hammers", "Progressive Hammers", "Progressive Hammers", "Progressive Spin", "Progressive Spin", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack High Jump",
+                      "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Deep Pi'illo Castle", "Blimport Bridge", "Mushrise Park Gate",
+                      "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
+
+    #Names for attack pieces
+    attack_piece_names = ["Mushrise Park", "Dreamy Mushrise Park", "Dozing Sands", "Dreamy Dozing Sands", "Wakeport", "Mount Pajamaja", "Dreamy Mount Pajamaja", "Driftwood Shores", "Dreamy Driftwood Shores",
+                          "Mount Pajamaja Summit", "Dreamy Wakeport", "Somnom Woods", "Dreamy Somnom Woods", "Mushrise Park Caves", "Neo Bowser Castle"]
+
+    #Names for the different kinds of checks
+    check_names = ["Block", "Block", "Rotated Block", "Mini Mario Block", "High Up Block", "Bean Spot", "Key Item Spot", "Attack Piece Block", "Rotated Block", "Rotated Block"]
+
+    #Sorts the new item locals array in order of room ID and spot ID
+    new_item_locals = sorted(new_item_locals, key=lambda local: local[0])
+    rooms = []
+    temp = []
+    for i in range(len(new_item_locals)-1):
+        if new_item_locals[i+1][0] == new_item_locals[i][0]:
+            rooms.append(new_item_locals[i])
+        else:
+            rooms = sorted(rooms, key=lambda local: local[7])
+            for r in range(len(rooms)):
+                temp.append(rooms[r])
+            rooms = []
+    rooms = sorted(rooms, key=lambda local: local[7])
+    for r in range(len(rooms)):
+        temp.append(rooms[r])
+    new_item_locals = temp
+
+    #Creates a spoiler log
+    spoiler_log = open(input_folder + "/Spoiler Log.txt", "w")
+    room_check = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+    for s in range(len(new_item_locals)):
+        check_type = ""
+        if len(room_check) >= new_item_locals[s][0] + 1:
+            if s > 0:
+                if room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] == room_check[new_item_locals[s-1][0]][get_spot_type(new_item_locals[s-1])]:
+                    room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] += 1
+            number = str(room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])])
+        else:
+            while len(room_check) < new_item_locals[s][0] + 1:
+                room_check.append([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+            number = "1"
+        k = find_index_in_2d_list(repack_data, new_item_locals[s][7] + 0xD000)
+        if k is None:
+            item = item_names[new_item_locals[s][3] // 0x2000][int(new_item_locals[s][3] / 2) % 0x100]
+            check_type = check_names[get_spot_type(new_item_locals[s])]
+        else:
+            check_type = check_names[repack_data[k[0]][0]]
+            ab = find_index_in_2d_list(key_item_pool_checked, repack_data[k[0]][6])
+            if ab is None:
+                if repack_data[k[0]][6] < 0xB037:
+                    item = attack_piece_names[int((repack_data[k[0]][6] - 0xB030) / 2)]
+                    offset = 0
+                elif repack_data[k[0]][6] < 0xB059:
+                    item = attack_piece_names[int((repack_data[k[0]][6] - 0xB037) / 2) + 2]
+                    offset = 1
+                else:
+                    item = attack_piece_names[int((repack_data[k[0]][6] - 0xB059) / 2) + 13]
+                    offset = 1
+                item += " Attack Piece " + str(((repack_data[k[0]][7] >> 0x2) + 1) * ((repack_data[k[0]][6] + offset) % 2 + 1))
+            else:
+                item = key_item_names[key_item_pool_checked[ab[0]][1]]
+        if new_item_locals[s][0] < len(item_local_names):
+            room_name = item_local_names[new_item_locals[s][0]]
+        else:
+            room_name = ""
+        spoiler_log.write(room_name + " " + check_type + " " + number + " - " + item + "\n")
 
     randomize_repack.pack(input_folder, repack_data)
 

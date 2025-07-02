@@ -103,6 +103,7 @@ def pack(input_folder, repack_data):
         Variables[0xCC2C] = 1.0 #Dreambert runs out of castle cutscene
         Variables[0xCC2D] = 1.0 #"There are many sights" cutscene
         Variables[0xCC2E] = 1.0 #Blimport bridge collapses
+        wait(3)
         Variables[0xCC2F] = 1.0 #Mario falls on Luigi
         Variables[0xCC30] = 1.0 #See first Pi'illo
         Variables[0xCC31] = 1.0 #First Pi'illo saved, can access Pi'illo folk in collection
@@ -129,6 +130,7 @@ def pack(input_folder, repack_data):
         #Variables[0xC954] = 1.0 #Grobot Battle Start
         #Variables[0xC92F] = 1.0 #Grobot Defeated
         Variables[0xC930] = 1.0 #Cutscene before entering Eldream's pillow
+        wait(3)
         Variables[0xC000] = 1.0 #Eldream Dream World Enter
         Variables[0xC001] = 1.0 #Boss Brickle declares you his rivals
         Variables[0xC028] = 1.0 #Boss Brickle declares you his rivals
@@ -167,6 +169,7 @@ def pack(input_folder, repack_data):
         Variables[0xC05E] = 1.0 #Exiting Luiginary Stack tutorial
         Variables[0xE014] = 1.0 #Can exit Luiginary Stack
         Variables[0xC334] = 1.0 #Cutscene for getting first Dozite
+        wait(3)
         Variables[0xC342] = 1.0 #Got first Dozite
         #Variables[0xE0A0] = 1.0 #Bridge is up
         Variables[0xC33D] = 1.0 #Britta appears
@@ -196,6 +199,7 @@ def pack(input_folder, repack_data):
         Variables[0xC3B8] = 1.0 #Accepting tours for Mount Pajamaja cutscene
         #Variables[0xC369] = 1.0 #Opens side rooms in Pi'illo Castle platform area and fixes bridge in Blimport
         #Variables[0xC960] = 1.0 #Tree blocking Wakeport has been removed
+        wait(3)
         Variables[0xC961] = 1.0 #Wakeport intro watched
         Variables[0xC9E3] = 1.0 #Popple is introduced
         Variables[0xC978] = 1.0 #Badge campaign
@@ -213,6 +217,7 @@ def pack(input_folder, repack_data):
         Variables[0xC098] = 1.0 #Timer Dreambert leaves
         Variables[0xC0AD] = 1.0 #Fall slow to hit red coins
         Variables[0xC0AE] = 1.0 #Crunch to hit bombs
+        wait(3)
         #Variables[0xC3B9] = 1.0 #Massifs pushed rock and opened Mount Pajamaja
         Variables[0xC3BB] = 1.0 #Massifs explain how a gate works
         Variables[0xCFC2] = 1.0 #Massifs are in right position for cutscene above
@@ -241,6 +246,7 @@ def pack(input_folder, repack_data):
         Variables[0xCC4E] = 1.0 #Broque is faking liking you
         Variables[0xCC4F] = 1.0 #Can access Driftwood Shores
         Variables[0xE0C1] = 1.0 #Removes invisible wall blocking Driftwood Shores
+        wait(3)
         Variables[0xCC51] = 1.0 #Broque Madame intro
         Variables[0xCC54] = 1.0 #Prevents crash
         Variables[0xCB41] = 1.0 #Seadrick dreampoint talked to him
@@ -260,6 +266,7 @@ def pack(input_folder, repack_data):
         Variables[0xC9F4] = 1.0 #Tree blocking other rock area is removed
         Variables[0xC9E1] = 1.0 #Wiggler first cutscene watched
         Variables[0xC9E2] = 1.0 #Wiggler second cutscene watched
+        wait(3)
         #Variables[0xC9E0] = 1.0 #Wiggler is defeated
         Variables[0xC9EA] = 1.0 #Bedsmith appears
         Variables[0xC59F] = 1.0 #Cog to enter Somnom Woods is available
@@ -318,7 +325,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        #change_room(0x0010, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x001C, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -466,9 +473,9 @@ def pack(input_folder, repack_data):
     script.header.triggers.append((0x00000000, 0x01F302A8, 0x00000000, 0x00000000, 0xFFFF0046, len(script.subroutines)-1, 0x00078022))
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
-    #Edits every room with attack piece blocks so they're all activated by default
-    attack_dat = [[0x004, 4, 0x0E, 0x101, 3], [0x005, 4, 0x08, 0xE1, 9], [0x010, 1, 0x16, 0xDF, 6], [0x011, 1, 0x0D, 0xDD, 11], [0x012, 1, 0x03, 0xEA, 8],
-                  [0x013, 1, 0x20, 0xFF, 6], [0x014, 1, 0x16, 0xDD, 6], [0x017, 2, 0x03, 0xBC, -1], [0x019, 2, 0x18, 0x103, 6], [0x062, 1, 0x03, 0xBC, -1, 0]]
+    #Edits every room with attack piece blocks so they're all deactivated by default
+    attack_dat = [[0x004, 4, 0x0E], [0x005, 4, 0x08], [0x010, 1, 0x16], [0x011, 1, 0x0D], [0x012, 1, 0x03],
+                  [0x013, 1, 0x20], [0x014, 1, 0x16], [0x017, 2, 0x03], [0x019, 2, 0x18], [0x062, 1, 0x03]]
     for i in attack_dat:
         script = fevent_manager.parsed_script(i[0], 0)
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
@@ -642,7 +649,7 @@ def pack(input_folder, repack_data):
         if i[6] == 0xE013:
             addon = "Luiginary Ball Throw"
         if i[6] == 0xE075:
-            addon = "Smoldergeist"
+            addon = "Deep Pi'illo Castle"
         if i[6] == 0xC369:
             addon = "Blimport Bridge"
         if i[6] == 0xCABF:
@@ -667,7 +674,7 @@ def pack(input_folder, repack_data):
         elif (i[6] == 0xCABF or i[6] == 0xC369 or i[6] == 0xE004 or i[6] == 0xE005 or (0xE00D <= i[6] <= 0xE013)):
             item = "the [Color #2C65FF]" + addon
         elif 0xB030 <= i[6] <= 0xB05C:
-            item = "an Attack Piece for [Color #2C65FF]" + addon
+            item = "an Attack Piece\nfor [Color #2C65FF]" + addon
         elif i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE00A:
             item = "[Color #2C65FF]" + addon
         elif addon[0:1] == 'A' or addon[0:1] == 'E' or addon[0:1] == 'I' or addon[0:1] == 'O' or addon[0:1] == 'U' or addon[0:2] == 'HP':
@@ -698,7 +705,7 @@ def pack(input_folder, repack_data):
             elif i[6] == 0xE004:
                 branch_if(Variables[0xE003], '==', 0.0, 'label_1')
                 branch_if(Variables[i[7]], '==', 1.0, 'label_0')
-            elif i[6] == 0xC363:
+            elif 0xC343 <= i[6] <= 0xC346:
                 Variables[i[6]] = 1.0
                 branch_if(Variables[0xC343], '==', 0.0, 'label_1')
                 branch_if(Variables[0xC344], '==', 0.0, 'label_1')
@@ -832,20 +839,6 @@ def pack(input_folder, repack_data):
             elif i[1] == 0x1E7:
                 script.header.triggers[9] = cast(tuple[int, int, int, int, int, int, int],
                                              script.header.triggers[9][:5] + (len(script.subroutines) - 1,) + script.header.triggers[9][6:])
-            elif i[1] == 0x13E:
-                for j in range(3):
-                    script.subroutines[0x80 + j].commands[28] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
-            elif i[1] == 0x0B2:
-                script.subroutines[0xa0].commands[26] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
-            elif i[1] == 0x0B5:
-                script.subroutines[0x95].commands[26] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
-            elif i[1] == 0x0B6:
-                script.subroutines[0x75].commands[23] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
-            elif i[1] == 0x0B7:
-                script.subroutines[0x8d].commands[23] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: sub_name})
-            else:
-                script.header.triggers[0] = cast(tuple[int, int, int, int, int, int, int],
-                                             script.header.triggers[0][:5] + (len(script.subroutines) - 1,) + script.header.triggers[0][6:])
 
         #Recompiles things
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
