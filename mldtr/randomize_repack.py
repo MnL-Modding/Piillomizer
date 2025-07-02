@@ -325,7 +325,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        change_room(0x001C, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x0004, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -474,16 +474,16 @@ def pack(input_folder, repack_data):
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Edits every room with attack piece blocks so they're all deactivated by default
-    attack_dat = [[0x004, 4, 0x0E], [0x005, 4, 0x08], [0x010, 1, 0x16], [0x011, 1, 0x0D], [0x012, 1, 0x03],
-                  [0x013, 1, 0x20], [0x014, 1, 0x16], [0x017, 2, 0x03], [0x019, 2, 0x18], [0x062, 1, 0x03]]
+    attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x062]
     for i in attack_dat:
-        script = fevent_manager.parsed_script(i[0], 0)
+        script = fevent_manager.parsed_script(i, 0)
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
         script.header.init_subroutine = None
         @subroutine(subs=script.subroutines, hdr=script.header, init=True)
         def attack_flag(sub: Subroutine):
-            for a in range(i[1]):
-                set_actor_attribute(i[2]+a, 0x5C, 0.0)
+            for a in range(len(script.header.actors)):
+                if script.header.actors[a][5] // 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
+                    set_actor_attribute(a, 0x5C, 0.0)
             call('init')
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
