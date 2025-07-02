@@ -33,26 +33,6 @@ def is_available(logic, key):
     available = True
     was_true = False
     for d in range(len(logic)-1):
-        #Updates hammers if mini or mole mario have been grabbed, along with updating the other if one has been grabbed multiple times
-        if (logic[d+1] == 1 or logic[d+1] == 2) and key[logic[d+1]] > 0:
-            if key[logic[d+1]] > 1:
-                if logic[d+1] == 1:
-                    key[2] += 1
-                    key[1] -= 1
-                else:
-                    key[1] += 1
-                    key[2] -= 1
-            else:
-                if key[0] < 1:
-                    key[0] += 1
-                    key[logic[d+1]] -= 1
-
-        #Updates the tornado if a progressive spin has been grabbed
-        if logic[d+1] == 4 and key[logic[d+1]] == 1:
-            if key[3] < 1:
-                key[3] += 1
-                key[4] -= 1
-
         #Checks if you have the items needed for the check
         if key[logic[d+1]] < 1:
             available = False
@@ -476,7 +456,7 @@ def randomize_data(input_folder, stat_mult):
             if len(key_item_pool) > 0:
                 can_key = False
                 for i in range(len(new_item_locals)):
-                    if new_item_locals[i][3] != 0:
+                    if new_item_locals[i][3] != 0 or find_index_in_2d_list(repack_data, new_item_locals[i][7] + 0xD000) is not None:
                         can_key = True
                 if can_key:
                     old_spot = random.randint(0, len(new_item_locals) - 1)
@@ -539,7 +519,7 @@ def randomize_data(input_folder, stat_mult):
         #Swaps a coin with whatever is left in the item pool
         if (len(item_pool) > 0 or len(attack_piece_pool) > 0) and len(item_logic) == 0:
             item = 0
-            while new_item_locals[item][3] != 0:
+            while new_item_locals[item][3] != 0 or find_index_in_2d_list(repack_data, new_item_locals[item][7] + 0xD000) is not None:
                 item += 1
             item_locals[len(item_logic)] = [new_item_locals[item][0], new_item_locals[item][1], new_item_locals[item][2], new_item_locals[item][4], new_item_locals[item][5], new_item_locals[item][6], new_item_locals[item][7]]
             item_logic.append([0, 0])
@@ -635,6 +615,7 @@ def randomize_data(input_folder, stat_mult):
             for r in range(len(rooms)):
                 temp.append(rooms[r])
             rooms = []
+            rooms.append(new_item_locals[i])
     rooms = sorted(rooms, key=lambda local: local[7])
     for r in range(len(rooms)):
         temp.append(rooms[r])
@@ -677,7 +658,7 @@ def randomize_data(input_folder, stat_mult):
         if new_item_locals[s][0] < len(item_local_names):
             room_name = item_local_names[new_item_locals[s][0]]
         else:
-            room_name = ""
+            room_name = str(new_item_locals[s][0])
         spoiler_log.write(room_name + " " + check_type + " " + number + " - " + item + "\n")
 
     randomize_repack.pack(input_folder, repack_data)
