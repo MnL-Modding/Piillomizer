@@ -8,6 +8,32 @@ from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_
 #input_folder = 'C:/Users/Dimit/AppData/Roaming/Azahar/load/mods/00040000000D5A00'
 #stat_mult = [5, 5]
 
+def get_room(id):
+    if 0x000 <= id <= 0x00C or id == 0x00F or id == 0x018 or id == 0x1C8 or 0x050 <= id <= 0x055:
+        return "Mushrise Park"
+    elif id == 0x00E or 0x010 <= id <= 0x017 or id == 0x019 or id == 0x01A or id == 0x05D or 0x60 <= id <= 0x62 or id == 0x0AF or 0x101 <= id <= 0x104 or id == 0x138 or id == 0x1DC or id == 0x28A:
+        return "Dozing Sands"
+    elif id == 0x01B or id == 0x01C or 0x056 <= id <= 0x05C or id == 0x063 or id == 0x064 or id == 0x1DE:
+        return "Blimport"
+    elif 0x01D <= id <= 0x030 or id == 0x032 or id == 0x0B0 or id == 0x09D or 0x0F1 <= id <= 0x0F3 or id == 0x199 or id == 0x19A or id == 0x1CD or id == 0x1CE:
+        return "Dreamy Mushrise Park"
+    elif 0x033 <= id <= 0x037 or id == 0x039 or 0x03C <= id <= 0x044 or 0x108 <= id <= 0x10A or id == 0x288:
+        return "Wakeport"
+    elif id == 0x038 or id == 0x03A or id == 0x03B or 0x045 <= id <= 0x04F:
+        return "Driftwood Shores"
+    elif 0x066 <= id <= 0x081 or id == 0x100 or id == 0x10B or id == 0x10C:
+        return "Mount Pajamaja"
+    elif id == 0x082 or 0x084 <= id <= 0x09B or 0x136 <= id <= 0x13B or id == 0x1D8:
+        return "Pi'illo Castle"
+    elif 0x0A1 <= id <= 0x0AE or 0x0D8 <= id <= 0x0DE or 0x0F4 <= id <= 0x0FA:
+        return "Dreamy Pi'illo Castle"
+    elif 0x0B1 <= id <= 0x0C7 or 0x0E4 <= id <= 0x0F0 or 0x13C <= id <= 0x13E or id == 0x1D6:
+        return "Dreamy Dozing Sands"
+    elif 0x0D2 <= id <= 0x0D6 or 0x161 <= id <= 0x182 or id == 0x1C9 or id == 0x1CA:
+        return "Dreamy Driftwood Shores"
+    else:
+        return "Unknown"
+
 def get_spot_type(spot):
     if spot[2] == 0x0012 or spot[2] == 0x0013:
         return 5
@@ -562,17 +588,17 @@ def randomize_data(input_folder, stat_mult):
 
     print("Generating spoiler log...")
     #Names for all the locations
-    item_local_names = ["Mushrise Park Entrance", "Mushrise Park Hammer Room", "Mushrise Park West Hammer Room", "Mushrise Park River Rocks",
-                        "Mushrise Park Upper Attack Piece Room", "Mushrise Park Lower Attack Piece Room", "Mushrise Park Gate Room",
-                        "Mushrise Park Fountain Room", "Mushrise Park Lower Rock Room", "Mushrise Park Right of Hammer Room", "Mushrise Park Maintenance Hut", "Mushrise Park Many Enemy Room",
-                        "Mushrise Park Early Hammer Room", "Dozing Sands Outside", "Mushrise Park Mushrise Treeboard Room", "Dozing Sands Western Track Room",
-                        "Dozing Sands Drill Machine Tutorial Room", "Dozing Sands Mini/Mole Mario Tutorial Room", "Dozing Sands Middle Track Room", "Dozing Sands Lower Track Room",
-                        "Dozing Sands Upper Track Room", "Dozing Sands Early First Track Room", "Dozing Sands Early Main Track Room", "Dozing Sands Mini Mario Room",
-                        "Mushrise Park Underground", "Dozing Sands Bottom Right Track Room", "Dozing Sands East of Dreamstone", "Blimport West of Pi'illo Castle",
-                        "Blimport In Front of Pi'illo Castle", "Dreamy Mushrise Park Test Room", "Dreamy Mushrise Park Eldream Room 1",
-                        "Dreamy Mushrise Park Eldream Room 2", "Dreamy Mushrise Park Eldream Room 3", "Dreamy Mushrise Park Eldream Room 4",
-                        "Dreamy Mushrise Park Eldream Room 5", "Dreamy Mushrise Park Eldream Item Detour Room", "Dreamy Mushrise Park Eldream Fountain Room",
-                        "Dreamy Mushrise Park Eldream Room 7", "Dreamy Mushrise Park Eldream Bouncy Flower Room", "Dreamy Mushrise Park Eldream Pipe to Sewers",
+    item_local_names = ["Entrance", "Hammer Room", "West Hammer Room", "River Rocks",
+                        "Upper Attack Piece Room", "Lower Attack Piece Room", "Gate Room",
+                        "Fountain Room", "Lower Rock Room", "Right of Hammer Room", "Maintenance Hut", "Many Enemy Room",
+                        "Early Hammer Room", "Outside", "Mushrise Treeboard Room", "Western Track Room",
+                        "Drill Machine Tutorial Room", "Mini/Mole Mario Tutorial Room", "Middle Track Room", "Lower Track Room",
+                        "Upper Track Room", "Early First Track Room", "Early Main Track Room", "Mini Mario Room",
+                        "Underground", "Bottom Right Track Room", "East of Dreamstone", "West of Pi'illo Castle",
+                        "In Front of Pi'illo Castle", "Test Room", "Eldream Room 1",
+                        "Eldream Room 2", "Eldream Room 3", "Eldream Room 4",
+                        "Eldream Room 5", "Eldream Item Detour Room", "Eldream Fountain Room",
+                        "Eldream Room 7", "Eldream Bouncy Flower Room", "Eldream Pipe to Sewers",
                         ""]
 
     #Names for items
@@ -614,25 +640,54 @@ def randomize_data(input_folder, stat_mult):
     #Sorts the new item locals array in order of room ID and spot ID
     new_item_locals = sorted(new_item_locals, key=lambda local: local[0])
     rooms = []
+    areas = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
     temp = []
     for i in range(len(new_item_locals)-1):
         if new_item_locals[i+1][0] == new_item_locals[i][0]:
             rooms.append(new_item_locals[i])
         else:
             rooms = sorted(rooms, key=lambda local: local[7])
-            for r in range(len(rooms)):
-                temp.append(rooms[r])
+            if get_room(rooms[-1][0]) == "Mushrise Park":
+                areas[3].append(rooms)
+            elif get_room(rooms[-1][0]) == "Dozing Sands":
+                areas[5].append(rooms)
+            elif get_room(rooms[-1][0]) == "Blimport":
+                areas[0].append(rooms)
+            elif get_room(rooms[-1][0]) == "Dreamy Mushrise Park":
+                areas[4].append(rooms)
+            elif get_room(rooms[-1][0]) == "Wakeport":
+                areas[7].append(rooms)
+            elif get_room(rooms[-1][0]) == "Driftwood Shores":
+                areas[11].append(rooms)
+            elif get_room(rooms[-1][0]) == "Mount Pajamaja":
+                areas[9].append(rooms)
+            elif get_room(rooms[-1][0]) == "Pi'illo Castle":
+                areas[1].append(rooms)
+            elif get_room(rooms[-1][0]) == "Dreamy Pi'illo Castle":
+                areas[2].append(rooms)
+            elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
+                areas[6].append(rooms)
+            elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shores":
+                areas[12].append(rooms)
+            else:
+                areas[17].append(rooms)
             rooms = []
             rooms.append(new_item_locals[i])
-    rooms = sorted(rooms, key=lambda local: local[7])
-    for r in range(len(rooms)):
-        temp.append(rooms[r])
+    for r in range(len(areas)):
+        for p in range(len(areas[r])):
+            for i in range(len(areas[r][p])):
+                temp.append(areas[r][p][i])
     new_item_locals = temp
 
     #Creates a spoiler log
     spoiler_log = open(input_folder + "/Spoiler Log.txt", "w")
     room_check = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
     for s in range(len(new_item_locals)):
+        if s > 0:
+            if get_room(new_item_locals[s][0]) != get_room(new_item_locals[s-1][0]):
+                spoiler_log.write("\n--" + get_room(new_item_locals[s][0]) + "--\n\n")
+        else:
+            spoiler_log.write("--Blimport--\n\n")
         check_type = ""
         if len(room_check) >= new_item_locals[s][0] + 1:
             if s > 0:
@@ -666,7 +721,7 @@ def randomize_data(input_folder, stat_mult):
         if new_item_locals[s][0] < len(item_local_names):
             room_name = item_local_names[new_item_locals[s][0]]
         else:
-            room_name = str(new_item_locals[s][0])
+            room_name = hex(new_item_locals[s][0])
         spoiler_log.write(room_name + " " + check_type + " " + number + " - " + item + "\n")
 
     randomize_repack.pack(input_folder, repack_data)
