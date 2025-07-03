@@ -1,3 +1,7 @@
+# Workaround for dynamic scope in Nuitka
+if '__compiled__' in globals():
+    _dynamicscope_test_variable = False
+
 # Imports the necessary modules
 import os
 import shutil
@@ -9,10 +13,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo
-
-# Workaround for dynamic scope in Nuitka
-if '__compiled__' in globals():
-    _dynamicscope_test_variable = False
 
 def get_folder(window):
     # Grabs a folder

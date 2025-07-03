@@ -311,7 +311,7 @@ def pack(input_folder, repack_data):
         emit_command(0x00DA, [0x00])
         emit_command(0x00DC)
         tint_screen('00000000', initial='------FF', transition_duration=16)
-        #Variables[0xE000] = 1.0
+        Variables[0xE000] = 1.0
         #Variables[0xE001] = 1.0
         #Variables[0xE002] = 1.0
         #Variables[0xE003] = 1.0
@@ -325,7 +325,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x0004, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -476,6 +476,7 @@ def pack(input_folder, repack_data):
     #Edits every room with attack piece blocks so they're all deactivated by default
     attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x062]
     for i in attack_dat:
+        #j = 0
         script = fevent_manager.parsed_script(i, 0)
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
         script.header.init_subroutine = None
@@ -486,6 +487,11 @@ def pack(input_folder, repack_data):
                     set_actor_attribute(a, 0x5C, 0.0)
             call('init')
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+        #for a in range(len(script.header.actors)):
+        #    if script.header.actors[a][5] // 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
+        #        script.header.actors[a] = cast(tuple[int, int, int, int, int, int],
+        #                                       script.header.actors[a][:2] + (0xF70016 + (j * 0x10000),) + script.header.actors[a][3:])
+        #        j += 1
 
     print("Repacking randomized data...")
     #Repacks all the randomized data
@@ -682,13 +688,14 @@ def pack(input_folder, repack_data):
         else:
             item = "a [Color #2C65FF]" + addon
         actor = 0x00
-        if 0xCD20 <= i[5] < 0xCDA0:
-            if 0xCD20 <= i[5] <= 0xCD23:
-                actor = 0x0E + (i[5] - 0xCD20)
-            elif i[5] <= 0xCD27:
-                actor = 0x08 + (i[5] - 0xCD24)
+        if i[0] == 7:
+            actor = 0
+            while script.header.actors[actor][2] != 0xF70016:
+                actor += 1
         @subroutine(subs=script.subroutines, hdr=script.header)
         def get_item(sub: Subroutine):
+            if i[0] == 7:
+                set_actor_attribute(actor, 0x5C, 0.0)
             if i[5] < 0xC000 or i[5] > 0xCFFF:
                 branch_if(Variables[i[5]], '==', 0.0, 'label_0')
             if i[6] > 0xC000:

@@ -303,10 +303,10 @@ def randomize_data(input_folder, stat_mult):
                       [-1], [-1], [0x177, 15, 16, 1, 2, 4, 6], [0x17A, 15, 16, 1, 4, 6], [0x17D, 15, 16, 1, 4, 6], [-1]]
 
     #Creates an array with the attack piece info
-    attack_piece_info = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1,]
+    attack_piece_info = [0x004, 0x004, 0x004, 0x004, 0x005, 0x005, 0x005, 0x005]
 
-    attack_piece_logic = [[0x004, 0x02, 15, 0], [0x004, 0x04, 15, 0], [0x004, 0x08, 15, 0], [0x004, 0x0F, 15, 0],
-                         [0x005, 0x01, 15, 0], [0x005, 0x02, 15, 0], [0x005, 0x04, 15, 0], [0x005, 0x08, 15, 0],]
+    attack_piece_logic = [[1, 15, 0], [2, 15, 0], [3, 15, 0], [4, 15, 0],
+                         [5, 15, 0], [6, 15, 0], [7, 15, 0], [8, 15, 0],]
 
     #Creates an item pool with the attack pieces
     attack_piece_pool = [[0x01, 0xB030], [0x02, 0xB030], [0x04, 0xB030], [0x08, 0xB030], [0x10, 0xB030], [0x01, 0xB031],
@@ -398,6 +398,41 @@ def randomize_data(input_folder, stat_mult):
                             i -= 1
                 except IndexError:
                     break
+        #for i in range(len(attack_piece_logic)):
+        #    if len(attack_piece_logic) > 0:
+        #        try:
+        #            if attack_piece_info[i] > -1:
+        #                if is_available(attack_piece_logic[i], key_item_check):
+        #                    rand_array = random.randint(0, 1)
+        #                    if rand_array == 0 and len(item_pool) > 0:
+        #                        # Code for if a block or bean spot's contents are in an ability cutscene
+        #                        nitem = random.randint(0, len(item_pool) - 1)
+        #                        if (item_pool[nitem][1] != 0x0000 and item_pool[nitem][1] != 0x0002 and
+        #                                item_pool[nitem][1] != 0x0004 and item_pool[nitem][1] != 0x0006 and item_pool[nitem][1] != 0x0008):
+        #                            repack_data.append(
+        #                                [7, attack_piece_info[i], 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1],
+        #                                 0xCDA0 + itemcut])
+        #                        else:
+        #                            repack_data.append(
+        #                                [7, attack_piece_info[i], 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1], 1 + 9 * (item_pool[nitem][0] // 0xA0 % 2),
+        #                                 0xCDA0 + itemcut])
+        #                        attackcut += 1
+        #                        del item_pool[nitem]
+        #                        del attack_piece_info[i]
+        #                        del attack_piece_logic[i]
+        #                    elif len(attack_piece_pool) > 0:
+        #                        # Code for if an attack is in an ability cutscene
+        #                        nitem = random.randint(0, len(attack_piece_pool) - 1)
+        #                        repack_data.append(
+        #                            [7, attack_piece_info[i], 0, 0, 0, 0xCD20 + attackcut, attack_piece_pool[nitem][1],
+        #                             attack_piece_pool[nitem][0], 0xCD20 + attackcut])
+        #                        attackcut += 1
+        #                        del attack_piece_pool[nitem]
+        #                        del attack_piece_info[i]
+        #                        del attack_piece_logic[i]
+        #                    i -= 1
+        #        except IndexError:
+        #            break
         # Checks if more items can be randomized
         if prevlen <= len(item_pool) + len(key_item_pool) + len(attack_piece_pool) and len(key_item_pool) > 0 and len(new_item_locals) > 0:
             if len(key_item_pool) > 0:
