@@ -555,8 +555,12 @@ def randomize_data(input_folder, stat_mult):
             item = 0
             while new_item_locals[item][3] != 0 or find_index_in_2d_list(repack_data, new_item_locals[item][7] + 0xD000) is not None:
                 item += 1
+                if item == len(new_item_locals):
+                    item -= 1
+                    break
             item_locals[len(item_logic)] = [new_item_locals[item][0], new_item_locals[item][1], new_item_locals[item][2], new_item_locals[item][4], new_item_locals[item][5], new_item_locals[item][6], new_item_locals[item][7]]
-            item_logic.append([0, 0])
+            item_logic.append([0])
+            del new_item_locals[item]
 
     #hammer_local = find_index_in_2d_list(repack_data, 0xC369)
     #print(repack_data[hammer_local[0]])
@@ -642,37 +646,97 @@ def randomize_data(input_folder, stat_mult):
     rooms = []
     areas = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
     temp = []
-    for i in range(len(new_item_locals)-1):
-        if new_item_locals[i+1][0] == new_item_locals[i][0]:
-            rooms.append(new_item_locals[i])
-        else:
-            rooms = sorted(rooms, key=lambda local: local[7])
-            if get_room(rooms[-1][0]) == "Mushrise Park":
-                areas[3].append(rooms)
-            elif get_room(rooms[-1][0]) == "Dozing Sands":
-                areas[5].append(rooms)
-            elif get_room(rooms[-1][0]) == "Blimport":
-                areas[0].append(rooms)
-            elif get_room(rooms[-1][0]) == "Dreamy Mushrise Park":
-                areas[4].append(rooms)
-            elif get_room(rooms[-1][0]) == "Wakeport":
-                areas[7].append(rooms)
-            elif get_room(rooms[-1][0]) == "Driftwood Shores":
-                areas[11].append(rooms)
-            elif get_room(rooms[-1][0]) == "Mount Pajamaja":
-                areas[9].append(rooms)
-            elif get_room(rooms[-1][0]) == "Pi'illo Castle":
-                areas[1].append(rooms)
-            elif get_room(rooms[-1][0]) == "Dreamy Pi'illo Castle":
-                areas[2].append(rooms)
-            elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
-                areas[6].append(rooms)
-            elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shores":
-                areas[12].append(rooms)
+    for i in range(len(new_item_locals)):
+        if i > 0:
+            if new_item_locals[i][0] == new_item_locals[i-1][0]:
+                rooms.append(new_item_locals[i])
             else:
-                areas[17].append(rooms)
-            rooms = []
+                rooms = sorted(rooms, key=lambda local: local[7])
+                if get_room(rooms[-1][0]) == "Mushrise Park":
+                    room = 3
+                elif get_room(rooms[-1][0]) == "Dozing Sands":
+                    room = 5
+                elif get_room(rooms[-1][0]) == "Blimport":
+                    room = 0
+                elif get_room(rooms[-1][0]) == "Dreamy Mushrise Park":
+                    room = 4
+                elif get_room(rooms[-1][0]) == "Wakeport":
+                    room = 7
+                elif get_room(rooms[-1][0]) == "Driftwood Shores":
+                    room = 11
+                elif get_room(rooms[-1][0]) == "Mount Pajamaja":
+                    room = 9
+                elif get_room(rooms[-1][0]) == "Pi'illo Castle":
+                    room = 1
+                elif get_room(rooms[-1][0]) == "Dreamy Pi'illo Castle":
+                    room = 2
+                elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
+                    room = 6
+                elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shores":
+                    room = 12
+                else:
+                    room = 17
+                if len(areas[room]) > 1:
+                    spot = 1
+                    while areas[room][spot-1][0] < areas[room][spot][0]:
+                        spot += 1
+                        if spot == len(areas[room]):
+                            break
+                    areas[room].insert(spot, rooms)
+                else:
+                    if len(areas[room]) == 0:
+                        areas[room].append(rooms)
+                    else:
+                        if areas[room][0][0] <= areas[room][-1][0]:
+                            areas[room].append(rooms)
+                        else:
+                            areas[room].insert(0, rooms)
+                rooms = []
+                rooms.append(new_item_locals[i])
+        else:
             rooms.append(new_item_locals[i])
+
+    rooms = sorted(rooms, key=lambda local: local[7])
+    if get_room(rooms[-1][0]) == "Mushrise Park":
+        room = 3
+    elif get_room(rooms[-1][0]) == "Dozing Sands":
+        room = 5
+    elif get_room(rooms[-1][0]) == "Blimport":
+        room = 0
+    elif get_room(rooms[-1][0]) == "Dreamy Mushrise Park":
+        room = 4
+    elif get_room(rooms[-1][0]) == "Wakeport":
+        room = 7
+    elif get_room(rooms[-1][0]) == "Driftwood Shores":
+        room = 11
+    elif get_room(rooms[-1][0]) == "Mount Pajamaja":
+        room = 9
+    elif get_room(rooms[-1][0]) == "Pi'illo Castle":
+        room = 1
+    elif get_room(rooms[-1][0]) == "Dreamy Pi'illo Castle":
+        room = 2
+    elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
+        room = 6
+    elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shores":
+        room = 12
+    else:
+        room = 17
+    if len(areas[room]) > 1:
+        spot = 1
+        while areas[room][spot - 1][0] < areas[room][spot][0]:
+            spot += 1
+            if spot == len(areas[room]):
+                break
+        areas[room].insert(spot, rooms)
+    else:
+        if len(areas[room]) == 0:
+            areas[room].append(rooms)
+        else:
+            if areas[room][0][0] <= areas[room][-1][0]:
+                areas[room].append(rooms)
+            else:
+                areas[room].insert(0, rooms)
+    rooms = []
     for r in range(len(areas)):
         for p in range(len(areas[r])):
             for i in range(len(areas[r][p])):
@@ -681,7 +745,7 @@ def randomize_data(input_folder, stat_mult):
 
     #Creates a spoiler log
     spoiler_log = open(input_folder + "/Spoiler Log.txt", "w")
-    room_check = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+    room_check = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     for s in range(len(new_item_locals)):
         if s > 0:
             if get_room(new_item_locals[s][0]) != get_room(new_item_locals[s-1][0]):
@@ -689,15 +753,11 @@ def randomize_data(input_folder, stat_mult):
         else:
             spoiler_log.write("--Blimport--\n\n")
         check_type = ""
-        if len(room_check) >= new_item_locals[s][0] + 1:
-            if s > 0:
-                if room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] == room_check[new_item_locals[s-1][0]][get_spot_type(new_item_locals[s-1])]:
-                    room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] += 1
-            number = str(room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])])
-        else:
+        if len(room_check) < new_item_locals[s][0] + 1:
             while len(room_check) < new_item_locals[s][0] + 1:
-                room_check.append([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
-            number = "1"
+                room_check.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] += 1
+        number = str(room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])])
         k = find_index_in_2d_list(repack_data, new_item_locals[s][7] + 0xD000)
         if k is None:
             item = item_names[new_item_locals[s][3] // 0x2000][int(new_item_locals[s][3] / 2) % 0x100]
