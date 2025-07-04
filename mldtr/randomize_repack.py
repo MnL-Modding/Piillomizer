@@ -250,6 +250,7 @@ def pack(input_folder, repack_data):
         Variables[0xCC50] = 1.0 #Intro to the Rose Broquet
         Variables[0xCC51] = 1.0 #Broque Madame intro
         Variables[0xCC54] = 1.0 #Prevents crash
+        #Variables[0xCC63] = 1.0 #Been to deluxe shop in the Rose Broquet
         Variables[0xCC57] = 1.0 #Direct attention to statues
         Variables[0xCC58] = 1.0 #MAJOR DISCOVERY!!!
         Variables[0xCC52] = 1.0 #First encounter inner tube
@@ -259,8 +260,8 @@ def pack(input_folder, repack_data):
         Variables[0xCC56] = 1.0 #Peach was the imposter
         Variables[0xCC65] = 1.0 #First Crab Minigame cutscene
         #Variables[0xCC67] = 1.0 #Won First Crab Minigame
-        Variables[0xC9DD] = 1.0 #Listened to the old coot vent
-        Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
+        Variables[0xCC69] = 1.0 #Another dreampoint is available
+        Variables[0xCC6A] = 1.0 #Another dreampoint is nearby
         Variables[0xCC53] = 1.0 #Talk to Broque Madame after Elite Trio's defeat
         Variables[0xCC82] = 1.0 #Doctor Snoozemore Appears
         Variables[0xCC83] = 1.0 #Doctor Snoozemore Cutscene Watched
@@ -273,6 +274,10 @@ def pack(input_folder, repack_data):
         Variables[0xC9B3] = 1.0 #Ultibed in Mushrise Park start
         Variables[0xC9F3] = 1.0 #Guy lets you into a rock area
         Variables[0xC9F4] = 1.0 #Tree blocking other rock area is removed
+        Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
+        Variables[0xC9DA] = 1.0 #Something something chase the fiends
+        Variables[0xC9DD] = 1.0 #Listened to the old coot vent
+        Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
         Variables[0xC9E1] = 1.0 #Wiggler first cutscene watched
         Variables[0xC9E2] = 1.0 #Wiggler second cutscene watched
         wait(3)
@@ -481,8 +486,8 @@ def pack(input_folder, repack_data):
     #Edits every room with attack piece blocks so they're all deactivated by default
     attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x062]
     j = []
-    for i in attack_dat:
-        script = fevent_manager.parsed_script(i, 0)
+    for i in range(len(attack_dat)):
+        script = fevent_manager.parsed_script(attack_dat[i], 0)
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
         script.header.init_subroutine = None
         @subroutine(subs=script.subroutines, hdr=script.header, init=True)
@@ -861,7 +866,7 @@ def pack(input_folder, repack_data):
                     script.header.triggers[9] = cast(tuple[int, int, int, int, int, int, int],
                                                  script.header.triggers[9][:5] + (len(script.subroutines) - 1,) + script.header.triggers[9][6:])
         else:
-            k = j.index(i[1]) + i[-1]
+            k = find_index_in_2d_list(j, i[1])[0] + i[-1]
             if i[0] == 0:
                 #Adds a trigger underneath a regular attack piece block
                 if j[k][1] > 0x55:
