@@ -26,12 +26,12 @@ def subroutine(*args, **kwargs):
         return subroutine
     return decorator
 
-def find_element_2d_array(matrix, target):
-    for row_index, row in enumerate(matrix):
+def find_index_in_2d_list(arr, target_value):
+    for row_index, row in enumerate(arr):
         for col_index, element in enumerate(row):
-            if element == target:
-                return row_index
-    return None
+            if element == target_value:
+                return (row_index, col_index)
+    return None  # Return None if the element is not found
 
 def pack(input_folder, repack_data):
     print("Setting up FEvent...")
@@ -247,11 +247,20 @@ def pack(input_folder, repack_data):
         Variables[0xCC4F] = 1.0 #Can access Driftwood Shores
         Variables[0xE0C1] = 1.0 #Removes invisible wall blocking Driftwood Shores
         wait(3)
+        Variables[0xCC50] = 1.0 #Intro to the Rose Broquet
         Variables[0xCC51] = 1.0 #Broque Madame intro
         Variables[0xCC54] = 1.0 #Prevents crash
+        Variables[0xCC57] = 1.0 #Direct attention to statues
+        Variables[0xCC58] = 1.0 #MAJOR DISCOVERY!!!
+        Variables[0xCC52] = 1.0 #First encounter inner tube
         Variables[0xCB41] = 1.0 #Seadrick dreampoint talked to him
         Variables[0xCB42] = 1.0 #Seadrick dreampoint allowed to leave
         Variables[0xCB72] = 1.0 #Maybe we should look around
+        Variables[0xCC56] = 1.0 #Peach was the imposter
+        Variables[0xCC65] = 1.0 #First Crab Minigame cutscene
+        #Variables[0xCC67] = 1.0 #Won First Crab Minigame
+        Variables[0xC9DD] = 1.0 #Listened to the old coot vent
+        Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
         Variables[0xCC53] = 1.0 #Talk to Broque Madame after Elite Trio's defeat
         Variables[0xCC82] = 1.0 #Doctor Snoozemore Appears
         Variables[0xCC83] = 1.0 #Doctor Snoozemore Cutscene Watched
@@ -311,7 +320,7 @@ def pack(input_folder, repack_data):
         emit_command(0x00DA, [0x00])
         emit_command(0x00DC)
         tint_screen('00000000', initial='------FF', transition_duration=16)
-        Variables[0xE000] = 1.0
+        #Variables[0xE000] = 1.0
         #Variables[0xE001] = 1.0
         #Variables[0xE002] = 1.0
         #Variables[0xE003] = 1.0
@@ -325,7 +334,7 @@ def pack(input_folder, repack_data):
         #Variables[0xE011] = 1.0
         #Variables[0xE012] = 1.0
         #Variables[0xE013] = 1.0
-        change_room(0x0004, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -364,19 +373,15 @@ def pack(input_folder, repack_data):
 
     #Stops Massifs pushing rock cutscene from appearing
     script = fevent_manager.parsed_script(0x0067, 0)
-    @subroutine(subs=script.subroutines, hdr=script.header)
+    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
+    script.header.init_subroutine = None
+    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
     def rock_pos(sub: Subroutine):
-        set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
-        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
-        set_movement_multipliers(Screen.TOP, 1.0, 1.0)
-        set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
-        set_touches_blocked(False)
+        sub.commands.extend(script.subroutines[0x6a].commands)
         branch_if(Variables[0xC3B9], '!=', 0.0, 'label_0')
         emit_command(0x00B4, [0x0D, 0x00, 0x0339, 0x0000, 0x02E4])
 
         label('label_0', manager=fevent_manager)
-
-    script.subroutines[0x6a].commands[7] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xCC11], 1.0, 0x01, PLACEHOLDER_OFFSET], offset_arguments={4: 'rock_pos'})
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Sets the script to look at the room where Mega Phil and Low reside
@@ -427,7 +432,7 @@ def pack(input_folder, repack_data):
         label('label_0', manager=fevent_manager)
         say(None, TextboxSoundsPreset.SILENT, "You don't have the\nrequired abilities.[Pause 45]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
-    script.header.triggers[0] = (0x018203EE, 0x02140450, 0x00000000, 0x00000000, 0x00000000, len(script.subroutines)-1, 0x00078002)
+    script.header.triggers[0] = (0x018203EE, 0x02140450, 0x00000000, 0x00000000, 0x01000040, len(script.subroutines)-1, 0x00078002)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
 
@@ -475,8 +480,10 @@ def pack(input_folder, repack_data):
 
     #Edits every room with attack piece blocks so they're all deactivated by default
     attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x062]
+    check = []
+    j = []
     for i in attack_dat:
-        #j = 0
+        check.append(0)
         script = fevent_manager.parsed_script(i, 0)
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
         script.header.init_subroutine = None
@@ -484,14 +491,10 @@ def pack(input_folder, repack_data):
         def attack_flag(sub: Subroutine):
             for a in range(len(script.header.actors)):
                 if script.header.actors[a][5] // 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
+                    j.append([script.header.actors[a][0] % 0x10000, script.header.actors[a][0] // 0x10000, script.header.actors[a][1] % 0x10000, 0])
                     set_actor_attribute(a, 0x5C, 0.0)
             call('init')
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
-        #for a in range(len(script.header.actors)):
-        #    if script.header.actors[a][5] // 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
-        #        script.header.actors[a] = cast(tuple[int, int, int, int, int, int],
-        #                                       script.header.actors[a][:2] + (0xF70016 + (j * 0x10000),) + script.header.actors[a][3:])
-        #        j += 1
 
     print("Repacking randomized data...")
     #Repacks all the randomized data
@@ -694,17 +697,22 @@ def pack(input_folder, repack_data):
                 actor += 1
         @subroutine(subs=script.subroutines, hdr=script.header)
         def get_item(sub: Subroutine):
-            if i[0] == 7:
-                set_actor_attribute(actor, 0x5C, 0.0)
             if i[5] < 0xC000 or i[5] > 0xCFFF:
                 branch_if(Variables[i[5]], '==', 0.0, 'label_0')
             if i[6] > 0xC000:
                 branch_if(Variables[i[6]], '==', 1.0, 'label_0')
             elif i[6] > 0xB0E0 or i[6] < 0xB000:
-                branch_if(Variables[i[len(i)-1]], '==', 1.0, 'label_0')
+                if i[-1] > 10:
+                    branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
+                else:
+                    branch_if(Variables[i[-2]], '==', 1.0, 'label_0')
             else:
-                branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
-                Variables[i[-1]] = 1.0
+                if i[-1] > 10:
+                    branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
+                    Variables[i[-1]] = 1.0
+                else:
+                    branch_if(Variables[i[-2]], '==', 1.0, 'label_0')
+                    Variables[i[-2]] = 1.0
             if i[6] == 0xE001 or i[6] == 0xE002:
                 branch_if(Variables[i[7]], '==', 1.0, 'label_0')
                 branch_if(Variables[0xE000], '==', 0.0, 'label_1')
@@ -732,6 +740,7 @@ def pack(input_folder, repack_data):
                 add_in_place(1.0, Variables[0xB02D])
                 Variables[i[len(i) - 1]] = 1.0
             elif i[6] > 0xB000:
+                Variables[i[6]] |= i[7]
                 branch_if(Variables[check_1], '!=', 0x1F, 'label_1')
                 branch_if(Variables[check_2], '!=', 0x1F, 'label_1')
                 Variables[attack_id] = 1.0
@@ -741,21 +750,33 @@ def pack(input_folder, repack_data):
                 branch('label_0')
             elif i[6] >= 0x6000:
                 emit_command(0x0033, [int(math.floor((i[6] - 0x4000) / 2)) + 0x28, 0x01], Variables[0x300B])
-                Variables[i[len(i) - 1]] = 1.0
+                if i[-1] > 10:
+                    Variables[i[-1]] = 1.0
+                else:
+                    Variables[i[-2]] = 1.0
             elif i[6] >= 0x2000:
                 emit_command(0x0033, [int(math.floor(i[6]/2)), 0x01], Variables[0x300B])
-                Variables[i[len(i) - 1]] = 1.0
+                if i[-1] > 10:
+                    Variables[i[-1]] = 1.0
+                else:
+                    Variables[i[-2]] = 1.0
             else:
                 emit_command(0x0031, [coin_amount * i[7]], Variables[0x300B])
-                Variables[i[len(i) - 1]] = 1.0
+                if i[-1] > 10:
+                    Variables[i[-1]] = 1.0
+                else:
+                    Variables[i[-2]] = 1.0
             if i[6] < 0x1000:
                 say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
-            elif i[-1] < 0xC020 or i[-1] >= 0xC0A0:
+            elif (i[-1] < 0xC020 or i[-1] >= 0xC0A0) and i[-1] > 10:
+                say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                branch('label_0')
+            elif i[-2] < 0xC020 or i[-2] >= 0xC0A0:
                 say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
-            if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xCD20 <= i[-1] < 0xCDA0) or (0xC343 <= i[6] <= 0xC346):
+            if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xB000 < i[6] < 0xB0E0) or (0xC343 <= i[6] <= 0xC346):
                 label('label_1', manager=fevent_manager)
                 if 0xE001 <= i[6] <= 0xE004:
                     Variables[i[7]] = 1.0
@@ -766,8 +787,6 @@ def pack(input_folder, repack_data):
                         Variables[0xE000] = 1.0
                         say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 else:
-                    if 0xCD20 <= i[-1] < 0xCDA0:
-                        Variables[i[6]] |= i[7]
                     say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
@@ -784,68 +803,76 @@ def pack(input_folder, repack_data):
         sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
         cast(SubroutineExt, get_item).name = sub_name
 
-        if i[0] == 0:
-            #Updates triggers if it's an overworld block
-            if i[3] > 0x55:
-                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] - 0x40) * 0x10000) + (i[3] - 0x56), len(script.subroutines) - 1, 0x00078022))
-            else:
-                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] - 0x40) * 0x10000), len(script.subroutines) - 1, 0x00078022))
-        elif i[0] == 5:
-            #Updates triggers if it's a bean spot
-            if i[3] > 0:
-                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] + 0x15) * 0x10000) + (i[3] - 1), len(script.subroutines) - 1, 0x00078022))
-            else:
-                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
-        elif i[0] == 1:
-            #Updates triggers if it's a regular dream world block
-            if i[3] - 0x92 < 0:
-                i[3] = 0xFFFF + (i[3] - 0x92)
-            script.header.triggers.append(((0xFFF00000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                           ((i[3] - 0x80) * 0x10000) + (i[3] - 0x97), len(script.subroutines) - 1, 0x00078022))
-        elif i[0] == 2 or i[0] == 8 or i[0] == 9:
-            #Updates triggers if it's a rotated dream world block
-            if i[0] == 2:
-                script.header.triggers.append(((0xFFF00000 + (i[2])-0x56), ((i[4]+0x10)*0x10000 + (i[2])-0x40), 0x00000000, 0x00000000,
-                                               ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
-            elif i[0] == 8:
+        if i[-1] > 10:
+            if i[0] == 0:
+                #Updates triggers if it's an overworld block
+                if i[3] > 0x55:
+                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                                   ((i[3] - 0x40) * 0x10000) + (i[3] - 0x56), len(script.subroutines) - 1, 0x00078022))
+                else:
+                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                                   ((i[3] - 0x40) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+            elif i[0] == 5:
+                #Updates triggers if it's a bean spot
+                if i[3] > 0:
+                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                                   ((i[3] + 0x15) * 0x10000) + (i[3] - 1), len(script.subroutines) - 1, 0x00078022))
+                else:
+                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                                   ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+            elif i[0] == 1:
+                #Updates triggers if it's a regular dream world block
+                if i[3] - 0x92 < 0:
+                    i[3] = 0xFFFF + (i[3] - 0x92)
                 script.header.triggers.append(((0xFFF00000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] + 0x56) * 0x10000) + (i[3] + 0x40), len(script.subroutines) - 1, 0x00078022))
+                                               ((i[3] - 0x80) * 0x10000) + (i[3] - 0x97), len(script.subroutines) - 1, 0x00078022))
+            elif i[0] == 2 or i[0] == 8 or i[0] == 9:
+                #Updates triggers if it's a rotated dream world block
+                if i[0] == 2:
+                    script.header.triggers.append(((0xFFF00000 + (i[2])-0x56), ((i[4]+0x10)*0x10000 + (i[2])-0x40), 0x00000000, 0x00000000,
+                                                   ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
+                elif i[0] == 8:
+                    script.header.triggers.append(((0xFFF00000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                                   ((i[3] + 0x56) * 0x10000) + (i[3] + 0x40), len(script.subroutines) - 1, 0x00078022))
+                else:
+                    script.header.triggers.append(((0xFFF00000 + (i[2])+0x40), ((i[4]+0x10)*0x10000 + (i[2])+0x56), 0x00000000, 0x00000000,
+                                                    ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
+            elif i[0] == 3:
+                #Updates the trigger if it's a mini mario block
+                if i[3] > 0x46:
+                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                                   ((i[3] - 0x31) * 0x10000) + (i[3] - 0x47), len(script.subroutines) - 1, 0x00078022))
+                else:
+                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                                   ((i[3] - 0x31) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+            elif i[0] == 4:
+                #Updates the trigger if it's a high up dream world block
+                script.header.triggers.append((((i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                               ((i[3] - 0x4F) * 0x10000) + (i[3] - 0x65), len(script.subroutines) - 1, 0x00078022))
             else:
-                script.header.triggers.append(((0xFFF00000 + (i[2])+0x40), ((i[4]+0x10)*0x10000 + (i[2])+0x56), 0x00000000, 0x00000000,
-                                                ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
-        elif i[0] == 3:
-            #Updates the trigger if it's a mini mario block
-            if i[3] > 0x46:
-                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] - 0x31) * 0x10000) + (i[3] - 0x47), len(script.subroutines) - 1, 0x00078022))
-            else:
-                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] - 0x31) * 0x10000), len(script.subroutines) - 1, 0x00078022))
-        elif i[0] == 4:
-            #Updates the trigger if it's a high up dream world block
-            script.header.triggers.append((((i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                           ((i[3] - 0x4F) * 0x10000) + (i[3] - 0x65), len(script.subroutines) - 1, 0x00078022))
-
-        elif i[0] == 7:
-            script.header.actors[actor] = cast(tuple[int, int, int, int, int, int], script.header.actors[actor][:4]
-                                                                + (len(script.subroutines) - 1,) + script.header.actors[actor][5:])
+                if i[1] == 0x001:
+                    script.header.triggers[4] = cast(tuple[int, int, int, int, int, int, int],
+                                                    script.header.triggers[4][:5] + (len(script.subroutines) - 1,) + script.header.triggers[4][6:])
+                elif i[1] == 0x012:
+                    script.header.triggers[1] = cast(tuple[int, int, int, int, int, int, int],
+                                                 script.header.triggers[1][:5] + (len(script.subroutines) - 1,) + script.header.triggers[1][6:])
+                elif i[1] == 0x0C6:
+                    script.header.triggers[2] = cast(tuple[int, int, int, int, int, int, int],
+                                                 script.header.triggers[2][:5] + (len(script.subroutines) - 1,) + script.header.triggers[2][6:])
+                elif i[1] == 0x1E7:
+                    script.header.triggers[9] = cast(tuple[int, int, int, int, int, int, int],
+                                                 script.header.triggers[9][:5] + (len(script.subroutines) - 1,) + script.header.triggers[9][6:])
         else:
-            if i[1] == 0x001:
-                script.header.triggers[4] = cast(tuple[int, int, int, int, int, int, int],
-                                                script.header.triggers[4][:5] + (len(script.subroutines) - 1,) + script.header.triggers[4][6:])
-            elif i[1] == 0x012:
-                script.header.triggers[1] = cast(tuple[int, int, int, int, int, int, int],
-                                             script.header.triggers[1][:5] + (len(script.subroutines) - 1,) + script.header.triggers[1][6:])
-            elif i[1] == 0x0C6:
-                script.header.triggers[2] = cast(tuple[int, int, int, int, int, int, int],
-                                             script.header.triggers[2][:5] + (len(script.subroutines) - 1,) + script.header.triggers[2][6:])
-            elif i[1] == 0x1E7:
-                script.header.triggers[9] = cast(tuple[int, int, int, int, int, int, int],
-                                             script.header.triggers[9][:5] + (len(script.subroutines) - 1,) + script.header.triggers[9][6:])
+            k = attack_dat.index(i[1]) + check[attack_dat.index(i[1])]
+            if i[0] == 0:
+                #Adds a trigger underneath a regular attack piece block
+                if j[k][1] > 0x55:
+                    script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
+                                                   ((j[k][1] - 0x40) * 0x10000) + (j[k][1] - 0x56), len(script.subroutines) - 1, 0x00078022))
+                else:
+                    script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
+                                                   ((j[k][1] - 0x40) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+            check[attack_dat.index(i[1])] += 1
 
         #Recompiles things
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))

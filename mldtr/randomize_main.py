@@ -35,17 +35,23 @@ def get_room(id):
         return "Unknown"
 
 def get_spot_type(spot):
-    if spot[2] == 0x0012 or spot[2] == 0x0013:
-        return 5
-    elif spot[-2] == 0:
-        return 1
-    elif (spot[-1] == 74 or spot[-1] == 282 or spot[-1] == 312 or (303 <= spot[-1] <= 306) or
-          spot[-1] == 312 or  spot[-1] == 1522 or spot[-1] == 1524 or
-          spot[-1] == 1581 or (1543 <= spot[-1] <= 1545) or spot[-1] == 1549 or
-          spot[-1] == 1567 or (1673 <= spot[-1] <= 1675) or spot[-1] == 2125 or
-          spot[-1] == 2398):
-        return 3
-    return 0
+    if len(spot) > 1:
+        if spot[2] == 0x0012 or spot[2] == 0x0013:
+            return 5
+        elif spot[-2] == 0:
+            return 1
+        elif (spot[-1] == 74 or spot[-1] == 282 or spot[-1] == 312 or (303 <= spot[-1] <= 306) or
+              spot[-1] == 312 or  spot[-1] == 1522 or spot[-1] == 1524 or
+              spot[-1] == 1581 or (1543 <= spot[-1] <= 1545) or spot[-1] == 1549 or
+              spot[-1] == 1567 or (1673 <= spot[-1] <= 1675) or spot[-1] == 2125 or
+              spot[-1] == 2398):
+            return 3
+        return 0
+    else:
+        if spot[0] // 0x10 == 0x012:
+            return 3
+        else:
+            return 0
 
 def find_index_in_2d_list(arr, target_value):
     for row_index, row in enumerate(arr):
@@ -144,7 +150,7 @@ def randomize_data(input_folder, stat_mult):
     #Logic for real world enemies
     enemy_logic = [[13], [18, 15, 5, -1, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0],
                    [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2],
-                   [48, 15, 22], [51, 1], [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, 4, 6, -1, 1, 5],
+                   [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, 4, 6, -1, 1, 5],
                    [68, 15, 16, 1, -1, 15, 16, 5], [69, 15, 16, 1, -1, 15, 16, 5], [70, 15, 16, 1, -1, 15, 16, 5],
                    [71, 15, 16, 1, -1, 15, 16, 5], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5], [87, 15, -1, 1, 4, 5],
                    [88, 15, -1, 1, 4, 5], [89, 15, -1, 1, 4, 5], [90, 1, 4, 5], [91, 15, 16, 2, 4], [92, 15], [93, 15],
@@ -303,7 +309,7 @@ def randomize_data(input_folder, stat_mult):
                       [-1], [-1], [0x177, 15, 16, 1, 2, 4, 6], [0x17A, 15, 16, 1, 4, 6], [0x17D, 15, 16, 1, 4, 6], [-1]]
 
     #Creates an array with the attack piece info
-    attack_piece_info = [0x004, 0x004, 0x004, 0x004, 0x005, 0x005, 0x005, 0x005]
+    attack_piece_info = [[0x0040], [0x0041], [0x0042], [0x0043], [0x0050], [0x0051], [0x0052], [0x0053]]
 
     attack_piece_logic = [[1, 15, 0], [2, 15, 0], [3, 15, 0], [4, 15, 0],
                          [5, 15, 0], [6, 15, 0], [7, 15, 0], [8, 15, 0],]
@@ -398,42 +404,42 @@ def randomize_data(input_folder, stat_mult):
                             i -= 1
                 except IndexError:
                     break
-        #for i in range(len(attack_piece_logic)):
-        #    if len(attack_piece_logic) > 0:
-        #        try:
-        #            if attack_piece_info[i] > -1:
-        #                if is_available(attack_piece_logic[i], key_item_check):
-        #                    rand_array = random.randint(0, 1)
-        #                    if rand_array == 0 and len(item_pool) > 0:
-        #                        # Code for if a block or bean spot's contents are in an ability cutscene
-        #                        nitem = random.randint(0, len(item_pool) - 1)
-        #                        if (item_pool[nitem][1] != 0x0000 and item_pool[nitem][1] != 0x0002 and
-        #                                item_pool[nitem][1] != 0x0004 and item_pool[nitem][1] != 0x0006 and item_pool[nitem][1] != 0x0008):
-        #                            repack_data.append(
-        #                                [7, attack_piece_info[i], 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1],
-        #                                 0xCDA0 + itemcut])
-        #                        else:
-        #                            repack_data.append(
-        #                                [7, attack_piece_info[i], 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1], 1 + 9 * (item_pool[nitem][0] // 0xA0 % 2),
-        #                                 0xCDA0 + itemcut])
-        #                        attackcut += 1
-        #                        del item_pool[nitem]
-        #                        del attack_piece_info[i]
-        #                        del attack_piece_logic[i]
-        #                    elif len(attack_piece_pool) > 0:
-        #                        # Code for if an attack is in an ability cutscene
-        #                        nitem = random.randint(0, len(attack_piece_pool) - 1)
-        #                        repack_data.append(
-        #                            [7, attack_piece_info[i], 0, 0, 0, 0xCD20 + attackcut, attack_piece_pool[nitem][1],
-        #                             attack_piece_pool[nitem][0], 0xCD20 + attackcut])
-        #                        attackcut += 1
-        #                        del attack_piece_pool[nitem]
-        #                        del attack_piece_info[i]
-        #                        del attack_piece_logic[i]
-        #                    i -= 1
-        #        except IndexError:
-        #            break
-        # Checks if more items can be randomized
+        for i in range(len(attack_piece_logic)):
+            if len(attack_piece_logic) > 0:
+                try:
+                    if attack_piece_info[i][0] > -1:
+                        if is_available(attack_piece_logic[i], key_item_check):
+                            rand_array = random.randint(0, 1)
+                            if rand_array == 0 and len(item_pool) > 0:
+                                # Code for if a block or bean spot's contents are in an ability cutscene
+                                nitem = random.randint(0, len(item_pool) - 1)
+                                if (item_pool[nitem][1] != 0x0000 and item_pool[nitem][1] != 0x0002 and
+                                        item_pool[nitem][1] != 0x0004 and item_pool[nitem][1] != 0x0006 and item_pool[nitem][1] != 0x0008):
+                                    repack_data.append(
+                                        [get_spot_type(attack_piece_info[i]), attack_piece_info[i][0] // 0x10, 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1],
+                                         0xCDA0 + itemcut, attack_piece_info[i][0] % 0x10])
+                                else:
+                                    repack_data.append(
+                                        [get_spot_type(attack_piece_info[i]), attack_piece_info[i][0] // 0x10, 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1], 1 + 9 * (item_pool[nitem][0] // 0xA0 % 2),
+                                         0xCDA0 + itemcut, attack_piece_info[i][0] % 0x10])
+                                itemcut += 1
+                                del item_pool[nitem]
+                                del attack_piece_info[i]
+                                del attack_piece_logic[i]
+                            elif len(attack_piece_pool) > 0:
+                                # Code for if an attack is in an ability cutscene
+                                nitem = random.randint(0, len(attack_piece_pool) - 1)
+                                repack_data.append(
+                                    [get_spot_type(attack_piece_info[i]), attack_piece_info[i][0] // 0x10, 0, 0, 0, 0xCD20 + attackcut, attack_piece_pool[nitem][1],
+                                     attack_piece_pool[nitem][0], 0xCD20 + attackcut, attack_piece_info[i][0] % 0x10])
+                                attackcut += 1
+                                del attack_piece_pool[nitem]
+                                del attack_piece_info[i]
+                                del attack_piece_logic[i]
+                            i -= 1
+                except IndexError:
+                    break
+        #Checks if more items can be randomized
         if prevlen <= len(item_pool) + len(key_item_pool) + len(attack_piece_pool) and len(key_item_pool) > 0 and len(new_item_locals) > 0:
             if len(key_item_pool) > 0:
                 can_key = False
