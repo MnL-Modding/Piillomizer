@@ -480,10 +480,8 @@ def pack(input_folder, repack_data):
 
     #Edits every room with attack piece blocks so they're all deactivated by default
     attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x062]
-    check = []
     j = []
     for i in attack_dat:
-        check.append(0)
         script = fevent_manager.parsed_script(i, 0)
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
         script.header.init_subroutine = None
@@ -491,7 +489,7 @@ def pack(input_folder, repack_data):
         def attack_flag(sub: Subroutine):
             for a in range(len(script.header.actors)):
                 if script.header.actors[a][5] // 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
-                    j.append([script.header.actors[a][0] % 0x10000, script.header.actors[a][0] // 0x10000, script.header.actors[a][1] % 0x10000, 0])
+                    j.append([script.header.actors[a][0] % 0x10000, script.header.actors[a][0] // 0x10000, script.header.actors[a][1] % 0x10000, attack_dat[i]])
                     set_actor_attribute(a, 0x5C, 0.0)
             call('init')
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
@@ -863,7 +861,7 @@ def pack(input_folder, repack_data):
                     script.header.triggers[9] = cast(tuple[int, int, int, int, int, int, int],
                                                  script.header.triggers[9][:5] + (len(script.subroutines) - 1,) + script.header.triggers[9][6:])
         else:
-            k = attack_dat.index(i[1]) + check[attack_dat.index(i[1])]
+            k = j.index(i[1]) + i[-1]
             if i[0] == 0:
                 #Adds a trigger underneath a regular attack piece block
                 if j[k][1] > 0x55:
@@ -872,7 +870,13 @@ def pack(input_folder, repack_data):
                 else:
                     script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
                                                    ((j[k][1] - 0x40) * 0x10000), len(script.subroutines) - 1, 0x00078022))
-            check[attack_dat.index(i[1])] += 1
+            elif i[0] == 3:
+                if j[k][1] > 0x55:
+                    script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
+                                                   ((j[k][1] - 0x40) * 0x10000) + (j[k][1] - 0x56), len(script.subroutines) - 1, 0x00078022))
+                else:
+                    script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
+                                                   ((j[k][1] - 0x40) * 0x10000), len(script.subroutines) - 1, 0x00078022))
 
         #Recompiles things
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
