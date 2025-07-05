@@ -136,8 +136,14 @@ def randomize(window):
     if window.exp_mode.get() == "10x - Enemies are Overrated":
         window.enemy_stats[1] = 10
 
+    #Appends settings to an array
+    window.random_settings = [[window.key1.get(), window.key2.get(), window.key3.get(), window.key4.get(), window.key5.get(), window.key6.get(), window.key7.get(),
+                               window.key8.get(), window.key9.get(), window.key10.get(), window.key11.get(), window.key12.get(), window.key13.get(), window.key14.get(),
+                               window.key15.get(), window.key16.get(), window.key17.get(), window.key18.get(), window.key19.get(), window.key20.get(), window.key21.get(),
+                               window.key22.get(), window.key23.get(), window.key24.get(), window.key25.get(), window.key26.get(), window.key27.get(), window.key28.get()]]
+
     # Begins randomization
-    randomize_main.randomize_data(window.romfs, window.enemy_stats)
+    randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings)
     if window.option.get() == 2:
         print("Randomizing custom music...")
         randomize_music.import_random(5, window.romfs, window.all_songs, window.categorize.get())
@@ -184,6 +190,34 @@ def main():
     window.exp_mode.set("2x - Quick Level")
     window.exp_options = ["0.5x - Grinder's Delight", "1x - Normal", "2x - Quick Level", "5x - Rapid Level",
                           "10x - Enemies are Overrated"]
+    window.key1 = tk.DoubleVar()
+    window.key2 = tk.DoubleVar()
+    window.key3 = tk.DoubleVar()
+    window.key4 = tk.DoubleVar()
+    window.key5 = tk.DoubleVar()
+    window.key6 = tk.DoubleVar()
+    window.key7 = tk.DoubleVar()
+    window.key8 = tk.DoubleVar()
+    window.key9 = tk.DoubleVar()
+    window.key10 = tk.DoubleVar()
+    window.key11 = tk.DoubleVar()
+    window.key12 = tk.DoubleVar()
+    window.key13 = tk.DoubleVar()
+    window.key14 = tk.DoubleVar()
+    window.key15 = tk.DoubleVar()
+    window.key16 = tk.DoubleVar()
+    window.key17 = tk.DoubleVar()
+    window.key18 = tk.DoubleVar()
+    window.key19 = tk.DoubleVar()
+    window.key20 = tk.DoubleVar()
+    window.key21 = tk.DoubleVar()
+    window.key22 = tk.DoubleVar()
+    window.key23 = tk.DoubleVar()
+    window.key24 = tk.DoubleVar()
+    window.key25 = tk.DoubleVar()
+    window.key26 = tk.DoubleVar()
+    window.key27 = tk.DoubleVar()
+    window.key28 = tk.DoubleVar()
     #Creates tabs
     window.menu = ttk.Notebook(window)
     tabMain = ttk.Frame(window.menu)
@@ -287,6 +321,259 @@ def main():
         state = "disabled"
     )
     window.category_check.place(x=180, y=195)
+
+    #Buttons for the different ability options
+    window.hammer_check = ttk.Checkbutton(
+        tabMain,
+        text = "Hammers",
+        variable = window.key1,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.hammer_check.place(x=12, y=50)
+
+    window.mini_check = ttk.Checkbutton(
+        tabMain,
+        text = "Mini Mario",
+        variable = window.key2,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.mini_check.place(x=129, y=50)
+
+    window.mole_check = ttk.Checkbutton(
+        tabMain,
+        text = "Mole Mario",
+        variable = window.key3,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.mole_check.place(x=246, y=50)
+
+    window.spin_check = ttk.Checkbutton(
+        tabMain,
+        text = "Spin Jump",
+        variable = window.key4,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.spin_check.place(x=359, y=50)
+
+    window.drill_check = ttk.Checkbutton(
+        tabMain,
+        text = "Side Drill",
+        variable = window.key5,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.drill_check.place(x=12, y=75)
+
+    window.ball_hop_check = ttk.Checkbutton(
+        tabMain,
+        text = "Ball Hop",
+        variable = window.key6,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.ball_hop_check.place(x=129, y=75)
+
+    window.works_check = ttk.Checkbutton(
+        tabMain,
+        text = "Luigi Works",
+        variable = window.key7,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.works_check.place(x=246, y=75)
+
+    window.ball_check = ttk.Checkbutton(
+        tabMain,
+        text = "Luigi Ball",
+        variable = window.key8,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.ball_check.place(x=359, y=75)
+
+    window.stack_jump_check = ttk.Checkbutton(
+        tabMain,
+        text = "Luigi Stack Jump",
+        variable = window.key9,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.stack_jump_check.place(x=12, y=100)
+
+    window.stack_pound_check = ttk.Checkbutton(
+        tabMain,
+        text = "Luigi Stack Pound",
+        variable = window.key10,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.stack_pound_check.place(x=129, y=100)
+
+    window.cone_jump_check = ttk.Checkbutton(
+        tabMain,
+        text = "Luigi Cone Jump",
+        variable = window.key11,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.cone_jump_check.place(x=246, y=100)
+
+    window.cone_storm_check = ttk.Checkbutton(
+        tabMain,
+        text = "Cone Storm",
+        variable = window.key12,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.cone_storm_check.place(x=359, y=100)
+
+    window.ball_hookshot_check = ttk.Checkbutton(
+        tabMain,
+        text = "Luigi Ball Hook",
+        variable = window.key13,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.ball_hookshot_check.place(x=12, y=125)
+
+    window.ball_throw_check = ttk.Checkbutton(
+        tabMain,
+        text = "Luigi Ball Throw",
+        variable = window.key14,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.ball_throw_check.place(x=129, y=125)
+
+    window.deep_castle_check = ttk.Checkbutton(
+        tabMain,
+        text = "Deep Castle",
+        variable = window.key15,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.deep_castle_check.place(x=246, y=125)
+
+    window.blimp_check = ttk.Checkbutton(
+        tabMain,
+        text = "Bridge",
+        variable = window.key16,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.blimp_check.place(x=359, y=125)
+
+    window.gate_check = ttk.Checkbutton(
+        tabMain,
+        text = "Mushrise Gate",
+        variable = window.key17,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.gate_check.place(x=12, y=150)
+
+    window.dozite0_check = ttk.Checkbutton(
+        tabMain,
+        text = "Dozite 0",
+        variable = window.key18,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.dozite0_check.place(x=129, y=150)
+
+    window.dozite1_check = ttk.Checkbutton(
+        tabMain,
+        text = "Dozite 1",
+        variable = window.key19,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.dozite1_check.place(x=246, y=150)
+
+    window.dozite2_check = ttk.Checkbutton(
+        tabMain,
+        text = "Dozite 2",
+        variable = window.key20,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.dozite2_check.place(x=359, y=150)
+
+    window.dozite3 = ttk.Checkbutton(
+        tabMain,
+        text = "Dozite 3",
+        variable = window.key21,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.dozite3.place(x=12, y=175)
+
+    window.dozite4 = ttk.Checkbutton(
+        tabMain,
+        text = "Dozite 4",
+        variable = window.key22,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.dozite4.place(x=129, y=175)
+
+    window.wakeport_check = ttk.Checkbutton(
+        tabMain,
+        text = "Wakeport",
+        variable = window.key23,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.wakeport_check.place(x=246, y=175)
+
+    window.pajamaja_check = ttk.Checkbutton(
+        tabMain,
+        text = "Mt Pajamaja",
+        variable = window.key24,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.pajamaja_check.place(x=359, y=175)
+
+    window.egg1_check = ttk.Checkbutton(
+        tabMain,
+        text = "Dream Egg 1",
+        variable = window.key25,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.egg1_check.place(x=12, y=200)
+
+    window.egg2_check = ttk.Checkbutton(
+        tabMain,
+        text = "Dream Egg 2",
+        variable = window.key26,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.egg2_check.place(x=129, y=200)
+
+    window.egg3_check = ttk.Checkbutton(
+        tabMain,
+        text = "Dream Egg 3",
+        variable = window.key27,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.egg3_check.place(x=246, y=200)
+
+    window.neo_castle_check = ttk.Checkbutton(
+        tabMain,
+        text = "Neo Castle",
+        variable = window.key28,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.neo_castle_check.place(x=359, y=200)
 
     #Explains how the custom music categorization works
     window.category_info = ttk.Button(

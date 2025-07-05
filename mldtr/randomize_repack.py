@@ -33,7 +33,7 @@ def find_index_in_2d_list(arr, target_value):
                 return (row_index, col_index)
     return None  # Return None if the element is not found
 
-def pack(input_folder, repack_data):
+def pack(input_folder, repack_data, settings):
     print("Setting up FEvent...")
     #Sets up the FEvent to be read
     fevent_manager = FEventScriptManager(input_folder)
@@ -97,7 +97,7 @@ def pack(input_folder, repack_data):
         Variables[0xCB06] = 1.0 #Bros chase after Peach again
         Variables[0xCB05] = 1.0 #Dromba battled
         Variables[0xE070] = 1.0 #Dromba bridge is up
-        Variables[0xCB07] = 1.0 #Final Dreamy Castle cutscene
+        #Variables[0xCB07] = 1.0 #Final Dreamy Castle cutscene
         Variables[0xCB08] = 1.0 #Dreambert is revived
         Variables[0xCC2B] = 1.0 #Dreambert awakes
         Variables[0xCC2C] = 1.0 #Dreambert runs out of castle cutscene
@@ -259,7 +259,7 @@ def pack(input_folder, repack_data):
         Variables[0xCB72] = 1.0 #Maybe we should look around
         Variables[0xCC56] = 1.0 #Peach was the imposter
         Variables[0xCC65] = 1.0 #First Crab Minigame cutscene
-        #Variables[0xCC67] = 1.0 #Won First Crab Minigame
+        Variables[0xCC67] = 1.0 #Won First Crab Minigame
         Variables[0xCC69] = 1.0 #Another dreampoint is available
         Variables[0xCC6A] = 1.0 #Another dreampoint is nearby
         Variables[0xCC53] = 1.0 #Talk to Broque Madame after Elite Trio's defeat
@@ -267,6 +267,7 @@ def pack(input_folder, repack_data):
         Variables[0xCC83] = 1.0 #Doctor Snoozemore Cutscene Watched
         Variables[0xC0B4] = 1.0 #Pi'illo Castle dream's deep opens
         Variables[0xC0A1] = 1.0 #Ultibed appears in pause menu
+        Variables[0xC5CC] = 1.0 #You must find the Ultibed parts cutscene
         Variables[0xC438] = 1.0 #Ultibed cutscene in Mount Pajamaja is watched
         Variables[0xC304] = 1.0 #Spawns more rocks in Mushrise Park
         Variables[0xC9F5] = 1.0 #Boss Brickle ponders who can help him
@@ -275,7 +276,7 @@ def pack(input_folder, repack_data):
         Variables[0xC9F3] = 1.0 #Guy lets you into a rock area
         Variables[0xC9F4] = 1.0 #Tree blocking other rock area is removed
         Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
-        Variables[0xC9DA] = 1.0 #Something something chase the fiends
+        #Variables[0xC9DA] = 1.0 #Something something chase the fiends
         Variables[0xC9DD] = 1.0 #Listened to the old coot vent
         Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
         Variables[0xC9E1] = 1.0 #Wiggler first cutscene watched
@@ -325,20 +326,36 @@ def pack(input_folder, repack_data):
         emit_command(0x00DA, [0x00])
         emit_command(0x00DC)
         tint_screen('00000000', initial='------FF', transition_duration=16)
-        #Variables[0xE000] = 1.0
-        #Variables[0xE001] = 1.0
-        #Variables[0xE002] = 1.0
-        #Variables[0xE003] = 1.0
-        #Variables[0xE004] = 1.0
-        #Variables[0xE005] = 1.0
-        #Variables[0xE00A] = 1.0
-        #Variables[0xE00D] = 1.0
-        #Variables[0xE00E] = 1.0
-        #Variables[0xE00F] = 1.0
-        #Variables[0xE010] = 1.0
-        #Variables[0xE011] = 1.0
-        #Variables[0xE012] = 1.0
-        #Variables[0xE013] = 1.0
+        Variables[0xE000] = int(settings[0][0])
+        Variables[0xE001] = int(settings[0][1])
+        Variables[0xE002] = int(settings[0][2])
+        Variables[0xE003] = int(settings[0][3])
+        Variables[0xE004] = int(settings[0][4])
+        Variables[0xE005] = int(settings[0][5])
+        Variables[0xE00A] = int(settings[0][6])
+        Variables[0xE00D] = int(settings[0][7])
+        Variables[0xE00E] = int(settings[0][8])
+        Variables[0xE00F] = int(settings[0][9])
+        Variables[0xE010] = int(settings[0][10])
+        Variables[0xE011] = int(settings[0][11])
+        Variables[0xE012] = int(settings[0][12])
+        Variables[0xE013] = int(settings[0][13])
+        Variables[0xE075] = int(settings[0][14])
+        Variables[0xC369] = int(settings[0][15])
+        Variables[0xCABF] = int(settings[0][16])
+        Variables[0xE0A0] = int(settings[0][17])
+        Variables[0xC343] = int(settings[0][18])
+        Variables[0xC344] = int(settings[0][19])
+        Variables[0xC345] = int(settings[0][20])
+        Variables[0xC346] = int(settings[0][21])
+        if settings[0][18] == 1.0 and settings[0][19] == 1.0 and settings[0][20] == 1.0 and settings[0][21] == 1.0:
+            Variables[0xE09F] = 1.0
+        Variables[0xC960] = int(settings[0][22])
+        Variables[0xC3B9] = int(settings[0][23])
+        Variables[0xB0F7] |= int(settings[0][24])
+        Variables[0xB0F7] |= int(settings[0][25])
+        Variables[0xB0F7] |= int(settings[0][26])
+        Variables[0xC47E] = int(settings[0][27])
         change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
@@ -383,10 +400,10 @@ def pack(input_folder, repack_data):
     @subroutine(subs=script.subroutines, hdr=script.header, init=True)
     def rock_pos(sub: Subroutine):
         sub.commands.extend(script.subroutines[0x6a].commands)
-        branch_if(Variables[0xC3B9], '!=', 0.0, 'label_0')
+        branch_if(Variables[0xC3B9], '!=', 0.0, 'label_1')
         emit_command(0x00B4, [0x0D, 0x00, 0x0339, 0x0000, 0x02E4])
 
-        label('label_0', manager=fevent_manager)
+        label('label_1', manager=fevent_manager)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Sets the script to look at the room where Mega Phil and Low reside
@@ -452,7 +469,7 @@ def pack(input_folder, repack_data):
     @subroutine(subs=script.subroutines, hdr=script.header)
     def defeat_all_bosses(sub: Subroutine):
         branch_if(Variables[0xCC28], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC0B5], '==', 0.0, 'label_0')
+        branch_if(Variables[0xCB07], '==', 0.0, 'label_0')
         branch_if(Variables[0xC92F], '==', 0.0, 'label_0')
         branch_if(Variables[0xC04C], '==', 0.0, 'label_0')
         branch_if(Variables[0xC367], '==', 0.0, 'label_0')

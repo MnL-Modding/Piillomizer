@@ -31,6 +31,8 @@ def get_room(id):
         return "Dreamy Dozing Sands"
     elif 0x0D2 <= id <= 0x0D6 or 0x161 <= id <= 0x182 or id == 0x1C9 or id == 0x1CA:
         return "Dreamy Driftwood Shores"
+    elif id == 0x106 or 0x10D <= id <= 0x134 or id == 0x12B or id == 0x12C or id == 0x1CF or id == 0x1E1 or id == 0x294 or id == 0x295:
+        return "Dreamy Wakeport"
     else:
         return "Unknown"
 
@@ -79,7 +81,7 @@ def is_available(logic, key):
         available = True
     return available
 
-def randomize_data(input_folder, stat_mult):
+def randomize_data(input_folder, stat_mult, settings):
     print("Initializing...")
     # Opens code.bin for enemy stat randomization
     code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
@@ -171,7 +173,7 @@ def randomize_data(input_folder, stat_mult):
 
     #Logic for bosses
     boss_logic = [[17, 14], [30, 15], [42, 15, 16, 17, 18, 19, 20, 21], [62, 23, 1, 4, 6, -1, 1, 5],
-                  [95, 15, 22, 5], [96, 15, 22, 5], [107, 15, 1, 2, 3, 5, 6], [108, 15, 1, 2, 3, 5, 6],]
+                  [95, 15, 22, 5], [96, 15, 22, 5], [107, 15, 1, 2, 4, 5, 6], [108, 15, 1, 2, 4, 5, 6],]
 
     #Logic for dream world bosses
     dream_boss_logic = [[23], [36, 15, 6], [52, 15, 22, 6], [79, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
@@ -204,10 +206,10 @@ def randomize_data(input_folder, stat_mult):
             for treasure_index, treasure in enumerate(itertools.batched(treasure_data, 12, strict=True)):
                 treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', bytes(treasure))
                 if (room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
-                        room != 0x054 and treasure_type != 0x16 and treasure_type != 0x17 and treasure_type != 0xC16 and treasure_type != 0xC17
+                        room != 0x054 and treasure_type % 0x100 != 0x16 and treasure_type % 0x100 != 0x17
                         and treasure_id != 157 and treasure_id != 161):
                     item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
-                    if room < 0x0D8:  # TODO
+                    if room < 0x10A:  # TODO
                         item_pool.append([treasure_type, item_id])
 
     #for item in item_locals:
@@ -281,7 +283,17 @@ def randomize_data(input_folder, stat_mult):
                   [464, 16, 17, 2, 6, -1, 16, 2, 5, 6], [450, 16, 17, 2, 6, -1, 16, 2, 5, 6], [486, 16, 17, 2, 6, -1, 16, 2, 5, 6], [512, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [513, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6],
                   [523, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [529, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [545, 16, 17, 18, 19, 20, 21, 6, 9, -1, 16, 5, 6, 9], [546, 16, 17, 18, 19, 20, 21, 6, 9, -1, 16, 5, 6, 9],
 
-                  [1243, 16, 24, 1, 3, 6], [1250, 16, 24, 1, 3, 6], [1251, 16, 24, 1, 3, 6], [1252, 16, 24, 1, 3, 6]]
+                  [1243, 16, 24, 1, 3, 6], [1250, 16, 24, 1, 3, 6], [1251, 16, 24, 1, 3, 6], [1252, 16, 24, 1, 3, 6], [184, 15, 6], [185, 15, 6], [186, 15, 6], [187, 15, 6], [188, 15, 6], [189, 15, 6], [191, 15, 6],
+                  [193, 15, 6], [195, 15, 6], [197, 15, 6], [199, 15, 6], [201, 15, 6], [203, 15, 6], [205, 15, 6], [207, 15, 6], [209, 15, 6], [211, 15, 6], [213, 15, 6], [215, 15, 6], [217, 15, 6], [219, 15, 6],
+                  [221, 15, 6], [223, 15, 6], [225, 15, 6], [227, 15, 6], [229, 15, 6], [231, 15, 6], [233, 15, 6], [235, 15, 6], [236, 15, 6], [237, 15, 6], [238, 15, 6], [245, 15, 6], [246, 15, 6],
+
+                  [568, 16, 17, 18, 19, 20, 21, 6, 9, -1, 16, 5, 6, 9], [569, 16, 17, 18, 19, 20, 21, 6, 9, -1, 16, 5, 6, 9], [577, 16, 4, 5, 6], [578, 16, 4, 5, 6], [579, 16, 4, 5, 6], [580, 16, 4, 5, 6],
+                  [581, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [582, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [583, 16, 17, 1, 6, -1, 16, 1, 5, 6], [584, 16, 17, 2, 6, -1, 16, 2, 5, 6], [585, 16, 17, 2, 6, -1, 16, 2, 5, 6],
+                  [861, 6, 7, 12, 13], [862, 6, 7, 12, 13], [2081, 15, 2, 4, 5, 6, 8],
+
+                  [1624, 1, 4, 5], [2404, 1, 4, 5], [315, 16, 17, 2, -1, 16, 2, 5], [316, 16, 17, 2, -1, 16, 2, 5], [317, 16, 17, 18, 19, 20, 21, 2, -1, 16, 2, 5], [318, 16, 5], [2396, 16, 4, 5], [2330, 16, 2, 4, 5],
+                  [323, 16, 4, 5], [324, 16, 4, 5], [325, 16, 4, 5], [326, 16, 4, 5], [1506, 15, 1], [1507, 15, 3], [1508, 15, 3, 5], [1509, 15, 5], [1510, 15, 2], [1533, 15, 16, 2, 4, 5, 6], [1534, 15, 16, 2, 4, 5, 6],
+                  [2337, 15, 16, 2, 4, 5, 6], [2338, 15, 16, 2, 4, 5, 6], [2339, 15, 16, 2, 4, 5, 6]]
 
     #for item in range(len(item_logic)):
     #    if item_locals[item][6] == item_logic[item][0]:
@@ -299,6 +311,13 @@ def randomize_data(input_folder, stat_mult):
 
     #Checked array for the key items
     key_item_check = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    #Removes items from the key item pool depending on the settings
+    for l in range(len(settings)):
+        if settings[0][l] == 1.0:
+            s = find_index_in_2d_list(key_item_pool, l)
+            key_item_check[s[0]] += 1
+            del key_item_pool[s[0]]
 
     #Creates an array with the key item logic
     key_item_logic = [[0x001, 15], [0x012, 15, 16], [-1], [0x06C, 0, 23, -1, 0, 5], [0x075, 0, 23, 3, 10, -1, 0, 5, 10],
@@ -764,6 +783,8 @@ def randomize_data(input_folder, stat_mult):
         room = 6
     elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shores":
         room = 12
+    elif get_room(rooms[-1][0]) == "Dreamy Wakeport":
+        room = 8
     else:
         room = 17
     if len(areas[room]) > 1:
@@ -829,6 +850,6 @@ def randomize_data(input_folder, stat_mult):
             room_name = hex(new_item_locals[s][0])
         spoiler_log.write(room_name + " " + check_type + " " + number + " - " + item + "\n")
 
-    randomize_repack.pack(input_folder, repack_data)
+    randomize_repack.pack(input_folder, repack_data, settings)
 
 #randomize_data(input_folder, stat_mult)
