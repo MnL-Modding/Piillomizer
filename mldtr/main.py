@@ -323,6 +323,8 @@ def main():
     window.category_check.place(x=180, y=195)
 
     #Buttons for the different ability options
+    window.key_label = ttk.Label(tabMain, text = "Key Items you want to EXCLUDE:")
+    window.key_label.place(x=150, y=20)
     window.hammer_check = ttk.Checkbutton(
         tabMain,
         text = "Hammers",

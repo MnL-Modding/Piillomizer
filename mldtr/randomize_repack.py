@@ -252,7 +252,7 @@ def pack(input_folder, repack_data, settings):
         Variables[0xCC54] = 1.0 #Prevents crash
         #Variables[0xCC63] = 1.0 #Been to deluxe shop in the Rose Broquet
         Variables[0xCC57] = 1.0 #Direct attention to statues
-        Variables[0xCC58] = 1.0 #MAJOR DISCOVERY!!!
+        #Variables[0xCC58] = 1.0 #MAJOR DISCOVERY!!!
         Variables[0xCC52] = 1.0 #First encounter inner tube
         Variables[0xCB41] = 1.0 #Seadrick dreampoint talked to him
         Variables[0xCB42] = 1.0 #Seadrick dreampoint allowed to leave
@@ -356,6 +356,9 @@ def pack(input_folder, repack_data, settings):
         Variables[0xB0F7] |= int(settings[0][25])
         Variables[0xB0F7] |= int(settings[0][26])
         Variables[0xC47E] = int(settings[0][27])
+        #Variables[0xE0AA] = 1.0
+        #Variables[0xE0BC] = 1.0
+        #Variables[0xE105] = 1.0
         change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
