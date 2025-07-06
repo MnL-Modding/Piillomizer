@@ -3,6 +3,7 @@ if '__compiled__' in globals():
     _dynamicscope_test_variable = False
 
 # Imports the necessary modules
+import sys
 import os
 import shutil
 import functools
@@ -13,6 +14,8 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo
+from mnllib.dt import determine_version_from_code_bin
+import random
 
 def get_folder(window):
     # Grabs a folder
@@ -97,14 +100,38 @@ def help():
 
 def randomize(window):
     #Moves the data to a copy of the folder
-    parent_folder = os.path.dirname(window.romfs) + "/"
-    if os.path.exists(parent_folder + "00040000000D5A00"):
-        copy_num = 0
-        while os.path.exists(parent_folder + "00040000000D5A00-seed" + str(copy_num)):
-            copy_num += 1
-        seed_folder = parent_folder + "00040000000D5A00-seed" + str(copy_num)
+    region = determine_version_from_code_bin(window.romfs + "/exefs/code.bin")
+    if region[0] == "E":
+        title_id = "00040000000D5A00"
+    elif region[0] == "P":
+        title_id = "00040000000D9000"
+    elif region[0] == "J":
+        title_id = "0004000000060600"
+    elif region[0] == "K":
+        title_id = ""
+    elif region[0] == "C":
+        title_id = ""
+    elif region[0] == "Y":
+        title_id = ""
+    elif region[0] == "W":
+        title_id = ""
+    elif region[0] == "C":
+        title_id = ""
+    elif region[0] == "A":
+        title_id = ""
     else:
-        seed_folder = parent_folder + "00040000000D5A00"
+        title_id = ""
+    parent_folder = os.path.dirname(window.romfs) + "/"
+
+    #Generates the seed
+    seed = random.randint(0, 0x10000000)
+
+    if os.path.exists(parent_folder + title_id):
+        while os.path.exists(parent_folder + title_id + "-seed" + str(seed)):
+            seed = random.randint(0, 0x10000000)
+        seed_folder = parent_folder + title_id + "-seed" + str(seed)
+    else:
+        seed_folder = parent_folder + title_id
     shutil.copytree(window.romfs, seed_folder)
     old_romfs = window.romfs
     window.romfs = seed_folder
@@ -140,10 +167,11 @@ def randomize(window):
     window.random_settings = [[window.key1.get(), window.key2.get(), window.key3.get(), window.key4.get(), window.key5.get(), window.key6.get(), window.key7.get(),
                                window.key8.get(), window.key9.get(), window.key10.get(), window.key11.get(), window.key12.get(), window.key13.get(), window.key14.get(),
                                window.key15.get(), window.key16.get(), window.key17.get(), window.key18.get(), window.key19.get(), window.key20.get(), window.key21.get(),
-                               window.key22.get(), window.key23.get(), window.key24.get(), window.key25.get(), window.key26.get(), window.key27.get(), window.key28.get()]]
+                               window.key22.get(), window.key23.get(), window.key24.get(), window.key25.get(), window.key26.get(), window.key27.get(), window.key28.get()],
+                              [window.mini_nerf.get(), 0, 0]]
 
     # Begins randomization
-    randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings)
+    randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed)
     if window.option.get() == 2:
         print("Randomizing custom music...")
         randomize_music.import_random(5, window.romfs, window.all_songs, window.categorize.get())
@@ -218,6 +246,7 @@ def main():
     window.key26 = tk.DoubleVar()
     window.key27 = tk.DoubleVar()
     window.key28 = tk.DoubleVar()
+    window.mini_nerf = tk.IntVar()
     #Creates tabs
     window.menu = ttk.Notebook(window)
     tabMain = ttk.Frame(window.menu)
@@ -576,6 +605,16 @@ def main():
         offvalue = 0.0,
     )
     window.neo_castle_check.place(x=359, y=200)
+
+    #Settings for the
+    window.mini_nerf_check = ttk.Checkbutton(
+        tabMain,
+        text = "Reduce Mini Mario Requirements",
+        variable = window.mini_nerf,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.mini_nerf_check.place(x=16, y=250)
 
     #Explains how the custom music categorization works
     window.category_info = ttk.Button(

@@ -62,7 +62,7 @@ def find_index_in_2d_list(arr, target_value):
                 return (row_index, col_index)
     return None  # Return None if the element is not found
 
-def is_available(logic, key):
+def is_available(logic, key, settings):
     #Sets up the variables to check the logic
     available = True
     was_true = False
@@ -81,8 +81,10 @@ def is_available(logic, key):
         available = True
     return available
 
-def randomize_data(input_folder, stat_mult, settings):
+def randomize_data(input_folder, stat_mult, settings, seed):
     print("Initializing...")
+    #Sets the seed to what it was in main
+    random.seed = seed
     # Opens code.bin for enemy stat randomization
     code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
     enemy_stats = load_enemy_stats(code_bin=code_bin_path)
@@ -209,7 +211,7 @@ def randomize_data(input_folder, stat_mult, settings):
                         room != 0x054 and treasure_type % 0x100 != 0x16 and treasure_type % 0x100 != 0x17
                         and treasure_id != 157 and treasure_id != 161):
                     item_locals.append([room, treasure_data_absolute_offset + treasure_index * 12, treasure_type, x, y, z, treasure_id])
-                    if room < 0x10A:  # TODO
+                    if room < 0x10D:  # TODO
                         item_pool.append([treasure_type, item_id])
 
     #for item in item_locals:
@@ -248,12 +250,14 @@ def randomize_data(input_folder, stat_mult, settings):
                   [1517, 15, 22, 2], [1518, 15, 22, 2], [1519, 15, 22], [1520, 15, 22, 2], [1521, 15, 22, 2], [1522, 15, 22, 1], [1523, 15, 22],
                   [1524, 15, 22, 1], [1525, 15, 22, 2], [1549, 15, 16, 1], [1550, 15, 16], [1551, 15, 16, 1], [1552, 15, 16, 2], [1527, 15, 22],
                   [1528, 15, 22], [1529, 15, 22], [1530, 15, 22], [1531, 15, 22], [1532, 15, 22], [1553, 15, 16, 1], [1554, 15, 16, 1, 3],
-                  [2331, 15, 16, 1, 3], [2332, 15, 16, 1, 3], [1562, 15, 16, 1, 3], [1539, 15, 22, 3], [1540, 15, 22], [1541, 15, 22], [1542, 15, 22],
-                  [1566, 15, 16, 1, 3], [1567, 15, 16, 1, 3], [1568, 15, 16, 1, 3], [1569, 15, 16, 1, 3], [1570, 15, 16, 1, 3, 5], [1571, 15, 16, 1, 2, 3],
+                  [2331, 15, 16, 1, 3], [2332, 15, 16, 1, 3], [1562, 15, 16, 1, 3], [1539, 15, 22, 3], [1540, 15, 22],
+                  [1541, 15, 22], [1542, 15, 22], [1566, 15, 16, 1, 3,], [1567, 15, 16, 1, 3], [1568, 15, 16, 1, 3],
+                  [1569, 15, 16, 1, 3], [1570, 15, 16, 1, 3, 5], [1571, 15, 16, 1, 2, 3],
                   [1572, 15, 16, 1, 2, 3], [1543, 15, 16, 1], [1544, 15, 16, 1], [1545, 15, 16, 1], [2398, 15, 16, 1], [2399, 15, 16],
-                  [1547, 15, 16], [1548, 15, 16, 2], [1555, 15, 16, 1, 4], [1556, 15, 16, 1, 4], [1557, 15, 16, 1, 2, 4], [2400, 15, 16, 1, 2, 4],
-                  [1558, 15, 16, 1, 3], [1559, 15, 16, 1, 3], [1560, 15, 16, 1, 2, 3], [1561, 15, 16, 1, 2, 3], [2401, 15, 16, 1, 2, 3],
-                  [1563, 15, 16, 1, 4, -1, 15, 16, 3, 5], [1564, 15, 16, 1, 4, -1, 15, 16, 3, 5], [1565, 15, 16, 1, 2, 4, -1, 15, 16, 2, 4, 5],
+                  [1547, 15, 16], [1548, 15, 16, 2], [1555, 15, 16, 1, 4], [1556, 15, 16, 1, 4], [1557, 15, 16, 1, 2, 4],
+                  [2400, 15, 16, 1, 2, 4], [1558, 15, 16, 1, 3], [1559, 15, 16, 1, 3], [1560, 15, 16, 1, 2, 3],
+                  [1561, 15, 16, 1, 2, 3], [2401, 15, 16, 1, 2, 3], [1563, 15, 16, 1, 4, -1, 15, 16, 3, 5],
+                  [1564, 15, 16, 1, 4, -1, 15, 16, 3, 5,], [1565, 15, 16, 1, 2, 4, -1, 15, 16, 2, 4, 5],
                   [988, 15, 16, 1, 2, 4, -1, 15, 16, 2, 3, 5],
 
                   [7], [8], [9], [10], [11], [12], [13], [14], [17], [18, 2], [19], [20, 2], [21, 2], [22, 2], [23, 2],
@@ -293,7 +297,8 @@ def randomize_data(input_folder, stat_mult, settings):
 
                   [1624, 1, 4, 5], [2404, 1, 4, 5], [315, 16, 17, 2, -1, 16, 2, 5], [316, 16, 17, 2, -1, 16, 2, 5], [317, 16, 17, 18, 19, 20, 21, 2, -1, 16, 2, 5], [318, 16, 5], [2396, 16, 4, 5], [2330, 16, 2, 4, 5],
                   [323, 16, 4, 5], [324, 16, 4, 5], [325, 16, 4, 5], [326, 16, 4, 5], [1506, 15, 1], [1507, 15, 3], [1508, 15, 3, 5], [1509, 15, 5], [1510, 15, 2], [1533, 15, 16, 2, 4, 5, 6], [1534, 15, 16, 2, 4, 5, 6],
-                  [2337, 15, 16, 2, 4, 5, 6], [2338, 15, 16, 2, 4, 5, 6], [2339, 15, 16, 2, 4, 5, 6]]
+                  [2337, 15, 16, 2, 4, 5, 6], [2338, 15, 16, 2, 4, 5, 6], [2339, 15, 16, 2, 4, 5, 6], [1535, 15, 16, 22, 2, 4, 5, 6], [1536, 15, 16, 22, 2, 4, 5, 6], [1625, 1, 4, 5], [1626, 1, 4, 5], [1627, 1, 4, 5],
+                  [1628, 2, 4, 5], [1629, 2, 4, 5]]
 
     #for item in range(len(item_logic)):
     #    if item_locals[item][6] == item_logic[item][0]:
@@ -365,7 +370,7 @@ def randomize_data(input_folder, stat_mult, settings):
         for i in range(item_logic_len):
             try:
                 if len(item_logic) > 0:
-                    if is_available(item_logic[i], key_item_check):
+                    if is_available(item_logic[i], key_item_check, settings):
                         rand_array = random.randint(0, 1)
                         if rand_array == 0 and len(item_pool) > 0:
                             #Code for randomizing blocks and bean spots with just eachother
@@ -396,7 +401,7 @@ def randomize_data(input_folder, stat_mult, settings):
             if len(key_item_logic) > 0:
                 try:
                     if key_item_info[i] > -1:
-                        if is_available(key_item_logic[i], key_item_check):
+                        if is_available(key_item_logic[i], key_item_check, settings):
                             rand_array = random.randint(0, 1)
                             if rand_array == 0 and len(item_pool) > 0:
                                 # Code for if a block or bean spot's contents are in an ability cutscene
@@ -431,7 +436,7 @@ def randomize_data(input_folder, stat_mult, settings):
             if len(attack_piece_logic) > 0:
                 try:
                     if attack_piece_info[i][0] > -1:
-                        if is_available(attack_piece_logic[i], key_item_check):
+                        if is_available(attack_piece_logic[i], key_item_check, settings):
                             rand_array = random.randint(0, 1)
                             if rand_array == 0 and len(item_pool) > 0:
                                 # Code for if a block or bean spot's contents are in an ability cutscene
@@ -482,7 +487,7 @@ def randomize_data(input_folder, stat_mult, settings):
 
                     # Code for putting key items in blocks and bean spots
                     nitem = random.randint(0, len(key_item_pool) - 1)
-                    while not is_available(logic_logic[key_item_pool[nitem][1]], key_item_check):
+                    while not is_available(logic_logic[key_item_pool[nitem][1]], key_item_check, settings):
                         nitem = random.randint(0, len(key_item_pool) - 1)
                     narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
                               item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
@@ -531,7 +536,7 @@ def randomize_data(input_folder, stat_mult, settings):
         for i in range(len(enemy_logic)):
             if len(enemy_logic) > 0:
                 try:
-                    if is_available(enemy_logic[i], key_item_check):
+                    if is_available(enemy_logic[i], key_item_check, settings):
                         temp = enemy_stats_rand[i]
                         for n in range(len(enemy_stats_rand[0])-1):
                             enemy_stats_rand[i][n+1] = enemy_stats_rand[0][n+1]
@@ -548,7 +553,7 @@ def randomize_data(input_folder, stat_mult, settings):
         for i in range(len(boss_logic)):
             if len(boss_logic) > 0:
                 try:
-                    if is_available(boss_logic[i], key_item_check):
+                    if is_available(boss_logic[i], key_item_check, settings):
                         temp = boss_stats_rand[i]
                         for n in range(len(boss_stats_rand[0])-1):
                             boss_stats_rand[i][n+1] = boss_stats_rand[0][n+1]
@@ -565,7 +570,7 @@ def randomize_data(input_folder, stat_mult, settings):
         for i in range(len(dream_enemy_logic)):
             if len(dream_enemy_logic) > 0:
                 try:
-                    if is_available(dream_enemy_logic[i], key_item_check):
+                    if is_available(dream_enemy_logic[i], key_item_check, settings):
                         temp = dream_enemy_stats_rand[i]
                         for n in range(len(dream_enemy_stats_rand[0])-1):
                             dream_enemy_stats_rand[i][n+1] = dream_enemy_stats_rand[0][n+1]
@@ -582,7 +587,7 @@ def randomize_data(input_folder, stat_mult, settings):
         for i in range(len(dream_boss_logic)):
             if len(dream_boss_logic) > 0:
                 try:
-                    if is_available(dream_boss_logic[i], key_item_check):
+                    if is_available(dream_boss_logic[i], key_item_check, settings):
                         temp = dream_boss_stats_rand[i]
                         for n in range(len(dream_boss_stats_rand[0])-1):
                             dream_boss_stats_rand[i][n+1] = dream_boss_stats_rand[0][n+1]
@@ -599,7 +604,7 @@ def randomize_data(input_folder, stat_mult, settings):
         for i in range(len(filler_logic)):
             if len(filler_logic) > 0:
                 try:
-                    if is_available(filler_logic[i], key_item_check):
+                    if is_available(filler_logic[i], key_item_check, settings):
                         temp = filler_stats_rand[i]
                         for n in range(len(filler_stats_rand[0])-1):
                             filler_stats_rand[i][n+1] = filler_stats_rand[0][n+1]
