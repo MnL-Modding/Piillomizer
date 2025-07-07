@@ -197,7 +197,7 @@ def credit():
 def main():
     # Create the window
     window = tk.Tk()
-    window.title("MLDT Randomizer")
+    window.title("Pi'illomizer")
     window.resizable(False, False)
     window.geometry("450x450")
 
