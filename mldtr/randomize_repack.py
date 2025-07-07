@@ -269,13 +269,14 @@ def pack(input_folder, repack_data, settings):
         Variables[0xC0A1] = 1.0 #Ultibed appears in pause menu
         Variables[0xC5CC] = 1.0 #You must find the Ultibed parts cutscene
         Variables[0xC438] = 1.0 #Ultibed cutscene in Mount Pajamaja is watched
+        Variables[0xC4AE] = 1.0 #Fixes a glitch in the rock code
         Variables[0xC304] = 1.0 #Spawns more rocks in Mushrise Park
         Variables[0xC9F5] = 1.0 #Boss Brickle ponders who can help him
         Variables[0xC9B2] = 1.0 #Ultibed in Mushrise Park start
         Variables[0xC9B3] = 1.0 #Ultibed in Mushrise Park start
         Variables[0xC9F3] = 1.0 #Guy lets you into a rock area
         Variables[0xC9F4] = 1.0 #Tree blocking other rock area is removed
-        Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
+        #Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
         #Variables[0xC9DA] = 1.0 #Something something chase the fiends
         Variables[0xC9DD] = 1.0 #Listened to the old coot vent
         Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
@@ -360,7 +361,7 @@ def pack(input_folder, repack_data, settings):
             Variables[0xE0AA] = 1.0
             Variables[0xE0BC] = 1.0
             Variables[0xE105] = 1.0
-        change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x0102, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -409,6 +410,8 @@ def pack(input_folder, repack_data, settings):
 
         label('label_1', manager=fevent_manager)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+    cast(SubroutineExt, script.subroutines[0x6b]).name = 'sub_0x6b'
+    script.subroutines[-1].commands[5] = CodeCommandWithOffsets(0x003, [0x01, PLACEHOLDER_OFFSET], offset_arguments = {1: 'sub_0x6b'})
 
     #Sets the script to look at the room where Mega Phil and Low reside
     script = fevent_manager.parsed_script(0x0068, 0)

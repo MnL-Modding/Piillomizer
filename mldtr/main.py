@@ -168,7 +168,7 @@ def randomize(window):
                                window.key8.get(), window.key9.get(), window.key10.get(), window.key11.get(), window.key12.get(), window.key13.get(), window.key14.get(),
                                window.key15.get(), window.key16.get(), window.key17.get(), window.key18.get(), window.key19.get(), window.key20.get(), window.key21.get(),
                                window.key22.get(), window.key23.get(), window.key24.get(), window.key25.get(), window.key26.get(), window.key27.get(), window.key28.get()],
-                              [window.mini_nerf.get(), 0, 0]]
+                              [window.mini_nerf.get(), window.ball_nerf.get(), 0]]
 
     # Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed)
@@ -247,6 +247,8 @@ def main():
     window.key27 = tk.DoubleVar()
     window.key28 = tk.DoubleVar()
     window.mini_nerf = tk.IntVar()
+    window.ball_nerf = tk.IntVar()
+
     #Creates tabs
     window.menu = ttk.Notebook(window)
     tabMain = ttk.Frame(window.menu)
@@ -615,6 +617,16 @@ def main():
         offvalue = 0
     )
     window.mini_nerf_check.place(x=16, y=250)
+
+    #Settings for the
+    window.ball_nerf_check = ttk.Checkbutton(
+        tabMain,
+        text = "Nerf Ball Hop",
+        variable = window.ball_nerf,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.ball_nerf_check.place(x=240, y=250)
 
     #Explains how the custom music categorization works
     window.category_info = ttk.Button(

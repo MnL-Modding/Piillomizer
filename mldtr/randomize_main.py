@@ -85,6 +85,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     print("Initializing...")
     #Sets the seed to what it was in main
     random.seed = seed
+
     # Opens code.bin for enemy stat randomization
     code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
     enemy_stats = load_enemy_stats(code_bin=code_bin_path)
@@ -194,8 +195,27 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     item_locals = []
     with (
         code_bin_path.open('rb') as code_bin,
-        fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('rb') as fmapdat,
+        fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('rb+') as fmapdat,
     ):
+        # Updates the collision for Nerfed Ball Hop
+        if settings[1][1] == 1:
+            fmapdat.seek(0x281A96C)
+            fmapdat.write(0x80.to_bytes())
+            fmapdat.seek(0x281A974)
+            fmapdat.write(0x80.to_bytes())
+            fmapdat.seek(0x281A97C)
+            fmapdat.write(0x80.to_bytes())
+            fmapdat.seek(0x281A984)
+            fmapdat.write(0x80.to_bytes())
+            fmapdat.seek(0x281A9A4)
+            fmapdat.write(0x80.to_bytes())
+            fmapdat.seek(0x281A9AC)
+            fmapdat.write(0x80.to_bytes())
+            fmapdat.seek(0x281A9B4)
+            fmapdat.write(0x80.to_bytes())
+            fmapdat.seek(0x281A9BC)
+            fmapdat.write(0x80.to_bytes())
+            fmapdat.seek(0)
         version_pair = determine_version_from_code_bin(code_bin)
         code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
         for room in range(NUMBER_OF_ROOMS):
@@ -664,7 +684,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     #Names for all the locations
     item_local_names = ["Entrance", "Hammer Room", "West Hammer Room", "River Rocks",
                         "Upper Attack Piece Room", "Lower Attack Piece Room", "Gate Room",
-                        "Fountain Room", "Lower Rock Room", "Right of Hammer Room", "Maintenance Hut", "Many Enemy Room",
+                        "Fountain Room", "Lower Rock Room", "Right of Hammer Room", "Right Rock Room", "Maintenance Hut", "Many Enemy Room",
                         "Early Hammer Room", "Outside", "Mushrise Treeboard Room", "Western Track Room",
                         "Drill Machine Tutorial Room", "Mini/Mole Mario Tutorial Room", "Middle Track Room", "Lower Track Room",
                         "Upper Track Room", "Early First Track Room", "Early Main Track Room", "Mini Mario Room",
