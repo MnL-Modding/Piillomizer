@@ -670,17 +670,17 @@ def pack(input_folder, repack_data, settings):
         if i[6] == 0xE00D:
             addon = "Luiginary Ball"
         if i[6] == 0xE00E:
-            addon = "Luiginary Stack High Jump"
+            addon = "Luiginary Stack Spring Jump"
         if i[6] == 0xE00F:
             addon = "Luiginary Stack Ground Pound"
         if i[6] == 0xE010:
             addon = "Luiginary Cone Jump"
         if i[6] == 0xE011:
-            addon = "Luiginary Cone Storm"
+            addon = "Luiginary Cone Tornado"
         if i[6] == 0xE012:
             addon = "Luiginary Ball Hookshot"
         if i[6] == 0xE013:
-            addon = "Luiginary Ball Throw"
+            addon = "Luiginary Ball Hammer"
         if i[6] == 0xE075:
             addon = "Deep Pi'illo Castle"
         if i[6] == 0xC369:
