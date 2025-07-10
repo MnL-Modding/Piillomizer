@@ -36,12 +36,12 @@ def fix_offsets(fmapdat, code_bin, room, new_len, spot):
                 if chunk_pos + chunk_len != chunk_next_pos[0] and c != 12:
                     new_chunk_pos = chunk_pos + chunk_len
                     if c == 11 and spot < 11:
-                        if room == 0x001:
-                            new_chunk_pos += 0x70
-                        elif room == 0x012:
-                            new_chunk_pos += 0x28
-                        elif room == 0x005:
-                            new_chunk_pos += 0x4C
+                        padding = 0
+                        fmapdat.seek(room_pos + chunk_pos)
+                        while int.from_bytes(fmapdat.read(1)) == 0:
+                            padding += 1
+                            fmapdat.seek(room_pos + chunk_pos + padding)
+                        new_chunk_pos += padding
                         if spot == 7:
                             room_len += new_len - old_len
                         else:
