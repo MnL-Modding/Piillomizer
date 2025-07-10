@@ -38,6 +38,10 @@ def fix_offsets(fmapdat, code_bin, room, new_len, spot):
                     if c == 11 and spot < 11:
                         if room == 0x001:
                             new_chunk_pos += 0x70
+                        elif room == 0x012:
+                            new_chunk_pos += 0x28
+                        elif room == 0x005:
+                            new_chunk_pos += 0x4C
                         if spot == 7:
                             room_len += new_len - old_len
                         else:

@@ -361,7 +361,7 @@ def pack(input_folder, repack_data, settings):
             Variables[0xE0AA] = 1.0
             Variables[0xE0BC] = 1.0
             Variables[0xE105] = 1.0
-        change_room(0x0004, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
