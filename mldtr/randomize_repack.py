@@ -361,7 +361,7 @@ def pack(input_folder, repack_data, settings):
             Variables[0xE0AA] = 1.0
             Variables[0xE0BC] = 1.0
             Variables[0xE105] = 1.0
-        change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x0004, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -542,7 +542,8 @@ def pack(input_folder, repack_data, settings):
             for a in range(len(script.header.actors)):
                 if script.header.actors[a][5] // 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
                     j.append([script.header.actors[a][0] % 0x10000, script.header.actors[a][0] // 0x10000, script.header.actors[a][1] % 0x10000, attack_dat[i]])
-                    set_actor_attribute(a, 0x5C, 0.0)
+                    set_actor_attribute(a, 0x00, 0.0)
+                    set_actor_attribute(a, 0x01, 0.0)
             call('init')
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
