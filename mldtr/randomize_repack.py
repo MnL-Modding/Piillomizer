@@ -400,18 +400,41 @@ def pack(input_folder, repack_data, settings):
 
     #Stops Massifs pushing rock cutscene from appearing
     script = fevent_manager.parsed_script(0x0067, 0)
+    if settings[1][1] == 1:
+        script.header.actors.append((0x0025027B, 0x000002E4, 0xFFFF000E, 0xFFFFFFFF, 0xFFFFFFFF, 0x01980143))
+        script.header.actors.append((0x000002BB, 0x000002E4, 0xFFFF000E, 0xFFFFFFFF, 0xFFFFFFFF, 0x01980143))
     cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
+    cast(SubroutineExt, script.subroutines[0x6b]).name = 'sub_0x6b'
+    cast(SubroutineExt, script.subroutines[0x6c]).name = 'sub_0x6c'
     script.header.init_subroutine = None
     @subroutine(subs=script.subroutines, hdr=script.header, init=True)
     def rock_pos(sub: Subroutine):
-        sub.commands.extend(script.subroutines[0x6a].commands)
+        set_blocked_buttons(Screen.TOP, ButtonFlags.ALL)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL)
+        set_movement_multipliers(Screen.TOP, 0.0, 0.0)
+        set_movement_multipliers(Screen.BOTTOM, 0.0, 0.0)
+        set_touches_blocked(True)
+        call('sub_0x6b')
+        branch_if(Variables[0xC369], '==', 1.0, 'label_0', invert=True)
+        branch_if(Variables[0xC961], '==', 0.0, 'label_0', invert=True)
+        branch_if(Variables[0xC4AE], '==', 0.0, 'sub_0x6c')
+
+        label('label_0', manager=fevent_manager)
+        tint_screen('00000000', initial='------FF', transition_duration=16)
+        set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
+        set_movement_multipliers(Screen.TOP, 1.0, 1.0)
+        set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
+        set_touches_blocked(False)
         branch_if(Variables[0xC3B9], '!=', 0.0, 'label_1')
         emit_command(0x00B4, [0x0D, 0x00, 0x0339, 0x0000, 0x02E4])
+        if settings[1][1] == 1:
+            emit_command(0x00B4, [len(script.header.actors)-2, 0x00, 0x0339, 0x0025, 0x02E4])
+            emit_command(0x00B4, [len(script.header.actors)-1, 0x00, 0x0379, 0x0000, 0x02E4])
 
         label('label_1', manager=fevent_manager)
+
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
-    cast(SubroutineExt, script.subroutines[0x6b]).name = 'sub_0x6b'
-    script.subroutines[-1].commands[5] = CodeCommandWithOffsets(0x003, [0x01, PLACEHOLDER_OFFSET], offset_arguments = {1: 'sub_0x6b'})
 
     #Sets the script to look at the room where Mega Phil and Low reside
     script = fevent_manager.parsed_script(0x0068, 0)

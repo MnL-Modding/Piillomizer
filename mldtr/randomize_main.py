@@ -3,10 +3,50 @@ import struct
 import random
 from mldtr import randomize_repack
 from mnllib.n3ds import fs_std_code_bin_path, fs_std_romfs_path
-from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_OF_ROOMS, determine_version_from_code_bin, load_enemy_stats, save_enemy_stats
+from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_OF_ROOMS, \
+    determine_version_from_code_bin, load_enemy_stats, save_enemy_stats, FEventScriptManager
+
 
 #input_folder = 'C:/Users/Dimit/AppData/Roaming/Azahar/load/mods/00040000000D5A00'
 #stat_mult = [5, 5]
+
+def fix_offsets(fmapdat, code_bin, room, new_len, spot):
+    do_once = False
+    version_pair = determine_version_from_code_bin(code_bin)
+    for i in range(0x317 - room):
+        r = room + i
+        code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + r*8)
+        room_pos, room_len = struct.unpack('<II', code_bin.read(4 * 2))
+        if not do_once:
+            do_once = True
+            room_len = 0x68
+            for c in range(13):
+                fmapdat.seek(room_pos + c*8)
+                chunk_pos, chunk_len = struct.unpack('<II', fmapdat.read(4 * 2))
+                chunk_next_pos = struct.unpack('<I', fmapdat.read(4))
+                if c == spot:
+                    fmapdat.seek(room_pos + c*8 + 4)
+                    fmapdat.write(new_len.to_bytes(4, "little"))
+                    chunk_len = new_len
+                room_len += chunk_len
+                if chunk_len == 0:
+                    room_len += chunk_next_pos[0] - chunk_pos
+                if chunk_pos + chunk_len != chunk_next_pos[0] and c != 12:
+                    new_chunk_pos = chunk_pos + chunk_len
+                    if c == 11 and spot < 11:
+                        new_chunk_pos += 0x70
+                        room_len += 12
+                    fmapdat.seek(room_pos + c*8 + 8)
+                    fmapdat.write(new_chunk_pos.to_bytes(4, "little"))
+        room_next_pos = struct.unpack('<I', code_bin.read(4))
+        code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 4 + r*8)
+        code_bin.write(room_len.to_bytes(4, "little"))
+        if r == NUMBER_OF_ROOMS:
+            room_len += 0x64
+        if r < 0x317 - 1 and room_pos + room_len != room_next_pos[0]:
+            room_next_pos = room_pos + room_len
+            code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 8 + r*8)
+            code_bin.write(room_next_pos.to_bytes(4, "little"))
 
 def get_room(id):
     if 0x000 <= id <= 0x00C or id == 0x00F or id == 0x018 or id == 0x1C8 or 0x050 <= id <= 0x055:
@@ -194,35 +234,74 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     # Creates an item_data array with all the blocks and bean spots
     item_locals = []
     with (
-        code_bin_path.open('rb') as code_bin,
+        code_bin_path.open('rb+') as code_bin,
         fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('rb+') as fmapdat,
     ):
         # Updates the collision for Nerfed Ball Hop
         if settings[1][1] == 1:
-            fmapdat.seek(0x281A96C)
-            fmapdat.write(0x80.to_bytes())
-            fmapdat.seek(0x281A974)
-            fmapdat.write(0x80.to_bytes())
-            fmapdat.seek(0x281A97C)
-            fmapdat.write(0x80.to_bytes())
-            fmapdat.seek(0x281A984)
-            fmapdat.write(0x80.to_bytes())
-            fmapdat.seek(0x281A9A4)
-            fmapdat.write(0x80.to_bytes())
-            fmapdat.seek(0x281A9AC)
-            fmapdat.write(0x80.to_bytes())
-            fmapdat.seek(0x281A9B4)
-            fmapdat.write(0x80.to_bytes())
-            fmapdat.seek(0x281A9BC)
-            fmapdat.write(0x80.to_bytes())
+            spot = [0x281A96C, 0x281A974, 0x281A97C, 0x281A984, 0x281A9A4, 0x281A9AC, 0x281A9B4, 0x281A9BC, 0x281AD24,
+                    0x281AD2C, 0x281AD34, 0x281AD3C, 0x2B92B10, 0x2B92B18, 0x2B92B20, 0x2B92B80, 0x2B92B88, 0x2B92B90,
+                    0x2B92BB8, 0x2B92BC0, 0x2B92BC8, 0x2B92BF0, 0x2B92BF8, 0x2B92C00, 0x2B92C08, 0x2B92C28, 0x2B92C30,
+                    0x2B92C38, 0x2B92C40, 0x2B92C60, 0x2B92C68, 0x2B92C70, 0x2B92C78, 0x2B92C98, 0x2B92CA0, 0x2B92CA8,
+                    0x2B92CB0, 0x2B92CD0, 0x2B92CD8, 0x2B92CE0, 0x2B92CE8, 0x2B92D08, 0x2B92D10, 0x2B92D18, 0x2B92D20,
+                    0x2B92D40, 0x2B92D48, 0x2B92D50, 0x2B92D58, 0x2B92F00, 0x2B92F08, 0x2B92F10, 0x2B93050, 0x2B93058,
+                    0x2B93060, 0x2B93068, 0x2B932B8, 0x2B932C0, 0x2B932C8, 0x2B932D0, 0x2B932F0, 0x2B932F8, 0x2B93300,
+                    0x2B93308, 0x2B93360, 0x2B93368, 0x2B93370, 0x2B93478, 0x2B93480, 0x2B93488, 0x2B93490, 0x2B934B0,
+                    0x2B934B8, 0x2B934C0, 0x2B934C8, 0x2B934E8, 0x2B934F0, 0x2B934F8, 0x2B93500, 0x2B93520, 0x2B93528,
+                    0x2B93530, 0x2B93538, 0x2B93558, 0x2B93560, 0x2B93568, 0x2B93570, 0x2B93590, 0x2B93598, 0x2B935A0,
+                    0x2B935A8, 0x2B936E0, 0x2B936E8, 0x2B936F0, 0x2B936F8, 0x2B93B08, 0x2B93B10, 0x2B93B18, 0x2B93B20]
+            for i in range(len(spot)):
+                fmapdat.seek(spot[i])
+                fmapdat.write(0x78.to_bytes())
+            #with open("Dozing Edit.bin", 'rb') as new_model:
+            #    fmapdat.seek(0)
+            #    temp = bytearray(fmapdat.read())
+            #    test = bytearray(new_model.read())
+            #    temp[0x281C898:0x281C898+0x72A7B] = (test[:0x72A7B])
+            #    temp[0x281C898+0x72A7B:0x281C898+0x72A7B] = test[0x72A7C:]
+            #    fmapdat.seek(0)
+            #    fmapdat.write(temp)
+            #    fix_offsets(fmapdat, code_bin, 0x5D, len(test), 12)
+            #del temp
+            #del test
             fmapdat.seek(0)
         version_pair = determine_version_from_code_bin(code_bin)
-        code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
+        block_id = 3000
         for room in range(NUMBER_OF_ROOMS):
+            code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + room*8)
             fmapdat_chunk_offset, fmapdat_chunk_len = struct.unpack('<II', code_bin.read(4 * 2))
             fmapdat.seek(fmapdat_chunk_offset + 7 * 4 * 2)
             treasure_data_offset, treasure_data_len = struct.unpack('<II', fmapdat.read(4 * 2))
             treasure_data_absolute_offset = fmapdat_chunk_offset + treasure_data_offset
+            if room == 0x001:
+                new_data = []
+                fevent_manager = FEventScriptManager(input_folder)
+                script = fevent_manager.parsed_script(room, 0)
+                fmapdat.seek(0)
+                temp = bytearray(fmapdat.read())
+                if room == 0x001:
+                    #Adds blocks in place of attack piece blocks and ability cutscenes
+                    fmapdat.seek(0)
+                    new_block = [0x10, 0x0, int(((script.header.triggers[4][0] % 0x10000) + (script.header.triggers[4][1] % 0x10000))/2),
+                                 script.header.triggers[4][5] % 0x10000,
+                                 int(((script.header.triggers[4][0] // 0x10000) + (script.header.triggers[4][1] // 0x10000)) / 2) - 0x20, block_id]
+                    block_id += 1
+                    for b in range(len(new_block)):
+                        temp[treasure_data_absolute_offset+b*2:treasure_data_absolute_offset+b*2] = new_block[b].to_bytes(2, "little")
+                    new_data.append([])
+                for a in range(len(script.header.actors)):
+                    if script.header.actors[a][5] // 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
+                        fmapdat.seek(0)
+                        new_block = [0x10, 0x0, script.header.actors[a][0] % 0x10000, script.header.actors[a][0] // 0x10000,
+                                     script.header.actors[a][0] % 0x10000, block_id]
+                        block_id += 1
+                        for b in range(len(new_block)):
+                            temp[treasure_data_absolute_offset+b:treasure_data_absolute_offset+b] = new_block[b].to_bytes(2, "little")
+                        new_data.append([])
+                fmapdat.write(temp)
+                fix_offsets(fmapdat, code_bin, room, len(new_data)*12 + treasure_data_len, 7)
+                fmapdat.seek(fmapdat_chunk_offset + 7 * 4 * 2)
+                treasure_data_offset, treasure_data_len = struct.unpack('<II', fmapdat.read(4 * 2))
             fmapdat.seek(treasure_data_absolute_offset)
             treasure_data = fmapdat.read(treasure_data_len)
             for treasure_index, treasure in enumerate(itertools.batched(treasure_data, 12, strict=True)):
@@ -239,7 +318,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     item_logic_chunk = [[], [], [], [], [], [], [], [], [], [], [], []]
     #Logic for every single block and bean spot (The numbers after the ID point to their spots in the ability info)
-    item_logic_chunk[0] = [[52, 15, 5], [53, 15, 5], [54, 15], [55, 15, 0, -1, 15, 5], [56, 15, 0], [57, 15, 0], [58, 15], [59, 15, 2], [60, 15, 2],
+    item_logic_chunk[0] = [[52, 15, 5], [53, 15, 5], [3000, 15], [54, 15], [55, 15, 0, -1, 15, 5], [56, 15, 0], [57, 15, 0], [58, 15], [59, 15, 2], [60, 15, 2],
                   [61, 15, 0, 2], [2388, 15, 2], [62, 15, 0], [63, 15, 0], [64, 15, 0], [65, 15, 0], [66, 15, 0], [67, 15, 2, 3, -1, 15, 2, 5],
                   [68, 15, 0], [69, 15, 0], [70, 15, 0], [71, 15, 0], [72, 15], [73, 15], [74, 15, 16, 1], [75, 15, 16, 2], [76, 15, 2], [77, 15, 2],
                   [78, 15, 0], [79, 15], [80, 15], [81, 15], [82, 15, 2], [83, 15, 2], [84, 15, 2], [85, 15, 2, 3, 0, 15, 2, 5], [86, 15, 4],
