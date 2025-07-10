@@ -292,7 +292,7 @@ def pack(input_folder, repack_data, settings):
         Variables[0xE00B] = 1.0 #Gives Luiginary stack
         Variables[0xE00C] = 1.0 #Gives Luiginary tornado (but none of its abilities)
         change_room(0x0298, position=(0.0, 0.0, 0.0), init_sub=-0x1, music=MusicFlag.FORCE_KEEP_CURRENT)
-        emit_command(0x0056, [0x01, 0x028D0026])  # Execute the command that was replaced with a call to this subroutine.
+        emit_command(0x001c, [0x01, 0x028D0026])  # Execute the command that was replaced with a call to this subroutine.
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
