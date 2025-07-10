@@ -13,7 +13,7 @@ from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_
 def fix_offsets(fmapdat, code_bin, room, new_len, spot):
     do_once = False
     version_pair = determine_version_from_code_bin(code_bin)
-    for i in range(0x317 - room):
+    for i in range(0x316 - room):
         r = room + i
         code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + r*8)
         room_pos, room_len = struct.unpack('<II', code_bin.read(4 * 2))
@@ -53,11 +53,15 @@ def fix_offsets(fmapdat, code_bin, room, new_len, spot):
         room_next_pos = struct.unpack('<I', code_bin.read(4))
         code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 4 + r*8)
         code_bin.write(room_len.to_bytes(4, "little"))
+        code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 0xD558 + 4 + r*8)
+        code_bin.write(room_len.to_bytes(4, "little"))
         if r == NUMBER_OF_ROOMS:
             room_len += 0x64
-        if r < 0x317 - 1 and room_pos + room_len != room_next_pos[0]:
+        if room_pos + room_len != room_next_pos[0]:
             room_next_pos = room_pos + room_len
             code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 8 + r*8)
+            code_bin.write(room_next_pos.to_bytes(4, "little"))
+            code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 0xD558 + 8 + r*8)
             code_bin.write(room_next_pos.to_bytes(4, "little"))
 
 def get_room(id):
@@ -356,9 +360,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 if room == 0x001:
                     #Adds blocks in place of attack piece blocks and ability cutscenes
                     fmapdat.seek(0)
-                    new_block = [0x10, 0x0, int(((script.header.triggers[4][0] % 0x10000) + (script.header.triggers[4][1] % 0x10000))/2),
-                                 script.header.triggers[4][5] % 0x10000,
-                                 int(((script.header.triggers[4][0] // 0x10000) + (script.header.triggers[4][1] // 0x10000)) / 2) - 0x20, block_id]
+                    new_block = [0x10, 0x0, int(((script.header.triggers[4][0] % 0x10000) + (script.header.triggers[4][1] % 0x10000))/2) - 0x20,
+                                 script.header.triggers[4][4] % 0x10000 + 0x55,
+                                 int(((script.header.triggers[4][0] // 0x10000) + (script.header.triggers[4][1] // 0x10000)) / 2), block_id]
                     block_id += 1
                     for b in range(len(new_block)):
                         temp[treasure_data_absolute_offset+b*2:treasure_data_absolute_offset+b*2] = new_block[b].to_bytes(2, "little")
