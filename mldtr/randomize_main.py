@@ -4,7 +4,8 @@ import random
 from mldtr import randomize_repack
 from mnllib.n3ds import fs_std_code_bin_path, fs_std_romfs_path
 from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_OF_ROOMS, \
-    determine_version_from_code_bin, load_enemy_stats, save_enemy_stats, FEventScriptManager
+    determine_version_from_code_bin, load_enemy_stats, save_enemy_stats, FEventScriptManager, \
+    FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS
 
 
 #input_folder = 'C:/Users/Dimit/AppData/Roaming/Azahar/load/mods/00040000000D5A00'
@@ -42,17 +43,17 @@ def fix_offsets(fmapdat, code_bin, room, new_len, spot):
                     fmapdat.seek(room_pos + c*8 + 8)
                     fmapdat.write(new_chunk_pos.to_bytes(4, "little"))
         room_next_pos = struct.unpack('<I', code_bin.read(4))
-        code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 4 + r*8)
+        code_bin.seek(FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 4 + r*8)
         code_bin.write(room_len.to_bytes(4, "little"))
-        code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 0xD558 + 4 + r*8)
+        code_bin.seek(FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 4 + r*8)
         code_bin.write(room_len.to_bytes(4, "little"))
         if r == NUMBER_OF_ROOMS:
             room_len += 0x64
         if room_pos + room_len != room_next_pos[0]:
             room_next_pos = room_pos + room_len
-            code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 8 + r*8)
+            code_bin.seek(FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 8 + r*8)
             code_bin.write(room_next_pos.to_bytes(4, "little"))
-            code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 0xD558 + 8 + r*8)
+            code_bin.seek(FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + 8 + r*8)
             code_bin.write(room_next_pos.to_bytes(4, "little"))
 
 def get_room(id):
@@ -337,7 +338,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         version_pair = determine_version_from_code_bin(code_bin)
         block_id = 3000
         for room in range(NUMBER_OF_ROOMS):
-            code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + room*8)
+            code_bin.seek(FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + room*8)
             fmapdat_chunk_offset, fmapdat_chunk_len = struct.unpack('<II', code_bin.read(4 * 2))
             fmapdat.seek(fmapdat_chunk_offset + 7 * 4 * 2)
             treasure_data_offset, treasure_data_len = struct.unpack('<II', fmapdat.read(4 * 2))

@@ -39,14 +39,14 @@ files = [
 
 [[package]]
 name = "mnllib"
-version = "0.2.2"
+version = "0.2.3"
 description = "Python library for the Mario & Luigi games."
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["main"]
 files = [
-    {file = "mnllib-0.2.2-py3-none-any.whl", hash = "sha256:30259c2bf84340cd056008377f3cf549b32d35f6f8e8f6e65c9f50d29d94f8f1"},
-    {file = "mnllib-0.2.2.tar.gz", hash = "sha256:c1a556da7a9a5908a5919ee38d43f48bfd9320727def9cac70029d9df62aa2b5"},
+    {file = "mnllib-0.2.3-py3-none-any.whl", hash = "sha256:ed43bdd51fe8b8e05b93c42eb15ef74a631253205cb6c4b2d525f3b9df149d6e"},
+    {file = "mnllib-0.2.3.tar.gz", hash = "sha256:c256b604b0d5d803270b10358858d47daa956fcba6ee21ffc6381130c46007e5"},
 ]
 
 [package.dependencies]
@@ -196,4 +196,4 @@ telegram = ["requests"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "37c6b8213b896976c8390f16daaa657701db6b0e00c12d02f0240411a20058f4"
+content-hash = "5dde5ec6a040ff562135753b91407bf92ca2bf442e9dc35ef95ec5d86517c751"

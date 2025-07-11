@@ -9,7 +9,7 @@ license = {text = "GPL-3.0-or-later"}
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
 dependencies = [
-    "mnllib (>=0.2.2,<0.3.0)",
+    "mnllib (>=0.2.3,<0.3.0)",
     "pymsbmnl (>=1.1.0,<2.0.0)",
     "mnlscript (>=0.2.5,<0.3.0)"
 ]
