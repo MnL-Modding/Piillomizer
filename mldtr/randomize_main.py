@@ -20,7 +20,6 @@ def fix_offsets(fmapdat, code_bin, room, new_len, spot):
         if not do_once:
             do_once = True
             room_len = 0x68
-            old_len = 0
             for c in range(13):
                 fmapdat.seek(room_pos + c*8)
                 chunk_pos, chunk_len = struct.unpack('<II', fmapdat.read(4 * 2))
@@ -28,26 +27,18 @@ def fix_offsets(fmapdat, code_bin, room, new_len, spot):
                 if c == spot:
                     fmapdat.seek(room_pos + c*8 + 4)
                     fmapdat.write(new_len.to_bytes(4, "little"))
-                    old_len = chunk_len
                     chunk_len = new_len
                 room_len += chunk_len
-                if chunk_len == 0:
-                    room_len += chunk_next_pos[0] - chunk_pos
                 if chunk_pos + chunk_len != chunk_next_pos[0] and c != 12:
                     new_chunk_pos = chunk_pos + chunk_len
-                    if c == 11 and spot < 11:
+                    if (c == 11 and spot < 11) or (c == 10 and chunk_len == 0):
                         padding = 0
                         fmapdat.seek(room_pos + chunk_pos)
                         while int.from_bytes(fmapdat.read(1)) == 0:
                             padding += 1
                             fmapdat.seek(room_pos + chunk_pos + padding)
                         new_chunk_pos += padding
-                        if spot == 7:
-                            room_len += new_len - old_len
-                            if room == 0x010 or room == 0x011:
-                                room_len += new_len - old_len
-                        else:
-                            room_len += 12
+                        room_len += padding
                     fmapdat.seek(room_pos + c*8 + 8)
                     fmapdat.write(new_chunk_pos.to_bytes(4, "little"))
         room_next_pos = struct.unpack('<I', code_bin.read(4))
@@ -351,7 +342,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             fmapdat.seek(fmapdat_chunk_offset + 7 * 4 * 2)
             treasure_data_offset, treasure_data_len = struct.unpack('<II', fmapdat.read(4 * 2))
             treasure_data_absolute_offset = fmapdat_chunk_offset + treasure_data_offset
-            if room == 0x001 or room == 0x004 or room == 0x005 or room == 0x010 or room == 0x011 or room == 0x012:
+            #print(room)
+            if (room == 0x001 or room == 0x004 or room == 0x005 or room == 0x010 or room == 0x011 or room == 0x012 or room == 0x013 or
+            room == 0x014 or room == 0x017 or room == 0x019 or room == 0x062):
                 new_data = []
                 fevent_manager = FEventScriptManager(input_folder)
                 script = fevent_manager.parsed_script(room, 0)
@@ -418,26 +411,35 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         item_logic_chunk[1] = [[253, 15, 16, 2], [3010, 15, 16, 1, 5], [3009, 15, 16, 17, 1, -1, 15, 16, 1, 5], [271, 15, 16, 17, 2, -1, 15, 16, 2, 5], [272, 15, 16, 17, 2, -1, 15, 16, 2, 5], [273, 15, 16, 17, 2, -1, 15, 16, 2, 5],
                   [274, 15, 16, 17, 2, -1, 15, 16, 2, 5], [275, 15, 16, 17, 2, -1, 15, 16, 2, 5], [3011, 15, 16, 17, 1, -1, 15, 16, 1, 5], [276, 15, 16, 17, 2, -1, 15, 16, 2, 5], [969, 15, 16, 17, 2, -1, 15, 16, 2, 5],
                   [277, 15, 16, 17, -1, 15, 16, 5], [278, 15, 16, 17, -1, 15, 16, 5], [3015, 15, 16, 2], [3014, 15, 16, 2], [3013, 15, 16, 2], [3012, 15, 16], [279, 15, 16, 2], [281, 15, 16, 2],
-                  [282, 15, 16, 1], [283, 15, 16, 17, -1, 15, 16, 5], [284, 15, 16, 2], [285, 15, 16, 17, 2, -1, 15, 16, 2, 5], [286, 15, 16, 17, 2, -1, 15, 16, 2, 5],
+                  [282, 15, 16, 1], [283, 15, 16, 17, -1, 15, 16, 5], [284, 15, 16, 2], [3017, 15, 16, 17, 1, -1, 15, 16, 1, 5], [3016, 15, 16, 17, 1, -1, 15, 16, 1, 5],
+                  [285, 15, 16, 17, 2, -1, 15, 16, 2, 5], [286, 15, 16, 17, 2, -1, 15, 16, 2, 5],
                   [287, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [288, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5],
                   [289, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [290, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5],
-                  [291, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [292, 15, 16, 17, 2, -1, 15, 16, 2, 5],
+                  [291, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [3019, 15, 16, 17, 1, -1, 15, 16, 1, 5], [3018, 15, 16, 17, 1, -1, 15, 16, 1, 5], [292, 15, 16, 17, 2, -1, 15, 16, 2, 5],
                   [293, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [294, 15, 16, 17, 2, -1, 15, 16, 2, 5],
                   [295, 15, 16, 17, 2, -1, 15, 16, 2, 5], [296, 15, 16, 17, 2, -1, 15, 16, 2, 5], [2373, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5],
-                  [303, 15, 16, 17, 1, -1, 15, 16, 1, 5], [304, 15, 16, 17, 1, -1, 15, 16, 1, 5],
-                  [305, 15, 16, 17, 1, -1, 15, 16, 1, 5], [306, 15, 16, 17, 1, -1, 15, 16, 1, 5]]
+                  [3021, 15, 16, 17, 1, -1, 15, 16, 1, 5], [3020, 15, 16, 17, 1, -1, 15, 16, 1, 5], [303, 15, 16, 17, 1, -1, 15, 16, 1, 5], [304, 15, 16, 17, 1, -1, 15, 16, 1, 5],
+                  [305, 15, 16, 17, 1, -1, 15, 16, 1, 5], [306, 15, 16, 17, 1, -1, 15, 16, 1, 5],
+                  [115, 15, 0], [116, 15, 0, 5], [3024, 15, 16, 17, 1, -1, 15, 16, 1, 5], [3023, 15, 16, 17, 1, -1, 15, 16, 1, 5],
+                  [3022, 15, 16, 17, 1, -1, 15, 16, 1, 5], [307, 15, 16, 17, 2, -1, 15, 16, 2, 5],
+                  [308, 15, 16, 1, 5, -1, 15, 16, 2, 5], [309, 15, 16, 17, 2, -1, 15, 16, 2, 5],
+                  [310, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5],
+                  [311, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5],
+                  [312, 15, 16, 17, 1, -1, 15, 16, 1, 5], [2374, 15, 16, 1, 5, -1, 15, 16, 2, 5],
+                  [313, 15, 16, 3, 5], [314, 15, 16, 3, 5], [15], [16, 2]]
     else:
         item_logic_chunk[1] = [[253, 15, 16, 2], [3010, 15, 16, 17, 1, 5], [3009, 15, 16, 17, 1], [271, 15, 16, 17, 2], [272, 15, 16, 17, 2], [273, 15, 16, 17, 2],
                       [274, 15, 16, 17, 2], [275, 15, 16, 17, 2], [3011, 15, 16, 17, 1], [276, 15, 16, 17, 2], [969, 15, 16, 17, 2],
                       [277, 15, 16, 17], [278, 15, 16, 17], [3015, 15, 16, 2], [3014, 15, 16, 2], [3013, 15, 16, 2], [3012, 15, 16],
-                      [279, 15, 16, 2], [281, 15, 16, 2], [282, 15, 16, 1], [283, 15, 16, 17],
-                      [284, 15, 16, 2], [285, 15, 16, 17, 2], [286, 15, 16, 17, 2], [287, 15, 16, 17, 1], [288, 15, 16, 17, 1],
-                      [289, 15, 16, 17, 1], [290, 15, 16, 17, 1], [291, 15, 16, 17, 1], [292, 15, 16, 17, 2],
-                      [293, 15, 16, 17, 1], [294, 15, 16, 17, 2], [295, 15, 16, 17, 2], [296, 15, 16, 17, 2], [2373, 15, 16, 17, 1],
+                      [279, 15, 16, 2], [281, 15, 16, 2], [282, 15, 16, 1], [283, 15, 16, 17], [284, 15, 16, 2], [3017, 15, 16, 17, 1], [3016, 15, 16, 17, 1],
+                      [285, 15, 16, 17, 2], [286, 15, 16, 17, 2], [287, 15, 16, 17, 1], [288, 15, 16, 17, 1],
+                      [289, 15, 16, 17, 1], [290, 15, 16, 17, 1], [291, 15, 16, 17, 1], [3019, 15, 16, 17, 1], [3018, 15, 16, 17, 1], [292, 15, 16, 17, 2],
+                      [293, 15, 16, 17, 1], [294, 15, 16, 17, 2], [295, 15, 16, 17, 2], [296, 15, 16, 17, 2], [2373, 15, 16, 17, 1], [3021, 15, 16, 17, 1], [3020, 15, 16, 17, 1],
                       [303, 15, 16, 17, 1], [304, 15, 16, 17, 1], [305, 15, 16, 17, 1], [306, 15, 16, 17, 1],
-                      [115, 15, 0], [116, 15, 0, 3], [307, 15, 16, 17, 2, -1, 15, 16, 2, 5], [308, 15, 16, 1, 5, -1, 15, 16, 2, 5], [309, 15, 16, 17, 2, -1, 15, 16, 2, 5],
-                      [310, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5], [311, 15, 16, 17, 2, -1, 15, 16, 2, 5, -1, 15, 16, 17, 1, -1, 15, 16, 1, 5],
-                      [312, 15, 16, 17, 1, -1, 15, 16, 1, 5], [2374, 15, 16, 1, 5, -1, 15, 16, 2, 5], [313, 15, 16, 3, 5], [314, 15, 16, 3, 5], [15], [16, 2]]
+                      [115, 15, 0], [116, 15, 0, 5], [3024, 15, 16, 17, 1], [3023, 15, 16, 17, 1], [3022, 15, 16, 17, 1], [307, 15, 16, 17, 2],
+                      [308, 15, 16, 17, 1, 5, -1, 15, 16, 17, 2, 5], [309, 15, 16, 17, 2],
+                      [310, 15, 16, 17, 2, -1, 15, 16, 17, 1], [311, 15, 16, 17, 2, -1, 15, 16, 17, 1],
+                      [312, 15, 16, 17, 1], [2374, 15, 16, 17, 1, 5, -1, 15, 16, 17, 2, 5], [313, 15, 16, 17, 3, 5], [314, 15, 16, 17, 3, 5], [15], [16, 2]]
 
     item_logic_chunk[2] = [[119, 15, 6], [121, 15, 6], [123, 15, 6], [125, 15, 6], [127, 15, 6], [129, 15, 6], [131, 15, 6], [132, 15, 6], [2392, 15, 6],
                   [141, 15, 6], [142, 15, 6], [2393, 15, 6], [144, 15, 6], [145, 15, 6], [146, 15, 6], [147, 15, 6], [152, 15, 6], [2394, 15, 6], [2395, 15, 6], [151, 15, 6]]
@@ -481,12 +483,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     if settings[1][1] != 1:
         item_logic_chunk[5] = [[254, 15, 16, 2], [255, 15, 16, 17, 18, 19, 20, 21, 1, 2, -1, 15, 16, 5], [256, 15, 16], [257, 15, 16], [258, 15, 16],
                   [259, 15, 16, 17, 2, -1, 15, 16, 2, 5], [260, 15, 16, 17, -1, 15, 16, 5], [261, 15, 16, 5], [262, 15, 16, 5],
-                  [263, 15, 16, 2, 5], [264, 15, 16, 2, 5], [268, 15, 16, 2], [269, 15, 16], [270, 15, 16],]
+                  [263, 15, 16, 2, 5], [264, 15, 16, 2, 5], [3025, 15, 16], [268, 15, 16, 2], [269, 15, 16], [270, 15, 16],]
     else:
-        item_logic_chunk[5] = [[254, 15, 16, 2], [255, 15, 16, 17, 18, 19, 20, 21, 1], [256, 15, 16], [257, 15, 16],
-                      [258, 15, 16],
+        item_logic_chunk[5] = [[254, 15, 16, 2], [255, 15, 16, 17, 18, 19, 20, 21, 1], [256, 15, 16], [257, 15, 16], [258, 15, 16],
                       [259, 15, 16, 17, 2], [260, 15, 16, 17], [261, 15, 16, 5], [262, 15, 16, 5],
-                      [263, 15, 16, 2, 5], [264, 15, 16, 2, 5], [268, 15, 16, 2], [269, 15, 16], [270, 15, 16],]
+                      [263, 15, 16, 2, 5], [264, 15, 16, 2, 5], [3025, 15, 16], [268, 15, 16, 2], [269, 15, 16], [270, 15, 16],]
 
     if settings[1][0] != 1 and settings[1][1] != 1:
         item_logic_chunk[6] = [[1573, 1], [1574, 1], [1575, 1], [1576, 23, 1, -1, 1, 5], [1577, 23, 1, -1, 1, 5], [1578, 23, 1, 3, -1, 1, 5], [1579, 23, 1, 2, 3, -1, 1, 2, 3, 5],
@@ -633,19 +634,12 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       [0x0B6, 15, 16, 17, 2, -1, 15, 16, 2, 5], [0x0B7, 15, 16, 17, 1, -1, 15, 16, 1, 5, -1, 15, 16, 17, 2, -1, 15, 16, 2, 5],
                       [-1], [-1], [0x177, 15, 16, 1, 2, 4, 6], [0x17A, 15, 16, 1, 4, 6], [0x17D, 15, 16, 1, 4, 6], [-1]]
 
-    #Creates an array with the attack piece info
-    attack_piece_info = [[0x0130], [0x0140], [0x0170], [0x0190], [0x0191], [0x0620]]
-
-    attack_piece_logic = [[0x0130, 16, 17, 1, -1, 16, 1, 5],
-                          [0x0140, 16, 17, 1, -1, 16, 1, 5], [0x0170, 16, 17, 1, -1, 16, 1, 5], [0x0171, 16, 17, 1, -1, 16, 1, 5],
-                          [0x0190, 16, 17, 1, -1, 16, 1, 5], [0x0191, 16, 17, 1, -1, 16, 1, 5], [0x0620, 16]]
-
     #Creates an item pool with the attack pieces
-    attack_piece_pool = [[0x01, 0xB030], [0x02, 0xB030], [0x04, 0xB030], [0x08, 0xB030], [0x10, 0xB030], [0x01, 0xB031],
-                         [0x02, 0xB031], [0x04, 0xB031], [0x08, 0xB031], [0x10, 0xB031], [0x01, 0xB059], [0x02, 0xB059],
+    attack_piece_pool = [[[0x01, 0xB030], [0x02, 0xB030], [0x04, 0xB030], [0x08, 0xB030], [0x10, 0xB030], [0x01, 0xB031],
+                         [0x02, 0xB031], [0x04, 0xB031], [0x08, 0xB031], [0x10, 0xB031]], [[0x01, 0xB059], [0x02, 0xB059],
                          [0x04, 0xB059], [0x08, 0xB059], [0x10, 0xB059], [0x01, 0xB05A], [0x02, 0xB05A], [0x04, 0xB05A],
-                         [0x08, 0xB05A], [0x10, 0xB05A], [0x01, 0xB037], [0x02, 0xB037], [0x04, 0xB037], [0x08, 0xB037],
-                         [0x10, 0xB037], [0x01, 0xB038], [0x02, 0xB038], [0x04, 0xB038], [0x08, 0xB038], [0x10, 0xB038]]
+                         [0x08, 0xB05A], [0x10, 0xB05A]], [[0x01, 0xB037], [0x02, 0xB037], [0x04, 0xB037], [0x08, 0xB037],
+                         [0x10, 0xB037], [0x01, 0xB038], [0x02, 0xB038], [0x04, 0xB038], [0x08, 0xB038], [0x10, 0xB038]]]
 
     #Logic for the key items, so they only spawn when others are already in the pool
     logic_logic = [[0], [1, 0], [2, 1], [3], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5], [6, 15, -1, 23, 1, 3], [7, 6], [8, 6], [9, 6], [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10],
@@ -661,6 +655,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     attackcut = 0
     key_item_pool_checked = []
     new_enemy_stats = []
+    attack = random.randint(0, len(attack_piece_pool) - 1)
 
     while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
         prevlen = len(item_pool) + len(key_item_pool) + len(attack_piece_pool)
@@ -681,15 +676,19 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             del item_logic[i]
                         elif len(attack_piece_pool) > 0:
                             #Code for putting attacks in blocks and bean spots
-                            nitem = random.randint(0, len(attack_piece_pool) - 1)
+                            if len(attack_piece_pool[attack]) == 0:
+                                del attack_piece_pool[attack]
+                                if len(attack_piece_pool) > 0:
+                                    attack = random.randint(0, len(attack_piece_pool) - 1)
+                            nitem = random.randint(0, len(attack_piece_pool[attack]) - 1)
                             narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
                                     item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                             new_item_locals.append(narray)
                             spottype = get_spot_type(item_locals[i])
                             repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6] + 0xD000,
-                                                attack_piece_pool[nitem][1], attack_piece_pool[nitem][0], 0xCD20 + attackcut])
+                                                attack_piece_pool[attack][nitem][1], attack_piece_pool[attack][nitem][0], 0xCD20 + attackcut])
                             attackcut += 1
-                            del attack_piece_pool[nitem]
+                            del attack_piece_pool[attack][nitem]
                             del item_locals[i]
                             del item_logic[i]
                         i -= 1
@@ -719,49 +718,17 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 del key_item_logic[i]
                             elif len(attack_piece_pool) > 0:
                                 # Code for if an attack is in an ability cutscene
-                                nitem = random.randint(0, len(attack_piece_pool) - 1)
+                                if len(attack_piece_pool[attack]) == 0:
+                                    del attack_piece_pool[attack]
+                                    attack = random.randint(0, len(attack_piece_pool) - 1)
+                                nitem = random.randint(0, len(attack_piece_pool[attack]) - 1)
                                 repack_data.append(
-                                    [6, key_item_info[i], 0, 0, 0, 0xCD20 + attackcut, attack_piece_pool[nitem][1],
-                                     attack_piece_pool[nitem][0], 0xCD20 + attackcut])
+                                    [6, key_item_info[i], 0, 0, 0, 0xCD20 + attackcut, attack_piece_pool[attack][nitem][1],
+                                     attack_piece_pool[attack][nitem][0], 0xCD20 + attackcut])
                                 attackcut += 1
-                                del attack_piece_pool[nitem]
+                                del attack_piece_pool[attack][nitem]
                                 del key_item_info[i]
                                 del key_item_logic[i]
-                            i -= 1
-                except IndexError:
-                    break
-        for i in range(len(attack_piece_logic)):
-            if len(attack_piece_logic) > 0:
-                try:
-                    if attack_piece_info[i][0] > -1:
-                        if is_available(attack_piece_logic[i], key_item_check, settings):
-                            rand_array = random.randint(0, 1)
-                            if rand_array == 0 and len(item_pool) > 0:
-                                # Code for if a block or bean spot's contents are in an ability cutscene
-                                nitem = random.randint(0, len(item_pool) - 1)
-                                if (item_pool[nitem][1] != 0x0000 and item_pool[nitem][1] != 0x0002 and
-                                        item_pool[nitem][1] != 0x0004 and item_pool[nitem][1] != 0x0006 and item_pool[nitem][1] != 0x0008):
-                                    repack_data.append(
-                                        [get_spot_type(attack_piece_info[i]), attack_piece_info[i][0] // 0x10, 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1],
-                                         0xCDA0 + itemcut, attack_piece_info[i][0] % 0x10])
-                                else:
-                                    repack_data.append(
-                                        [get_spot_type(attack_piece_info[i]), attack_piece_info[i][0] // 0x10, 0, 0, 0, 0xCDA0 + itemcut, item_pool[nitem][1], 1 + 9 * (item_pool[nitem][0] // 0xA0 % 2),
-                                         0xCDA0 + itemcut, attack_piece_info[i][0] % 0x10])
-                                itemcut += 1
-                                del item_pool[nitem]
-                                del attack_piece_info[i]
-                                del attack_piece_logic[i]
-                            elif len(attack_piece_pool) > 0:
-                                # Code for if an attack is in an ability cutscene
-                                nitem = random.randint(0, len(attack_piece_pool) - 1)
-                                repack_data.append(
-                                    [get_spot_type(attack_piece_info[i]), attack_piece_info[i][0] // 0x10, 0, 0, 0, 0xCD20 + attackcut, attack_piece_pool[nitem][1],
-                                     attack_piece_pool[nitem][0], 0xCD20 + attackcut, attack_piece_info[i][0] % 0x10])
-                                attackcut += 1
-                                del attack_piece_pool[nitem]
-                                del attack_piece_info[i]
-                                del attack_piece_logic[i]
                             i -= 1
                 except IndexError:
                     break
