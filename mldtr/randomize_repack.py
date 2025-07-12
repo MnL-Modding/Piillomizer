@@ -748,7 +748,9 @@ def pack(input_folder, repack_data, settings):
                 actor += 1
         @subroutine(subs=script.subroutines, hdr=script.header)
         def get_item(sub: Subroutine):
-            if i[5] < 0xC000 or i[5] > 0xCFFF:
+            if i[0] == 0:
+                set_actor_attribute(len(script.header.actors), 0x30, 0.0)
+            if (i[5] < 0xC000 or i[5] > 0xCFFF) and i[0] != 0:
                 branch_if(Variables[i[5]], '==', 0.0, 'label_0')
             if i[6] > 0xC000:
                 branch_if(Variables[i[6]], '==', 1.0, 'label_0')
@@ -856,13 +858,13 @@ def pack(input_folder, repack_data, settings):
 
         if i[-1] > 10:
             if i[0] == 0:
-                #Updates triggers if it's an overworld block
-                if i[3] > 0x55:
-                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] - 0x40) * 0x10000) + (i[3] - 0x56), len(script.subroutines) - 1, 0x00078022))
-                else:
-                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] - 0x40) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+                #Updates actors if it's an overworld block
+                try:
+                    sprite_index = script.header.sprite_groups.index(0x0000)
+                except ValueError:
+                    script.header.sprite_groups.append(0x0000)
+                    sprite_index = len(script.header.sprite_groups) - 1
+                script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
             elif i[0] == 5:
                 #Updates triggers if it's a bean spot
                 if i[3] > 0:
@@ -871,35 +873,6 @@ def pack(input_folder, repack_data, settings):
                 else:
                     script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
                                                    ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
-            elif i[0] == 1:
-                #Updates triggers if it's a regular dream world block
-                if i[3] - 0x92 < 0:
-                    i[3] = 0xFFFF + (i[3] - 0x92)
-                script.header.triggers.append(((0xFFF00000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] - 0x80) * 0x10000) + (i[3] - 0x97), len(script.subroutines) - 1, 0x00078022))
-            elif i[0] == 2 or i[0] == 8 or i[0] == 9:
-                #Updates triggers if it's a rotated dream world block
-                if i[0] == 2:
-                    script.header.triggers.append(((0xFFF00000 + (i[2])-0x56), ((i[4]+0x10)*0x10000 + (i[2])-0x40), 0x00000000, 0x00000000,
-                                                   ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
-                elif i[0] == 8:
-                    script.header.triggers.append(((0xFFF00000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] + 0x56) * 0x10000) + (i[3] + 0x40), len(script.subroutines) - 1, 0x00078022))
-                else:
-                    script.header.triggers.append(((0xFFF00000 + (i[2])+0x40), ((i[4]+0x10)*0x10000 + (i[2])+0x56), 0x00000000, 0x00000000,
-                                                    ((i[3] - 0x10) * 0x10000) + (i[3] + 0x10), len(script.subroutines) - 1, 0x00078022))
-            elif i[0] == 3:
-                #Updates the trigger if it's a mini mario block
-                if i[3] > 0x46:
-                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] - 0x31) * 0x10000) + (i[3] - 0x47), len(script.subroutines) - 1, 0x00078022))
-                else:
-                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] - 0x31) * 0x10000), len(script.subroutines) - 1, 0x00078022))
-            elif i[0] == 4:
-                #Updates the trigger if it's a high up dream world block
-                script.header.triggers.append((((i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                               ((i[3] - 0x4F) * 0x10000) + (i[3] - 0x65), len(script.subroutines) - 1, 0x00078022))
             else:
                 if i[1] == 0x001:
                     script.header.triggers[4] = cast(tuple[int, int, int, int, int, int, int],

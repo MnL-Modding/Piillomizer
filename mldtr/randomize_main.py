@@ -11,16 +11,17 @@ from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_
 #input_folder = 'C:/Users/Dimit/AppData/Roaming/Azahar/load/mods/00040000000D5A00'
 #stat_mult = [5, 5]
 
-def fix_offsets(fmapdat, code_bin, room, new_len, spot):
+def fix_offsets(fmapdat, code_bin, room, new_len, spot, next_room):
     do_once = False
     version_pair = determine_version_from_code_bin(code_bin)
-    for i in range(0x316 - room):
+    for i in range(next_room - room):
         r = room + i
         code_bin.seek(FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + r*8)
         room_pos, room_len = struct.unpack('<II', code_bin.read(4 * 2))
         if not do_once:
             do_once = True
             room_len = 0x68
+            old_len = 0
             for c in range(13):
                 fmapdat.seek(room_pos + c*8)
                 chunk_pos, chunk_len = struct.unpack('<II', fmapdat.read(4 * 2))
@@ -28,18 +29,24 @@ def fix_offsets(fmapdat, code_bin, room, new_len, spot):
                 if c == spot:
                     fmapdat.seek(room_pos + c*8 + 4)
                     fmapdat.write(new_len.to_bytes(4, "little"))
+                    old_len = chunk_len
                     chunk_len = new_len
                 room_len += chunk_len
+                if (chunk_len == 0 or c == 11) and chunk_next_pos[0] - chunk_pos + (old_len - new_len) != 0:
+                    padding = 0
+                    fmapdat.seek(room_pos + chunk_pos + chunk_len)
+                    chunk_type = int.from_bytes(fmapdat.read(1))
+                    while chunk_type == 0 or (chunk_type == 0xFF and c == 11):
+                        padding += 1
+                        fmapdat.seek(room_pos + chunk_pos + chunk_len + padding)
+                        chunk_type = int.from_bytes(fmapdat.read(1))
+                    if padding % 4 != 2 or c > 7:
+                        chunk_len += padding
+                        room_len += padding
+                    else:
+                        test = 0
                 if chunk_pos + chunk_len != chunk_next_pos[0] and c != 12:
                     new_chunk_pos = chunk_pos + chunk_len
-                    if (c == 11 and spot < 11) or (c == 10 and chunk_len == 0):
-                        padding = 0
-                        fmapdat.seek(room_pos + chunk_pos)
-                        while int.from_bytes(fmapdat.read(1)) == 0:
-                            padding += 1
-                            fmapdat.seek(room_pos + chunk_pos + padding)
-                        new_chunk_pos += padding
-                        room_len += padding
                     fmapdat.seek(room_pos + c*8 + 8)
                     fmapdat.write(new_chunk_pos.to_bytes(4, "little"))
         room_next_pos = struct.unpack('<I', code_bin.read(4))
@@ -85,23 +92,9 @@ def get_room(id):
         return "Unknown"
 
 def get_spot_type(spot):
-    if len(spot) > 1:
-        if spot[2] == 0x0012 or spot[2] == 0x0013:
-            return 5
-        elif spot[-2] == 0:
-            return 1
-        elif (spot[-1] == 74 or spot[-1] == 282 or spot[-1] == 312 or (303 <= spot[-1] <= 306) or
-              spot[-1] == 312 or  spot[-1] == 1522 or spot[-1] == 1524 or
-              spot[-1] == 1581 or (1543 <= spot[-1] <= 1545) or spot[-1] == 1549 or
-              spot[-1] == 1567 or (1673 <= spot[-1] <= 1675) or spot[-1] == 2125 or
-              spot[-1] == 2398):
-            return 3
-        return 0
-    else:
-        if spot[0] // 0x10 == 0x012 or spot[0] // 0x10 == 0x017 or (spot[0] // 0x10 == 0x019 and spot[0] % 0x10 == 1):
-            return 3
-        else:
-            return 0
+    if spot[2] == 0x0012 or spot[2] == 0x0013:
+        return 5
+    return 0
 
 def find_index_in_2d_list(arr, target_value):
     for row_index, row in enumerate(arr):
@@ -337,6 +330,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             fmapdat.seek(0)
         version_pair = determine_version_from_code_bin(code_bin)
         block_id = 3000
+        rooms_to_init = [0x001, 0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x062]
         for room in range(NUMBER_OF_ROOMS):
             code_bin.seek(FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + room*8)
             fmapdat_chunk_offset, fmapdat_chunk_len = struct.unpack('<II', code_bin.read(4 * 2))
@@ -344,8 +338,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             treasure_data_offset, treasure_data_len = struct.unpack('<II', fmapdat.read(4 * 2))
             treasure_data_absolute_offset = fmapdat_chunk_offset + treasure_data_offset
             #print(room)
-            if (room == 0x001 or room == 0x004 or room == 0x005 or room == 0x010 or room == 0x011 or room == 0x012 or room == 0x013 or
-            room == 0x014 or room == 0x017 or room == 0x019 or room == 0x062):
+            try:
+                check_room = rooms_to_init.index(room)
                 new_data = []
                 fevent_manager = FEventScriptManager(input_folder)
                 script = fevent_manager.parsed_script(room, 0)
@@ -380,9 +374,14 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             temp[treasure_data_absolute_offset+b*2:treasure_data_absolute_offset+b*2] = new_block[b].to_bytes(2, "little")
                         new_data.append([])
                 fmapdat.write(temp)
-                fix_offsets(fmapdat, code_bin, room, len(new_data)*12 + treasure_data_len, 7)
+                if check_room < len(rooms_to_init) - 1:
+                    fix_offsets(fmapdat, code_bin, room, len(new_data)*12 + treasure_data_len, 7, rooms_to_init[check_room + 1] + 1)
+                else:
+                    fix_offsets(fmapdat, code_bin, room, len(new_data)*12 + treasure_data_len, 7, 0x316)
                 fmapdat.seek(fmapdat_chunk_offset + 7 * 4 * 2)
                 treasure_data_offset, treasure_data_len = struct.unpack('<II', fmapdat.read(4 * 2))
+            except ValueError:
+                room = room
             fmapdat.seek(treasure_data_absolute_offset)
             treasure_data = fmapdat.read(treasure_data_len)
             for treasure_index, treasure in enumerate(itertools.batched(treasure_data, 12, strict=True)):
@@ -900,32 +899,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     #hammer_local = find_index_in_2d_list(repack_data, 0xC369)
     #print(repack_data[hammer_local[0]])
 
-    print("Repacking enemy stats...")
-    #Repackages randomized enemy stats
-    for enemy in range(len(new_enemy_stats)):
-        enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
-        enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
-        enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
-        enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
-        enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
-        enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
-        enemy_stats[new_enemy_stats[enemy][0]].coin_rate = new_enemy_stats[enemy][7]
-        enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
-        enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
-        enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
-        enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
-        enemy_stats[new_enemy_stats[enemy][0]].level = new_enemy_stats[enemy][12]
-        #print(new_enemy_stats[enemy])
-    #Packs enemy stats
-    save_enemy_stats(enemy_stats, code_bin=code_bin_path)
-
-    print("Repacking FMap...")
-    with fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('r+b') as f:
-        for b in new_item_locals:
-            if b[3] < 0xC000:
-                f.seek(b[1])
-                f.write(struct.pack('<HHHHHH', *b[2:8]))
-
     print("Generating spoiler log...")
     #Names for all the locations
     item_local_names = ["Entrance", "Hammer Room", "West Hammer Room", "River Rocks",
@@ -979,6 +952,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     #Sorts the new item locals array in order of room ID and spot ID
     new_item_locals = sorted(new_item_locals, key=lambda local: local[0])
+    repack_data = sorted(repack_data, key=lambda key: key[1])
     rooms = []
     areas = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
     temp = []
@@ -1121,6 +1095,82 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         else:
             room_name = hex(new_item_locals[s][0])
         spoiler_log.write(room_name + " " + check_type + " " + number + " - " + item + "\n")
+
+    print("Repacking enemy stats...")
+    #Repackages randomized enemy stats
+    for enemy in range(len(new_enemy_stats)):
+        enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
+        enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
+        enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
+        enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
+        enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
+        enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
+        enemy_stats[new_enemy_stats[enemy][0]].coin_rate = new_enemy_stats[enemy][7]
+        enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
+        enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
+        enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
+        enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
+        enemy_stats[new_enemy_stats[enemy][0]].level = new_enemy_stats[enemy][12]
+        #print(new_enemy_stats[enemy])
+    #Packs enemy stats
+    save_enemy_stats(enemy_stats, code_bin=code_bin_path)
+
+    print("Repacking FMap...")
+    newlen = 0
+    rooms_to_fix = []
+    items_to_delete = []
+    with fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('r+b') as f:
+        b = 0
+        while b < len(new_item_locals):
+            try:
+                if new_item_locals[b][3] < 0xC000:
+                    f.seek(new_item_locals[b][1])
+                    f.write(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
+                if b > 0:
+                    if new_item_locals[b-1][0] != new_item_locals[b][0]:
+                        if newlen > 0:
+                            rooms_to_fix.append([items_to_delete[-1][0], newlen*12])
+                        newlen = 0
+                if find_index_in_2d_list(repack_data, new_item_locals[b][-1] + 0xD000) is not None:
+                    x, y = find_index_in_2d_list(repack_data, new_item_locals[b][-1] + 0xD000)
+                    if repack_data[x][0] == 0:
+                        items_to_delete.append([new_item_locals[b][0], new_item_locals[b][7]])
+                        newlen += 1
+                b += 1
+            except IndexError:
+                break
+        t = 0
+        for r in range(len(rooms_to_fix)):
+            with (
+                code_bin_path.open('rb+') as code_bin,
+            ):
+                version_pair = determine_version_from_code_bin(code_bin)
+                code_bin.seek(FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16 + rooms_to_fix[r][0]*8)
+                room_pos = struct.unpack('<I', code_bin.read(4))
+                f.seek(room_pos[0] + 7 * 8)
+                treasure_pos = struct.unpack('<I', f.read(4))
+                treasure_len = struct.unpack('<I', f.read(4))
+                while rooms_to_fix[r][0] == items_to_delete[t][0]:
+                    p = 0
+                    f.seek(room_pos[0] + treasure_pos[0] + 10)
+                    f.seek(room_pos[0] + treasure_pos[0] + 10)
+                    while struct.unpack('<H', f.read(2))[0] != items_to_delete[t][1]:
+                        p += 1
+                        f.seek(room_pos[0] + treasure_pos[0] + p*12 + 10)
+                    f.seek(room_pos[0] + treasure_pos[0] + p*12 + 12)
+                    the_rest = f.read()
+                    f.seek(room_pos[0] + treasure_pos[0] + p*12)
+                    f.write(the_rest)
+                    t += 1
+                    if t == len(items_to_delete):
+                        break
+                if r < len(rooms_to_fix) - 1:
+                    if rooms_to_fix[r+1][0] > rooms_to_fix[r][0]:
+                        fix_offsets(f, code_bin, rooms_to_fix[r][0], treasure_len[0] - rooms_to_fix[r][1], 7, rooms_to_fix[r+1][0])
+                    else:
+                        fix_offsets(f, code_bin, rooms_to_fix[r][0], treasure_len[0] - rooms_to_fix[r][1], 7, 0x316)
+                else:
+                    fix_offsets(f, code_bin, rooms_to_fix[r][0], treasure_len[0] - rooms_to_fix[r][1], 7, 0x316)
 
     randomize_repack.pack(input_folder, repack_data, settings)
 
