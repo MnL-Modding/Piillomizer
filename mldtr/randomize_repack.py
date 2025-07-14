@@ -904,7 +904,7 @@ def pack(input_folder, repack_data, settings):
                     script.header.sprite_groups.append(0x0001)
                 script.header.sprite_groups.append(0x0000)
                 sprite_index = len(script.header.sprite_groups) - 1
-            script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143 + (i[0] * 0x1000000)))
+            script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
             blockcount += 1
             if i[6] > 0xB0F0:
                 block_info.append([i[6], 0.0])
