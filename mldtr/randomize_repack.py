@@ -559,30 +559,30 @@ def pack(input_folder, repack_data, settings):
     prevroom = 0
     for i in repack_data:
         #Updates the previous script if there are blocks to be updated
-        #if i[1] != prevroom and blockcount > 0:
-        #    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
-        #    script.header.init_subroutine = None
-        #    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
-        #    def fix_blocks(sub: Subroutine):
-        #        for a in range(blockcount):
-        #            if block_info[a][1] == 0.0:
-        #                branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
-        #            else:
-        #                Variables[0xCD90] = Variables[block_info[a][0]] | block_info[a][1] >> int(math.log2(block_info[a][1]))
-        #                branch_if(Variables[0xCD90], '!=', 1.0, 'label_' + str(a))
-        #            set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
-        #            try:
-        #                emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
-        #            except ValueError:
-        #                emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
-        #                script.header.sprite_groups.append(0x0001)
-#
-#                    label('label_' + str(a), manager=fevent_manager)
-#                    if a == blockcount - 1:
-#                        call('og_init')
-#            update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
-#            blockcount = 0
-#            block_info = []
+        if i[1] != prevroom and blockcount > 0:
+            cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
+            script.header.init_subroutine = None
+            @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+            def fix_blocks(sub: Subroutine):
+                for a in range(blockcount):
+                    if block_info[a][1] == 0.0:
+                        branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
+                    else:
+                        Variables[0xCD90] = Variables[block_info[a][0]] >> int(math.log2(block_info[a][1]))
+                        branch_if(Variables[0xCD90], '!=', 1.0, 'label_' + str(a))
+                    set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
+                    try:
+                        emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
+                    except ValueError:
+                        emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
+                        script.header.sprite_groups.append(0x0001)
+
+                    label('label_' + str(a), manager=fevent_manager)
+                    if a == blockcount - 1:
+                        call('og_init')
+            update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+            blockcount = 0
+            block_info = []
 
         #Sets the script to look at the room hammers will be placed
         script = fevent_manager.parsed_script(i[1], 0)
