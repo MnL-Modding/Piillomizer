@@ -374,6 +374,9 @@ def pack(input_folder, repack_data, settings):
     }
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
+    script = fevent_manager.parsed_script(0x0001, 0)
+    script.header.triggers[1] = (0, 0, 0, 0, 0, 0x0032, 0x78012)
+
     #Sets the script to look at the room you fight Torkscrew
     script = fevent_manager.parsed_script(0x0102, 0)
 
@@ -531,7 +534,9 @@ def pack(input_folder, repack_data, settings):
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Edits every room with attack piece blocks so they're all deactivated by default
-    attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x062]
+    attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
+                  0x034, 0x035, 0x036, 0x039, 0x039, 0x03D, 0x040,
+                  0x062, 0x06C]
     j = []
     for i in range(len(attack_dat)):
         script = fevent_manager.parsed_script(attack_dat[i], 0)
@@ -540,7 +545,7 @@ def pack(input_folder, repack_data, settings):
         @subroutine(subs=script.subroutines, hdr=script.header, init=True)
         def attack_flag(sub: Subroutine):
             for a in range(len(script.header.actors)):
-                if script.header.actors[a][5] // 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
+                if (script.header.actors[a][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
                     j.append([script.header.actors[a][0] % 0x10000, script.header.actors[a][0] // 0x10000, script.header.actors[a][1] % 0x10000, attack_dat[i]])
                     set_actor_attribute(a, 0x00, 0.0)
                     set_actor_attribute(a, 0x01, 0.0)
@@ -549,8 +554,36 @@ def pack(input_folder, repack_data, settings):
 
     print("Repacking randomized data...")
     #Repacks all the randomized data
-    sub_num = []
+    blockcount = 0
+    block_info = []
+    prevroom = 0
     for i in repack_data:
+        #Updates the previous script if there are blocks to be updated
+        #if i[1] != prevroom and blockcount > 0:
+        #    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
+        #    script.header.init_subroutine = None
+        #    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+        #    def fix_blocks(sub: Subroutine):
+        #        for a in range(blockcount):
+        #            if block_info[a][1] == 0.0:
+        #                branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
+        #            else:
+        #                Variables[0xCD90] = Variables[block_info[a][0]] | block_info[a][1] >> int(math.log2(block_info[a][1]))
+        #                branch_if(Variables[0xCD90], '!=', 1.0, 'label_' + str(a))
+        #            set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
+        #            try:
+        #                emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
+        #            except ValueError:
+        #                emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
+        #                script.header.sprite_groups.append(0x0001)
+#
+#                    label('label_' + str(a), manager=fevent_manager)
+#                    if a == blockcount - 1:
+#                        call('og_init')
+#            update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+#            blockcount = 0
+#            block_info = []
+
         #Sets the script to look at the room hammers will be placed
         script = fevent_manager.parsed_script(i[1], 0)
 
@@ -748,9 +781,13 @@ def pack(input_folder, repack_data, settings):
                 actor += 1
         @subroutine(subs=script.subroutines, hdr=script.header)
         def get_item(sub: Subroutine):
-            if i[0] == 0:
+            if i[0] == 0 or i[0] == 1:
                 set_actor_attribute(len(script.header.actors), 0x30, 0.0)
-            if (i[5] < 0xC000 or i[5] > 0xCFFF) and i[0] != 0:
+                try:
+                    emit_command(0x008C, [len(script.header.actors), script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
+                except ValueError:
+                    emit_command(0x008C, [len(script.header.actors), len(script.header.sprite_groups), 0x0000, 0x01])
+            if (i[5] < 0xC000 or i[5] > 0xCFFF) and i[0] != 0 and i[0] != 1:
                 branch_if(Variables[i[5]], '==', 0.0, 'label_0')
             if i[6] > 0xC000:
                 branch_if(Variables[i[6]], '==', 1.0, 'label_0')
@@ -856,53 +893,32 @@ def pack(input_folder, repack_data, settings):
         sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
         cast(SubroutineExt, get_item).name = sub_name
 
-        if i[-1] > 10:
-            if i[0] == 0:
-                #Updates actors if it's an overworld block
+        if i[0] == 0 or i[0] == 1:
+            #Updates actors if it's an overworld block
+            try:
+                sprite_index = script.header.sprite_groups.index(0x0000)
+            except ValueError:
                 try:
-                    sprite_index = script.header.sprite_groups.index(0x0000)
+                    script.header.sprite_groups.index(0x0001)
                 except ValueError:
-                    script.header.sprite_groups.append(0x0000)
-                    sprite_index = len(script.header.sprite_groups) - 1
-                script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
-            elif i[0] == 5:
-                #Updates triggers if it's a bean spot
-                if i[3] > 0:
-                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] + 0x15) * 0x10000) + (i[3] - 1), len(script.subroutines) - 1, 0x00078022))
-                else:
-                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+                    script.header.sprite_groups.append(0x0001)
+                script.header.sprite_groups.append(0x0000)
+                sprite_index = len(script.header.sprite_groups) - 1
+            script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143 + (i[0] * 0x1000000)))
+            blockcount += 1
+            if i[6] > 0xB0F0:
+                block_info.append([i[6], 0.0])
             else:
-                if i[1] == 0x001:
-                    script.header.triggers[4] = cast(tuple[int, int, int, int, int, int, int],
-                                                    script.header.triggers[4][:5] + (len(script.subroutines) - 1,) + script.header.triggers[4][6:])
-                elif i[1] == 0x012:
-                    script.header.triggers[1] = cast(tuple[int, int, int, int, int, int, int],
-                                                 script.header.triggers[1][:5] + (len(script.subroutines) - 1,) + script.header.triggers[1][6:])
-                elif i[1] == 0x0C6:
-                    script.header.triggers[2] = cast(tuple[int, int, int, int, int, int, int],
-                                                 script.header.triggers[2][:5] + (len(script.subroutines) - 1,) + script.header.triggers[2][6:])
-                elif i[1] == 0x1E7:
-                    script.header.triggers[9] = cast(tuple[int, int, int, int, int, int, int],
-                                                 script.header.triggers[9][:5] + (len(script.subroutines) - 1,) + script.header.triggers[9][6:])
-        else:
-            k = find_index_in_2d_list(j, i[1])[0] + i[-1]
-            if i[0] == 0:
-                #Adds a trigger underneath a regular attack piece block
-                if j[k][1] > 0x55:
-                    script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
-                                                   ((j[k][1] - 0x40) * 0x10000) + (j[k][1] - 0x56), len(script.subroutines) - 1, 0x00078022))
-                else:
-                    script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
-                                                   ((j[k][1] - 0x40) * 0x10000), len(script.subroutines) - 1, 0x00078022))
-            elif i[0] == 3:
-                if j[k][1] > 0x55:
-                    script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
-                                                   ((j[k][1] - 0x40) * 0x10000) + (j[k][1] - 0x56), len(script.subroutines) - 1, 0x00078022))
-                else:
-                    script.header.triggers.append((((j[k][2]-0x10)*0x10000 + (j[k][0])-0x10), ((j[k][2]+0x10)*0x10000 + (j[k][0])+0x10), 0x00000000, 0x00000000,
-                                                   ((j[k][1] - 0x40) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+                block_info.append([i[6], i[7]])
+        elif i[0] == 5:
+            #Updates triggers if it's a bean spot
+            if i[3] > 0:
+                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                               ((i[3] + 0x15) * 0x10000) + (i[3] - 1), len(script.subroutines) - 1, 0x00078022))
+            else:
+                script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
+                                               ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+        prevroom = i[1]
 
         #Recompiles things
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
