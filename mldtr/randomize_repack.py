@@ -289,6 +289,11 @@ def pack(input_folder, repack_data, settings):
         Variables[0xE0F9] = 1.0 #Stairs to switch in Somnom Woods are up
         Variables[0xC5A0] = 1.0 #Cog has been turned
         Variables[0xE0FA] = 1.0 #Switch in Somnom Woods has been turned
+        Variables[0xC45E] = 1.0 #Elite Trio flee
+        Variables[0xC43B] = 1.0 #Kamek randomized the rooms in the first area
+        Variables[0xC475] = 1.0 #Switch is on the other side
+        Variables[0xC474] = 1.0 #Cutscene before entering Kamek's first dream world
+        Variables[0xC447] = 1.0 #Kamek randomizes the second area
         Variables[0xE00B] = 1.0 #Gives Luiginary stack
         Variables[0xE00C] = 1.0 #Gives Luiginary tornado (but none of its abilities)
         change_room(0x0298, position=(0.0, 0.0, 0.0), init_sub=-0x1, music=MusicFlag.FORCE_KEEP_CURRENT)
