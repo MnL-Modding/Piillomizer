@@ -7,7 +7,7 @@ from mnlscript import CodeCommandWithOffsets, emit_command, update_commands_with
 from mnlscript.dt import PLACEHOLDER_OFFSET, Variables, change_room, MusicFlag, set_action_icons_shown, \
     set_actor_attribute, Actors, tint_screen, set_blocked_buttons, ButtonFlags, set_movement_multipliers, \
     set_touches_blocked, branch_if, TextboxSoundsPreset, say, wait, Globals, call, branch, TextboxAlignment, \
-    add_in_place
+    add_in_place, start_battle, WorldType, Transition, Sound
 from typing import cast
 import math
 import functools
@@ -277,10 +277,10 @@ def pack(input_folder, repack_data, settings):
         Variables[0xC9B3] = 1.0 #Ultibed in Mushrise Park start
         Variables[0xC9F3] = 1.0 #Guy lets you into a rock area
         Variables[0xC9F4] = 1.0 #Tree blocking other rock area is removed
-        #Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
-        #Variables[0xC9DA] = 1.0 #Something something chase the fiends
-        Variables[0xC9DD] = 1.0 #Listened to the old coot vent
-        Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
+        Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
+        Variables[0xC9DA] = 1.0 #Can enter the cave
+        #Variables[0xC9DD] = 1.0 #Listened to the old coot vent
+        #Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
         Variables[0xC9E1] = 1.0 #Wiggler first cutscene watched
         Variables[0xC9E2] = 1.0 #Wiggler second cutscene watched
         wait(3)
@@ -406,6 +406,26 @@ def pack(input_folder, repack_data, settings):
     #Skips the post-boss cutscene
     script.subroutines[0x49].commands[6] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'label_151'})
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+    #Fixes Smoldergeist
+    script = fevent_manager.parsed_script(0x0094, 0)
+    @subroutine(subs=script.subroutines, hdr=script.header)
+    def fix_smoldergeist(sub: Subroutine):
+        branch_if(Variables[0xCC28], "==", 1.0, 'label_0')
+        start_battle(0x00027008, WorldType.REAL, transition=Transition.BOSS, music=Sound(5, 0x0006), unk4=0x08, unk5=0x03)
+
+        label('label_0', manager=fevent_manager)
+    script.header.triggers[0] = (0x022600AF, 0x0258032F, 0x00000000, 0x00000000, 0xFFFF0000, len(script.subroutines)-1, 0x00078012)
+
+    #Fixes Smoldergeist
+    script = fevent_manager.parsed_script(0x00F3, 0)
+    @subroutine(subs=script.subroutines, hdr=script.header)
+    def fix_bowser_and_antasma(sub: Subroutine):
+        branch_if(Variables[0xC04C], "==", 1.0, 'label_0')
+        start_battle(0x0002500C, WorldType.DREAM, transition=Transition.BOSS, music=Sound(5, 0x0006), unk3=0x0001, unk4=0x0E)
+
+        label('label_0', manager=fevent_manager)
+    script.header.triggers[0] = (0xFFF00320, 0x001005DC, 0x00000000, 0x00000000, 0x000A006E, len(script.subroutines)-1, 0x00010002)
 
     #Stops Massifs pushing rock cutscene from appearing
     script = fevent_manager.parsed_script(0x0067, 0)
@@ -539,13 +559,90 @@ def pack(input_folder, repack_data, settings):
     script.header.triggers.append((0x00000000, 0x01F302A8, 0x00000000, 0x00000000, 0xFFFF0046, len(script.subroutines)-1, 0x00078022))
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
-    #Edits every room with attack piece blocks so they're all deactivated by default
+    #Adds dialogue to Toadsworth in Pi'illo Castle so he can tell you what bosses you have left to defeat
+    script = fevent_manager.parsed_script(0x0082, 0)
+    script_index = 0x0082 * 2
+
+    # Workaround for dynamic scope in Nuitka
+    if '__compiled__' in globals():
+        inspect.currentframe().f_locals['script_index'] = script_index
+
+    @subroutine(subs=script.subroutines, hdr=script.header)
+    def bosses_to_defeat(sub: Subroutine):
+        say(0x06, TextboxSoundsPreset.TOAD, "I daresay, you still have\nthese bosses to defeat:", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+        branch_if(Variables[0xCC28], '==', 1.0, 'label_0')
+        say(0x06, TextboxSoundsPreset.TOAD, "Smoldergeist", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_0', manager=fevent_manager)
+        branch_if(Variables[0xCB07], '==', 1.0, 'label_1')
+        say(0x06, TextboxSoundsPreset.TOAD, "Dreamy Mario", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_1', manager=fevent_manager)
+        branch_if(Variables[0xC92F], '==', 1.0, 'label_2')
+        say(0x06, TextboxSoundsPreset.TOAD, "Grobot", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_2', manager=fevent_manager)
+        branch_if(Variables[0xC04C], '==', 1.0, 'label_3')
+        say(0x06, TextboxSoundsPreset.TOAD, "Bowser and Antasma", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_3', manager=fevent_manager)
+        branch_if(Variables[0xC367], '==', 1.0, 'label_4')
+        say(0x06, TextboxSoundsPreset.TOAD, "Torkscrew", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_4', manager=fevent_manager)
+        branch_if(Variables[0xC057], '==', 1.0, 'label_5')
+        say(0x06, TextboxSoundsPreset.TOAD, "Drilldozer", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_5', manager=fevent_manager)
+        branch_if(Variables[0xC60E], '==', 1.0, 'label_6')
+        say(0x06, TextboxSoundsPreset.TOAD, "Big Massif", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_6', manager=fevent_manager)
+        branch_if(Variables[0xC423], '==', 1.0, 'label_7')
+        say(0x06, TextboxSoundsPreset.TOAD, "Mammoshka", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_7', manager=fevent_manager)
+        branch_if(Variables[0xC649], '==', 1.0, 'label_8')
+        say(0x06, TextboxSoundsPreset.TOAD, "Mount Pajamaja", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_8', manager=fevent_manager)
+        branch_if(Variables[0xCB45], '==', 1.0, 'label_9')
+        say(0x06, TextboxSoundsPreset.TOAD, "The Elite Trio", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_9', manager=fevent_manager)
+        branch_if(Variables[0xC637], '==', 1.0, 'label_10')
+        say(0x06, TextboxSoundsPreset.TOAD, "Earthwake", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_10', manager=fevent_manager)
+        branch_if(Variables[0xC5AE], '==', 1.0, 'label_11')
+        say(0x06, TextboxSoundsPreset.TOAD, "Pi'illodium", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_11', manager=fevent_manager)
+        branch_if(Variables[0xC0BF], '==', 1.0, 'label_12')
+        say(0x06, TextboxSoundsPreset.TOAD, "The Zeekeeper", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_12', manager=fevent_manager)
+        branch_if(Variables[0xC0CA], '==', 1.0, 'label_13')
+        say(0x06, TextboxSoundsPreset.TOAD, "Giant Bowser", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_13', manager=fevent_manager)
+        branch_if(Variables[0xC45C], '==', 1.0, 'label_14')
+        say(0x06, TextboxSoundsPreset.TOAD, "Antasma", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+        label('label_14', manager=fevent_manager)
+        say(0x06, TextboxSoundsPreset.TOAD, "Pummel them all, I say!\nPUMMEL THEM ALL!!!", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+
+    script.header.actors[6] = (0x00000000, 0x80000000, 0xFFFF0018, 0xFFFFFFFF, len(script.subroutines)-1, 0x00591168)
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+    #Edits every room with attack piece blocks so they're all gone
     attack_dat = [0x001, 0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                   0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
                   0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
                   0x0F5, 0x0F6, 0x0FA, 0x10C, 0x124, 0x125, 0x126, 0x127, 0x128, 0x129, 0x12A, 0x13D, 0x144, 0x145, 0x146, 0x147, 0x148,
                   0x14B, 0x14C, 0x14E, 0x14F, 0x161, 0x164, 0x165, 0x167, 0x168, 0x16C, 0x177, 0x17A, 0x17D, 0x187, 0x188, 0x189, 0x18A,
-                  0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x295,]
+                  0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x22A,
+                  0x22B, 0x22C, 0x22D, 0x22E, 0x22F, 0x231, 0x232, 0x233, 0x295,]
     j = []
     for i in range(len(attack_dat)):
         script = fevent_manager.parsed_script(attack_dat[i], 0)

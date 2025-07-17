@@ -36,6 +36,8 @@ def get_room(id):
         return "Dreamy Dozing Sands"
     elif 0x0D2 <= id <= 0x0D6 or 0x161 <= id <= 0x182 or id == 0x1C9 or id == 0x1CA:
         return "Dreamy Driftwood Shores"
+    elif 0x0FB <= id <= 0x0FD or 0x219 <= id <= 0x238:
+        return "Dreamy Somnom Woods"
     elif id == 0x106 or 0x10D <= id <= 0x134 or id == 0x12B or id == 0x12C or id == 0x1CF or id == 0x1E1 or id == 0x294 or id == 0x295:
         return "Dreamy Wakeport"
     elif id == 0x13F or 0x1E7 <= id <= 0x20E or id == 0x250 or id == 0x290:
@@ -44,6 +46,8 @@ def get_room(id):
         return "Neo Bowser Castle"
     elif 0x183 <= id <= 0x196:
         return "Somnom Woods"
+    elif 0x252 <= id <= 0x27B:
+        return "Dreamy Neo Bowser Castle"
     else:
         return "Unknown"
 
@@ -81,7 +85,7 @@ def is_available(logic, key, settings):
     return available
 
 def randomize_data(input_folder, stat_mult, settings, seed):
-    with tqdm(total=1574, desc="Initializing...") as pbar:
+    with tqdm(total=2082, desc="Initializing...") as pbar:
         #Sets the seed to what it was in main
         random.seed = seed
         pbar.update(1)
@@ -305,7 +309,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                              0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
                              0x0F5, 0x0F6, 0x0FA, 0x10C, 0x124, 0x125, 0x126, 0x127, 0x128, 0x129, 0x12A, 0x13D, 0x144, 0x145, 0x146, 0x147, 0x148,
                              0x14B, 0x14C, 0x14E, 0x14F, 0x161, 0x164, 0x165, 0x167, 0x168, 0x16C, 0x177, 0x17A, 0x17D, 0x187, 0x188, 0x189, 0x18A,
-                             0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x295,]
+                             0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x22A,
+                             0x22B, 0x22C, 0x22D, 0x22E, 0x22F, 0x231, 0x232, 0x233, 0x295,]
             for room in range(NUMBER_OF_ROOMS):
                 try:
                     check_room = rooms_to_init.index(room)
@@ -343,17 +348,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 for treasure_index in range(math.floor(len(parsed_fmapdat[room][7])/12)):
                     treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', parsed_fmapdat[room][7][treasure_index*12:treasure_index*12+12])
                     if (room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
-                            room != 0x054 and room != 0x1D2 and treasure_type % 0x100 != 0x16 and treasure_type % 0x100 != 0x17
-                            and treasure_id != 157 and treasure_id != 161):
+                            room != 0x054 and room != 0x1D2 and room != 0x2A8 and room != 0x2A9 and treasure_type % 0x100 != 0x16 and
+                            treasure_type % 0x100 != 0x17 and treasure_id != 157 and treasure_id != 161):
                         pbar.update(1)
                         item_locals.append([room, treasure_index * 12, treasure_type, x, y, z, treasure_id])
-                        if room < 0x219:  # TODO
-                            item_pool.append([treasure_type, item_id])
+                        item_pool.append([treasure_type, item_id])
 
         #for item in item_locals:
         #   print(str(item) + "\n")
 
-        item_logic_chunk = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+        item_logic_chunk = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
         #Logic for every single block and bean spot (The numbers after the ID point to their spots in the ability info)
         item_logic_chunk[0] = [[52, 15, 5], [53, 15, 5], [2500, 15], [54, 15], [55, 15, 0, -1, 15, 5], [56, 15, 0], [57, 15, 0], [58, 15], [59, 15, 2], [60, 15, 2],
                       [61, 15, 0, 2], [2388, 15, 2], [62, 15, 0], [63, 15, 0], [64, 15, 0], [65, 15, 0], [2501, 15, 0], [2502, 15, 0], [2503, 15, 0], [2504, 15, 0],
@@ -715,6 +719,45 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                     [986, 0, 4, 5, 6], [989, 0, 4, 5, 6], [990, 23, 0, 3, -1, 0, 5], [991, 23, 0, 3, -1, 0, 5], [992, 23, 0, 3, -1, 0, 5], [1050, 23, 0, -1, 0, 5], [1051, 23, 0, -1, 0, 5], [1653, 15, 27, 0, 3, 5, 6], [1654, 15, 27, 0, 3, 5, 6], [2368, 15, 27, 0, 3, 5, 6],
                                     [2369, 15, 27, 0, 3, 5, 6], [2376, 15, 27, 0, 3, 5, 6]]
 
+        if settings[1][0] == 0:
+            item_logic_chunk[20] = [[1968, 15, 1, 4, 5, 6], [1969, 15, 1, 4, 5, 6], [1970, 15, 1, 4, 5, 6], [1971, 15, 1, 4, 5, 6], [1972, 15, 1, 4, 5, 6], [1973, 15, 1, 4, 5, 6], [1974, 15, 1, 4, 5, 6], [2008, 15, 1, 4, 5, 6], [2009, 15, 1, 4, 5, 6], [2010, 15, 1, 4, 5, 6], [2016, 15, 1, 2, 4, 5, 6],
+                                    [2017, 15, 1, 2, 4, 5, 6], [2018, 15, 1, 2, 4, 5, 6], [2019, 15, 1, 2, 4, 5, 6], [2020, 15, 1, 2, 4, 5, 6], [2021, 15, 1, 2, 4, 5, 6], [2022, 15, 1, 2, 4, 5, 6], [2023, 15, 1, 2, 4, 5, 6], [2644, 15, 1, 2, 4, 5, 6], [2645, 15, 1, 2, 4, 5, 6], [2646, 15, 1, 2, 4, 5, 6, 8, 9],
+                                    [2024, 15, 1, 2, 4, 5, 6], [2025, 15, 1, 2, 4, 5, 6], [2026, 15, 1, 2, 4, 5, 6], [2027, 15, 1, 2, 4, 5, 6], [2028, 15, 1, 2, 4, 5, 6], [2029, 15, 1, 2, 4, 5, 6], [2030, 15, 1, 2, 4, 5, 6, 8, 9], [2031, 15, 1, 2, 4, 5, 6], [2647, 15, 1, 2, 4, 5, 6], [2648, 15, 1, 2, 4, 5, 6, 8, 9],
+                                    [2035, 15, 1, 2, 4, 5, 6, 8, 9], [2036, 15, 1, 2, 4, 5, 6, 8, 10], [2649, 15, 1, 2, 4, 5, 6, 8, 9], [2051, 15, 1, 2, 4, 5, 6, 8, 9], [2052, 15, 1, 2, 4, 5, 6], [2053, 15, 1, 2, 4, 5, 6, 8, 9], [2054, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2355, 15, 1, 2, 4, 5, 6, 8, 9], [2650, 15, 1, 2, 4, 5, 6, 8, 9, 10],
+                                    [2651, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2058, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2059, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2652, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2060, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2061, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2062, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2063, 15, 1, 2, 4, 5, 6, 8, 9, 10],
+                                    [2653, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2066, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2067, 15, 1, 2, 4, 5, 6, 8, 9, 10], [2085, 15, 1, 3, 5, 6], [2086, 15, 1, 3, 5, 6], [2087, 15, 1, 3, 5, 6], [2088, 15, 1, 4, 5, 6], [2089, 15, 1, 2, 4, 5, 6], [2090, 15, 1, 2, 4, 5, 6], [2091, 15, 1, 2, 4, 5, 6],
+                                    [2335, 15, 1, 4, 5, 6], [2336, 15, 1, 4, 5, 6]]
+        else:
+            item_logic_chunk[20] = [[1968, 15, 0, 4, 5, 6], [1969, 15, 0, 4, 5, 6], [1970, 15, 0, 4, 5, 6], [1971, 15, 0, 4, 5, 6], [1972, 15, 0, 4, 5, 6], [1973, 15, 0, 4, 5, 6], [1974, 15, 0, 4, 5, 6], [2008, 15, 0, 4, 5, 6], [2009, 15, 0, 4, 5, 6], [2010, 15, 0, 4, 5, 6], [2016, 15, 2, 4, 5, 6],
+                                    [2017, 15, 2, 4, 5, 6], [2018, 15, 2, 4, 5, 6], [2019, 15, 2, 4, 5, 6], [2020, 15, 2, 4, 5, 6], [2021, 15, 2, 4, 5, 6], [2022, 15, 2, 4, 5, 6], [2023, 15, 2, 4, 5, 6], [2644, 15, 2, 4, 5, 6], [2645, 15, 2, 4, 5, 6], [2646, 15, 2, 4, 5, 6, 8, 9], [2024, 15, 2, 4, 5, 6],
+                                    [2025, 15, 2, 4, 5, 6], [2026, 15, 2, 4, 5, 6], [2027, 15, 2, 4, 5, 6], [2028, 15, 2, 4, 5, 6], [2029, 15, 2, 4, 5, 6], [2030, 15, 2, 4, 5, 6, 8, 9], [2031, 15, 2, 4, 5, 6], [2647, 15, 2, 4, 5, 6], [2648, 15, 2, 4, 5, 6, 8, 9], [2035, 15, 2, 4, 5, 6, 8, 9], [2036, 15, 2, 4, 5, 6, 8, 10],
+                                    [2649, 15, 2, 4, 5, 6, 8, 9], [2051, 15, 2, 4, 5, 6, 8, 9], [2052, 15, 2, 4, 5, 6], [2053, 15, 2, 4, 5, 6, 8, 9], [2054, 2, 4, 5, 6, 8, 9, 10], [2355, 15, 2, 4, 5, 6, 8, 9], [2650, 15, 2, 4, 5, 6, 8, 9, 10], [2651, 15, 2, 4, 5, 6, 8, 9, 10], [2058, 15, 2, 4, 5, 6, 8, 9, 10],
+                                    [2059, 15, 2, 4, 5, 6, 8, 9, 10], [2652, 15, 2, 4, 5, 6, 8, 9, 10], [2060, 15, 2, 4, 5, 6, 8, 9, 10], [2061, 15, 2, 4, 5, 6, 8, 9, 10], [2062, 15, 2, 4, 5, 6, 8, 9, 10], [2063, 15, 2, 4, 5, 6, 8, 9, 10], [2653, 15, 2, 4, 5, 6, 8, 9, 10], [2066, 15, 2, 4, 5, 6, 8, 9, 10],
+                                    [2067, 15, 2, 4, 5, 6, 8, 9, 10], [2085, 15, 0, 3, 5, 6], [2086, 15, 0, 3, 5, 6], [2087, 15, 0, 3, 5, 6], [2088, 15, 0, 4, 5, 6], [2089, 15, 2, 4, 5, 6], [2090, 15, 2, 4, 5, 6], [2091, 15, 2, 4, 5, 6], [2335, 15, 0, 4, 5, 6], [2336, 15, 0, 4, 5, 6]]
+
+        if settings[1][0] == 0:
+            item_logic_chunk[21] = [[2138, 15, 27, 1, 3, 5, 6], [2139, 15, 27, 1, 3, 5, 6], [2140, 15, 27, 1, 3, 5, 6], [2141, 15, 27, 1, 3, 5, 6], [2142, 15, 27, 1, 3, 5, 6], [2143, 15, 27, 1, 3, 5, 6], [2144, 15, 27, 1, 3, 5, 6], [2145, 15, 27, 1, 3, 5, 6], [2146, 15, 27, 1, 3, 5, 6], [2147, 15, 27, 1, 3, 5, 6],
+                                    [2203, 15, 27, 1, 3, 5, 6], [2204, 15, 27, 1, 3, 5, 6], [2205, 15, 27, 1, 3, 5, 6], [2206, 15, 27, 1, 3, 5, 6], [2207, 15, 27, 1, 3, 5, 6], [2208, 15, 27, 1, 3, 5, 6], [2209, 15, 27, 1, 3, 5, 6], [2210, 15, 27, 1, 3, 5, 6], [2211, 15, 27, 1, 3, 5, 6], [2356, 15, 27, 1, 3, 5, 6],
+                                    [2212, 15, 27, 1, 3, 5, 6], [2215, 15, 27, 1, 3, 5, 6], [2216, 15, 27, 1, 3, 5, 6], [2217, 15, 27, 1, 3, 5, 6], [2218, 15, 27, 1, 3, 5, 6], [2357, 15, 27, 1, 3, 5, 6], [2220, 15, 27, 1, 3, 5, 6], [2230, 15, 27, 1, 3, 5, 6], [2231, 15, 27, 1, 4, 5, 6], [2232, 15, 27, 1, 4, 5, 6],
+                                    [2239, 15, 27, 1, 4, 5, 6], [2245, 15, 27, 1, 4, 5, 6], [2246, 15, 27, 1, 4, 5, 6], [2247, 15, 27, 1, 4, 5, 6], [2273, 15, 27, 1, 4, 5, 6, 7, 8, 10, 12, 13], [2274, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2275, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 12, 13],
+                                    [2276, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2277, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2382, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2293, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2294, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2295, 15, 27, 1, 4, 5, 6, 7, 8, 9, 10, 12, 13]]
+        else:
+            item_logic_chunk[21] = [[2138, 15, 27, 3, 5, 6], [2139, 15, 27, 3, 5, 6], [2140, 15, 27, 3, 5, 6], [2141, 15, 27, 3, 5, 6], [2142, 15, 27, 3, 5, 6], [2143, 15, 27, 3, 5, 6], [2144, 15, 27, 3, 5, 6], [2145, 15, 27, 3, 5, 6], [2146, 15, 27, 3, 5, 6], [2147, 15, 27, 3, 5, 6], [2203, 15, 27, 3, 5, 6],
+                                    [2204, 15, 27, 3, 5, 6], [2205, 15, 27, 3, 5, 6], [2206, 15, 27, 3, 5, 6], [2207, 15, 27, 3, 5, 6], [2208, 15, 27, 3, 5, 6], [2209, 15, 27, 3, 5, 6], [2210, 15, 27, 3, 5, 6], [2211, 15, 27, 3, 5, 6], [2356, 15, 27, 0, 3, 5, 6], [2212, 15, 27, 0, 3, 5, 6], [2215, 15, 27, 0, 3, 5, 6],
+                                    [2216, 15, 27, 0, 3, 5, 6], [2217, 15, 27, 0, 3, 5, 6], [2218, 15, 27, 0, 3, 5, 6], [2357, 15, 27, 0, 3, 5, 6], [2220, 15, 27, 0, 3, 5, 6], [2230, 15, 27, 0, 3, 5, 6], [2231, 15, 27, 0, 4, 5, 6], [2232, 15, 27, 0, 4, 5, 6], [2239, 15, 27, 0, 4, 5, 6],
+                                    [2245, 15, 27, 0, 4, 5, 6], [2246, 15, 27, 0, 4, 5, 6], [2247, 15, 27, 0, 4, 5, 6], [2273, 15, 27, 0, 4, 5, 6, 7, 8, 10, 12, 13], [2274, 15, 27, 0, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2275, 15, 27, 0, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2276, 15, 27, 0, 4, 5, 6, 7, 8, 9, 10, 12, 13],
+                                    [2277, 15, 27, 0, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2382, 15, 27, 0, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2293, 15, 27, 0, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2294, 15, 27, 0, 4, 5, 6, 7, 8, 9, 10, 12, 13], [2295, 15, 27, 0, 4, 5, 6, 7, 8, 9, 10, 12, 13]]
+
+        if settings[1][0] == 0 and settings[1][1] == 0:
+            item_logic_chunk[22] = [[1526, 15, 22, 1, -1, 15, 22, 5], [297, 15, 16, 17, 1, -1, 15, 16, 1, 5], [298, 15, 16, 17, 1, -1, 15, 16, 1, 5], [299, 15, 16, 17, 1, -1, 15, 16, 1, 5], [300, 15, 16, 17, 1, -1, 15, 16, 1, 5], [301, 15, 16, 17, 1, -1, 15, 16, 1, 5], [302, 15, 16, 17, 1, -1, 15, 16, 1, 5],
+                                    [2654, 15, 22, 1, 4, 5, 6], [758, 15, 22, 1, 4, 5, 6], [759, 15, 22, 1, 4, 5, 6]]
+        elif settings[1][0] == 1 and settings[1][1] == 1:
+            item_logic_chunk[22] = [[1526, 15, 22, 1, -1, 15, 22, 5], [297, 15, 16, 17, 1], [298, 15, 16, 17, 1], [299, 15, 16, 17, 1], [300, 15, 16, 17, 1], [301, 15, 16, 17, 1], [302, 15, 16, 17, 1], [2654, 15, 22, 1, 4, 5, 6], [758, 15, 22, 1, 4, 5, 6], [759, 15, 22, 1, 4, 5, 6]]
+        elif settings[1][1] == 1:
+            item_logic_chunk[22] = [[1526, 15, 22, 1, -1, 15, 22, 5], [297, 15, 16, 17, 1], [298, 15, 16, 17, 1], [299, 15, 16, 17, 1], [300, 15, 16, 17, 1], [301, 15, 16, 17, 1], [302, 15, 16, 17, 1], [2654, 15, 22, 1, 4, 5, 6], [758, 15, 22, 1, 4, 5, 6], [759, 15, 22, 1, 4, 5, 6]]
+        else:
+            item_logic_chunk[22] = [[1526, 15, 22, 1, -1, 15, 22, 5], [297, 15, 16, 17, 1, -1, 15, 16, 1, 5], [298, 15, 16, 17, 1, -1, 15, 16, 1, 5], [299, 15, 16, 17, 1, -1, 15, 16, 1, 5], [300, 15, 16, 17, 1, -1, 15, 16, 1, 5], [301, 15, 16, 17, 1, -1, 15, 16, 1, 5], [302, 15, 16, 17, 1, -1, 15, 16, 1, 5],
+                                    [2654, 15, 22, 1, 4, 5, 6], [758, 15, 22, 1, 4, 5, 6], [759, 15, 22, 1, 4, 5, 6]]
         pbar.update(10)
 
         item_logic = []
@@ -723,9 +766,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 item_logic.append(item_logic_chunk[c][l])
                 pbar.update(1)
 
-        for item in range(len(item_logic)):
-            if item_locals[item][6] == item_logic[item][0]:
-                print(item_locals[item][6])
+        #for item in range(len(item_logic)):
+        #    if item_locals[item][6] == item_logic[item][0]:
+        #        print(item_locals[item][6])
 
         #Creates an item pool for the key items
         key_item_pool = [[0xE002, 0], [0xE002, 1], [0xE002, 2], [0xE004, 3], [0xE004, 4], [0xE005, 5], [0xE00A, 6], [0xE00D, 7],
@@ -764,7 +807,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                              [[0x01, 0xB049], [0x02, 0xB049], [0x04, 0xB049], [0x08, 0xB049], [0x10, 0xB049],
                               [0x01, 0xB04A], [0x02, 0xB04A], [0x04, 0xB04A], [0x08, 0xB04A], [0x10, 0xB04A]],
                              [[0x01, 0xB03F], [0x02, 0xB03F], [0x04, 0xB03F], [0x08, 0xB03F], [0x10, 0xB03F],
-                              [0x01, 0xB040], [0x02, 0xB040], [0x04, 0xB040], [0x08, 0xB040], [0x10, 0xB040]],]
+                              [0x01, 0xB040], [0x02, 0xB040], [0x04, 0xB040], [0x08, 0xB040], [0x10, 0xB040]],
+                             [[0x01, 0xB04B], [0x02, 0xB04B], [0x04, 0xB04B], [0x08, 0xB04B], [0x10, 0xB04B],
+                              [0x01, 0xB04C], [0x02, 0xB04C], [0x04, 0xB04C], [0x08, 0xB04C], [0x10, 0xB04C]],]
 
         #Logic for the key items, so they only spawn when others are already in the pool
         logic_logic = [[0], [1, 0], [2, 1], [3], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5], [6, 15, -1, 23, 1, 3], [7, 6], [8, 6], [9, 6], [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10],
@@ -1000,7 +1045,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     if item == len(new_item_locals):
                         item -= 1
                         break
-                item_locals[len(item_logic)] = [new_item_locals[item][0], new_item_locals[item][1], new_item_locals[item][2], new_item_locals[item][4], new_item_locals[item][5], new_item_locals[item][6], new_item_locals[item][7]]
+                item_locals.append([new_item_locals[item][0], new_item_locals[item][1], new_item_locals[item][2], new_item_locals[item][4], new_item_locals[item][5], new_item_locals[item][6], new_item_locals[item][7]])
                 item_logic.append([0])
                 del new_item_locals[item]
 
@@ -1009,18 +1054,56 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     print("Generating spoiler log...")
     #Names for all the locations
-    item_local_names = ["Entrance", "Hammer Room", "West Hammer Room", "River Rocks",
+    item_local_names = ["Entrance", "Hammer Room", "West of Hammer Room", "River Rocks",
                         "Upper Attack Piece Room", "Lower Attack Piece Room", "Gate Room",
-                        "Fountain Room", "Lower Rock Room", "Right of Hammer Room", "Right Rock Room", "Maintenance Hut", "Many Enemy Room",
+                        "Fountain Room", "Lower Ultibed Rock Room", "Right of Hammer Room", "Right Ultibed Rock Room", "Maintenance Hut", "Many Enemy Room",
                         "Early Hammer Room", "Outside", "Mushrise Treeboard Room", "Western Track Room",
-                        "Drill Machine Tutorial Room", "Mini/Mole Mario Tutorial Room", "Middle Track Room", "Lower Track Room",
+                        "Drill Machine Tutorial Room", "Mini/Mole Mario Tutorial Room", "Middle Track Room",
                         "Upper Track Room", "Early First Track Room", "Early Main Track Room", "Mini Mario Room",
-                        "Underground", "Bottom Right Track Room", "East of Dreamstone", "West of Pi'illo Castle",
+                        "Underground", "Southeastern Track Room", "East of Dreamstone", "West of Pi'illo Castle",
                         "In Front of Pi'illo Castle", "Test Room", "Eldream Room 1",
                         "Eldream Room 2", "Eldream Room 3", "Eldream Room 4",
                         "Eldream Room 5", "Eldream Item Detour Room", "Eldream Fountain Room",
                         "Eldream Room 7", "Eldream Bouncy Flower Room", "Eldream Pipe to Sewers",
-                        ""]
+                        "Eldream Sewers", "Eldream Throw Boss Brickle", "Eldream Buildup to Final Attack Piece", "Eldream Final Attack Piece",
+                        "Pi'illo to Hammers", "Eldream Clouds 1", "Eldream Clouds 2", "Eldream Confront Bunny", "Pi'illo in River Room",
+                        "Pi'illo Room 2", "Ultibed Pi'illo Room 2", "Buildup 2", "Entrance", "Tour Center Location", "Shopping District", "Early Room 3",
+                        "Outside Rose Broquet", "Southern Panel Room", "Dream Egg Dreampoint Room", "Crab Minigame", "Entrance Right Room", "Entrance Middle Room",
+                        "Entrance Left Room", "Bedsmith Room First Floor", "Kylie Koopa's Photo Booth", "Tour Center", "Item Shop", "Badge Shop", "Gear Shop",
+                        "Rose Broquet Shop", "Broque Madame's Spot", "Ultibed Cave Entrance", "Ultibed Cave Middle Room", "Driftwood Jelly Sheets Resting Spot",
+                        "Entrance", "Guard Room", "Seabelle Dreampoint Room", "Middle Warp Pipe Room", "Unused Room", "Seabury Dreampoint Room",
+                        "Glitched Room 1", "Wakeport?", "Glitched Room 2", "Glitched Room 3", "Glitched Room 4", "Glitched Room 5",
+                        "Toad Crash Room", "Removed Second Check-X Quiz Room", "Second Toad Crash Room", "Gromba Battle Arena", "Bridge Room",
+                        "East of Pi'illo Castle", "Behind Pi'illo Castle", "Badge Room", "Mushrise Park Minimap", "Weak Trembling Fortress",
+                        "East Track Room", "Ultibed Cliff", "Desert Entrance", "Check-X Quiz", "Starting Room", "Test Room 2", "Entrance", "Rock Room",
+                        "First Mega Pi'illo Room", "Weird Lift Thingy Room", "2 Pi'illos in Rocks Room", "Weird Lift Thingy Second Room",
+                        "Spin Jump Tutorial Room", "Southeast Deviation", "Southwest Spin Jump Gaps", "Spin Jump Whirlwind Tutorial Room", "West Deviation",
+                        "Removed Room", "Peak Before Big Jump", "Big Fall", "Pajamaja Base Warp Pipe Room", "Side Drill Tutorial Room", "Large Room Before Snow",
+                        "Second Mega Pi'illo Room", "Path to Right Massif Ice Room", "Right Massif Ice Room", "Bros Wear Room", "Path to Left Massif Ice Room", "Left Massif Ice Room",
+                        "Mammoshka Arena", "Peak", "Frozen Dream World", "Peak Pipe", "Ball Hop Cave", "Lobby", "Early Minimap", "Golden Pipe Room", "Bedroom Entrance",
+                        "Platform Area", "Staff Break Room", "Shop", "Hotel Entrance", "Hotel Lobby", "Hotel Left Room", "Hotel Topleft Room", "Hotel Top Room", "Hotel Topright Room",
+                        "Ball Hop Room Entrance", "Ride to Underground", "Underground Entrance", "Removed Minigame", "Gromba Circle", "Smoldergeist Arena",
+                        "Stairs to Smoldergeist", "Underground Save Room", "Collection Room", "Battle Ring", "Restaurant District", "Hotel Balcony", "North Balcony", "Minimap 1",
+                        "Camera Block Pi'illo Room 2", "Black Screen Crash", "Early Mushrise Minimap 2", "Sick Map Warper", "Swimming", "Dreambert Entrance", "Dreambert Door Tutorial Room",
+                        "Dreambert Many Door Room", "Dreambert First Dreamy Enemy Room", "Dreambert Broque Shop", "Dreambert Many Enemy Room", "Dreambert Dreamy Mario Arena",
+                        "Dreambert Revival Room", "Entrance to Dream's Deep", "Unused", "First Fling Pi'illo Entrance", "First Fling Pi'illo Room 2", "First Fling Pi'illo Room 3",
+                        "Britta's Meeting Room", "Eldream Topright Detour", "First Dozite Room 1", "First Track Dozite Room 1", "First Track Dozite Room 2", "First Track Dozite Room 3",
+                        "Second Track Dozite", "Third Track Dozite", "Final Track Dozite Room 1", "Final Track Dozite Room 2", "Final Track Dozite Room 3", "Dream Stone Entrance",
+                        "Dream Stone First Drill Room", "Dream Stone Main Room", "Dream Stone Big Drill Room", "Dream Stone After Big Drill Room", "Dream Stone First Luiginary Room",
+                        "Dream Stone Switch Puzzle Room 1", "Dream Stone After Switch Puzzle 1", "Dream Stone Many Enemy Room", "Dream Stone Britta Shop", "Dream Stone After 2nd Spirit Talk",
+                        "Dream Stone Spinning Room", "Dream Stone Ground Pound Room", "Dream Stone Before Last Attack Pieces", "Beta Room 1", "Beta Room 2",
+                        "Unused Northwest Bedroom 1", "Unused Northwest Bedroom 2", "Unused Northeast Bedroom", "Early Underground Gromba Circle", "Early Smoldergeist",
+                        "Beta Room 3", "Beta Room 4", "Beta Room 5", "Dream Egg Dream Entrance", "Dream Egg Dream First Egg Departure", "Dream Egg Dream First Egg Entrance",
+                        "Dream Egg Dream First Egg Room 1", "Dream Egg Dream First Egg Room 2", "Glitched Room", "Second Throw Pi'illo Room 1", "Second Throw Pi'illo Room 2",
+                        "Second Throw Pi'illo Room 3", "First Pi'illo Room 1", "First Pi'illo Room 2", "First Pi'illo Room 3", "First Pi'illo Room 4", "Unused 1", "Unused 2",
+                        "Unused 3", "Unused 4", "Unused 5", "Dream Stone Dream Last Attack Pieces", "Dream Stone Dream After Last Attack Pieces", "Dream Stone Dream Zigzag",
+                        "Mattress Dream Entrance", "Mattress Dream Bottom Room", "Mattress Dream Top Room", "Mattress Dream Right Room", "Badge Room Pi'illo",
+                        "Southeast Track Room Pi'illo", "Eastern Track Room Pi'illo", "Main Track Room Pi'illo", "First Ultibed Pi'illo Room 2", "Second Ultibed Pi'illo Room 2",
+                        "Dream's Deep Entrance", "Dream's Deep Hallway Warps", "Bowser and Antasma Arena", "Dream's Deep Entrance", "Learn Luiginary Ball Room",
+                        "Learn Luiginary Hookshot Room", "Dream's Deep Room 4", "Dream's Deep Room 5", "Dream's Deep Room 6", "Learn Luiginary Throw Room",
+                        "Zeekeeper Cloud Ride", "Zeekeeper Before Boss", "Zeekeeper Arena", "Glitched 00 Room 1", "Glitched 00 Room 2", "Summit Ball Hop Gate", "End of Track Room",
+                        "Dreamstone Room", "Mattress Underground 1", "Mattress Underground 2", "Dreamy Dozing Sands Unused", "Massif Entrance", "Glitched 00 Room 3",
+                        "Buildup 1", "Wiggler and Popple Arena", "Bedsmith Basement", "Rock Frame Room", "Ball Hop Tutorial Room", "Massif Lobby", "Massif Hooraw Main Room"]
 
     #Names for items
     item_names = [["Coin", "5 Coins", "10 Coins", "50 Coins", "100 Coins"],
@@ -1098,6 +1181,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     room = 13
                 elif get_room(rooms[-1][0]) == "Dreamy Mount Pajamaja":
                     room = 10
+                elif get_room(rooms[-1][0]) == "Dreamy Somnom Woods":
+                    room = 14
+                elif get_room(rooms[-1][0]) == "Dreamy Neo Bowser Castle":
+                    room = 16
                 else:
                     room = 17
                 if len(areas[room]) > 1:
@@ -1151,6 +1238,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         room = 13
     elif get_room(rooms[-1][0]) == "Dreamy Mount Pajamaja":
         room = 10
+    elif get_room(rooms[-1][0]) == "Dreamy Somnom Woods":
+        room = 14
+    elif get_room(rooms[-1][0]) == "Dreamy Neo Bowser Castle":
+        room = 16
     else:
         room = 17
     if len(areas[room]) > 1:
@@ -1180,6 +1271,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     room_check = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     for s in range(len(new_item_locals)):
         if s > 0:
+            #if new_item_locals[s][0] != new_item_locals[s-1][0] and new_item_locals[s][0] < len(item_local_names):
+            #    print(hex(new_item_locals[s][0]) + " " + item_local_names[new_item_locals[s][0]])
             if get_room(new_item_locals[s][0]) != get_room(new_item_locals[s-1][0]):
                 spoiler_log.write("\n--" + get_room(new_item_locals[s][0]) + "--\n\n")
         else:
