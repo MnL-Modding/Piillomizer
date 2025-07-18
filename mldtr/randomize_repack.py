@@ -412,8 +412,8 @@ def pack(input_folder, repack_data, settings):
     @subroutine(subs=script.subroutines, hdr=script.header)
     def fix_smoldergeist(sub: Subroutine):
         branch_if(Variables[0xCC28], "==", 1.0, 'label_0')
-        start_battle(0x00027008, WorldType.REAL, transition=Transition.BOSS, music=Sound(5, 0x0006), unk4=0x08, unk5=0x03)
-        Variables[0xCC28] = 1.0
+        start_battle(0x00027008, WorldType.REAL, transition=Transition.BOSS, music=Sound(5, 0x0006), unk4=0x08)
+        Variables[0xCC28] = 1
 
         label('label_0', manager=fevent_manager)
     script.header.triggers[0] = (0x022600AF, 0x0258032F, 0x00000000, 0x00000000, 0xFFFF0000, len(script.subroutines)-1, 0x00078012)
@@ -423,8 +423,8 @@ def pack(input_folder, repack_data, settings):
     @subroutine(subs=script.subroutines, hdr=script.header)
     def fix_bowser_and_antasma(sub: Subroutine):
         branch_if(Variables[0xC04C], "==", 1.0, 'label_0')
-        start_battle(0x0002500C, WorldType.DREAM, transition=Transition.BOSS, music=Sound(5, 0x0006), unk3=0x0001, unk4=0x0E)
-        Variables[0xC04C] = 1.0
+        start_battle(0x0002500C, WorldType.DREAM, transition=Transition.BOSS, music=Sound(5, 0x0006), unk4=0x0E)
+        Variables[0xC04C] = 1
 
         label('label_0', manager=fevent_manager)
     script.header.triggers[0] = (0xFFF00320, 0x001005DC, 0x00000000, 0x00000000, 0x000A006E, len(script.subroutines)-1, 0x00010002)
@@ -677,7 +677,7 @@ def pack(input_folder, repack_data, settings):
                         branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
                     else:
                         Variables[0xCDFF] = Variables[block_info[a][0]] >> int(math.log2(block_info[a][1]))
-                        Variables[0xCDFF] |= 1.0
+                        Variables[0xCDFF] |= 1
                         branch_if(Variables[0xCDFF], '!=', 1.0, 'label_' + str(a))
                     set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
                     try:
