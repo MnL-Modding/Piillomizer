@@ -413,21 +413,23 @@ def pack(input_folder, repack_data, settings):
     def fix_smoldergeist(sub: Subroutine):
         branch_if(Variables[0xCC28], "==", 1.0, 'label_0')
         start_battle(0x00027008, WorldType.REAL, transition=Transition.BOSS, music=Sound(5, 0x0006), unk4=0x08)
-        Variables[0xCC28] = 1
+        Variables[0xCC28] = 1.0
 
         label('label_0', manager=fevent_manager)
     script.header.triggers[0] = (0x022600AF, 0x0258032F, 0x00000000, 0x00000000, 0xFFFF0000, len(script.subroutines)-1, 0x00078012)
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
-    #Fixes Smoldergeist
+    #Fixes Bowser and Antasma
     script = fevent_manager.parsed_script(0x00F3, 0)
     @subroutine(subs=script.subroutines, hdr=script.header)
     def fix_bowser_and_antasma(sub: Subroutine):
         branch_if(Variables[0xC04C], "==", 1.0, 'label_0')
         start_battle(0x0002500C, WorldType.DREAM, transition=Transition.BOSS, music=Sound(5, 0x0006), unk4=0x0E)
-        Variables[0xC04C] = 1
+        Variables[0xC04C] = 1.0
 
         label('label_0', manager=fevent_manager)
     script.header.triggers[0] = (0xFFF00320, 0x001005DC, 0x00000000, 0x00000000, 0x000A006E, len(script.subroutines)-1, 0x00010002)
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Stops Massifs pushing rock cutscene from appearing
     script = fevent_manager.parsed_script(0x0067, 0)
@@ -676,9 +678,9 @@ def pack(input_folder, repack_data, settings):
                     if block_info[a][1] == 0.0:
                         branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
                     else:
-                        Variables[0xCDFF] = Variables[block_info[a][0]] >> int(math.log2(block_info[a][1]))
-                        Variables[0xCDFF] |= 1
-                        branch_if(Variables[0xCDFF], '!=', 1.0, 'label_' + str(a))
+                        Variables[0x1000] = Variables[block_info[a][0]] >> int(math.log2(block_info[a][1]))
+                        Variables[0x1000] &= 1
+                        branch_if(Variables[0x1000], '!=', 1.0, 'label_' + str(a))
                     set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
                     try:
                         emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
