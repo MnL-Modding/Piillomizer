@@ -85,7 +85,7 @@ def is_available(logic, key, settings):
     return available
 
 def randomize_data(input_folder, stat_mult, settings, seed):
-    with tqdm(total=2082, desc="Initializing...") as pbar:
+    with tqdm(total=2085, desc="Initializing...") as pbar:
         #Sets the seed to what it was in main
         random.seed = seed
         pbar.update(1)
@@ -1337,16 +1337,20 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 if newlen > 0:
                     for j in range(newlen):
                         i = 0
-                        while parsed_fmapdat[new_item_locals[b-1][0]][7][i*12+10:i*12+12] != check_spot[j].to_bytes(2, 'little'):
+                        while parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12] != check_spot[j][0].to_bytes(2, 'little') and i < len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])/12:
                             i += 1
-                        parsed_fmapdat[new_item_locals[b-1][0]][7] = parsed_fmapdat[new_item_locals[b-1][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[b-1][0]][7][i*12+12:-1]
-            newlen = 0
-            check_spot = []
-        if find_index_in_2d_list(repack_data, new_item_locals[b][-1] + 0xD000) is not None:
-            x, y = find_index_in_2d_list(repack_data, new_item_locals[b][-1] + 0xD000)
-            if repack_data[x][0] == 0 or repack_data[x][0] == 1:
+                        #print(int.from_bytes(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12], "little"))
+                        #print(len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])])/12)
+                        parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7] = parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])]
+                    newlen = 0
+                    check_spot = []
+        x = 0
+        while x < len(repack_data):
+            if repack_data[x][5] == new_item_locals[b][-1] + 0xD000 and (repack_data[x][0] == 0 or repack_data[x][0] == 1):
                 newlen += 1
-                check_spot.append(new_item_locals[b][7])
+                check_spot.append([new_item_locals[b][7], b])
+                break
+            x += 1
         i = 0
         while parsed_fmapdat[new_item_locals[b][0]][7][i*12+10:i*12+12] != new_item_locals[b][7].to_bytes(2, 'little'):
             i += 1
