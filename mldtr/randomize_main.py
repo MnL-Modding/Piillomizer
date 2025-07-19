@@ -110,13 +110,25 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 enemy_stats[enemy].exp *= stat_mult[1]
                 if enemy_stats[enemy].exp > 0xFFFF:
                     enemy_stats[enemy].exp = 0xFFFF
+            if enemy == 17:
+                enemy_stats[enemy].hp *= 4
+                enemy_stats[enemy].power *= 4
+                enemy_stats[enemy].defense *= 4
+                enemy_stats[enemy].speed *= 4
+                enemy_stats[enemy].exp *= 4
+            elif enemy == 107:
+                enemy_stats[enemy].hp *= 2
+                enemy_stats[enemy].power *= 2
+                enemy_stats[enemy].defense *= 2
+                enemy_stats[enemy].speed *= 2
+                enemy_stats[enemy].exp *= 2
             if (enemy > 12 and not(14 <= enemy <= 16) and enemy != 20 and
                     enemy != 22 and enemy != 24 and enemy != 26 and
                     enemy != 28 and enemy != 32 and enemy != 34 and
                     enemy != 40 and enemy != 43 and enemy != 44 and
                     enemy != 48 and enemy != 51 and not(53 <= enemy <= 56) and
                     enemy != 63 and enemy != 83 and enemy != 88 and enemy != 89 and enemy != 97 and
-                    enemy != 103 and enemy != 105 and enemy != 114 and
+                    enemy != 103 and enemy != 105 and enemy != 108 and enemy != 114 and
                     enemy != 132 and not(134 <= enemy <= 136) and enemy < 139):
                 #Appends data to enemy array if it's an enemy
                 if (enemy == 13 or enemy == 18 or enemy == 25 or
@@ -212,7 +224,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         #Logic for bosses
         boss_logic = [[17, 14], [30, 15], [42, 15, 16, 17, 18, 19, 20, 21], [62, 23, 1, 4, 6, -1, 1, 5],
-                      [95, 15, 22, 5], [96, 15, 22, 5], [107, 15, 1, 2, 4, 5, 6], [108, 15, 1, 2, 4, 5, 6],]
+                      [95, 15, 22, 5], [96, 15, 22, 5], [107, 15, 1, 2, 4, 5, 6],]
 
         #Logic for dream world bosses
         dream_boss_logic = [[23], [36, 15, 6], [52, 15, 22, 6], [79, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
@@ -347,9 +359,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     pass
                 for treasure_index in range(math.floor(len(parsed_fmapdat[room][7])/12)):
                     treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', parsed_fmapdat[room][7][treasure_index*12:treasure_index*12+12])
-                    if (room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
+                    if (room != 0x009 and room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
                             room != 0x054 and room != 0x1D2 and room != 0x2A8 and room != 0x2A9 and treasure_type % 0x100 != 0x16 and
-                            treasure_type % 0x100 != 0x17 and treasure_id != 157 and treasure_id != 161):
+                            treasure_type % 0x100 != 0x17):
                         pbar.update(1)
                         item_locals.append([room, treasure_index * 12, treasure_type, x, y, z, treasure_id])
                         item_pool.append([treasure_type, item_id])
@@ -364,7 +376,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       [66, 15, 0], [67, 15, 2, 3, -1, 15, 2, 5], [2505, 15, 0], [2506, 15, 0], [2507, 15, 0], [2508, 15, 0], [68, 15, 0], [69, 15, 0], [70, 15, 0],
                       [71, 15, 0], [72, 15], [73, 15], [74, 15, 16, 1], [75, 15, 16, 2], [76, 15, 2], [77, 15, 2],
                       [78, 15, 0], [79, 15], [80, 15], [81, 15], [82, 15, 2], [83, 15, 2], [84, 15, 2], [85, 15, 2, 3, 0, 15, 2, 5], [86, 15, 4],
-                      [87, 15], [88, 15], [89, 15, 4], [90, 15, 2], [91, 15, 0], [92, 15, 0, 1, 5, -1, 15, 0, 1, 3], [2389, 15, 0, 4, 5], [94, 15, 0, 4, 5],
+                      [87, 15], [88, 15], [89, 15, 4], [90, 15, 2], [2389, 15, 0, 4, 5], [94, 15, 0, 4, 5],
                       [95, 15, 0, 4, 5], [96, 15, 0, 4, 5], [97, 15, 0, 4, 5], [98, 15, 0, 4, 5], [99, 15, 0, 2, 4, 5], [100, 15, 0, 2, 4, 5],
                       [101, 15, 0, 2, 4, 5], [102, 15, 0, 2, 4, 5], [103, 15], [104, 15], [107, 15], [2390, 15, 0], [2391, 15, 0],
                       [108, 15, 0, 2], [109, 15, 0, 2], [110, 15, 0, 2], [111, 15, 0, 2], [112, 15, 0], [113, 15, 0], [114, 15, 0]]
@@ -507,7 +519,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                           [1617, 23, 4, 6, 8, 10, -1, 4, 5], [1618, 23, 2, 4, 6, 8, 10, -1, 2, 4, 5], [2361, 23, 2, 4, 6, 8, 10, -1, 2, 4, 5], [2362, 3, 5],
                           [1619, 23, 2, 4, 6, 8, 10, -1, 2, 3, 5], [1620, 23, 2, 4, 6, 8, 10, -1, 2, 3, 5], [1621, 3, 5], [2296, 2, 3, 5], [1623, 3, 5],]
 
-        item_logic_chunk[7] = [[24], [25], [26], [27, 3, -1, 5], [28], [29], [30], [31, 15], [32, 15], [33], [34, 15], [35, 15], [158], [159], [162], [163], [164], [165], [167, 6],
+        item_logic_chunk[7] = [[24], [25], [26], [27, 3, -1, 5], [28], [29], [30], [31, 15], [32, 15], [33], [34, 15], [35, 15], [157], [158], [159], [161], [162], [163], [164], [165], [167, 6],
         [168, 6], [169, 6], [171, 6], [173, 6], [175, 6], [177, 6], [1643, 6], [265, 16, 17, 2, -1, 2, 5], [266, 16, 17, 2, -1, 2, 5], [267, 16, 17, -1, 5], [148, 15, 6],]
 
         if settings[1][1] == 0:
@@ -980,6 +992,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 if i > 0:
                                     boss_stats_rand[i-1][n+1] = temp[n+1]
                             new_enemy_stats.append(boss_stats_rand[i])
+                            if new_enemy_stats[-1][0] == 107:
+                                for j in range(5):
+                                    new_enemy_stats[-1][j+1] *= 2
+                                new_enemy_stats.append([108, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                            elif new_enemy_stats[-1][0] == 17:
+                                for j in range(5):
+                                    new_enemy_stats[-1][j+1] *= 4
                             del boss_stats_rand[i]
                             del boss_logic[i]
                             i -= 1

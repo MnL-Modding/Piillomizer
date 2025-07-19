@@ -642,7 +642,29 @@ def pack(input_folder, repack_data, settings):
     script.header.actors[6] = (0x00000000, 0x80000000, 0xFFFF0018, 0xFFFFFFFF, len(script.subroutines)-1, 0x00591168)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
-    #Edits every room with attack piece blocks so they're all gone
+    #Changes the dream world to point to the proper overworld initialization subroutine, and vice versa
+    #room_sub_dat = [[0x001, 0, 0x8C, -3, 0x02C, 0x98, 0], [0x02C, 1, 0x6B, -1, 0x001, 0x9D, 1, 2, 0x79, -1, 0x001, 0x9D, 1]]
+    #for i in room_sub_dat:
+    #    script = fevent_manager.parsed_script(i[0], 0)
+    #    for j in range(int((len(i)-1)/6)):
+    #        if i[(j*6)+1] == 0:
+    #            @subroutine(subs=script.subroutines, hdr=script.header)
+    #            def new_sub(sub: Subroutine):
+    #                change_room(i[(j*6)+4], position=(0.0, 0.0, 0.0), init_sub=i[(j*6)+5], facing=4)
+    #        elif i[(j * 6) + 1] == 1:
+    #            @subroutine(subs=script.subroutines, hdr=script.header)
+    #            def new_sub(sub: Subroutine):
+    #                change_room(i[(j * 6) + 4], position=(0.0, 0.0, 0.0), init_sub=i[(j * 6) + 5], facing=4)
+    #        if i[(j * 6) + 1] == 0:
+    #            @subroutine(subs=script.subroutines, hdr=script.header)
+    #            def new_sub(sub: Subroutine):
+    #                change_room(i[(j * 6) + 4], position=(0.0, 0.0, 0.0), init_sub=i[(j * 6) + 5], facing=4)
+    #        if i[(j*6)+6] == 1:
+    #            script.subroutines[i[(j*6)+2]].commands[i[(j*6)+3]] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'new_sub'})
+    #        else:
+    #            script.subroutines[i[(j*6)+2]].commands[i[(j*6)+3]] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'new_sub'})
+
+    #Fixes the initialization subroutine in rooms with attack pieces
     attack_dat = [0x001, 0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                   0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
                   0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
@@ -650,6 +672,7 @@ def pack(input_folder, repack_data, settings):
                   0x14B, 0x14C, 0x14E, 0x14F, 0x161, 0x164, 0x165, 0x167, 0x168, 0x16C, 0x177, 0x17A, 0x17D, 0x187, 0x188, 0x189, 0x18A,
                   0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x22A,
                   0x22B, 0x22C, 0x22D, 0x22E, 0x22F, 0x231, 0x232, 0x233, 0x295,]
+    room_sub_dat = [0x001, ]
     j = []
     for i in range(len(attack_dat)):
         script = fevent_manager.parsed_script(attack_dat[i], 0)
