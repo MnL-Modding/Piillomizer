@@ -271,6 +271,9 @@ def pack(input_folder, repack_data, settings):
         Variables[0xC5CC] = 1.0 #You must find the Ultibed parts cutscene
         Variables[0xC438] = 1.0 #Ultibed cutscene in Mount Pajamaja is watched
         Variables[0xC4AE] = 1.0 #Fixes a glitch in the rock code
+        Variables[0xC9A2] = 1.0 #Ball Hop tutorial
+        Variables[0xC9A6] = 1.0 #Massifs can't open gate
+        Variables[0xC9A7] = 1.0 #Massifs give you attack pieces
         Variables[0xC304] = 1.0 #Spawns more rocks in Mushrise Park
         Variables[0xC9F5] = 1.0 #Boss Brickle ponders who can help him
         Variables[0xC9B2] = 1.0 #Ultibed in Mushrise Park start
