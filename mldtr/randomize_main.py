@@ -106,6 +106,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     enemy_stats[enemy].power = 0xFFFF
             else:
                 enemy_stats[enemy].power = 0xFFFF
+            if enemy == 87:
+                enemy_stats[enemy].exp *= 4
             if stat_mult[1] > 0:
                 enemy_stats[enemy].exp *= stat_mult[1]
                 if enemy_stats[enemy].exp > 0xFFFF:
@@ -886,7 +888,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         i -= 1
                         rbar.update(1)
                     i += 1
-            i = 0
             #Checks if more items can be randomized
             if prevlen <= len(item_pool) + len(key_item_pool) + len(attack_piece_pool) and len(key_item_pool) > 0 and len(new_item_locals) > 0:
                 if len(key_item_pool) > 0:
@@ -913,20 +914,20 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                   item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                         new_item_locals[old_spot] = narray
                         spottype = get_spot_type(item_locals[i])
-                        if key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004:
+                        if (key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004) and key_item_pool[nitem][0] != 0xB0F7:
                             repack_data.append(
                                 [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
                                  item_locals[i][6] + 0xD000, key_item_pool[nitem][0]])
                         elif key_item_pool[nitem][0] != 0xE000:
                             repack_data.append(
                                 [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
-                                 item_locals[i][6] + 0xD000, key_item_pool[nitem][0], 0xCDA0 + itemcut])
+                                 item_locals[i][6] + 0xD000, key_item_pool[nitem][0], 0xCDC0 + itemcut])
                             itemcut += 1
                         else:
                             repack_data.append(
                                 [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
                                  item_locals[i][6] + 0xD000, key_item_pool[nitem][0] + key_item_pool[nitem][1],
-                                 0xCDA0 + itemcut])
+                                 0xCDC0 + itemcut])
                             itemcut += 1
                         key_item_check[key_item_pool[nitem][1]] += 1
                         key_item_pool_checked.append(key_item_pool[nitem])
@@ -966,6 +967,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 enemy_stats_rand[i-1][n+1] = temp[n+1]
                         new_enemy_stats.append(enemy_stats_rand[i])
                         if new_enemy_stats[-1][0] == 87:
+                            new_enemy_stats[-1][5] //= 4
                             new_enemy_stats.append([88, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
                                                     new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
                                                     new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
@@ -993,14 +995,14 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         new_enemy_stats.append(boss_stats_rand[i])
                         if new_enemy_stats[-1][0] == 107:
                             for j in range(5):
-                                new_enemy_stats[-1][j+1] *= 2
+                                new_enemy_stats[-1][j+1] //= 2
                             new_enemy_stats.append([108, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
                                                     new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
                                                     new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                     new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
                         elif new_enemy_stats[-1][0] == 17:
                             for j in range(5):
-                                new_enemy_stats[-1][j+1] *= 4
+                                new_enemy_stats[-1][j+1] //= 4
                         del boss_stats_rand[i]
                         del boss_logic[i]
                         i -= 1

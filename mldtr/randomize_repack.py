@@ -388,7 +388,7 @@ def pack(input_folder, repack_data, settings):
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     script = fevent_manager.parsed_script(0x0001, 0)
-    script.header.triggers[1] = (0, 0, 0, 0, 0, 0x0032, 0x78012)
+    script.header.triggers[4] = (0, 0, 0, 0, 0, 0x0032, 0x78012)
 
     #Sets the script to look at the room you fight Torkscrew
     script = fevent_manager.parsed_script(0x0102, 0)
@@ -411,8 +411,8 @@ def pack(input_folder, repack_data, settings):
     script.header.triggers.append((0x02F50000, 0x2FFF2FFF, 0x00000000, 0x00000000, 0xFFFF0000, 0x0000005C, 0x00078022))
 
     #Skips the post-boss cutscene
-    script.subroutines[0x49].commands[6] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'label_151'})
-    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+    #script.subroutines[0x49].commands[6] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'label_151'})
+    #update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Fixes Smoldergeist
     script = fevent_manager.parsed_script(0x0094, 0)
@@ -1048,7 +1048,10 @@ def pack(input_folder, repack_data, settings):
             script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
             blockcount += 1
             if i[6] > 0xB0F0:
-                block_info.append([i[6], 0.0])
+                if (i[6] < 0xE000 or i[6] > 0xE004) and i[6] != 0xB0F7:
+                    block_info.append([i[6], 0.0])
+                else:
+                    block_info.append([i[7], 0.0])
             else:
                 block_info.append([i[6], i[7]])
         elif i[0] == 5:
