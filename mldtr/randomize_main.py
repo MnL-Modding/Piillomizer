@@ -824,7 +824,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                               [0x01, 0xB04C], [0x02, 0xB04C], [0x04, 0xB04C], [0x08, 0xB04C], [0x10, 0xB04C]],]
 
         #Logic for the key items, so they only spawn when others are already in the pool
-        logic_logic = [[0], [1, 0], [2, 1], [3], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5], [6, 15, -1, 23, 1, 3], [7, 6], [8, 6], [9, 6], [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10],
+        logic_logic = [[0], [1, 0], [2, 1], [3], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5], [6], [7, 6], [8, 6], [9, 6], [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10],
                        [12, 7], [13, 7], [14], [15], [16, 15], [17, 15, 16], [18, 15, 16], [19, 15, 16], [20, 15, 16], [21, 15, 16], [22, 15], [23, 1],
                        [24, 1, 3, 6], [25, 24], [26, 25], [27, 15, 1]]
         pbar.update(2)
@@ -843,6 +843,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         #[Trigger type, Room ID, X Pos, Y Pos, Z Pos, Collectible/Cutscene ID, Ability/Item/Key Item/Attack(, Attack Piece ID/Coin Amount/Item Cutscene/Hammer or Spin Cutscene, Coin Cutscene)]
         repack_data = []
+        i = 0
         itemcut = 0
         attackcut = 0
         key_item_pool_checked = []
@@ -851,27 +852,26 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
             prevlen = len(item_pool) + len(key_item_pool) + len(attack_piece_pool)
-            item_logic_len = len(item_logic)
-            for i in range(item_logic_len):
-                try:
-                    if len(item_logic) > 0:
-                        if is_available(item_logic[i], key_item_check, settings):
-                            rand_array = random.randint(0, 1)
-                            if rand_array == 0 and len(item_pool) > 0:
-                                #Code for randomizing blocks and bean spots with just eachother
-                                nitem = random.randint(0, len(item_pool) - 1)
-                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
-                                            item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
-                                new_item_locals.append(narray)
-                                del item_pool[nitem]
-                                del item_locals[i]
-                                del item_logic[i]
-                            elif len(attack_piece_pool) > 0:
-                                #Code for putting attacks in blocks and bean spots
-                                if len(attack_piece_pool[attack]) == 0:
-                                    del attack_piece_pool[attack]
-                                    if len(attack_piece_pool) > 0:
-                                        attack = random.randint(0, len(attack_piece_pool) - 1)
+            while i < len(item_logic):
+                if len(item_logic) > 0:
+                    if is_available(item_logic[i], key_item_check, settings):
+                        rand_array = random.randint(0, 1)
+                        if rand_array == 0 and len(item_pool) > 0:
+                            #Code for randomizing blocks and bean spots with just eachother
+                            nitem = random.randint(0, len(item_pool) - 1)
+                            narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
+                                        item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            new_item_locals.append(narray)
+                            del item_pool[nitem]
+                            del item_locals[i]
+                            del item_logic[i]
+                        elif len(attack_piece_pool) > 0:
+                            #Code for putting attacks in blocks and bean spots
+                            if len(attack_piece_pool[attack]) == 0:
+                                del attack_piece_pool[attack]
+                                if len(attack_piece_pool) > 0:
+                                    attack = random.randint(0, len(attack_piece_pool) - 1)
+                            if len(attack_piece_pool) > 0:
                                 nitem = random.randint(0, len(attack_piece_pool[attack]) - 1)
                                 narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
@@ -883,10 +883,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 del attack_piece_pool[attack][nitem]
                                 del item_locals[i]
                                 del item_logic[i]
-                            i -= 1
-                            rbar.update(1)
-                except IndexError:
-                    break
+                        i -= 1
+                        rbar.update(1)
+                    i += 1
+            i = 0
             #Checks if more items can be randomized
             if prevlen <= len(item_pool) + len(key_item_pool) + len(attack_piece_pool) and len(key_item_pool) > 0 and len(new_item_locals) > 0:
                 if len(key_item_pool) > 0:
@@ -946,118 +946,114 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             del repack_data[attack_spot[0]]
                         else:
                             item_pool.append([new_item_locals[0][2], new_item_locals[0][3]])
-                        item_locals[len(item_logic)] = [new_item_locals[0][0], new_item_locals[0][1], new_item_locals[0][2],
+                        item_locals.append([new_item_locals[0][0], new_item_locals[0][1], new_item_locals[0][2],
                                             new_item_locals[0][4], new_item_locals[0][5], new_item_locals[0][6],
-                                            new_item_locals[0][7]]
+                                            new_item_locals[0][7]])
                         item_logic.append([0])
                         del new_item_locals[0]
+            i = 0
 
             #Randomizes enemy stats
-            for i in range(len(enemy_logic)):
+            while i < len(enemy_logic):
                 if len(enemy_logic) > 0:
-                    try:
-                        if is_available(enemy_logic[i], key_item_check, settings):
-                            temp = enemy_stats_rand[i]
-                            for n in range(len(enemy_stats_rand[0])-1):
-                                enemy_stats_rand[i][n+1] = enemy_stats_rand[0][n+1]
-                                for j in range(i-1):
-                                    enemy_stats_rand[j][n+1] = enemy_stats_rand[j+1][n+1]
-                                if i > 0:
-                                    enemy_stats_rand[i-1][n+1] = temp[n+1]
-                            new_enemy_stats.append(enemy_stats_rand[i])
-                            if new_enemy_stats[-1][0] == 87:
-                                new_enemy_stats.append([88, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([89, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                    if is_available(enemy_logic[i], key_item_check, settings):
+                        temp = enemy_stats_rand[i]
+                        for n in range(len(enemy_stats_rand[0])-1):
+                            enemy_stats_rand[i][n+1] = enemy_stats_rand[0][n+1]
+                            for j in range(i-1):
+                                enemy_stats_rand[j][n+1] = enemy_stats_rand[j+1][n+1]
+                            if i > 0:
+                                enemy_stats_rand[i-1][n+1] = temp[n+1]
+                        new_enemy_stats.append(enemy_stats_rand[i])
+                        if new_enemy_stats[-1][0] == 87:
+                            new_enemy_stats.append([88, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                    new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                    new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                    new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                            new_enemy_stats.append([89, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                    new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                    new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                    new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
 
-                            del enemy_stats_rand[i]
-                            del enemy_logic[i]
-                            i -= 1
-                    except IndexError:
-                        break
-            for i in range(len(boss_logic)):
+                        del enemy_stats_rand[i]
+                        del enemy_logic[i]
+                        i -= 1
+                    i += 1
+            i = 0
+            while i < len(boss_logic):
                 if len(boss_logic) > 0:
-                    try:
-                        if is_available(boss_logic[i], key_item_check, settings):
-                            temp = boss_stats_rand[i]
-                            for n in range(len(boss_stats_rand[0])-1):
-                                boss_stats_rand[i][n+1] = boss_stats_rand[0][n+1]
-                                for j in range(i-1):
-                                    boss_stats_rand[j][n+1] = boss_stats_rand[j+1][n+1]
-                                if i > 0:
-                                    boss_stats_rand[i-1][n+1] = temp[n+1]
-                            new_enemy_stats.append(boss_stats_rand[i])
-                            if new_enemy_stats[-1][0] == 107:
-                                for j in range(5):
-                                    new_enemy_stats[-1][j+1] *= 2
-                                new_enemy_stats.append([108, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                            elif new_enemy_stats[-1][0] == 17:
-                                for j in range(5):
-                                    new_enemy_stats[-1][j+1] *= 4
-                            del boss_stats_rand[i]
-                            del boss_logic[i]
-                            i -= 1
-                    except IndexError:
-                        break
-            for i in range(len(dream_enemy_logic)):
+                    if is_available(boss_logic[i], key_item_check, settings):
+                        temp = boss_stats_rand[i]
+                        for n in range(len(boss_stats_rand[0])-1):
+                            boss_stats_rand[i][n+1] = boss_stats_rand[0][n+1]
+                            for j in range(i-1):
+                                boss_stats_rand[j][n+1] = boss_stats_rand[j+1][n+1]
+                            if i > 0:
+                                boss_stats_rand[i-1][n+1] = temp[n+1]
+                        new_enemy_stats.append(boss_stats_rand[i])
+                        if new_enemy_stats[-1][0] == 107:
+                            for j in range(5):
+                                new_enemy_stats[-1][j+1] *= 2
+                            new_enemy_stats.append([108, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                    new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                    new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                    new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                        elif new_enemy_stats[-1][0] == 17:
+                            for j in range(5):
+                                new_enemy_stats[-1][j+1] *= 4
+                        del boss_stats_rand[i]
+                        del boss_logic[i]
+                        i -= 1
+                    i += 1
+            i = 0
+            while i < len(dream_enemy_logic):
                 if len(dream_enemy_logic) > 0:
-                    try:
-                        if is_available(dream_enemy_logic[i], key_item_check, settings):
-                            temp = dream_enemy_stats_rand[i]
-                            for n in range(len(dream_enemy_stats_rand[0])-1):
-                                dream_enemy_stats_rand[i][n+1] = dream_enemy_stats_rand[0][n+1]
-                                for j in range(i-1):
-                                    dream_enemy_stats_rand[j][n+1] = dream_enemy_stats_rand[j+1][n+1]
-                                if i > 0:
-                                    dream_enemy_stats_rand[i-1][n+1] = temp[n+1]
-                            new_enemy_stats.append(dream_enemy_stats_rand[i])
-                            del dream_enemy_stats_rand[i]
-                            del dream_enemy_logic[i]
-                            i -= 1
-                    except IndexError:
-                        break
-            for i in range(len(dream_boss_logic)):
+                    if is_available(dream_enemy_logic[i], key_item_check, settings):
+                        temp = dream_enemy_stats_rand[i]
+                        for n in range(len(dream_enemy_stats_rand[0])-1):
+                            dream_enemy_stats_rand[i][n+1] = dream_enemy_stats_rand[0][n+1]
+                            for j in range(i-1):
+                                dream_enemy_stats_rand[j][n+1] = dream_enemy_stats_rand[j+1][n+1]
+                            if i > 0:
+                                dream_enemy_stats_rand[i-1][n+1] = temp[n+1]
+                        new_enemy_stats.append(dream_enemy_stats_rand[i])
+                        del dream_enemy_stats_rand[i]
+                        del dream_enemy_logic[i]
+                        i -= 1
+                    i += 1
+            i = 0
+            while i < len(dream_boss_logic):
                 if len(dream_boss_logic) > 0:
-                    try:
-                        if is_available(dream_boss_logic[i], key_item_check, settings):
-                            temp = dream_boss_stats_rand[i]
-                            for n in range(len(dream_boss_stats_rand[0])-1):
-                                dream_boss_stats_rand[i][n+1] = dream_boss_stats_rand[0][n+1]
-                                for j in range(i-1):
-                                    dream_boss_stats_rand[j][n+1] = dream_boss_stats_rand[j+1][n+1]
-                                if i > 0:
-                                    dream_boss_stats_rand[i-1][n+1] = temp[n+1]
-                            new_enemy_stats.append(dream_boss_stats_rand[i])
-                            del dream_boss_stats_rand[i]
-                            del dream_boss_logic[i]
-                            i -= 1
-                    except IndexError:
-                        break
-            for i in range(len(filler_logic)):
+                    if is_available(dream_boss_logic[i], key_item_check, settings):
+                        temp = dream_boss_stats_rand[i]
+                        for n in range(len(dream_boss_stats_rand[0])-1):
+                            dream_boss_stats_rand[i][n+1] = dream_boss_stats_rand[0][n+1]
+                            for j in range(i-1):
+                                dream_boss_stats_rand[j][n+1] = dream_boss_stats_rand[j+1][n+1]
+                            if i > 0:
+                                dream_boss_stats_rand[i-1][n+1] = temp[n+1]
+                        new_enemy_stats.append(dream_boss_stats_rand[i])
+                        del dream_boss_stats_rand[i]
+                        del dream_boss_logic[i]
+                        i -= 1
+                    i += 1
+            i = 0
+            while i < len(filler_logic):
                 if len(filler_logic) > 0:
-                    try:
-                        if is_available(filler_logic[i], key_item_check, settings):
-                            temp = filler_stats_rand[i]
-                            for n in range(len(filler_stats_rand[0])-1):
-                                filler_stats_rand[i][n+1] = filler_stats_rand[0][n+1]
-                                for j in range(i-1):
-                                    filler_stats_rand[j][n+1] = filler_stats_rand[j+1][n+1]
-                                if i > 0:
-                                    filler_stats_rand[i-1][n+1] = temp[n+1]
-                            new_enemy_stats.append(filler_stats_rand[i])
-                            del filler_stats_rand[i]
-                            del filler_logic[i]
-                            i -= 1
-                    except IndexError:
-                        break
+                    if is_available(filler_logic[i], key_item_check, settings):
+                        temp = filler_stats_rand[i]
+                        for n in range(len(filler_stats_rand[0])-1):
+                            filler_stats_rand[i][n+1] = filler_stats_rand[0][n+1]
+                            for j in range(i-1):
+                                filler_stats_rand[j][n+1] = filler_stats_rand[j+1][n+1]
+                            if i > 0:
+                                filler_stats_rand[i-1][n+1] = temp[n+1]
+                        new_enemy_stats.append(filler_stats_rand[i])
+                        del filler_stats_rand[i]
+                        del filler_logic[i]
+                        i -= 1
+                    i += 1
+            i = 0
 
             #Swaps a coin with whatever is left in the item pool
             if (len(item_pool) > 0 or len(attack_piece_pool) > 0) and len(item_logic) == 0:
