@@ -359,7 +359,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     pass
                 for treasure_index in range(math.floor(len(parsed_fmapdat[room][7])/12)):
                     treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', parsed_fmapdat[room][7][treasure_index*12:treasure_index*12+12])
-                    if (room != 0x009 and room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
+                    if (room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
                             room != 0x054 and room != 0x1D2 and room != 0x2A8 and room != 0x2A9 and treasure_type % 0x100 != 0x16 and
                             treasure_type % 0x100 != 0x17):
                         pbar.update(1)
@@ -376,7 +376,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       [66, 15, 0], [67, 15, 2, 3, -1, 15, 2, 5], [2505, 15, 0], [2506, 15, 0], [2507, 15, 0], [2508, 15, 0], [68, 15, 0], [69, 15, 0], [70, 15, 0],
                       [71, 15, 0], [72, 15], [73, 15], [74, 15, 16, 1], [75, 15, 16, 2], [76, 15, 2], [77, 15, 2],
                       [78, 15, 0], [79, 15], [80, 15], [81, 15], [82, 15, 2], [83, 15, 2], [84, 15, 2], [85, 15, 2, 3, 0, 15, 2, 5], [86, 15, 4],
-                      [87, 15], [88, 15], [89, 15, 4], [90, 15, 2], [2389, 15, 0, 4, 5], [94, 15, 0, 4, 5],
+                      [87, 15], [88, 15], [89, 15, 4], [90, 15, 2], [91, 15, 0], [92, 15, 1, 5], [2389, 15, 0, 4, 5], [94, 15, 0, 4, 5],
                       [95, 15, 0, 4, 5], [96, 15, 0, 4, 5], [97, 15, 0, 4, 5], [98, 15, 0, 4, 5], [99, 15, 0, 2, 4, 5], [100, 15, 0, 2, 4, 5],
                       [101, 15, 0, 2, 4, 5], [102, 15, 0, 2, 4, 5], [103, 15], [104, 15], [107, 15], [2390, 15, 0], [2391, 15, 0],
                       [108, 15, 0, 2], [109, 15, 0, 2], [110, 15, 0, 2], [111, 15, 0, 2], [112, 15, 0], [113, 15, 0], [114, 15, 0]]

@@ -704,9 +704,9 @@ def pack(input_folder, repack_data, settings):
                     if block_info[a][1] == 0.0:
                         branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
                     else:
-                        Variables[0x1000] = Variables[block_info[a][0]] >> int(math.log2(block_info[a][1]))
-                        Variables[0x1000] &= 1
-                        branch_if(Variables[0x1000], '!=', 1.0, 'label_' + str(a))
+                        Variables[0x100F] = Variables[block_info[a][0]] >> int(math.log2(block_info[a][1]))
+                        Variables[0x100F] &= 1
+                        branch_if(Variables[0x100F], '!=', 1.0, 'label_' + str(a))
                     set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
                     try:
                         emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
