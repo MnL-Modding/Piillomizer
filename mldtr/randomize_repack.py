@@ -281,8 +281,8 @@ def pack(input_folder, repack_data, settings):
         Variables[0xC9F3] = 1.0 #Guy lets you into a rock area
         Variables[0xC9F4] = 1.0 #Tree blocking other rock area is removed
         Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
-        Variables[0xC9DA] = 1.0 #Can enter the cave
-        #Variables[0xC9DD] = 1.0 #Listened to the old coot vent
+        Variables[0xC9D4] = 1.0 #Can enter the cave
+        Variables[0xC9DD] = 1.0 #Listened to the old coot vent
         #Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
         Variables[0xC9E1] = 1.0 #Wiggler first cutscene watched
         Variables[0xC9E2] = 1.0 #Wiggler second cutscene watched
@@ -293,6 +293,10 @@ def pack(input_folder, repack_data, settings):
         Variables[0xE0F9] = 1.0 #Stairs to switch in Somnom Woods are up
         Variables[0xC5A0] = 1.0 #Cog has been turned
         Variables[0xE0FA] = 1.0 #Switch in Somnom Woods has been turned
+        Variables[0xC5A1] = 1.0 #Bedsmith builds the Ultibed
+        Variables[0xC5B0] = 1.0 #Camera pans to show the rest of the area
+        Variables[0xC5C8] = 1.0 #Met first Pi'illo Master
+        Variables[0xC5A2] = 1.0 #Watched cutscene with children of Sommon
         Variables[0xC45E] = 1.0 #Elite Trio flee
         Variables[0xC43B] = 1.0 #Kamek randomized the rooms in the first area
         Variables[0xC475] = 1.0 #Switch is on the other side
