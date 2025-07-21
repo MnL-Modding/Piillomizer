@@ -108,17 +108,7 @@ def randomize(window):
     elif region[0] == "J":
         title_id = "0004000000060600"
     elif region[0] == "K":
-        title_id = ""
-    elif region[0] == "C":
-        title_id = ""
-    elif region[0] == "Y":
-        title_id = ""
-    elif region[0] == "W":
-        title_id = ""
-    elif region[0] == "C":
-        title_id = ""
-    elif region[0] == "A":
-        title_id = ""
+        title_id = "00040000000FCD00"
     else:
         title_id = ""
     parent_folder = os.path.dirname(window.romfs) + "/"
@@ -140,27 +130,29 @@ def randomize(window):
     window.enemy_stats[0] = 1
     if window.attack_mode.get() == "0.5x - Easy":
         window.enemy_stats[0] = 0.5
-    if window.attack_mode.get() == "1x - Normal":
+    elif window.attack_mode.get() == "1x - Normal":
         window.enemy_stats[0] = 1
-    if window.attack_mode.get() == "2x - Hard":
+    elif window.attack_mode.get() == "2x - Hard":
         window.enemy_stats[0] = 2
-    if window.attack_mode.get() == "3x - Very Hard":
+    elif window.attack_mode.get() == "3x - Very Hard":
         window.enemy_stats[0] = 3
-    if window.attack_mode.get() == "5x - Good Luck":
+    elif window.attack_mode.get() == "5x - Good Luck":
         window.enemy_stats[0] = 5
-    if window.attack_mode.get() == "Maxed Out - The Perfect Run":
+    elif window.attack_mode.get() == "Maxed Out - The Perfect Run":
         window.enemy_stats[0] = -1
 
     window.enemy_stats[1] = 2
     if window.exp_mode.get() == "0.5x - Grinder's Delight":
         window.enemy_stats[1] = 0.5
-    if window.exp_mode.get() == "1x - Normal":
+    elif window.exp_mode.get() == "1x - Normal":
         window.enemy_stats[1] = 1
-    if window.exp_mode.get() == "2x - Quick Level":
+    elif window.exp_mode.get() == "2x - Quick Level":
         window.enemy_stats[1] = 2
-    if window.exp_mode.get() == "5x - Rapid Level":
+    elif window.exp_mode.get() == "3x - Quicker Level":
+        window.enemy_stats[1] = 3
+    elif window.exp_mode.get() == "5x - Rapid Level":
         window.enemy_stats[1] = 5
-    if window.exp_mode.get() == "10x - Enemies are Overrated":
+    elif window.exp_mode.get() == "10x - Enemies are Overrated":
         window.enemy_stats[1] = 10
 
     #Appends settings to an array
@@ -168,7 +160,10 @@ def randomize(window):
                                window.key8.get(), window.key9.get(), window.key10.get(), window.key11.get(), window.key12.get(), window.key13.get(), window.key14.get(),
                                window.key15.get(), window.key16.get(), window.key17.get(), window.key18.get(), window.key19.get(), window.key20.get(), window.key21.get(),
                                window.key22.get(), window.key23.get(), window.key24.get(), window.key25.get(), window.key26.get(), window.key27.get(), window.key28.get()],
-                              [window.mini_nerf.get(), window.ball_nerf.get(), 0]]
+                              [window.mini_nerf.get(), window.ball_nerf.get(), 0],
+                              [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
+                               window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
+                               window.boss15.get(), window.boss16.get()]]
 
     # Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed)
@@ -216,7 +211,7 @@ def main():
                              "Maxed Out - The Perfect Run"]
     window.exp_mode = tk.StringVar()
     window.exp_mode.set("2x - Quick Level")
-    window.exp_options = ["0.5x - Grinder's Delight", "1x - Normal", "2x - Quick Level", "5x - Rapid Level",
+    window.exp_options = ["0.5x - Grinder's Delight", "1x - Normal", "2x - Quick Level", "3x - Quicker Level","5x - Rapid Level",
                           "10x - Enemies are Overrated"]
     window.key1 = tk.DoubleVar()
     window.key2 = tk.DoubleVar()
@@ -248,6 +243,23 @@ def main():
     window.key28 = tk.DoubleVar()
     window.mini_nerf = tk.IntVar()
     window.ball_nerf = tk.IntVar()
+
+    window.boss1 = tk.IntVar()
+    window.boss2 = tk.IntVar()
+    window.boss3 = tk.IntVar()
+    window.boss4 = tk.IntVar()
+    window.boss5 = tk.IntVar()
+    window.boss6 = tk.IntVar()
+    window.boss7 = tk.IntVar()
+    window.boss8 = tk.IntVar()
+    window.boss9 = tk.IntVar()
+    window.boss10 = tk.IntVar()
+    window.boss11 = tk.IntVar()
+    window.boss12 = tk.IntVar()
+    window.boss13 = tk.IntVar()
+    window.boss14 = tk.IntVar()
+    window.boss15 = tk.IntVar()
+    window.boss16 = tk.IntVar()
 
     #Creates tabs
     window.menu = ttk.Notebook(window)
@@ -287,22 +299,26 @@ def main():
     window.show_credits.place(x=360, y=10)
 
     #Lets you decide options for enemy attack
+    window.key_label = ttk.Label(tabEnemy, text = "Multiplier for enemy attack:")
+    window.key_label.place(x=30, y=175)
     window.enemy_attack = ttk.OptionMenu(
         tabEnemy,
         window.attack_mode,
         window.attack_options[1],
         *window.attack_options
     )
-    window.enemy_attack.place(x=160, y=100)
+    window.enemy_attack.place(x=25, y=200)
 
     #Lets you decide options for experience gained in battle
+    window.key_label = ttk.Label(tabEnemy, text = "Multiplier for experience:")
+    window.key_label.place(x=255, y=175)
     window.enemy_exp = ttk.OptionMenu(
         tabEnemy,
         window.exp_mode,
         window.exp_options[2],
         *window.exp_options
     )
-    window.enemy_exp.place(x=160, y=150)
+    window.enemy_exp.place(x=250, y=200)
 
     # Press button to open songs
     window.songdir_button = ttk.Button(
@@ -355,7 +371,7 @@ def main():
 
     #Buttons for the different ability options
     window.key_label = ttk.Label(tabMain, text = "Key Items you want to EXCLUDE:")
-    window.key_label.place(x=150, y=20)
+    window.key_label.place(x=129, y=20)
     window.hammer_check = ttk.Checkbutton(
         tabMain,
         text = "Hammers",
@@ -608,7 +624,7 @@ def main():
     )
     window.neo_castle_check.place(x=359, y=200)
 
-    #Settings for the
+    #Settings to reduce Mini Mario requirements
     window.mini_nerf_check = ttk.Checkbutton(
         tabMain,
         text = "Reduce Mini Mario Requirements",
@@ -618,7 +634,7 @@ def main():
     )
     window.mini_nerf_check.place(x=16, y=250)
 
-    #Settings for the
+    #Settings to make the Ball Hop skip less
     window.ball_nerf_check = ttk.Checkbutton(
         tabMain,
         text = "Nerf Ball Hop",
@@ -627,6 +643,153 @@ def main():
         offvalue = 0
     )
     window.ball_nerf_check.place(x=240, y=250)
+
+    #Settings for the bosses
+    window.key_label = ttk.Label(tabEnemy, text = "Bosses you want to EXCLUDE:")
+    window.key_label.place(x=150, y=20)
+    window.boss1_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Smoldergeist",
+        variable = window.boss1,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss1_check.place(x=12, y=50)
+
+    window.boss2_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Dreamy Mario",
+        variable = window.boss2,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss2_check.place(x=120, y=50)
+
+    window.boss3_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Grobot",
+        variable = window.boss3,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss3_check.place(x=225, y=50)
+
+    window.boss4_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Bowser & Antasma",
+        variable = window.boss4,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss4_check.place(x=320, y=50)
+
+    window.boss5_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Torkscrew",
+        variable = window.boss5,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss5_check.place(x=12, y=75)
+
+    window.boss6_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Drilldozer",
+        variable = window.boss6,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss6_check.place(x=120, y=75)
+
+    window.boss7_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Big Massif",
+        variable = window.boss7,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss7_check.place(x=225, y=75)
+
+    window.boss8_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Mammoshka",
+        variable = window.boss8,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss8_check.place(x=320, y=75)
+
+    window.boss9_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Mount Pajamaja",
+        variable = window.boss9,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss9_check.place(x=12, y=100)
+
+    window.boss10_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Elite Trio",
+        variable = window.boss10,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss10_check.place(x=120, y=100)
+
+    window.boss11_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Wiggler & Popple",
+        variable = window.boss11,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss11_check.place(x=200, y=100)
+
+    window.boss12_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Earthwake",
+        variable = window.boss12,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss12_check.place(x=320, y=100)
+
+    window.boss13_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Pi'illodium",
+        variable = window.boss13,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss13_check.place(x=12, y=125)
+
+    window.boss14_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Zeekeeper",
+        variable = window.boss14,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss14_check.place(x=120, y=125)
+
+    window.boss15_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Kamek 3",
+        variable = window.boss15,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss15_check.place(x=225, y=125)
+
+    window.boss16_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Antasma",
+        variable = window.boss16,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.boss16_check.place(x=320, y=125)
 
     #Explains how the custom music categorization works
     window.category_info = ttk.Button(

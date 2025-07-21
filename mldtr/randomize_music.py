@@ -106,7 +106,7 @@ def import_random(section, input_folder, filenames_all, mode):
                 if i == 34:
                     category = 4
             else:
-                category = random.randint(0,5)
+                category = random.randint(0,4)
                 randi = random.randint(0, len(filenames_all[category])-1)
             while randi in has_done[category] or randi > len(filenames_all[category]):
                 if not(mode):

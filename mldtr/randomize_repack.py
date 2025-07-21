@@ -375,6 +375,22 @@ def pack(input_folder, repack_data, settings):
             Variables[0xE0AA] = 1.0
             Variables[0xE0BC] = 1.0
             Variables[0xE105] = 1.0
+        Variables[0xCC28] = settings[2][0]
+        Variables[0xCB07] = settings[2][1]
+        Variables[0xC92F] = settings[2][2]
+        Variables[0xC04C] = settings[2][3]
+        Variables[0xC367] = settings[2][4]
+        Variables[0xC057] = settings[2][5]
+        Variables[0xC60E] = settings[2][6]
+        Variables[0xC423] = settings[2][7]
+        Variables[0xC649] = settings[2][8]
+        Variables[0xCB45] = settings[2][9]
+        Variables[0xC637] = settings[2][10]
+        Variables[0xC5AE] = settings[2][11]
+        Variables[0xC0BF] = settings[2][12]
+        Variables[0xC0B8] = settings[2][13]
+        Variables[0xC0CA] = settings[2][14]
+        Variables[0xC45C] = settings[2][15]
         change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
