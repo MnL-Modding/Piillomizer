@@ -25,7 +25,7 @@ def get_room(id):
     elif 0x033 <= id <= 0x037 or id == 0x039 or 0x03C <= id <= 0x044 or 0x108 <= id <= 0x10A or id == 0x288:
         return "Wakeport"
     elif id == 0x038 or id == 0x03A or id == 0x03B or 0x045 <= id <= 0x04F:
-        return "Driftwood Shores"
+        return "Driftwood Shore"
     elif 0x066 <= id <= 0x081 or id == 0x100 or id == 0x10B or id == 0x10C:
         return "Mount Pajamaja"
     elif id == 0x082 or 0x084 <= id <= 0x09B or 0x136 <= id <= 0x13B or id == 0x1D8:
@@ -35,7 +35,7 @@ def get_room(id):
     elif 0x0B1 <= id <= 0x0C7 or 0x0E4 <= id <= 0x0F0 or 0x13C <= id <= 0x13E or id == 0x1D6:
         return "Dreamy Dozing Sands"
     elif 0x0D2 <= id <= 0x0D6 or 0x161 <= id <= 0x182 or id == 0x1C9 or id == 0x1CA:
-        return "Dreamy Driftwood Shores"
+        return "Dreamy Driftwood Shore"
     elif 0x0FB <= id <= 0x0FD or 0x219 <= id <= 0x238:
         return "Dreamy Somnom Woods"
     elif id == 0x106 or 0x10D <= id <= 0x134 or id == 0x12B or id == 0x12C or id == 0x1CF or id == 0x1E1 or id == 0x294 or id == 0x295:
@@ -225,8 +225,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                  [122, 15, 27, 1, 4, 5, 6], [123, 15, 27, 1, 4, 5, 6], [124, 15, 27, 1, 5, 6], [125, 15, 27, 1, 5, 6], [133, 15, 27, 1, 4, 5, 6],]
 
         #Logic for bosses
-        boss_logic = [[17, 14], [30, 15], [42, 15, 16, 17, 18, 19, 20, 21], [62, 23, 1, 4, 6, -1, 1, 5],
-                      [95, 15, 22, 5], [96, 15, 22, 5], [107, 15, 1, 2, 4, 5, 6],]
+        boss_logic = [[17, 14], [30, 15], [42, 15, 16, 17, 18, 19, 20, 21], [62, 23, 1, 4, 6, 8, 10, -1, 1, 5],
+                      [95, 15, 16, 22, 1, 2, 4, 5, 6], [96, 15, 16, 22, 1, 2, 4, 5, 6], [107, 15, 1, 2, 4, 5, 6],]
 
         #Logic for dream world bosses
         dream_boss_logic = [[23], [36, 15, 6], [52, 15, 22, 6], [79, 15, 16, 24, 25, 26, 1, 4, 6, -1, 15, 16, 24, 25, 26, 4, 5, 6],
@@ -246,16 +246,36 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                  [85, 15, -1, 23, 4, 5], [86, 15, -1, 23, 4, 5], [87, 15, -1, 23, 4, 5], [90, 23, 4, 5], [94, 15, 16, 17, 18, 19, 20, 21, 5],
                                  [100, 15, 3, 5], [101, 15, 5], [102, 15, 5], [104, 15, 5], [106, 15, 5], [113, 15, 27, 5], [115, 15, 27, 5], [116, 15, 27, 5],
                                  [117, 15, 27, 4, 5], [118, 15, 27, 4, 5], [119, 15, 27, 4, 5], [120, 15, 27, 4, 5]]
+
+                replace_boss = [[62, 23, 4, 6, 8, 10], [95, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10], [96, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10]]
+
+                replace_dream_boss = []
             elif settings[1][0] == 1:
                 replace_enemy = [[41, 15, 16, 5, -1, 15, 16, 17, 2], [58], [59, 23, -1, 5], [60, 23, 4, 6, -1, 5], [68, 15, 16], [69, 15, 16],
                                  [70, 15, 16], [71, 15, 16], [85, 15, -1, 4, 5], [86, 15, -1, 4, 5], [87, 15, -1, 4, 5], [90, 4, 5],
                                  [101, 15, 5], [102, 15, 5], [104, 15, 5], [106, 15, 5], [113, 15, 27, 5], [115, 15, 27, 5], [116, 15, 27, 5],
                                  [117, 15, 27, 4, 5], [118, 15, 27, 4, 5], [119, 15, 27, 4, 5], [120, 15, 27, 4, 5]]
+
+                replace_boss = [[62, 23, 4, 6, 8, 10, -1, 5]]
+
+                replace_dream_boss = []
             else:
                 replace_enemy = [[41, 15, 16, 17, 2], [58, 1], [59, 23, 1], [60, 23, 1, 4, 6], [85, 15, -1, 23, 1, 4, 5], [86, 15, -1, 23, 1, 4, 5],
                                  [87, 15, -1, 23, 1, 4, 5], [90, 23, 1, 4, 5], [94, 15, 16, 17, 18, 19, 20, 21, 5],]
+
+                replace_boss = [[62, 23, 1, 4, 6, 8, 10], [95, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10], [96, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10]]
+
+                replace_dream_boss = []
             for e in replace_enemy:
-                enemy_logic[find_index_in_2d_list(enemy_logic, e[0])[0]] = e
+                el = 0
+                while enemy_logic[el][0] != e[0]:
+                    el += 1
+                enemy_logic[el] = e
+            for b in replace_boss:
+                bl = 0
+                while boss_logic[bl][0] != b[0]:
+                    bl += 1
+                boss_logic[bl] = b
         #Loads in FMap as a 3D array
         parsed_fmapdat = []
         with (
@@ -479,7 +499,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                           [1617, 23, 1, 4, 6, 8, 10, -1, 1, 4, 5], [1618, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 4, 5], [2361, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 4, 5], [2362, 1, 3, 5],
                           [1619, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 3, 5], [1620, 23, 1, 2, 4, 6, 8, 10, -1, 1, 2, 3, 5], [1621, 1, 3, 5], [2296, 1, 2, 3, 5], [1623, 1, 3, 5],]
         elif settings[1][0] == 1 and settings[1][1] == 1:
-            item_logic_chunk[6] = [[1573], [1574], [1575], [1576, 23], [1577, 23], [2554, 23, 3], [1578, 23, 3, -1, 23, 5], [1579, 23, 2, 3],
+            item_logic_chunk[6] = [[1573, 1], [1574], [1575], [1576, 23], [1577, 23], [2554, 23, 3], [1578, 23, 3, -1, 23, 5], [1579, 23, 2, 3],
                           [1580, 23, 2, 3], [2555, 23, 1], [1581, 23], [1582, 23], [1583, 23, 2, 4], [2402, 23, 2, 4],
                           [2542, 23], [2543, 23, 3], [1584, 23], [1585, 23, 2, 3], [1586, 23, 3], [2558, 23], [1587, 23, 3], [1588, 23],
                           [1589, 23], [1590, 23], [1591, 23, 2, 3], [1592, 23, 3], [2403, 23, 3, -1, 23, 5], [2559, 23, 3],
@@ -507,7 +527,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                           [1617, 23, 1, 4, 6, 8, 10], [1618, 23, 1, 2, 4, 6, 8], [2361, 23, 1, 2, 4, 6, 8, 10], [2362, 23, 1, 3, 5],
                           [1619, 23, 1, 2, 4, 6, 8, 10], [1620, 23, 1, 2, 4, 6, 8, 10], [1621, 23, 1, 3, 5], [2296, 23, 1, 2, 3, 5], [1623, 23, 1, 3, 5],]
         else:
-            item_logic_chunk[6] = [[1573], [1574], [1575], [1576, 23, -1, 5], [1577, 23, -1, 5], [2554, 23, 3, -1, 3, 5], [1578, 23, 3, -1, 5], [1579, 23, 2, 3, -1, 2, 3, 5],
+            item_logic_chunk[6] = [[1573, 1], [1574], [1575], [1576, 23, -1, 5], [1577, 23, -1, 5], [2554, 23, 3, -1, 3, 5], [1578, 23, 3, -1, 5], [1579, 23, 2, 3, -1, 2, 3, 5],
                           [1580, 23, 2, 3, -1, 2, 3, 5], [2555, 23, 1, -1, 1, 5], [1581, 23, -1, 5], [1582, 23, -1, 5], [1583, 23, 2, 4, -1, 2, 4, 5], [2402, 23, 2, 4, -1, 2, 4, 5],
                           [2542, 23, -1, 5], [2543, 23, 3, -1, 3, 5], [1584, 23, -1, 5], [1585, 23, 2, 3, -1, 2, 3, 5], [1586, 23, 3, -1, 5], [2558, 23, -1, 5], [1587, 23, 3, -1, 3, 5], [1588, 23, -1, 5],
                           [1589, 23, -1, 5], [1590, 23, -1, 5], [1591, 23, 2, 3, -1, 2, 3, 5], [1592, 23, 3, -1, 3, 5], [2403, 23, 3, -1, 5], [2559, 23, 3, -1, 3, 5],
@@ -857,8 +877,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             while i < len(item_logic):
                 if len(item_logic) > 0:
                     if is_available(item_logic[i], key_item_check, settings):
-                        rand_array = random.randint(0, 1)
-                        if rand_array == 0 and len(item_pool) > 0:
+                        rand_array = random.randint(0, 3)
+                        if rand_array < 3 and len(item_pool) > 0:
                             #Code for randomizing blocks and bean spots with just eachother
                             nitem = random.randint(0, len(item_pool) - 1)
                             narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
@@ -893,7 +913,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 if len(key_item_pool) > 0:
                     can_key = False
                     for i in range(len(new_item_locals)):
-                        if new_item_locals[i][3] != 0 or find_index_in_2d_list(repack_data, new_item_locals[i][7] + 0xD000) is not None:
+                        if new_item_locals[i][3] != 0 and find_index_in_2d_list(repack_data, new_item_locals[i][7] + 0xD000) is None:
                             can_key = True
                     if can_key:
                         old_spot = random.randint(0, len(new_item_locals) - 1)
@@ -935,6 +955,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         del item_locals[i]
                     else:
                         attack_spot = find_index_in_2d_list(repack_data, new_item_locals[0][7] + 0xD000)
+                        while attack_spot is None:
+                            r = random.randint(0, len(new_item_locals)-1)
+                            attack_spot = find_index_in_2d_list(repack_data, new_item_locals[r][7] + 0xD000)
                         if attack_spot is not None:
                             if len(repack_data[attack_spot[0]]) > 7 and repack_data[attack_spot[0]][6] < 0xC000:
                                 attack_piece_pool.append([repack_data[attack_spot[0]][7], repack_data[attack_spot[0]][6]])
@@ -1155,7 +1178,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
 
     #Names for attack pieces
-    attack_piece_names = ["Mushrise Park", "Dreamy Mushrise Park", "Dozing Sands", "Dreamy Dozing Sands", "Wakeport", "Mount Pajamaja", "Dreamy Mount Pajamaja", "Driftwood Shores", "Dreamy Driftwood Shores",
+    attack_piece_names = ["Mushrise Park", "Dreamy Mushrise Park", "Dozing Sands", "Dreamy Dozing Sands", "Wakeport", "Mount Pajamaja", "Dreamy Mount Pajamaja", "Driftwood Shore", "Dreamy Driftwood Shore",
                           "Mount Pajamaja Summit", "Dreamy Wakeport", "Somnom Woods", "Dreamy Somnom Woods", "Mushrise Park Caves", "Neo Bowser Castle"]
 
     #Names for the different kinds of checks
@@ -1183,7 +1206,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     room = 4
                 elif get_room(rooms[-1][0]) == "Wakeport":
                     room = 7
-                elif get_room(rooms[-1][0]) == "Driftwood Shores":
+                elif get_room(rooms[-1][0]) == "Driftwood Shore":
                     room = 11
                 elif get_room(rooms[-1][0]) == "Mount Pajamaja":
                     room = 9
@@ -1193,7 +1216,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     room = 2
                 elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
                     room = 6
-                elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shores":
+                elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shore":
                     room = 12
                 elif get_room(rooms[-1][0]) == "Neo Bowser Castle":
                     room = 15
@@ -1238,7 +1261,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         room = 4
     elif get_room(rooms[-1][0]) == "Wakeport":
         room = 7
-    elif get_room(rooms[-1][0]) == "Driftwood Shores":
+    elif get_room(rooms[-1][0]) == "Driftwood Shore":
         room = 11
     elif get_room(rooms[-1][0]) == "Mount Pajamaja":
         room = 9
@@ -1248,7 +1271,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         room = 2
     elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
         room = 6
-    elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shores":
+    elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shore":
         room = 12
     elif get_room(rooms[-1][0]) == "Dreamy Wakeport":
         room = 8
@@ -1320,7 +1343,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 else:
                     item = attack_piece_names[int((repack_data[k[0]][6] - 0xB059) / 2) + 13]
                     offset = 1
-                item += " Attack Piece " + str(((repack_data[k[0]][7] >> 0x2) + 1) * ((repack_data[k[0]][6] + offset) % 2 + 1))
+                item += " Attack Piece " + str(((repack_data[k[0]][7] // 2) + 1) * ((repack_data[k[0]][6] + offset) % 2 + 1))
             else:
                 item = key_item_names[key_item_pool_checked[ab[0]][1]]
         if new_item_locals[s][0] < len(item_local_names):

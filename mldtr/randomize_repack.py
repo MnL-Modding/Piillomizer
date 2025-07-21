@@ -85,6 +85,7 @@ def pack(input_folder, repack_data, settings):
         Variables[0xCC48] = 1.0 #Peach is in danger... again!
         Variables[0xCC27] = 1.0 #Got badges and watched tutorial
         Variables[0xE01D] = 1.0 #Gives access to badges and expert challenges
+        Variables[0xCCCC] = 1.0 #Smoldergeist badge tutorial
         Variables[0xE075] = 1.0 #Fixes bridge in Deep Pi'illo Castle
         Variables[0xC5CA] = 1.0 #How did you come OUT of the hidden area!?
         Variables[0xCC29] = 1.0 #First entered collection room
@@ -387,8 +388,19 @@ def pack(input_folder, repack_data, settings):
     }
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
+    #Removes the hammer tutorial cutscene
     script = fevent_manager.parsed_script(0x0001, 0)
     script.header.triggers[4] = (0, 0, 0, 0, 0, 0x0032, 0x78012)
+
+    #Fixes the bridge in Deep Pi'illo Castle
+    script = fevent_manager.parsed_script(0x13A, 0)
+    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
+    script.header.init_subroutine = None
+    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+    def lower_bridge(sub: Subroutine):
+        emit_command(0x0126, [0x00, 0x01])
+        call('init')
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Sets the script to look at the room you fight Torkscrew
     script = fevent_manager.parsed_script(0x0102, 0)
@@ -412,7 +424,7 @@ def pack(input_folder, repack_data, settings):
 
     #Skips the post-boss cutscene
     #script.subroutines[0x49].commands[6] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'label_151'})
-    #update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Fixes Smoldergeist
     script = fevent_manager.parsed_script(0x0094, 0)
@@ -676,7 +688,7 @@ def pack(input_folder, repack_data, settings):
                   0x14B, 0x14C, 0x14E, 0x14F, 0x161, 0x164, 0x165, 0x167, 0x168, 0x16C, 0x177, 0x17A, 0x17D, 0x187, 0x188, 0x189, 0x18A,
                   0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x22A,
                   0x22B, 0x22C, 0x22D, 0x22E, 0x22F, 0x231, 0x232, 0x233, 0x295,]
-    room_sub_dat = [0x001, ]
+    #room_sub_dat = [0x001, ]
     j = []
     for i in range(len(attack_dat)):
         script = fevent_manager.parsed_script(attack_dat[i], 0)
@@ -801,13 +813,13 @@ def pack(input_folder, repack_data, settings):
             attack_id = 0xE02A
             attack_name = "Luiginary Hammer"
         if i[6] == 0xB041 or i[6] == 0xB042:
-            addon = "Driftwood Shores"
+            addon = "Driftwood Shore"
             check_1 = 0xB041
             check_2 = 0xB042
             attack_id = 0xE022
             attack_name = "Bomb Derby"
         if i[6] == 0xB043 or i[6] == 0xB044:
-            addon = "Dreamy Driftwood Shores"
+            addon = "Dreamy Driftwood Shore"
             check_1 = 0xB043
             check_2 = 0xB044
             attack_id = 0xE02B
