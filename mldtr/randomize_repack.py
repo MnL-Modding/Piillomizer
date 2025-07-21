@@ -107,6 +107,14 @@ def pack(input_folder, repack_data, settings):
         wait(3)
         Variables[0xCC2F] = 1.0 #Mario falls on Luigi
         Variables[0xCC30] = 1.0 #See first Pi'illo
+        Variables[0xCB2F] = 1.0 #First entered first Pi'illo
+        Variables[0xCB2E] = 1.0 #First Luiginary work cutscene
+        Variables[0xCB2D] = 1.0 #Also set with first Luiginary work
+        Variables[0xCB49] = 1.0 #First Luiginary work cutscene part 2
+        Variables[0xCB31] = 1.0 #First nightmare chunk of first Pi'illo
+        Variables[0xCB0C] = 1.0 #Part of cutscene above
+        Variables[0xCB0E] = 1.0 #Tutorial for nightmare chunk counter
+        Variables[0xCB10] = 1.0 #Luiginary sneeze tutorial
         Variables[0xCC31] = 1.0 #First Pi'illo saved, can access Pi'illo folk in collection
         Variables[0xCABD] = 1.0 #Shell Hutch Tutorial
         Variables[0xC300] = 1.0 #First Boss Brickle cutscene watched
