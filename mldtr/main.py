@@ -800,6 +800,4 @@ def main():
     window.category_info.place(x=185, y=220)
 
     #Run the application loop
-    file = os.path.basename(__file__)
-    if file == "main.py":
-        window.mainloop()
+    window.mainloop()
