@@ -689,7 +689,7 @@ def pack(input_folder, repack_data, settings):
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Fixes the initialization subroutine in rooms with attack pieces
-    attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
+    attack_dat = [0x001, 0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                   0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
                   0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
                   0x0F5, 0x0F6, 0x0FA, 0x10C, 0x124, 0x125, 0x126, 0x127, 0x128, 0x129, 0x12A, 0x13D, 0x144, 0x145, 0x146, 0x147, 0x148,
@@ -697,7 +697,12 @@ def pack(input_folder, repack_data, settings):
                   0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x22A,
                   0x22B, 0x22C, 0x22D, 0x22E, 0x22F, 0x231, 0x232, 0x233, 0x295,]
 
-    room_sub_dat = [[0x000, 0x5A, 0x296, 0x25, -35, 0.0, 0.0, 0.0, 8], [0x001, 0x8D, 0x02C, 0x91, -2, 1816.0, 0.0, 860.0, 8], [0x001, 0x8D, 0x02C, 0x92, -2, 1816.0, 0.0, 860.0, 8]]
+    #Data for the other types of room entries [room ID, destination sub, room warped from ID, room warped from subroutine, room warped from change_room command ID, xpos, ypos, zpos, facing]
+    room_sub_dat = [[0x000, 0x5A, 0x296, 0x25, -35, 0.0, 0.0, 0.0, 8], [0x001, 0x8D, 0x02C, 0x91, -2, 1816.0, 0.0, 860.0, 8], [0x001, 0x8D, 0x02C, 0x92, -2, 1816.0, 0.0, 860.0, 8],
+                    [0x003, 0x69, 0x30, 0x91, -2, 180.0, 0.0, 646.0, 8], [0x003, 0x69, 0x30, 0x92, -2, 180.0, 0.0, 646.0, 8], [0x004, 0x120, 0x19A, 0x74, -2, 1816.0, 0.0, 860.0, 8],
+                    [0x004, 0x120, 0x19A, 0x75, -2, 1816.0, 0.0, 860.0, 8], [0x004, 0x120, 0x09D, 0x86, -2, 0.0, 0.0, 0.0, 8], [0x004, 0x101, 0x005, 0x104, -3, 1200.0, 300.0, 1800.0, 0],
+                    [0x005, 0xE1, 0x004, 0x12A, -2, 1430.0, 300.0, 300.0, 8], [0x008, 0x75, 0x199, 0x74, -2, 180.0, 0.0, 646.0, 8], [0x008, 0x75, 0x032, 0x7E, -2, 0.0, 0.0, 0.0, 8],
+                    [0x00B, 0x82, 0x296, 0x25, -32, 0.0, 0.0, 0.0, 8], [0x00B, 0xA0, 0x1E, 0x76, -2, 0.0, 0.0, 0.0, 8], [0x00B, 0xA0, 0x1E, 0x77, -2, 0.0, 0.0, 0.0, 8],]
 
     print("Repacking randomized data...")
     #Repacks all the randomized data
@@ -1061,6 +1066,7 @@ def pack(input_folder, repack_data, settings):
         if i[1] != nextroom and blockcount > 0:
             #print(i[1])
             cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
+            old_init = script.header.init_subroutine
             script.header.init_subroutine = None
             @subroutine(subs=script.subroutines, hdr=script.header, init=True)
             def fix_blocks(sub: Subroutine):
@@ -1098,7 +1104,10 @@ def pack(input_folder, repack_data, settings):
             while find_index_in_2d_list(room_sub_dat, i[1], 0) is not None:
                 m = room_sub_dat[find_index_in_2d_list(room_sub_dat, i[1], 0)]
                 #print(m)
-                cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
+                if m[1] != old_init:
+                    cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
+                else:
+                    cast(SubroutineExt, script.subroutines[m[1]]).name = 'og_init'
                 @subroutine(subs=script.subroutines, hdr=script.header)
                 def new_warp(sub: Subroutine):
                     for a in range(blockcount):
@@ -1128,7 +1137,10 @@ def pack(input_folder, repack_data, settings):
                                         set_actor_attribute(at, 0x01, 0.0)
                             except ValueError:
                                 pass
-                            call('sub_' + str(m[1]))
+                            if m[1] != old_init:
+                                call('sub_' + str(m[1]))
+                            else:
+                                call('og_init')
                 sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
                 cast(SubroutineExt, new_warp).name = sub_name
                 new_pos = len(script.subroutines) - 1
@@ -1159,6 +1171,7 @@ def pack(input_folder, repack_data, settings):
         script = fevent_manager.parsed_script(i, 0)
         j = []
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
+        old_init = script.header.init_subroutine
         script.header.init_subroutine = None
         @subroutine(subs=script.subroutines, hdr=script.header, init=True)
         def fix_blocks(sub: Subroutine):
@@ -1171,11 +1184,15 @@ def pack(input_folder, repack_data, settings):
                     set_actor_attribute(at, 0x00, 0.0)
                     set_actor_attribute(at, 0x01, 0.0)
             call('og_init')
+        update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
         while find_index_in_2d_list(room_sub_dat, i, 0) is not None:
             m = room_sub_dat[find_index_in_2d_list(room_sub_dat, i, 0)]
             # print(m)
-            cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
+            if m[1] != old_init:
+                cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
+            else:
+                cast(SubroutineExt, script.subroutines[m[1]]).name = 'og_init'
 
             @subroutine(subs=script.subroutines, hdr=script.header)
             def new_warp(sub: Subroutine):
@@ -1190,7 +1207,10 @@ def pack(input_folder, repack_data, settings):
                             set_actor_attribute(at, 0x01, 0.0)
                 except ValueError:
                     pass
-                call('sub_' + str(m[1]))
+                if m[1] != old_init:
+                    call('sub_' + str(m[1]))
+                else:
+                    call('og_init')
 
             sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
             cast(SubroutineExt, new_warp).name = sub_name

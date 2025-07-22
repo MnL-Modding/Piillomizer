@@ -799,4 +799,6 @@ def main():
     )
     window.category_info.place(x=185, y=220)
 
-    window.mainloop()
+    #Run the application loop
+    if __name__ == "__main__":
+        window.mainloop()
