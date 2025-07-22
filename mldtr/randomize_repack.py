@@ -1,6 +1,6 @@
 from pymsbmnl import LMSDocument, msbt_from_file
 from mnllib.n3ds import fs_std_romfs_path
-from mnllib import Subroutine, RawDataCommand
+from mnllib import Subroutine, RawDataCommand, CodeCommand
 from mnllib.dt import FEventScriptManager, FMES_NUMBER_OF_CHUNKS, MESSAGE_DIR_PATH, DTLMSAdapter, read_msbt_archive, write_msbt_archive
 from mnlscript import CodeCommandWithOffsets, emit_command, update_commands_with_offsets, Screen, label, \
     SubroutineExt
@@ -26,12 +26,18 @@ def subroutine(*args, **kwargs):
         return subroutine
     return decorator
 
-def find_index_in_2d_list(arr, target_value):
-    for row_index, row in enumerate(arr):
-        for col_index, element in enumerate(row):
-            if element == target_value:
-                return (row_index, col_index)
+def find_index_in_2d_list(arr, target_value, index):
+    for row in range(len(arr)):
+        if arr[row][index] == target_value:
+            return row
     return None  # Return None if the element is not found
+
+def find_every_index_in_2d_list(arr, target_value, index):
+    indexes = []
+    for row in range(len(arr)):
+        if arr[row][index] == target_value:
+            indexes.append(row)
+    return indexes
 
 def pack(input_folder, repack_data, settings):
     print("Setting up FEvent...")
@@ -682,85 +688,23 @@ def pack(input_folder, repack_data, settings):
     script.header.actors[6] = (0x00000000, 0x80000000, 0xFFFF0018, 0xFFFFFFFF, len(script.subroutines)-1, 0x00591168)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
-    #Changes the dream world to point to the proper overworld initialization subroutine, and vice versa
-    #room_sub_dat = [[0x001, 0, 0x8C, -3, 0x02C, 0x98, 0], [0x02C, 1, 0x6B, -1, 0x001, 0x9D, 1, 2, 0x79, -1, 0x001, 0x9D, 1]]
-    #for i in room_sub_dat:
-    #    script = fevent_manager.parsed_script(i[0], 0)
-    #    for j in range(int((len(i)-1)/6)):
-    #        if i[(j*6)+1] == 0:
-    #            @subroutine(subs=script.subroutines, hdr=script.header)
-    #            def new_sub(sub: Subroutine):
-    #                change_room(i[(j*6)+4], position=(0.0, 0.0, 0.0), init_sub=i[(j*6)+5], facing=4)
-    #        elif i[(j * 6) + 1] == 1:
-    #            @subroutine(subs=script.subroutines, hdr=script.header)
-    #            def new_sub(sub: Subroutine):
-    #                change_room(i[(j * 6) + 4], position=(0.0, 0.0, 0.0), init_sub=i[(j * 6) + 5], facing=4)
-    #        if i[(j * 6) + 1] == 0:
-    #            @subroutine(subs=script.subroutines, hdr=script.header)
-    #            def new_sub(sub: Subroutine):
-    #                change_room(i[(j * 6) + 4], position=(0.0, 0.0, 0.0), init_sub=i[(j * 6) + 5], facing=4)
-    #        if i[(j*6)+6] == 1:
-    #            script.subroutines[i[(j*6)+2]].commands[i[(j*6)+3]] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'new_sub'})
-    #        else:
-    #            script.subroutines[i[(j*6)+2]].commands[i[(j*6)+3]] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'new_sub'})
-
     #Fixes the initialization subroutine in rooms with attack pieces
-    attack_dat = [0x001, 0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
+    attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                   0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
                   0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
                   0x0F5, 0x0F6, 0x0FA, 0x10C, 0x124, 0x125, 0x126, 0x127, 0x128, 0x129, 0x12A, 0x13D, 0x144, 0x145, 0x146, 0x147, 0x148,
                   0x14B, 0x14C, 0x14E, 0x14F, 0x161, 0x164, 0x165, 0x167, 0x168, 0x16C, 0x177, 0x17A, 0x17D, 0x187, 0x188, 0x189, 0x18A,
                   0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x22A,
                   0x22B, 0x22C, 0x22D, 0x22E, 0x22F, 0x231, 0x232, 0x233, 0x295,]
-    #room_sub_dat = [0x001, ]
-    j = []
-    for i in range(len(attack_dat)):
-        script = fevent_manager.parsed_script(attack_dat[i], 0)
-        cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
-        script.header.init_subroutine = None
-        @subroutine(subs=script.subroutines, hdr=script.header, init=True)
-        def attack_flag(sub: Subroutine):
-            for a in range(len(script.header.actors)):
-                if (script.header.actors[a][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
-                    j.append([script.header.actors[a][0] % 0x10000, script.header.actors[a][0] // 0x10000, script.header.actors[a][1] % 0x10000, attack_dat[i]])
-                    set_actor_attribute(a, 0x00, 0.0)
-                    set_actor_attribute(a, 0x01, 0.0)
-            call('init')
-        update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+    room_sub_dat = [[0x000, 0x5A, 0x296, 0x25, -35, 0.0, 0.0, 0.0, 8], [0x001, 0x8D, 0x02C, 0x91, -2, 1816.0, 0.0, 860.0, 8], [0x001, 0x8D, 0x02C, 0x92, -2, 1816.0, 0.0, 860.0, 8]]
 
     print("Repacking randomized data...")
     #Repacks all the randomized data
     blockcount = 0
     block_info = []
-    prevroom = 0
+    spotnum = 0
     for i in repack_data:
-        #Updates the previous script if there are blocks to be updated
-        if i[1] != prevroom and blockcount > 0:
-            cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
-            script.header.init_subroutine = None
-            @subroutine(subs=script.subroutines, hdr=script.header, init=True)
-            def fix_blocks(sub: Subroutine):
-                for a in range(blockcount):
-                    if block_info[a][1] == 0.0:
-                        branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
-                    else:
-                        Variables[0x100F] = Variables[block_info[a][0]] >> int(math.log2(block_info[a][1]))
-                        Variables[0x100F] &= 1
-                        branch_if(Variables[0x100F], '!=', 1.0, 'label_' + str(a))
-                    set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
-                    try:
-                        emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
-                    except ValueError:
-                        emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
-                        script.header.sprite_groups.append(0x0001)
-
-                    label('label_' + str(a), manager=fevent_manager)
-                    if a == blockcount - 1:
-                        call('og_init')
-            update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
-            blockcount = 0
-            block_info = []
-
         #Sets the script to look at the room hammers will be placed
         script = fevent_manager.parsed_script(i[1], 0)
 
@@ -1098,10 +1042,173 @@ def pack(input_folder, repack_data, settings):
             else:
                 script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
                                                ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
-        prevroom = i[1]
+        if find_every_index_in_2d_list(repack_data, i[1], 1)[-1] == len(repack_data) - 1 or len(find_every_index_in_2d_list(repack_data, i[1], 1)) == 0:
+            #print(repack_data[-1])
+            nextroom = i[1]
+        else:
+            #print("Block Count: " + str(blockcount))
+            #print(repack_data[find_every_index_in_2d_list(repack_data, i[1], 1)[spotnum] + 1])
+            #print(find_every_index_in_2d_list(repack_data, i[1], 1))
+            #print(spotnum)
+            nextroom = repack_data[find_every_index_in_2d_list(repack_data, i[1], 1)[spotnum] + 1][1]
+            #print(nextroom)
+            if spotnum < len(find_every_index_in_2d_list(repack_data, i[1], 1)) - 1:
+                spotnum += 1
+            else:
+                spotnum = 0
+
+        #Updates the script if there are blocks to be updated
+        if i[1] != nextroom and blockcount > 0:
+            #print(i[1])
+            cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
+            script.header.init_subroutine = None
+            @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+            def fix_blocks(sub: Subroutine):
+                for a in range(blockcount):
+                    if block_info[a][1] == 0.0:
+                        branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
+                    else:
+                        Variables[0x100F] = Variables[block_info[a][0]] & int(block_info[a][1])
+                        Variables[0x100F] >>= int(math.log2(block_info[a][1]))
+                        branch_if(Variables[0x100F], '!=', 1.0, 'label_' + str(a))
+                    set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
+                    try:
+                        emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
+                    except ValueError:
+                        emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
+                        script.header.sprite_groups.append(0x0001)
+                    label('label_' + str(a), manager=fevent_manager)
+                    #print(i[1])
+                    j = []
+                    if a == blockcount - 1:
+                        try:
+                            for at in range(len(script.header.actors) - blockcount):
+                                if (script.header.actors[at][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[at][5] % 0x100 == 0x43:
+                                    j.append(
+                                        [script.header.actors[at][0] % 0x10000, script.header.actors[at][0] // 0x10000,
+                                         script.header.actors[at][1] % 0x10000, attack_dat.index(i[1])])
+                                    set_actor_attribute(at, 0x00, 0.0)
+                                    set_actor_attribute(at, 0x01, 0.0)
+                            del attack_dat[attack_dat.index(i[1])]
+                        except ValueError:
+                            pass
+                        call('og_init')
+            update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+            while find_index_in_2d_list(room_sub_dat, i[1], 0) is not None:
+                m = room_sub_dat[find_index_in_2d_list(room_sub_dat, i[1], 0)]
+                #print(m)
+                cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
+                @subroutine(subs=script.subroutines, hdr=script.header)
+                def new_warp(sub: Subroutine):
+                    for a in range(blockcount):
+                        if block_info[a][1] == 0.0:
+                            branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
+                        else:
+                            Variables[0x100F] = Variables[block_info[a][0]] & int(block_info[a][1])
+                            Variables[0x100F] >>= int(math.log2(block_info[a][1]))
+                            branch_if(Variables[0x100F], '!=', 1.0, 'label_' + str(a))
+                        set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
+                        try:
+                            emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
+                        except ValueError:
+                            emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
+                            script.header.sprite_groups.append(0x0001)
+                        label('label_' + str(a), manager=fevent_manager)
+                        j = []
+                        if a == blockcount - 1:
+                            try:
+                                for at in range(len(script.header.actors) - blockcount):
+                                    if (script.header.actors[at][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[at][
+                                        5] % 0x100 == 0x43:
+                                        j.append(
+                                            [script.header.actors[at][0] % 0x10000, script.header.actors[at][0] // 0x10000,
+                                             script.header.actors[at][1] % 0x10000, attack_dat.index(i[1])])
+                                        set_actor_attribute(at, 0x00, 0.0)
+                                        set_actor_attribute(at, 0x01, 0.0)
+                            except ValueError:
+                                pass
+                            call('sub_' + str(m[1]))
+                sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
+                cast(SubroutineExt, new_warp).name = sub_name
+                new_pos = len(script.subroutines) - 1
+                update_commands_with_offsets(fevent_manager, script.subroutines,
+                                             len(script.header.to_bytes(fevent_manager)))
+
+                script = fevent_manager.parsed_script(m[2], 0)
+                script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
+                                                                                 [m[0], m[5], m[6], m[7], m[8], 0x00,
+                                                                                  new_pos, 0xFFFFFFFD, 0x00])
+                update_commands_with_offsets(fevent_manager, script.subroutines,
+                                             len(script.header.to_bytes(fevent_manager)))
+
+                script = fevent_manager.parsed_script(i[1], 0)
+                del room_sub_dat[find_index_in_2d_list(room_sub_dat, i[1], 0)]
+
+            blockcount = 0
+            block_info = []
+            spotnum = 0
 
         #Recompiles things
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+    #Fixes rooms with just attack piece blocks
+
+    #print(i[1])
+    for i in attack_dat:
+        script = fevent_manager.parsed_script(i, 0)
+        j = []
+        cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
+        script.header.init_subroutine = None
+        @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+        def fix_blocks(sub: Subroutine):
+            for at in range(len(script.header.actors)):
+                if (script.header.actors[at][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[at][
+                    5] % 0x100 == 0x43:
+                    j.append(
+                        [script.header.actors[at][0] % 0x10000, script.header.actors[at][0] // 0x10000,
+                         script.header.actors[at][1] % 0x10000, attack_dat.index(i)])
+                    set_actor_attribute(at, 0x00, 0.0)
+                    set_actor_attribute(at, 0x01, 0.0)
+            call('og_init')
+
+        while find_index_in_2d_list(room_sub_dat, i, 0) is not None:
+            m = room_sub_dat[find_index_in_2d_list(room_sub_dat, i, 0)]
+            # print(m)
+            cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
+
+            @subroutine(subs=script.subroutines, hdr=script.header)
+            def new_warp(sub: Subroutine):
+                try:
+                    for at in range(len(script.header.actors) - blockcount):
+                        if (script.header.actors[at][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[at][5] % 0x100 == 0x43:
+                            j.append(
+                                [script.header.actors[at][0] % 0x10000,
+                                 script.header.actors[at][0] // 0x10000,
+                                 script.header.actors[at][1] % 0x10000, attack_dat.index(i)])
+                            set_actor_attribute(at, 0x00, 0.0)
+                            set_actor_attribute(at, 0x01, 0.0)
+                except ValueError:
+                    pass
+                call('sub_' + str(m[1]))
+
+            sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
+            cast(SubroutineExt, new_warp).name = sub_name
+            new_pos = len(script.subroutines) - 1
+            update_commands_with_offsets(fevent_manager, script.subroutines,
+                                         len(script.header.to_bytes(fevent_manager)))
+
+            script = fevent_manager.parsed_script(m[2], 0)
+            script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
+                                                                  [m[0], m[5], m[6], m[7], m[8], 0x00,
+                                                                   new_pos, 0xFFFFFFFD, 0x00])
+            update_commands_with_offsets(fevent_manager, script.subroutines,
+                                         len(script.header.to_bytes(fevent_manager)))
+            blockcount = 0
+            block_info = []
+
+            script = fevent_manager.parsed_script(i, 0)
+            del room_sub_dat[find_index_in_2d_list(room_sub_dat, i, 0)]
 
     print("Saving...")
     #Recompiles FEvent
