@@ -735,7 +735,7 @@ def pack(input_folder, repack_data, settings):
                     [0x077, 0x7C, 0x1E9, 0x4E, -2, 0.0, 0.0, 0.0, 8, 0], [0x077, 0x7C, 0x1EB, 0x89, -2, 0.0, 0.0, 0.0, 8, 0],
 
                     [0x089, 0x4D, 0x082, 0x70, -2, 150.0, 0.0, 880.0, 2, 0], [0x08A, 0x54, 0x08C, 0x44, -2, 480.0, 0.0, 330.0, 6, 0], [0x08A, 0x56, 0x08E, 0x2A, -2, 1190.0, 0.0, 365.0, 10, 0],
-                    [0x08E, 0x2B, 0x08A, 0x55, -2, 215.0, 0.0, 720.0, 2, 0], [0x0A3, 0xC5, 0x0A4, 0xCA, -16, 405.0, 490.0, 0.0, 4, 0], [0x0A3, 0xC5, 0x0A4, 0xCA, -2, 1211.0, 320.0, 0.0, 12, 0],
+                    [0x08E, 0x2B, 0x08A, 0x55, -2, 215.0, 0.0, 720.0, 2, 0], [0x0A3, 0xC5, 0x0A4, 0xCA, -17, 405.0, 490.0, 0.0, 4, 0], [0x0A3, 0xC5, 0x0A4, 0xCA, -2, 1211.0, 320.0, 0.0, 12, 0],
                     [0x0A4, 0xCE, 0x0A3, 0xC9, -17, 390.0, 360.0, 0.0, 4, 0], [0x0A4, 0xCE, 0x0A3, 0xC9, -2, 1410.0, 70.0, 0.0, 12, 0],
 
                     [0x0B1, 0x73, 0x012, 0x103, -2, 0.0, 0.0, 0.0, 4, 0], [0x0B5, 0x8C, 0x019, 0x11C, -2, 0.0, 0.0, 0.0, 4, 0], [0x0B6, 0x8C, 0x1DC, 0x8C, -2, 0.0, 0.0, 0.0, 4, 0],
@@ -1156,7 +1156,7 @@ def pack(input_folder, repack_data, settings):
 
         #Updates the script if there are blocks to be updated
         if i[1] != nextroom and blockcount > 0:
-            print(i[1])
+            #print(i[1])
             cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
             old_init = script.header.init_subroutine
             script.header.init_subroutine = None

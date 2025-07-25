@@ -871,6 +871,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         key_item_pool_checked = []
         new_enemy_stats = []
         attack = random.randint(0, len(attack_piece_pool) - 1)
+        while attack != 0 and attack != 3 and attack != 5 and attack != 12:
+            attack = random.randint(0, len(attack_piece_pool) - 1)
+        prevlen_locals = 0
 
         while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
             prevlen = len(item_pool) + len(key_item_pool) + len(attack_piece_pool)
@@ -887,7 +890,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             del item_pool[nitem]
                             del item_locals[i]
                             del item_logic[i]
-                        elif len(attack_piece_pool) > 0:
+                        elif len(attack_piece_pool) > 0 and (item_locals[i][2] // 0x100) % 0x10 != 8 and (item_locals[i][2] // 0x100) % 0x10 != 0xC and (item_locals[i][2] // 0x100) % 0x10 != 4:
                             #Code for putting attacks in blocks and bean spots
                             if len(attack_piece_pool[attack]) == 0:
                                 del attack_piece_pool[attack]
@@ -917,8 +920,12 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             can_key = True
                     if can_key:
                         old_spot = random.randint(0, len(new_item_locals) - 1)
-                        while new_item_locals[old_spot][3] == 0:
+                        if prevlen_locals != len(new_item_locals) - 1:
+                            old_spot = random.randint(prevlen_locals, len(new_item_locals) - 1)
+                        while new_item_locals[old_spot][3] == 0 or (new_item_locals[old_spot][2] // 0x100) % 0x10 == 8 or (new_item_locals[old_spot][2] // 0x100) % 0x10 == 0xC or (new_item_locals[old_spot][2] // 0x100) % 0x10 == 4:
                             old_spot = random.randint(0, len(new_item_locals) - 1)
+                            if prevlen_locals != len(new_item_locals) - 1:
+                                old_spot = random.randint(prevlen_locals, len(new_item_locals) - 1)
                         item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
                                             new_item_locals[old_spot][2], new_item_locals[old_spot][4],
                                             new_item_locals[old_spot][5], new_item_locals[old_spot][6],
@@ -953,6 +960,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         key_item_pool_checked.append(key_item_pool[nitem])
                         del key_item_pool[nitem]
                         del item_locals[i]
+                        prevlen_locals = len(new_item_locals) - 1
                     else:
                         attack_spot = find_index_in_2d_list(repack_data, new_item_locals[0][7] + 0xD000)
                         while attack_spot is None:
