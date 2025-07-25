@@ -890,7 +890,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             del item_pool[nitem]
                             del item_locals[i]
                             del item_logic[i]
-                        elif len(attack_piece_pool) > 0 and (item_locals[i][2] // 0x100) % 0x10 != 8 and (item_locals[i][2] // 0x100) % 0x10 != 0xC and (item_locals[i][2] // 0x100) % 0x10 != 4:
+                        elif len(attack_piece_pool) > 0:
                             #Code for putting attacks in blocks and bean spots
                             if len(attack_piece_pool[attack]) == 0:
                                 del attack_piece_pool[attack]
@@ -918,14 +918,14 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         if len(new_item_locals) >= 50:
                             offset -= 50
                         else:
-                            offset -= 1
+                            offset -= 25
                     can_key = False
                     for i in range(len(new_item_locals) - offset):
                         if new_item_locals[i+offset][3] != 0 and find_index_in_2d_list(repack_data, new_item_locals[i+offset][7] + 0xD000) is None:
                             can_key = True
                     if can_key:
                         old_spot = random.randint(offset, len(new_item_locals) - 1)
-                        while new_item_locals[old_spot][3] == 0 or (new_item_locals[old_spot][2] // 0x100) % 0x10 == 8 or (new_item_locals[old_spot][2] // 0x100) % 0x10 == 0xC or (new_item_locals[old_spot][2] // 0x100) % 0x10 == 4:
+                        while new_item_locals[old_spot][3] == 0 or find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000) is not None:
                             old_spot = random.randint(offset, len(new_item_locals) - 1)
                         item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
                                             new_item_locals[old_spot][2], new_item_locals[old_spot][4],

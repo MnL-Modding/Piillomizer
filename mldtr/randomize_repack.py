@@ -740,7 +740,7 @@ def pack(input_folder, repack_data, settings):
 
                     [0x0B1, 0x73, 0x012, 0x103, -2, 0.0, 0.0, 0.0, 4, 0], [0x0B5, 0x8C, 0x019, 0x11C, -2, 0.0, 0.0, 0.0, 4, 0], [0x0B6, 0x8C, 0x1DC, 0x8C, -2, 0.0, 0.0, 0.0, 4, 0],
                     [0x0B9, 0x74, 0x0B7, 0xA8, -2, 0.0, 0.0, 0.0, 4, 0], [0x0C0, 0x73, 0x0C1, 0x70, -2, 138.0, 340.0, 0.0, 4, 0], [0x0D2, 0x137, 0x03A, 0x10B, -2, 515.0, 170.0, 0.0, 12, 0],
-                    [0x0D2, 0x9D, 0x16E, 0xB5, -18, 875.0, 100.0, 0.0, 12, 0], [0x0D4, 0xA2, 0x0D3, 0xC4, -3, 410.0, 50.0, 0.0, 12, 0], [0x0D4, 0xC2, 0x0D5, 0x96, -2, 50.0, 150.0, 0.0, 12, 0],
+                    [0x0D2, 0x9D, 0x16E, 0xB5, -19, 875.0, 100.0, 0.0, 12, 0], [0x0D4, 0xA2, 0x0D3, 0xC4, -3, 410.0, 50.0, 0.0, 12, 0], [0x0D4, 0xC2, 0x0D5, 0x96, -2, 50.0, 150.0, 0.0, 12, 0],
                     [0x0D6, 0x119, 0x0D5, 0x98, -2, 680.0, 430.0, 0.0, 12, 0], [0x0D6, 0x117, 0x161, 0x117, -2, 677.0, 430.0, 0.0, 12, 0], [0x0D6, 0x11E, 0x16C, 0x115, -2, 275.0, 270.0, 0.0, 4, 0],
                     [0x0DB, 0xD8, 0x13A, 0x69, -2, 0.0, 0.0, 0.0, 4, 0], [0x0E8, 0x70, 0x0E7, 0x7F, -2, 246.0, 80.0, 0.0, 4, 0], [0x0E8, 0x72, 0x0E9, 0x75, -2, 238.0, 420.0, 0.0, 4, 0],
                     [0x0E9, 0x74, 0x0E7, 0x81, -2, 140.0, 338.0, 0.0, 4, 0], [0x0E9, 0x76, 0x0E8, 0x71, -2, 235.0, 60.0, 0.0, 12, 0], [0x0E9, 0x78, 0x0EA, 0x7D, -2, 770.0, 70.0, 0.0, 4, 0],
@@ -760,7 +760,7 @@ def pack(input_folder, repack_data, settings):
                     [0x13F, 0x4D, 0x068, 0x62, -2, 250.0, 150.0, 0.0, 4, 0],
 
                     [0x144, 0x133, 0x252, 0x89, -2, 0.0, 0.0, 0.0, 8, 0], [0x149, 0x2B, 0x14A, 0x4B, -2, 0.0, 0.0, 0.0, 0, 0], [0x14A, 0x4C, 0x149, 0x2A, -2, 0.0, 0.0, 0.0, 0, 0],
-                    [0x14D, 0xC3, 0x142, 0x4F, -4, 0.0, 0.0, 0.0, 0, 0], [0x14D, 0xB6, 0x25A, 0x80, -2, 0.0, 0.0, 0.0, 8, 0], [0x156, 0x43, 0x142, 0x4F, -2, 0.0, 0.0, 0.0, 0, 0],
+                    [0x14D, 0xC3, 0x142, 0x4F, -5, 0.0, 0.0, 0.0, 0, 0], [0x14D, 0xB6, 0x25A, 0x80, -2, 0.0, 0.0, 0.0, 8, 0], [0x156, 0x43, 0x142, 0x4F, -2, 0.0, 0.0, 0.0, 0, 0],
                     [0x156, 0x45, 0x157, 0x84, -2, 0.0, 0.0, 0.0, 0, 0],
 
                     [0x161, 0x118, 0x0D6, 0x116, -2, 50.0, 350.0, 0.0, 4, 0], [0x161, 0x116, 0x162, 0xBF, -2, 98.0, 200.0, 0.0, 4, 0], [0x164, 0x118, 0x170, 0xC2, -2, 975.0, 50.0, 0.0, 12, 0],
@@ -1216,15 +1216,11 @@ def pack(input_folder, repack_data, settings):
                             emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
                             script.header.sprite_groups.append(0x0001)
                         label('label_' + str(a), manager=fevent_manager)
-                        j = []
                         if a == blockcount - 1:
                             try:
                                 for at in range(len(script.header.actors) - blockcount):
                                     if (script.header.actors[at][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[at][
                                         5] % 0x100 == 0x43:
-                                        j.append(
-                                            [script.header.actors[at][0] % 0x10000, script.header.actors[at][0] // 0x10000,
-                                             script.header.actors[at][1] % 0x10000, attack_dat.index(i[1])])
                                         set_actor_attribute(at, 0x00, 0.0)
                                         set_actor_attribute(at, 0x01, 0.0)
                             except ValueError:
