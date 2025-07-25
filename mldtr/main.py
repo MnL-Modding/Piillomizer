@@ -775,7 +775,7 @@ def main():
 
     window.boss15_check = ttk.Checkbutton(
         tabEnemy,
-        text = "Kamek 3",
+        text = "Giant Bowser",
         variable = window.boss15,
         onvalue = 1,
         offvalue = 0

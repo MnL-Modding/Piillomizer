@@ -119,7 +119,9 @@ def pack(input_folder, repack_data, settings):
         Variables[0xCB49] = 1.0 #First Luiginary work cutscene part 2
         Variables[0xCB31] = 1.0 #First nightmare chunk of first Pi'illo
         Variables[0xCB0C] = 1.0 #Part of cutscene above
+        Variables[0xCC32] = 1.0 #Second Pi'illo has already been entered (fixes loading zone)
         Variables[0xCB0E] = 1.0 #Tutorial for nightmare chunk counter
+        Variables[0xCB33] = 1.0 #Doors close for Luiginary sneeze tutorial
         Variables[0xCB10] = 1.0 #Luiginary sneeze tutorial
         Variables[0xCC31] = 1.0 #First Pi'illo saved, can access Pi'illo folk in collection
         Variables[0xCABD] = 1.0 #Shell Hutch Tutorial
@@ -1156,7 +1158,7 @@ def pack(input_folder, repack_data, settings):
 
         #Updates the script if there are blocks to be updated
         if i[1] != nextroom and blockcount > 0:
-            #print(i[1])
+            print(i[1])
             cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
             old_init = script.header.init_subroutine
             script.header.init_subroutine = None
