@@ -239,6 +239,8 @@ def pack(input_folder, repack_data, settings):
         Variables[0xC3BB] = 1.0 #Massifs explain how a gate works
         Variables[0xCFC2] = 1.0 #Massifs are in right position for cutscene above
         Variables[0xC3C6] = 1.0 #Big Massif tells you to hurry up
+        Variables[0xC3C7] = 1.0 #Massifs tell you to come over to them
+        Variables[0xC3C8] = 1.0 #Spin Jump tutorial
         Variables[0xC3CB] = 1.0 #Mega Low Intro
         Variables[0xC3CC] = 1.0 #RISING BEEF!!!
         Variables[0xC3CD] = 1.0 #Massifs are high
@@ -247,7 +249,9 @@ def pack(input_folder, repack_data, settings):
         Variables[0xC3D0] = 1.0 #Mega Phil Intro
         Variables[0xCCBF] = 1.0 #Luiginary Cone Tutorial
         Variables[0xC41B] = 1.0 #Side Drill Tutorial
+        Variables[0xC4B2] = 1.0 #Tunnel in Side Drill tutorial is broken
         Variables[0xC41C] = 1.0 #Side Drill Tutorial Part 2
+        Variables[0xC4B3] = 1.0 #Rock in second Side Drill tutorial is broken
         Variables[0xC4B8] = 1.0 #Drink fountain tutorial
         Variables[0xC3D4] = 1.0 #Massifs break ice tutorial
         Variables[0xC3D5] = 1.0 #Massifs break ice tutorial
