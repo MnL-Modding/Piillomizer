@@ -1162,7 +1162,7 @@ def pack(input_folder, repack_data, settings):
 
         #Updates the script if there are blocks to be updated
         if i[1] != nextroom and blockcount > 0:
-            print(i[1])
+            #print(i[1])
             cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
             old_init = script.header.init_subroutine
             script.header.init_subroutine = None
