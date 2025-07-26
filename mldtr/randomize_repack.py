@@ -545,6 +545,9 @@ def pack(input_folder, repack_data, settings):
     script.header.actors[8] = (0x00D20424, 0x80080271, 0x00290017, 0xFFFFFFFF, 0x00000071, 0x005B8168)
     script.header.actors[9] = (0x00D20424, 0x00010271, 0x0029000E, 0xFFFFFFFF, 0x00000071, 0x0250014C)
 
+    #Stops Starlow from stopping you if you go left
+    script.header.triggers[4] = (0, 0, 0, 0, 0, 0x0000000A, 0x00078012)
+
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Fixes the Mammoshka boss fight
