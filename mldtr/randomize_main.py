@@ -969,7 +969,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             attack_spot = find_index_in_2d_list(repack_data, new_item_locals[r][7] + 0xD000)
                         if attack_spot is not None:
                             if len(repack_data[attack_spot[0]]) > 7 and repack_data[attack_spot[0]][6] < 0xC000:
-                                attack_piece_pool.append([repack_data[attack_spot[0]][7], repack_data[attack_spot[0]][6]])
+                                attack_piece_pool.append([[repack_data[attack_spot[0]][7], repack_data[attack_spot[0]][6]]])
                             else:
                                 key_spot = find_index_in_2d_list(key_item_pool_checked, repack_data[attack_spot[0]][6])
                                 if key_spot is not None:
