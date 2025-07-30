@@ -3,6 +3,9 @@ import math
 import struct
 import random
 import os
+
+from mnllib import Subroutine
+from mnlscript import update_commands_with_offsets, subroutine
 from tqdm import tqdm
 from mldtr import randomize_repack
 from mnllib.n3ds import fs_std_code_bin_path, fs_std_romfs_path
@@ -51,6 +54,10 @@ def get_room(id):
     else:
         return "Unknown"
 
+def get_minimap(room_id):
+    if get_room(room_id) == "Mushrise Park":
+        return 0x245
+
 def get_spot_type(spot):
     if spot[2] == 0x0012 or spot[2] == 0x0013:
         return 5
@@ -94,7 +101,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
         enemy_stats = load_enemy_stats(code_bin=code_bin_path)
         enemy_stats_rand = []
-        dream_enemy_stats_rand = []
         boss_stats_rand = []
         dream_boss_stats_rand = []
         filler_stats_rand = []
@@ -138,7 +144,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         enemy == 39 or enemy == 41 or (58 <= enemy <= 61) or
                         (68 <= enemy <= 71) or (85 <= enemy <= 94) or
                         (100 <= enemy <= 102) or enemy == 104 or enemy == 106 or
-                        enemy == 113 or (115 <= enemy <= 120)):
+                        enemy == 113 or (115 <= enemy <= 120) or enemy == 19 or
+                        enemy == 21 or enemy == 31 or
+                      enemy == 33 or enemy == 35 or enemy == 45 or
+                      enemy == 46 or enemy == 47 or enemy == 49 or
+                      enemy == 50 or (64 <= enemy <= 67) or (72 <= enemy <= 78) or
+                      enemy == 84 or enemy == 98 or enemy == 99 or
+                      (110 <= enemy <= 112) or (121 <= enemy <= 125) or enemy == 133):
                     enemy_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
                                              enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
@@ -147,16 +159,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       enemy == 62 or enemy == 95 or enemy == 96 or
                       enemy == 107 or enemy == 108):
                     boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
-                                             enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
-                #Appends data to dream enemy array if it's a dream enemy
-                elif (enemy == 19 or enemy == 21 or enemy == 31 or
-                      enemy == 33 or enemy == 35 or enemy == 45 or
-                      enemy == 46 or enemy == 47 or enemy == 49 or
-                      enemy == 50 or (64 <= enemy <= 67) or (72 <= enemy <= 78) or
-                      enemy == 84 or enemy == 98 or enemy == 99 or
-                      (110 <= enemy <= 112) or (121 <= enemy <= 125) or enemy == 133):
-                    dream_enemy_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
                                              enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
                 #Appends data to dream boss array if it's a dream boss
@@ -172,57 +174,20 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
 
         #Logic for real world enemies
-        enemy_logic = [[13], [18, 15, 5, -1, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0],
-                           [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2],
-                           [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, -1, 1, 5],
+        enemy_logic = [[13], [18, 15, 5, -1, 15, 6], [19], [21, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0], [31, 15, 6], [33, 15, 6], [35, 15, 6],
+                           [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6],
+                           [49, 15, 22, 6], [50, 15, 22, 6], [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, -1, 1, 5], [64, 23, 1, 6, -1, 1, 5, 6],
+                           [65, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [66, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [67, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
                            [68, 15, 16, 1, -1, 15, 16, 5], [69, 15, 16, 1, -1, 15, 16, 5], [70, 15, 16, 1, -1, 15, 16, 5],
-                           [71, 15, 16, 1, -1, 15, 16, 5], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5], [87, 15, -1, 1, 4, 5],
+                           [71, 15, 16, 1, -1, 15, 16, 5], [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
+                           [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
+                           [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
+                           [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5], [87, 15, -1, 1, 4, 5],
                            [90, 1, 4, 5], [91, 15, 16, 2, 4], [92, 15], [93, 15],
-                           [94, 15, 16, 5], [100, 15, 1, 3, 5], [101, 15, 1, 5], [102, 15, 1, 5], [104, 15, 1, 5],
-                           [106, 15, 1, 5], [113, 15, 27, 1, 5], [115, 15, 27, 1, 5],
-                           [116, 15, 27, 1, 5], [117, 15, 27, 1, 4, 5], [118, 15, 27, 1, 4, 5], [119, 15, 27, 1, 4, 5], [120, 15, 27, 1, 4, 5],]
-
-        #Logic for dream world enemies
-        if settings[1][0] == 0 and settings[1][1] == 0:
-            dream_enemy_logic = [[19], [21], [31, 15, 6], [33, 15, 6], [35, 15, 6], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6],
-                                 [49, 15, 22, 6], [50, 15, 22, 6], [64, 23, 1, 6, -1, 1, 5, 6], [65, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
-                                 [66, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [67, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
-                                 [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                                 [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
-                                 [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                                 [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6], [98, 22, 1, 2, 4, 5, 6], [99, 22, 1, 2, 4, 5, 6],
-                                 [110, 15, 1, 3, 5, 6], [111, 15, 1, 3, 5, 6], [112, 15, 1, 2, 3, 5, 6],  [121, 15, 27, 1, 5, 6],
-                                 [122, 15, 27, 1, 4, 5, 6], [123, 15, 27, 1, 4, 5, 6], [124, 15, 27, 1, 5, 6], [125, 15, 27, 1, 5, 6], [133, 15, 27, 1, 4, 5, 6],]
-        elif settings[1][0] == 1 and settings[1][1] == 1:
-            dream_enemy_logic = [[19], [21, 15, 6], [31, 15, 6], [33, 15, 6], [35, 15, 6], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6],
-                                 [49, 15, 22, 6], [50, 15, 22, 6], [64, 23, 3, 6, -1, 23, 5, 6], [65, 23, 4, 6, 10],
-                                 [66, 23, 4, 6, 10], [67, 23, 4, 6, 10],
-                                 [72, 15, 16, 6], [73, 15, 16, 6],
-                                 [74, 15, 16, 24, 6], [75, 15, 16, 24, 6],
-                                 [76, 15, 16, 24, 25, 6], [77, 15, 16, 6],
-                                 [78, 15, 16, 6], [84, 6], [98, 22, 2, 4, 5, 6], [99, 22, 2, 4, 5, 6],
-                                 [110, 15, 3, 5, 6], [111, 15, 3, 5, 6], [112, 15, 2, 3, 5, 6],  [121, 15, 27, 5, 6],
-                                 [122, 15, 27, 4, 5, 6], [123, 15, 27, 4, 5, 6], [124, 15, 27, 5, 6], [125, 15, 27, 5, 6], [133, 15, 27, 4, 5, 6],]
-        elif settings[1][0] == 1:
-            dream_enemy_logic = [[19], [21], [31, 15, 6], [33, 15, 6], [35, 15, 6], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6],
-                                 [49, 15, 22, 6], [50, 15, 22, 6], [64, 23, 6, -1, 5, 6], [65, 23, 4, 6, 10, -1, 3, 5, 6, 10],
-                                 [66, 23, 4, 6, 10, -1, 3, 5, 6, 10], [67, 23, 4, 6, 10, -1, 3, 5, 6, 10],
-                                 [72, 15, 16, 6], [73, 15, 16, 6],
-                                 [74, 15, 16, 24, 6], [75, 15, 16, 24, 6],
-                                 [76, 15, 16, 24, 25, 6], [77, 15, 16, 6],
-                                 [78, 15, 16, 6], [84, 6], [98, 22, 2, 4, 5, 6], [99, 22, 2, 4, 5, 6],
-                                 [110, 15, 3, 5, 6], [111, 15, 3, 5, 6], [112, 15, 2, 3, 5, 6],  [121, 15, 27, 5, 6],
-                                 [122, 15, 27, 4, 5, 6], [123, 15, 27, 4, 5, 6], [124, 15, 27, 5, 6], [125, 15, 27, 5, 6], [133, 15, 27, 4, 5, 6],]
-        else:
-            dream_enemy_logic = [[19], [21], [31, 15, 6], [33, 15, 6], [35, 15, 6], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6],
-                                 [49, 15, 22, 6], [50, 15, 22, 6], [64, 23, 1, 6], [65, 23, 1, 4, 6, 10],
-                                 [66, 23, 1, 4, 6, 10], [67, 23, 1, 4, 6, 10],
-                                 [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                                 [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
-                                 [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                                 [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6], [98, 22, 1, 2, 4, 5, 6], [99, 22, 1, 2, 4, 5, 6],
-                                 [110, 15, 1, 3, 5, 6], [111, 15, 1, 3, 5, 6], [112, 15, 1, 2, 3, 5, 6],  [121, 15, 27, 1, 5, 6],
-                                 [122, 15, 27, 1, 4, 5, 6], [123, 15, 27, 1, 4, 5, 6], [124, 15, 27, 1, 5, 6], [125, 15, 27, 1, 5, 6], [133, 15, 27, 1, 4, 5, 6],]
+                           [94, 15, 16, 5], [98, 22, 1, 2, 4, 5, 6], [99, 22, 1, 2, 4, 5, 6], [100, 15, 1, 3, 5], [101, 15, 1, 5], [102, 15, 1, 5], [104, 15, 1, 5],
+                           [106, 15, 1, 5], [110, 15, 1, 3, 5, 6], [111, 15, 1, 3, 5, 6], [112, 15, 1, 2, 3, 5, 6], [113, 15, 27, 1, 5], [115, 15, 27, 1, 5],
+                           [116, 15, 27, 1, 5], [117, 15, 27, 1, 4, 5], [118, 15, 27, 1, 4, 5], [119, 15, 27, 1, 4, 5], [120, 15, 27, 1, 4, 5],[121, 15, 27, 1, 5, 6],
+                           [122, 15, 27, 1, 4, 5, 6], [123, 15, 27, 1, 4, 5, 6], [124, 15, 27, 1, 5, 6], [125, 15, 27, 1, 5, 6], [133, 15, 27, 1, 4, 5, 6],]
 
         #Logic for bosses
         boss_logic = [[17, 14], [30, 15], [42, 15, 16, 17, 18, 19, 20, 21], [62, 23, 1, 4, 6, 8, 10, -1, 1, 5],
@@ -242,30 +207,35 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #Replaces logic where needed
         if settings[1][0] == 1 or settings[1][1] == 1:
             if settings[1][0] == 1 and settings[1][1] == 1:
-                replace_enemy = [[41, 15, 16, 17, 2], [58, 23], [59, 23], [60, 23], [61, 23], [68, 15, 16], [69, 15, 16], [70, 15, 16], [71, 15, 16],
+                replace_enemy = [[41, 15, 16, 17, 2], [47, 15, 16, 17, 6], [58, 23], [59, 23], [60, 23], [61, 23], [64, 23, 0, 6], [65, 23, 4, 6, 8, 10],
+                                 [66, 23, 4, 6, 8, 10], [67, 23, 4, 6, 8, 10], [68, 15, 16], [69, 15, 16], [70, 15, 16], [71, 15, 16],
+                                 [72, 15, 16, 6], [73, 15, 16, 6], [74, 15, 16, 24, 6], [75, 15, 16, 24, 6], [76, 15, 16, 24, 25, 6], [77, 15, 16, 6], [78, 15, 16, 6],
                                  [85, 15, -1, 23, 4, 5], [86, 15, -1, 23, 4, 5], [87, 15, -1, 23, 4, 5], [90, 23, 4, 5], [94, 15, 16, 17, 18, 19, 20, 21, 5],
-                                 [100, 15, 3, 5], [101, 15, 5], [102, 15, 5], [104, 15, 5], [106, 15, 5], [113, 15, 27, 5], [115, 15, 27, 5], [116, 15, 27, 5],
-                                 [117, 15, 27, 4, 5], [118, 15, 27, 4, 5], [119, 15, 27, 4, 5], [120, 15, 27, 4, 5]]
+                                 [100, 15, 3, 5], [101, 15, 5], [102, 15, 5], [104, 15, 5], [106, 15, 5], [110, 15, 3, 5, 6], [111, 15, 3, 5, 6], [112, 15, 2, 3, 5, 6], [113, 15, 27, 5], [115, 15, 27, 5], [116, 15, 27, 5],
+                                 [117, 15, 27, 4, 5], [118, 15, 27, 4, 5], [119, 15, 27, 4, 5], [120, 15, 27, 4, 5], [121, 15, 27, 5, 6],
+                                 [122, 15, 27, 4, 5, 6], [123, 15, 27, 4, 5, 6], [124, 15, 27, 5, 6], [125, 15, 27, 5, 6], [133, 15, 27, 4, 5, 6],]
 
                 replace_boss = [[62, 23, 4, 6, 8, 10], [95, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10], [96, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10]]
-
-                replace_dream_boss = []
             elif settings[1][0] == 1:
-                replace_enemy = [[41, 15, 16, 5, -1, 15, 16, 17, 2], [58], [59, 23, -1, 5], [60, 23, -1, 5], [61, 23, -1, 5], [68, 15, 16], [69, 15, 16],
-                                 [70, 15, 16], [71, 15, 16], [85, 15, -1, 4, 5], [86, 15, -1, 4, 5], [87, 15, -1, 4, 5], [90, 4, 5],
-                                 [101, 15, 5], [102, 15, 5], [104, 15, 5], [106, 15, 5], [113, 15, 27, 5], [115, 15, 27, 5], [116, 15, 27, 5],
-                                 [117, 15, 27, 4, 5], [118, 15, 27, 4, 5], [119, 15, 27, 4, 5], [120, 15, 27, 4, 5]]
+                replace_enemy = [[58], [59, 23, -1, 5], [60, 23, -1, 5], [61, 23, -1, 5], [64, 23, 6, -1, 5, 6], [65, 23, 4, 6, 10, -1, 3, 5, 6, 10],
+                                 [66, 23, 4, 6, 10, -1, 3, 5, 6, 10], [67, 23, 4, 6, 10, -1, 3, 5, 6, 10], [68, 15, 16], [69, 15, 16],
+                                 [70, 15, 16], [71, 15, 16], [72, 15, 16, 6], [73, 15, 16, 6],
+                                 [74, 15, 16, 24, 6], [75, 15, 16, 24, 6], [76, 15, 16, 24, 25, 6], [77, 15, 16, 6],
+                                 [78, 15, 16, 6], [85, 15, -1, 4, 5], [86, 15, -1, 4, 5], [87, 15, -1, 4, 5], [90, 4, 5],
+                                 [101, 15, 5], [102, 15, 5], [104, 15, 5], [106, 15, 5], [110, 15, 3, 5, 6], [111, 15, 3, 5, 6], [112, 15, 2, 3, 5, 6], [113, 15, 27, 5], [115, 15, 27, 5], [116, 15, 27, 5],
+                                 [117, 15, 27, 4, 5], [118, 15, 27, 4, 5], [119, 15, 27, 4, 5], [120, 15, 27, 4, 5], [121, 15, 27, 5, 6], [122, 15, 27, 4, 5, 6],
+                                 [123, 15, 27, 4, 5, 6], [124, 15, 27, 5, 6], [125, 15, 27, 5, 6], [133, 15, 27, 4, 5, 6],]
 
                 replace_boss = [[62, 23, 4, 6, 8, 10, -1, 5]]
-
-                replace_dream_boss = []
             else:
-                replace_enemy = [[41, 15, 16, 17, 2], [58, 1], [59, 23, 1], [60, 23, 1], [61, 23, 1], [85, 15, -1, 23, 1, 4, 5], [86, 15, -1, 23, 1, 4, 5],
+                replace_enemy = [[41, 15, 16, 17, 2], [47, 15, 16, 17, 6], [58, 1], [59, 23, 1], [60, 23, 1], [61, 23, 1], [64, 23, 1, 6], [65, 23, 1, 4, 6, 10],
+                                 [66, 23, 1, 4, 6, 10], [67, 23, 1, 4, 6, 10], [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
+                                 [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
+                                 [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
+                                 [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [85, 15, -1, 23, 1, 4, 5], [86, 15, -1, 23, 1, 4, 5],
                                  [87, 15, -1, 23, 1, 4, 5], [90, 23, 1, 4, 5], [94, 15, 16, 17, 18, 19, 20, 21, 5],]
 
                 replace_boss = [[62, 23, 1, 4, 6, 8, 10], [95, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10], [96, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10]]
-
-                replace_dream_boss = []
             for e in replace_enemy:
                 el = 0
                 while enemy_logic[el][0] != e[0]:
@@ -325,18 +295,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 for i in range(len(spot[1])):
                     parsed_fmapdat[0x67][3][spot[1][i]] = 0x78
                 #with open("Dozing Edit.bin", 'rb') as new_model:
-                #    fmapdat.seek(0)
-                #    temp = bytearray(fmapdat.read())
-                #    test = bytearray(new_model.read())
-                #    temp[0x281C898:0x281C898+0x72A7B] = (test[:0x72A7B])
-                #    temp[0x281C898+0x72A7B:0x281C898+0x72A7B] = test[0x72A7C:]
-                #    fmapdat.seek(0)
-                #    fmapdat.write(temp)
-                #    fix_offsets(fmapdat, code_bin, 0x5D, len(test), 12)
-                #del temp
-                #del test
-                fmapdat.seek(0)
-            version_pair = determine_version_from_code_bin(code_bin)
+                #    parsed_fmapdat[0xC8][12] = new_model.read()
+                #    print(len(parsed_fmapdat[0xC8][12]))
             block_id = 2500
             rooms_to_init = [0x001, 0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                              0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
@@ -820,7 +780,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                               [0x01, 0xB05A], [0x02, 0xB05A], [0x04, 0xB05A], [0x08, 0xB05A], [0x10, 0xB05A]],
                              [[0x01, 0xB037], [0x02, 0xB037], [0x04, 0xB037], [0x08, 0xB037], [0x10, 0xB037],
                               [0x01, 0xB038], [0x02, 0xB038], [0x04, 0xB038], [0x08, 0xB038], [0x10, 0xB038]],
-                             [[0x01, 0xB03B], [0x02, 0xB03B], [0x04, 0xB03B], [0x08, 0xB03B], [0x10, 0xB03B],
+                             [[0x01, 0xB03B], [0x04, 0xB03B], [0x08, 0xB03B], [0x10, 0xB03B],
                               [0x01, 0xB03C], [0x02, 0xB03C], [0x04, 0xB03C], [0x08, 0xB03C], [0x10, 0xB03C]],
                              [[0x01, 0xB032], [0x02, 0xB032], [0x04, 0xB032], [0x08, 0xB032], [0x10, 0xB032],
                               [0x01, 0xB033], [0x02, 0xB033], [0x04, 0xB033], [0x08, 0xB033], [0x10, 0xB033]],
@@ -862,6 +822,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     with tqdm(total=len(item_pool)+len(key_item_pool)+(len(attack_piece_pool[0])*len(attack_piece_pool)), desc="Randomizing...") as rbar:
         new_item_locals = []
+        new_item_logic = []
 
         #[Trigger type, Room ID, X Pos, Y Pos, Z Pos, Collectible/Cutscene ID, Ability/Item/Key Item/Attack(, Attack Piece ID/Coin Amount/Item Cutscene/Hammer or Spin Cutscene, Coin Cutscene)]
         repack_data = []
@@ -887,6 +848,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                             new_item_locals.append(narray)
+                            new_item_logic.append(item_logic[i])
                             del item_pool[nitem]
                             del item_locals[i]
                             del item_logic[i]
@@ -901,6 +863,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                                 new_item_locals.append(narray)
+                                new_item_logic.append(item_logic[i])
                                 spottype = get_spot_type(item_locals[i])
                                 repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6] + 0xD000,
                                                     attack_piece_pool[attack][nitem][1], attack_piece_pool[attack][nitem][0], 0xCD20 + attackcut])
@@ -984,6 +947,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                             new_item_locals[0][7]])
                         item_logic.append([0])
                         del new_item_locals[0]
+                        del new_item_logic[0]
             i = 0
 
             #Randomizes enemy stats
@@ -1037,22 +1001,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 new_enemy_stats[-1][j+1] //= 4
                         del boss_stats_rand[i]
                         del boss_logic[i]
-                        i -= 1
-                    i += 1
-            i = 0
-            while i < len(dream_enemy_logic):
-                if len(dream_enemy_logic) > 0:
-                    if is_available(dream_enemy_logic[i], key_item_check, settings):
-                        temp = dream_enemy_stats_rand[i]
-                        for n in range(len(dream_enemy_stats_rand[0])-1):
-                            dream_enemy_stats_rand[i][n+1] = dream_enemy_stats_rand[0][n+1]
-                            for j in range(i-1):
-                                dream_enemy_stats_rand[j][n+1] = dream_enemy_stats_rand[j+1][n+1]
-                            if i > 0:
-                                dream_enemy_stats_rand[i-1][n+1] = temp[n+1]
-                        new_enemy_stats.append(dream_enemy_stats_rand[i])
-                        del dream_enemy_stats_rand[i]
-                        del dream_enemy_logic[i]
                         i -= 1
                     i += 1
             i = 0
@@ -1443,6 +1391,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         code_bin.seek(FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
         code_bin.write(fmapdat_offset_table)
 
-    randomize_repack.pack(input_folder, repack_data, settings)
+    randomize_repack.pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, key_item_pool_checked)
 
 #randomize_data(input_folder, stat_mult)

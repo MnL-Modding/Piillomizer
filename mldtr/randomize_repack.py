@@ -26,6 +26,49 @@ def subroutine(*args, **kwargs):
         return subroutine
     return decorator
 
+def get_room(id):
+    if 0x000 <= id <= 0x00C or id == 0x00F or id == 0x018 or id == 0x1C8 or 0x050 <= id <= 0x055:
+        return "Mushrise Park"
+    elif id == 0x00E or 0x010 <= id <= 0x017 or id == 0x019 or id == 0x01A or id == 0x05D or 0x60 <= id <= 0x62 or id == 0x0AF or 0x101 <= id <= 0x104 or id == 0x138 or id == 0x1DC or id == 0x28A:
+        return "Dozing Sands"
+    elif id == 0x01B or id == 0x01C or 0x056 <= id <= 0x05C or id == 0x063 or id == 0x064 or id == 0x1DE:
+        return "Blimport"
+    elif 0x01D <= id <= 0x030 or id == 0x032 or id == 0x0B0 or id == 0x09D or 0x0F1 <= id <= 0x0F3 or id == 0x199 or id == 0x19A or id == 0x1CD or id == 0x1CE:
+        return "Dreamy Mushrise Park"
+    elif 0x033 <= id <= 0x037 or id == 0x039 or 0x03C <= id <= 0x044 or 0x108 <= id <= 0x10A or id == 0x288:
+        return "Wakeport"
+    elif id == 0x038 or id == 0x03A or id == 0x03B or 0x045 <= id <= 0x04F:
+        return "Driftwood Shore"
+    elif 0x066 <= id <= 0x081 or id == 0x100 or id == 0x10B or id == 0x10C:
+        return "Mount Pajamaja"
+    elif id == 0x082 or 0x084 <= id <= 0x09B or 0x136 <= id <= 0x13B or id == 0x1D8:
+        return "Pi'illo Castle"
+    elif 0x0A1 <= id <= 0x0AE or 0x0D8 <= id <= 0x0DE or 0x0F4 <= id <= 0x0FA:
+        return "Dreamy Pi'illo Castle"
+    elif 0x0B1 <= id <= 0x0C7 or 0x0E4 <= id <= 0x0F0 or 0x13C <= id <= 0x13E or id == 0x1D6:
+        return "Dreamy Dozing Sands"
+    elif 0x0D2 <= id <= 0x0D6 or 0x161 <= id <= 0x182 or id == 0x1C9 or id == 0x1CA:
+        return "Dreamy Driftwood Shore"
+    elif 0x0FB <= id <= 0x0FD or 0x219 <= id <= 0x238:
+        return "Dreamy Somnom Woods"
+    elif id == 0x106 or 0x10D <= id <= 0x134 or id == 0x12B or id == 0x12C or id == 0x1CF or id == 0x1E1 or id == 0x294 or id == 0x295:
+        return "Dreamy Wakeport"
+    elif id == 0x13F or 0x1E7 <= id <= 0x20E or id == 0x250 or id == 0x290:
+        return "Dreamy Mount Pajamaja"
+    elif 0x140 <= id <= 0x160 or id == 0x218:
+        return "Neo Bowser Castle"
+    elif 0x183 <= id <= 0x196:
+        return "Somnom Woods"
+    elif 0x252 <= id <= 0x27B:
+        return "Dreamy Neo Bowser Castle"
+    else:
+        return "Unknown"
+
+def get_minimap(room_id):
+    if get_room(room_id) == "Mushrise Park":
+        return 0x245
+    return 0
+
 def find_index_in_2d_list(arr, target_value, index):
     for row in range(len(arr)):
         if arr[row][index] == target_value:
@@ -39,7 +82,7 @@ def find_every_index_in_2d_list(arr, target_value, index):
             indexes.append(row)
     return indexes
 
-def pack(input_folder, repack_data, settings):
+def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, key_item_pool_checked):
     print("Setting up FEvent...")
     #Sets up the FEvent to be read
     fevent_manager = FEventScriptManager(input_folder)
@@ -899,7 +942,7 @@ def pack(input_folder, repack_data, settings):
             attack_id = 0xE02B
             attack_name = "Luiginary Flame"
         if i[6] == 0xB045 or i[6] == 0xB046:
-            addon = "Lofty Mount Pajamaja"
+            addon = "Mount Pajamaja Summit"
             check_1 = 0xB045
             check_2 = 0xB046
             attack_id = 0xE025
@@ -1262,7 +1305,6 @@ def pack(input_folder, repack_data, settings):
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Fixes rooms with just attack piece blocks
-
     #print(i[1])
     for i in attack_dat:
         script = fevent_manager.parsed_script(i, 0)
@@ -1326,6 +1368,39 @@ def pack(input_folder, repack_data, settings):
 
             script = fevent_manager.parsed_script(i, 0)
             del room_sub_dat[find_index_in_2d_list(room_sub_dat, i, 0)]
+
+    # Sets up the bottom screen to show what items you can and can't get
+    #print("Setting up bottom screen...")
+    #offset_data = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+    #sub_info = []
+    #for s in range(len(new_item_locals)):
+    #    if new_item_locals[s][0] < len(offset_data):
+    #        script = fevent_manager.parsed_script(get_minimap(new_item_locals[s][0]), 0)
+    #        sub_info.append([len(script.header.actors), new_item_locals[s][0], len(script.subroutines)])
+    #        script.header.actors.append((0xFFFF0000 + new_item_locals[s][4] + offset_data[new_item_locals[s][0]][0],
+    #                                     0x00010000 + new_item_locals[s][6] + offset_data[new_item_locals[s][0]][1],
+    #                                     0x0005 + len(script.subroutines) * 0x10000, 0xFFFFFFFF, 0xFFFFFFFF,
+    #                                     0x04500000))
+    #        @subroutine(subs=script.subroutines, hdr=script.header)
+    #        def get_block_availability(sub: Subroutine):
+    #            #for l in range(len(new_item_logic[s]) - 1):
+    #            #    if find_index_in_2d_list(key_item_pool_checked, new_item_logic[s][l+1], 1) is not None:
+    #            #        branch_if(Variables[key_item_pool_checked[find_index_in_2d_list(key_item_pool_checked, new_item_logic[s][l+1], 1)][0]], '==', 0.0, 'label_0')
+    #            #set_actor_attribute(len(script.header.actors) - 1, 0x01, 1.0)
+    #            #set_actor_attribute(len(script.header.actors) - 1, 0x00, 1.0)
+    #            #emit_command(0x004E, [len(script.header.actors) - 1, 0x01, 0x1E, 1.0])
+
+    #            #label('label_0', manager=fevent_manager)
+    #            branch_if(Variables[new_item_locals[s][7] + 0xD000], '==', 0.0, 'label_1')
+    #            set_actor_attribute(len(script.header.actors) - 1, 0x01, 0.0)
+    #            set_actor_attribute(len(script.header.actors) - 1, 0x00, 0.0)
+    #            emit_command(0x004E, [len(script.header.actors) - 1, 0x01, 0x1E, 0.0])
+
+    #            label('label_1', manager=fevent_manager)
+    #        sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
+    #        cast(SubroutineExt, get_block_availability).name = sub_name
+    #        update_commands_with_offsets(fevent_manager, script.subroutines,
+    #                                     len(script.header.to_bytes(fevent_manager)))
 
     print("Saving...")
     #Recompiles FEvent

@@ -90,8 +90,8 @@ def import_random(section, input_folder, filenames_all, mode):
             sound_data.seek(0x034A3E2C + offset)
             records.append(sound_data.read(length))
         filenames = []
-        randi = random.randint(0, len(filenames_all[0])-1)
-        has_done = [[],[],[],[],[],[]]
+        randi = random.randrange(0, len(filenames_all[0]))
+        has_done = [[],[],[],[],[]]
         category = 0
         for i in range(52):
             if mode:
@@ -107,11 +107,11 @@ def import_random(section, input_folder, filenames_all, mode):
                     category = 4
             else:
                 category = random.randint(0,4)
-                randi = random.randint(0, len(filenames_all[category])-1)
+                randi = random.randrange(0, len(filenames_all[category]))
             while randi in has_done[category] or randi > len(filenames_all[category]):
-                if not(mode):
-                    category = random.randint(0,5)
-                randi = random.randint(0, len(filenames_all[category])-1)
+                if not mode:
+                    category = random.randint(0,4)
+                randi = random.randrange(0, len(filenames_all[category]))
             filenames.append(filenames_all[category][randi])
             has_done[category].append(randi)
         sound_data.seek(section_offset + next_section_offset)
