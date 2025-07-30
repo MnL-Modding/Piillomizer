@@ -1268,6 +1268,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     #Creates a spoiler log
     spoiler_log = open(input_folder + "/Spoiler Log.txt", "w")
+    spoiler_log.write("Seed: " + str(seed) + "\n\n")
     room_check = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     for s in range(len(new_item_locals)):
         if s > 0:
