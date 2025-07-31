@@ -116,6 +116,14 @@ def randomize(window):
     #Generates the seed
     seed = random.randint(0, 0x10000000)
 
+    #Sets seed to an input if the user input a seed
+    if window.seed.get() != "":
+        try:
+            if int(window.seed.get(), 16) < 0x10000000:
+                seed = int(window.seed.get(), 16)
+        except ValueError:
+            seed = int.from_bytes(window.seed.get().encode('utf-8'))
+
     if os.path.exists(parent_folder + title_id):
         while os.path.exists(parent_folder + title_id + "-seed" + str(seed)):
             seed = random.randint(0, 0x10000000)
@@ -260,6 +268,8 @@ def main():
     window.boss14 = tk.IntVar()
     window.boss15 = tk.IntVar()
     window.boss16 = tk.IntVar()
+
+    window.seed = tk.StringVar()
 
     #Creates tabs
     window.menu = ttk.Notebook(window)
@@ -798,6 +808,15 @@ def main():
         command = help
     )
     window.category_info.place(x=185, y=220)
+
+    #Lets you input a custom seed
+    window.seed_label = ttk.Label(window, text = "Custom Seed:")
+    window.seed_label.place(x=184, y=370)
+    window.custom_seed = ttk.Entry(
+        window,
+        textvariable = window.seed
+    )
+    window.custom_seed.place(x=160, y=390)
 
     #Run the application loop
     window.mainloop()
