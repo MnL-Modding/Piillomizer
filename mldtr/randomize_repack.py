@@ -336,6 +336,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC0B4] = 1.0 #Pi'illo Castle dream's deep opens
         Variables[0xC0A1] = 1.0 #Ultibed appears in pause menu
         Variables[0xC5CC] = 1.0 #You must find the Ultibed parts cutscene
+        Variables[0xC09F] = 1.0 #Luiginary Ball tutorial
+        Variables[0xC0A3] = 1.0 #Learning Luiginary Ball Hookshot
+        Variables[0xC0A4] = 1.0 #Learning Luiginary Ball Throw
         Variables[0xC438] = 1.0 #Ultibed cutscene in Mount Pajamaja is watched
         Variables[0xC4AE] = 1.0 #Fixes a glitch in the rock code
         Variables[0xC9A2] = 1.0 #Ball Hop tutorial
