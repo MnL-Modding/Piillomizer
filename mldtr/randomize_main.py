@@ -94,7 +94,7 @@ def is_available(logic, key, settings):
 def randomize_data(input_folder, stat_mult, settings, seed):
     with tqdm(total=2085, desc="Initializing...") as pbar:
         #Sets the seed to what it was in main
-        random.seed = seed
+        random.seed(seed)
         pbar.update(1)
 
         # Opens code.bin for enemy stat randomization
@@ -1268,7 +1268,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     #Creates a spoiler log
     spoiler_log = open(input_folder + "/Spoiler Log.txt", "w")
-    spoiler_log.write("Seed: " + str(seed) + "\n\n")
+    spoiler_log.write("Seed: " + hex(seed) + "\n\n")
     room_check = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     for s in range(len(new_item_locals)):
         if s > 0:

@@ -125,9 +125,9 @@ def randomize(window):
             seed = int.from_bytes(window.seed.get().encode('utf-8'))
 
     if os.path.exists(parent_folder + title_id):
-        while os.path.exists(parent_folder + title_id + "-seed" + str(seed)):
+        while os.path.exists(parent_folder + title_id + "-seed" + hex(seed)):
             seed = random.randint(0, 0x10000000)
-        seed_folder = parent_folder + title_id + "-seed" + str(seed)
+        seed_folder = parent_folder + title_id + "-seed" + hex(seed)
     else:
         seed_folder = parent_folder + title_id
     shutil.copytree(window.romfs, seed_folder)
