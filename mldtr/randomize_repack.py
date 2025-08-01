@@ -265,6 +265,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC978] = 1.0 #Badge campaign
         Variables[0xC962] = 1.0 #Registered for tour
         Variables[0xC964] = 1.0 #Massif hunt begin
+        Variables[0xC96F] = 1.0 #Attack piece cutscene Zeekeeper guy
+        Variables[0xC987] = 1.0 #Talked to the hoo who wants a girlfriend
+        Variables[0xC988] = 1.0 #Accepted his sidequest
         Variables[0xC96B] = 1.0 #Panel tutorial cutscene
         Variables[0xC969] = 1.0 #Panel tutorial complete
         Variables[0xC96C] = 1.0 #Bridge is down
@@ -891,91 +894,91 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         elif i[6] < 0xB000:
             addon = item_msgs.messages[0x152 + (i[6] >> 1 & 0x0FFF) * 4].text
         if i[6] == 0xB030 or i[6] == 0xB031:
-            addon = "Mushrise Park"
+            addon = "3D Red Shell"
             check_1 = 0xB030
             check_2 = 0xB031
             attack_id = 0xE01E
-            attack_name = "Red Shell"
+            attack_name = "3D Red Shell"
         if i[6] == 0xB032 or i[6] == 0xB033:
-            addon = "Dreamy Mushrise Park"
+            addon = "Luiginary Ball Attack"
             check_1 = 0xB032
             check_2 = 0xB033
             attack_id = 0xE028
-            attack_name = "Luiginary Ball"
+            attack_name = "Luiginary Ball Attack"
         if i[6] == 0xB037 or i[6] == 0xB038:
-            addon = "Dozing Sands"
+            addon = "Fire Flower"
             check_1 = 0xB037
             check_2 = 0xB038
             attack_id = 0xE021
             attack_name = "Fire Flower"
         if i[6] == 0xB039 or i[6] == 0xB03A:
-            addon = "Dreamy Dozing Sands"
+            addon = "Luiginary Stack Attack"
             check_1 = 0xB039
             check_2 = 0xB03A
             attack_id = 0xE029
-            attack_name = "Luiginary Stack"
+            attack_name = "Luiginary Stack Attack"
         if i[6] == 0xB03B or i[6] == 0xB03C:
-            addon = "Wakeport"
+            addon = "Bye-Bye Cannon"
             check_1 = 0xB03B
             check_2 = 0xB03C
             attack_id = 0xE024
             attack_name = "Bye-Bye Cannon"
         if i[6] == 0xB03D or i[6] == 0xB03E:
-            addon = "Mount Pajamaja"
+            addon = "Dropchopper"
             check_1 = 0xB03D
             check_2 = 0xB03E
             attack_id = 0xE020
             attack_name = "Dropchopper"
         if i[6] == 0xB03F or i[6] == 0xB040:
-            addon = "Dreamy Mount Pajamaja"
+            addon = "Luiginary Hammer"
             check_1 = 0xB03F
             check_2 = 0xB040
             attack_id = 0xE02A
             attack_name = "Luiginary Hammer"
         if i[6] == 0xB041 or i[6] == 0xB042:
-            addon = "Driftwood Shore"
+            addon = "Bomb Derby"
             check_1 = 0xB041
             check_2 = 0xB042
             attack_id = 0xE022
             attack_name = "Bomb Derby"
         if i[6] == 0xB043 or i[6] == 0xB044:
-            addon = "Dreamy Driftwood Shore"
+            addon = "Luiginary Flame"
             check_1 = 0xB043
             check_2 = 0xB044
             attack_id = 0xE02B
             attack_name = "Luiginary Flame"
         if i[6] == 0xB045 or i[6] == 0xB046:
-            addon = "Mount Pajamaja Summit"
+            addon = "Slingsniper"
             check_1 = 0xB045
             check_2 = 0xB046
             attack_id = 0xE025
             attack_name = "Slingsniper"
         if i[6] == 0xB047 or i[6] == 0xB048:
-            addon = "Dreamy Wakeport"
+            addon = "Luiginary Wall"
             check_1 = 0xB047
             check_2 = 0xB048
             attack_id = 0xE02C
             attack_name = "Luiginary Wall"
         if i[6] == 0xB049 or i[6] == 0xB04A:
-            addon = "Somnom Woods"
+            addon = "Jet-Board Bash"
             check_1 = 0xB049
             check_2 = 0xB04A
             attack_id = 0xE023
             attack_name = "Jet-Board Bash"
         if i[6] == 0xB04B or i[6] == 0xB04C:
-            addon = "Dreamy Somnom Woods"
+            addon = "Luiginary Typhoon"
             check_1 = 0xB04B
             check_2 = 0xB04C
             attack_id = 0xE02D
             attack_name = "Luiginary Typhoon"
         if i[6] == 0xB059 or i[6] == 0xB05A:
-            addon = "Mushrise Park Caves"
+            addon = "3D Green Shell"
             check_1 = 0xB059
             check_2 = 0xB05A
             attack_id = 0xE01F
-            attack_name = "Green Shell"
+            attack_name = "3D Green Shell"
         if i[6] == 0xB05B or i[6] == 0xB05C:
-            addon = "Neo Bowser Castle"
+            addon = "Star Rocket"
             check_1 = 0xB05B
             check_2 = 0xB05C
             attack_id = 0xE026
@@ -1040,7 +1043,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         elif (i[6] == 0xCABF or i[6] == 0xC369 or i[6] == 0xE004 or i[6] == 0xE005 or (0xE00D <= i[6] <= 0xE013)):
             item = "the [Color #2C65FF]" + addon
         elif 0xB030 <= i[6] <= 0xB05C:
-            item = "an Attack Piece\nfor [Color #2C65FF]" + addon
+            item = "an Attack Piece\nfor the [Color #2C65FF]" + addon
         elif i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE00A:
             item = "[Color #2C65FF]" + addon
         elif addon[0:1] == 'A' or addon[0:1] == 'E' or addon[0:1] == 'I' or addon[0:1] == 'O' or addon[0:1] == 'U' or addon[0:2] == 'HP':
