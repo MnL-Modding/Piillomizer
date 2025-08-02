@@ -345,6 +345,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             room != 0x054 and room != 0x1D2 and room != 0x2A8 and room != 0x2A9 and treasure_type % 0x100 != 0x16 and
                             treasure_type % 0x100 != 0x17):
                         pbar.update(1)
+                        if treasure_type % 2 == 1:
+                            treasure_type -= 1
                         item_locals.append([room, treasure_index * 12, treasure_type, x, y, z, treasure_id])
                         item_pool.append([treasure_type, item_id])
 
@@ -845,8 +847,30 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         if rand_array < 3 and len(item_pool) > 0:
                             #Code for randomizing blocks and bean spots with just eachother
                             nitem = random.randint(0, len(item_pool) - 1)
-                            narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
-                                        item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            if item_pool[nitem][0] != 0x0012 and item_pool[nitem][0] != 0x0013 and item_locals[i][2] != 0x0012 and item_locals[i][2] != 0x0013:
+                                narray = [item_locals[i][0], item_locals[i][1], item_pool[nitem][0], item_pool[nitem][1],
+                                            item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            elif (item_pool[nitem][0] == 0x0012 or item_pool[nitem][0] == 0x0013) and (item_locals[i][2] == 0x0012 or item_locals[i][2] == 0x0013):
+                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
+                                            item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            elif item_pool[nitem][0] == 0x0012 or item_pool[nitem][0] == 0x0013:
+                                if item_locals[i][2] // 0x10 % 0x10 == 0xA:
+                                    item_locals[i][2] -= 0x90
+                                item_locals[i][2] &= ~(1 << 8)
+                                item_locals[i][2] &= ~(1 << 9)
+                                item_locals[i][2] &= ~(1 << 10)
+                                item_locals[i][2] &= ~(1 << 11)
+                                item_locals[i][2] &= ~(1 << 12)
+                                #print("Block " + hex(item_locals[i][2]))
+                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
+                                            item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
+                            else:
+                                item_locals[i][2] |= (1 << 1)
+                                item_locals[i][2] &= ~(1 << 2)
+                                item_locals[i][2] &= ~(1 << 3)
+                                #print("Bean " + hex(item_locals[i][2]))
+                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
+                                            item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                             new_item_locals.append(narray)
                             new_item_logic.append(item_logic[i])
                             del item_pool[nitem]
@@ -1152,7 +1176,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             if new_item_locals[i][0] == new_item_locals[i-1][0]:
                 rooms.append(new_item_locals[i])
             else:
-                rooms = sorted(rooms, key=lambda local: local[7])
+                #rooms = sorted(rooms, key=lambda local: local[7])
                 if get_room(rooms[-1][0]) == "Mushrise Park":
                     room = 3
                 elif get_room(rooms[-1][0]) == "Dozing Sands":
@@ -1202,12 +1226,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             areas[room].append(rooms)
                         else:
                             areas[room].insert(0, rooms)
-                rooms = []
-                rooms.append(new_item_locals[i])
+                rooms = [new_item_locals[i]]
         else:
             rooms.append(new_item_locals[i])
 
-    rooms = sorted(rooms, key=lambda local: local[7])
+    #rooms = sorted(rooms, key=lambda local: local[7])
     if get_room(rooms[-1][0]) == "Mushrise Park":
         room = 3
     elif get_room(rooms[-1][0]) == "Dozing Sands":
@@ -1352,10 +1375,17 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 check_spot.append([new_item_locals[b][7], b])
                 break
             x += 1
+        if b < len(new_item_locals) - 1:
+            if new_item_locals[b][0] != new_item_locals[b+1][0]:
+                new_item_locals[b][2] += 1
+        else:
+            new_item_locals[b][2] += 1
         i = 0
         while parsed_fmapdat[new_item_locals[b][0]][7][i*12+10:i*12+12] != new_item_locals[b][7].to_bytes(2, 'little'):
             i += 1
         parsed_fmapdat[new_item_locals[b][0]][7][i*12:i*12+12] = struct.pack('<HHHHHH', *new_item_locals[b][2:8])
+        #if new_item_locals[b][2] % 2 == 1:
+        #    print(str(new_item_locals[b][0]) + " " + str(new_item_locals[b][7]))
 
     with (
         code_bin_path.open('r+b') as code_bin,
