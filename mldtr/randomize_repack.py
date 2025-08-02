@@ -1094,7 +1094,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 branch_if(Variables[0xC346], '==', 0.0, 'label_1')
                 Variables[0xE09F] = 1.0
                 say(None, TextboxSoundsPreset.SILENT,
-                    "You got the final [Color #2C65FF]" + addon + "[Color #000000]![Pause 90]",
+                    "You got the final [Color #2C65FF]" + addon + "[Color #000000]![Pause 60]",
                     offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             if i[6] > 0xC000:
@@ -1111,7 +1111,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 branch_if(Variables[check_2], '!=', 0x1F, 'label_1')
                 Variables[attack_id] = 1.0
                 say(None, TextboxSoundsPreset.SILENT,
-                    "You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 90]",
+                    "You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 60]",
                     offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             elif i[6] >= 0x6000:
@@ -1133,13 +1133,13 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 else:
                     Variables[i[-2]] = 1.0
             if i[6] < 0x1000:
-                say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             elif (i[-1] < 0xC020 or i[-1] >= 0xC0A0) and i[-1] > 10:
-                say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             elif i[-2] < 0xC020 or i[-2] >= 0xC0A0:
-                say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xB000 < i[6] < 0xB0E0) or (0xC343 <= i[6] <= 0xC346):
@@ -1148,19 +1148,19 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     Variables[i[7]] = 1.0
                     if i[6] == 0xE004:
                         Variables[0xE003] = 1.0
-                        say(None, TextboxSoundsPreset.SILENT, "You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        say(None, TextboxSoundsPreset.SILENT, "You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                     else:
                         Variables[0xE000] = 1.0
-                        say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 else:
-                    say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002:
                 label('label_2', manager=fevent_manager)
                 Variables[i[7]] = 1.0
                 Variables[invi] = 1.0
-                say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + invi_name[invi - 0xE001] + "[Color #000000]![Pause 90]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + invi_name[invi - 0xE001] + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             label('label_0', manager=fevent_manager)
