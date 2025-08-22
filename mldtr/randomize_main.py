@@ -861,7 +861,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 item_locals[i][2] &= ~(1 << 10)
                                 item_locals[i][2] &= ~(1 << 11)
                                 item_locals[i][2] &= ~(1 << 12)
-                                #item_locals[i][2] += (item_pool[nitem][0] // 0x100 % 0x11) * 0x100
                                 #print("Block " + hex(item_locals[i][2]))
                                 narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
                                             item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
@@ -869,6 +868,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 item_locals[i][2] |= (1 << 1)
                                 item_locals[i][2] &= ~(1 << 2)
                                 item_locals[i][2] &= ~(1 << 3)
+                                item_locals[i][2] += (item_pool[nitem][0] // 0x100 % 0x1F) * 0x100
                                 #print("Bean " + hex(item_locals[i][2]))
                                 narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
                                             item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
