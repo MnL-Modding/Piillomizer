@@ -870,7 +870,16 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         if '__compiled__' in globals():
             inspect.currentframe().f_locals['script_index'] = script_index
 
-        #Sets up the subroutine to give an item
+        #Sets up which block it should look at
+        if (get_room(i[1]) == "Mushrise Park" or get_room(i[1]) == "Dozing Sands" or get_room(i[1]) == "Blimport" or get_room(i[1]) == "Wakeport" or get_room(i[1]) == "Driftwood Shores" or
+                get_room(i[1]) == "Mount Pajamaja" or get_room(i[1]) == "Pi'illo Castle" or get_room(i[1]) == "Neo Bowser Castle" or get_room(i[1]) == "Somnom Woods"):
+            block_sprite = 0x0000
+            block_sprite_hit = 0x0001
+        else:
+            block_sprite = 0x0015
+            block_sprite_hit = 0x0012
+
+        #Labels which item the subroutine gives
         addon = ""
         if i[6] < 0x6000:
             if 0x2000 <= i[6] <= 0x2006:
@@ -1060,7 +1069,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             if i[0] == 0 or i[0] == 1:
                 set_actor_attribute(len(script.header.actors), 0x30, 0.0)
                 try:
-                    emit_command(0x008C, [len(script.header.actors), script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
+                    emit_command(0x008C, [len(script.header.actors), script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
                 except ValueError:
                     emit_command(0x008C, [len(script.header.actors), len(script.header.sprite_groups), 0x0000, 0x01])
             if (i[5] < 0xC000 or i[5] > 0xCFFF) and i[0] != 0 and i[0] != 1:
@@ -1172,13 +1181,13 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         if i[0] == 0 or i[0] == 1:
             #Updates actors if it's an overworld block
             try:
-                sprite_index = script.header.sprite_groups.index(0x0000)
+                sprite_index = script.header.sprite_groups.index(block_sprite)
             except ValueError:
                 try:
-                    script.header.sprite_groups.index(0x0001)
+                    script.header.sprite_groups.index(block_sprite_hit)
                 except ValueError:
-                    script.header.sprite_groups.append(0x0001)
-                script.header.sprite_groups.append(0x0000)
+                    script.header.sprite_groups.append(block_sprite_hit)
+                script.header.sprite_groups.append(block_sprite)
                 sprite_index = len(script.header.sprite_groups) - 1
             script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
             blockcount += 1
@@ -1229,10 +1238,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                         branch_if(Variables[0x100F], '!=', 1.0, 'label_' + str(a))
                     set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
                     try:
-                        emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
+                        emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
                     except ValueError:
                         emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
-                        script.header.sprite_groups.append(0x0001)
+                        script.header.sprite_groups.append(block_sprite_hit)
                     label('label_' + str(a), manager=fevent_manager)
                     #print(i[1])
                     j = []
@@ -1269,10 +1278,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                             branch_if(Variables[0x100F], '!=', 1.0, 'label_' + str(a))
                         set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
                         try:
-                            emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(0x0001), 0x0000, 0x01])
+                            emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
                         except ValueError:
                             emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
-                            script.header.sprite_groups.append(0x0001)
+                            script.header.sprite_groups.append(block_sprite_hit)
                         label('label_' + str(a), manager=fevent_manager)
                         if a == blockcount - 1:
                             try:
