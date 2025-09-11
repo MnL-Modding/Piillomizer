@@ -92,7 +92,7 @@ def is_available(logic, key, settings):
     return available
 
 def randomize_data(input_folder, stat_mult, settings, seed):
-    with tqdm(total=2085, desc="Initializing...") as pbar:
+    with tqdm(total=2089, desc="Initializing...") as pbar:
         #Sets the seed to what it was in main
         random.seed(seed)
         pbar.update(1)
@@ -837,6 +837,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         while attack == 4 or attack == 8 or attack == 9 or attack == 12 or attack == 13 or attack == 14:
             attack = random.randint(0, len(attack_piece_pool) - 1)
         offset = 0
+        key_order = []
 
         while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
             prevlen = len(item_pool) + len(key_item_pool) + len(attack_piece_pool)
@@ -947,6 +948,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             itemcut += 1
                         key_item_check[key_item_pool[nitem][1]] += 1
                         key_item_pool_checked.append(key_item_pool[nitem])
+                        key_order.append(key_item_pool[nitem][1])
                         del key_item_pool[nitem]
                         del item_locals[i]
                         offset = len(new_item_locals)
@@ -1333,6 +1335,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         else:
             room_name = hex(new_item_locals[s][0])
         spoiler_log.write(room_name + " " + check_type + " " + number + " - " + item + "\n")
+    spoiler_log.write("\nKey Item Order:\n")
+    for k in key_order:
+        spoiler_log.write(key_item_names[k] + "\n")
 
     print("Repacking enemy stats...")
     #Repackages randomized enemy stats
@@ -1359,32 +1364,34 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     for b in range(len(new_item_locals)):
         if b > 0:
             if new_item_locals[b-1][0] != new_item_locals[b][0]:
-                if newlen > 0:
-                    for j in range(newlen):
-                        i = 0
-                        while parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12] != check_spot[j][0].to_bytes(2, 'little') and i < len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])/12:
-                            i += 1
-                        #print(int.from_bytes(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12], "little"))
-                        #print(len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])])/12)
-                        parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7] = parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])]
-                    newlen = 0
-                    check_spot = []
-        x = 0
-        while x < len(repack_data):
-            if repack_data[x][5] == new_item_locals[b][-1] + 0xD000 and (repack_data[x][0] == 0 or repack_data[x][0] == 1):
-                newlen += 1
-                check_spot.append([new_item_locals[b][7], b])
-                break
-            x += 1
+                parsed_fmapdat[new_item_locals[b][0]][7].clear()
+                #if newlen > 0:
+                #    for j in range(newlen):
+                #        i = 0
+                #        while parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12] != check_spot[j][0].to_bytes(2, 'little') and i < len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])/12:
+                #            i += 1
+                #        #print(int.from_bytes(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12], "little"))
+                #        #print(len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])])/12)
+                #        parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7] = parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])]
+                #    newlen = 0
+                #    check_spot = []
+        #x = 0
+        #while x < len(repack_data):
+        #    if repack_data[x][5] == new_item_locals[b][-1] + 0xD000 and (repack_data[x][0] == 0 or repack_data[x][0] == 1):
+        #        newlen += 1
+        #        check_spot.append([new_item_locals[b][7], b])
+        #        break
+        #    x += 1
         if b < len(new_item_locals) - 1:
             if new_item_locals[b][0] != new_item_locals[b+1][0]:
                 new_item_locals[b][2] += 1
+            #print("Block type: " + hex(new_item_locals[b][2]) + " Block ID: " + hex(new_item_locals[b][7]))
         else:
             new_item_locals[b][2] += 1
-        i = 0
-        while parsed_fmapdat[new_item_locals[b][0]][7][i*12+10:i*12+12] != new_item_locals[b][7].to_bytes(2, 'little'):
-            i += 1
-        parsed_fmapdat[new_item_locals[b][0]][7][i*12:i*12+12] = struct.pack('<HHHHHH', *new_item_locals[b][2:8])
+        #i = 0
+        #while parsed_fmapdat[new_item_locals[b][0]][7][i*12+10:i*12+12] != new_item_locals[b][7].to_bytes(2, 'little'):
+        #    i += 1
+        parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
         #if new_item_locals[b][2] % 2 == 1:
         #    print(str(new_item_locals[b][0]) + " " + str(new_item_locals[b][7]))
 
