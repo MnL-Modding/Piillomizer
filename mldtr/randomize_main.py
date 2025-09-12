@@ -855,7 +855,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], item_pool[nitem][1],
                                             item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                             elif item_pool[nitem][0] == 0x0012 or item_pool[nitem][0] == 0x0013:
-                                if item_locals[i][2] // 0x10 % 0x10 == 0xA:
+                                if item_locals[i][2] // 0x10 % 0x10 >= 0xA:
                                     item_locals[i][2] -= 0x90
                                 #item_locals[i][2] &= ~(1 << 8)
                                 #item_locals[i][2] &= ~(1 << 9)
@@ -921,15 +921,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                             new_item_locals[old_spot][5], new_item_locals[old_spot][6],
                                             new_item_locals[old_spot][7]])
                         item_pool.append([new_item_locals[old_spot][2], new_item_locals[old_spot][3]])
+                        #del new_item_locals[old_spot]
                         i = -1
 
                         # Code for putting key items in blocks and bean spots
                         nitem = random.randint(0, len(key_item_pool) - 1)
                         while not is_available(logic_logic[key_item_pool[nitem][1]], key_item_check, settings):
                             nitem = random.randint(0, len(key_item_pool) - 1)
-                        narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
-                                  item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
-                        new_item_locals[old_spot] = narray
                         spottype = get_spot_type(item_locals[i])
                         if (key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004) and key_item_pool[nitem][0] != 0xB0F7:
                             repack_data.append(
@@ -951,6 +949,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         key_order.append(key_item_pool[nitem][1])
                         del key_item_pool[nitem]
                         del item_locals[i]
+                        #del item_logic[i]
+                        #del new_item_locals[old_spot]
                         offset = len(new_item_locals)
                     else:
                         attack_spot = find_index_in_2d_list(repack_data, new_item_locals[0][7] + 0xD000)
@@ -1391,7 +1391,14 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #i = 0
         #while parsed_fmapdat[new_item_locals[b][0]][7][i*12+10:i*12+12] != new_item_locals[b][7].to_bytes(2, 'little'):
         #    i += 1
-        parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
+        availability = True
+        x = 0
+        while x < len(repack_data):
+            if repack_data[x][5] == new_item_locals[b][-1] + 0xD000 and (repack_data[x][0] == 0 or repack_data[x][0] == 1):
+                availability = False
+            x += 1
+        if availability:
+            parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
         #if new_item_locals[b][2] % 2 == 1:
         #    print(str(new_item_locals[b][0]) + " " + str(new_item_locals[b][7]))
 
