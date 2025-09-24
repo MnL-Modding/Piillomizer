@@ -504,7 +504,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                           [1619, 23, 2, 4, 6, 8, 10, -1, 2, 3, 5], [1620, 23, 2, 4, 6, 8, 10, -1, 2, 3, 5], [1621, 0, 3, 5], [2296, 2, 3, 5], [1623, 0, 3, 5],]
 
         item_logic_chunk[7] = [[24], [25], [26], [27, 3, -1, 5], [28], [29], [30], [31, 15], [32, 15], [33], [34, 15], [35, 15], [157], [158], [159], [161], [162], [163], [164], [165], [166, 15, 6],
-        [168, 15, 6], [169, 15, 6], [171, 15, 6], [173, 15, 6], [175, 15, 6], [177, 15, 6], [1643, 15, 6], [265, 16, 17, 2, -1, 2, 5], [266, 16, 17, 2, -1, 2, 5], [267, 16, 17, -1, 5], [148, 15, 6],]
+        [168, 15, 6], [169, 15, 6], [171, 15, 6], [173, 15, 6], [175, 15, 6], [177, 15, 6], [1643, 15, 6], [265, 16, 17, 2, -1, 16, 2, 5], [266, 16, 17, 2, -1, 16, 2, 5], [267, 16, 17, -1, 16, 5], [148, 15, 6],]
 
         if settings[1][1] == 0:
             item_logic_chunk[8] = [[413, 16, 2, 6], [414, 16, 2, 6], [452, 16, 17, 1, 6, -1, 16, 1, 5, 6], [461, 16, 17, 1, 6, -1, 16, 1, 5, 6], [462, 16, 17, 1, 6, -1, 16, 1, 5, 6], [463, 16, 17, 1, 6, -1, 16, 1, 5, 6],
@@ -948,6 +948,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         key_item_pool_checked.append(key_item_pool[nitem])
                         key_order.append(key_item_pool[nitem][1])
                         del key_item_pool[nitem]
+                        #del logic_logic[nitem]
                         del item_locals[i]
                         #del item_logic[i]
                         #del new_item_locals[old_spot]
@@ -1157,7 +1158,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                    "DEF Mush Jam", "Duplex Crown", " -- ", "Mushroom Amulet", "DoB Ring", "Mini Ring", "Silver Statue", "Gold Statue"]]
 
     #Names for key items
-    key_item_names = ["Progressive Hammers", "Progressive Hammers", "Progressive Hammers", "Progressive Spin", "Progressive Spin", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack High Jump",
+    key_item_names = ["Progressive Hammers 1", "Progressive Hammers 2", "Progressive Hammers 3", "Progressive Spin 1", "Progressive Spin 2", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack High Jump",
                       "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Deep Pi'illo Castle", "Blimport Bridge", "Mushrise Park Gate",
                       "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
 
