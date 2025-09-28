@@ -871,7 +871,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             inspect.currentframe().f_locals['script_index'] = script_index
 
         #Sets up which block it should look at
-        if (get_room(i[1]) == "Mushrise Park" or get_room(i[1]) == "Dozing Sands" or get_room(i[1]) == "Blimport" or get_room(i[1]) == "Wakeport" or get_room(i[1]) == "Driftwood Shores" or
+        if (get_room(i[1]) == "Mushrise Park" or get_room(i[1]) == "Dozing Sands" or get_room(i[1]) == "Blimport" or get_room(i[1]) == "Wakeport" or get_room(i[1]) == "Driftwood Shore" or
                 get_room(i[1]) == "Mount Pajamaja" or get_room(i[1]) == "Pi'illo Castle" or get_room(i[1]) == "Neo Bowser Castle" or get_room(i[1]) == "Somnom Woods"):
             block_sprite = 0x0000
             block_sprite_hit = 0x0001
@@ -1013,7 +1013,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         if i[6] == 0xE00A:
             addon = "Luiginary Works"
         if i[6] == 0xE00D:
-            addon = "Luiginary Ball"
+            addon = "Luiginary Ball Ability"
         if i[6] == 0xE00E:
             addon = "Luiginary Stack Spring Jump"
         if i[6] == 0xE00F:
