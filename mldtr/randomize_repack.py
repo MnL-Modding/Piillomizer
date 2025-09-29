@@ -495,15 +495,16 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     script = fevent_manager.parsed_script(0x0102, 0)
 
     #Names the label so it can be accessed later (Hex value got by subtracting comment on top from comment on label)
-    cast(SubroutineExt, script.subroutines[0x49]).labels = {
-        'label_151': 0x2D55,
-    }
+    #cast(SubroutineExt, script.subroutines[0x49]).labels = {
+    #    'label_151': 0x2D55,
+    #}
 
     #Allows you to access Torkscrew even if the cutscene breaks
     @subroutine(subs=script.subroutines, hdr=script.header)
     def access_torkscrew(sub: Subroutine):
         branch_if(Variables[0xE09F], "==", 0.0, 'label_0')
         branch_if(Variables[0xC367], "==", 1.0, 'label_0')
+        Variables[0xC367] = 1.0
         change_room(0x02AB, position=(1000.0, 0.0, 2000.0), init_sub=-0x1)
 
         label('label_0', manager=fevent_manager)

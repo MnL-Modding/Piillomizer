@@ -328,7 +328,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                      int(((script.header.triggers[trigger][0] // 0x10000) + (script.header.triggers[trigger][1] // 0x10000)) / 2), block_id]
                         if new_block[4] > 30000:
                             new_block[4] = 0
-                        print(new_block)
+                        #print(new_block)
                         block_id += 1
                         temp.append(new_block)
                     for a in range(len(script.header.actors)):
@@ -1134,7 +1134,63 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         "Learn Luiginary Hookshot Room", "Dream's Deep Room 4", "Dream's Deep Room 5", "Dream's Deep Room 6", "Learn Luiginary Throw Room",
                         "Zeekeeper Cloud Ride", "Zeekeeper Before Boss", "Zeekeeper Arena", "Glitched 00 Room 1", "Glitched 00 Room 2", "Summit Ball Hop Gate", "End of Track Room",
                         "Dreamstone Room", "Mattress Underground 1", "Mattress Underground 2", "Dreamy Dozing Sands Unused", "Massif Entrance", "Glitched 00 Room 3",
-                        "Buildup 1", "Wiggler and Popple Arena", "Bedsmith Basement", "Rock Frame Room", "Ball Hop Tutorial Room", "Massif Lobby", "Massif Hooraw Main Room"]
+                        "Buildup 1", "Wiggler and Popple Arena", "Bedsmith Basement", "Rock Frame Room", "Ball Hop Tutorial Room", "Massif Lobby", "Massif Hooraw Main Room",
+                        "Massif Topright of Main", "Massif Clock Tutorial", "Massif After Clock Tutorial", "Massif Heavy Zest Room 1", "Massif Heavy Zest Room 2", "Massif Heavy Zest Room 3",
+                        "Massif Heavy Zest Arena", "Massif Thunder Sass Room 1", "Massif Thunder Sass Room 2", "Massif Thunder Sass Room 3", "Massif Thunder Sass Arena",
+                        "Massif Topleft of Main Room 2", "Massif Topleft of Main Room 1", "Massif Sorrow Fist Room 1", "Massif Sorrow Fist Room 2", "Massif Sorrow Fist Room 3",
+                        "Massif Sorrow Fist Arena", "Massif Beef Cloud Before Arena", "Massif Beef Cloud Arena", "Massif Window Room", "Bedsmith Entrance", "Bedsmith Room 2", "Bedsmith Room 3",
+                        "Bedsmith Room 3 Detour", "Bedsmith Room 4", "Bedsmith Room 4 Detour", "Bedsmith Room 5", "Bedsmith Room 6", "Bedsmith Upper Umbrella Puzzle", "Bedsmith Earthwake Arena",
+                        "South Room Pi'illo", "After Puzzle Pi'illo Room 1", "After Puzzle Pi'illo Room 2", "Eastern Pi'illo", "Left of Wiggler Pi'illo Entrance", "Left of Wiggler Pi'illo Main Room",
+                        "Right of Wiggler Pi'illo Entrance", "Right of Wiggler Pi'illo Main Room", "Disco Blocks", "Ball Hop Room", "Jump Tutorial", "Path to Ultibed Room 2",
+                        "Under Blimport Bridge Falling Point", "Under Blimport Bridge First Pi'illo Room", "Under Blimport Bridge Second Fling Pi'illo Room", "First Dozite Wall of Enemies",
+                        "First Dozite Learn Luiginary Stack", "First Dozite Final Puzzle", "Base Right Mega Pi'illo Entrance", "Entrance Before Castle Falls", "Entrance", "Pipe Room", "Kamek 1 Left Room",
+                        "Kamek 1 Lobby", "Kamek 1 Right Room", "Kamek 1 Top Left", "Kamek 1 North of Lobby", "Kamek 1 Top Right", "First Elevator Lower Room", "First Elevator Upper Room",
+                        "First Bomb Room", "Kamek 2 Left Room", "Kamek 2 Lobby", "Kamek 2 Right Room", "Above Kamek 2", "West of Kamek 3 Lobby", "Kamek 3 Lobby", "Kamek 3 Right Room",
+                        "Kamek 3 Western Bomb Room", "Kamek 3 Middle Bomb Room", "Kamek 3 Eastern Bomb Room", "Elevator to Final Puzzle", "Final Puzzle Lobby", "Left Balcony", "Right Balcony",
+                        "Bottom Left of Final Puzzle Room", "Bottom Right of Final Puzzle Room", "Front Balcony", "Bowser's Dream Room", "Antasma Battle Arena", "Spiral to Final Boss", "Finall Bowser Arena",
+                        "Dream Egg Dream First Egg Room 3", "Dream Egg Dream First Egg Puzzle Room", "Dream Egg Dream Second Egg Lobby", "Dream Egg Dream Second Egg Room 1", "Dream Egg Dream Second Egg Room 2 Side Room",
+                        "Dream Egg Dream Second Egg Room 4", "Dream Egg Dream Second Egg Room 5", "Dream Egg Dream Second Egg Puzzle Room", "Dream Egg Dream Third Egg Lobby", "Dream Egg Dream Third Egg Room 1",
+                        "Dream Egg Dream Third Egg Room 3", "Dream Egg Dream First Egg Room 2 Side Room", "Dream Egg Dream Third Egg Puzzle Room", "Dream Egg Dream Third Egg Room 2", "Dream Egg Dream Shop Area",
+                        "Dream Egg Dream Second Egg Entrance", "Dream Egg Dream Third Egg Entrance", "Dream Egg Dream Elite Trio Arena", "Seatoon Entrance", "Seatoon Inner Tube Intro",
+                        "Seatoon Room 3", "Seatoon Room 4", "Seatoon Cutscene", "Seabury Entrance", "Seabury Puzzle", "Seabury Cutscene", "Seabelle Entrance", "Seabelle Puzzle", "Seabelle Cutscene",
+                        "Rose Broquet Pi'illo", "Under Dream Egg Dream Pi'illo Path Room", "Under Dream Egg Dream Pi'illo Left Room", "Under Dream Egg Dream Pi'illo Right Room", "Ultibed Path Pi'illo",
+                        "Entrance", "Woods Entrance", "Bedsmith Room", "Poison Water Puzzle 1", "Poison Water Puzzle 2", "Poison Water Side Drill Junction", "First Pi'illo Master Room", "Lower Elevator Room",
+                        "Main Puzzle Tracks Area", "Bottom Right Track Room", "Bottom Right Pi'illo Master Room", "Middle Right Track Room", "Top Right Track Room", "Bottom Left Track Room",
+                        "Middle Left Track Room", "Top Left Track Room Entrance", "Top Left Track Room Pi'illo", "Top Left Track Room Cave", "Room Before Pi'illodium", "Pi'illodium Arena",
+                        "Collapsing Antasma Cutscene", "Crash", "Ultibed Pi'illo Entrance", "Left of Camera Block Pi'illo Entrance", "Entrance Pi'illo Entrance", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap",
+                        "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Crash", "Crash", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap",
+                        "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Crash", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap",
+                        "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Crash", "Crash", "Crash", "Crash", "Dreamy Driftwood Shore Minimap", "Dreamy Driftwood Shore Minimap", "Dreamy Driftwood Shore Minimap",
+                        "Dream's Deep?", "Crash", "Dreamy Mount Pajamaja", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Minimap 1", "Minimap 2", "Minimap 3", "Minimap 4", "Minimap 5",
+                        "Path to Somnom Woods and Neo Bowser Castle", "Dream Egg Dream Second Egg Room 2", "Dream Egg Dream Second Egg Room 3", "Torkscrew Minigame", "Dreamy Driftwood Background",
+                        "Hallway of Luigis", "Long Drop", "Bedsmith Earthwake Arena After Fight", "Blimport", "Blimport", "Blimport", "Dreamy Mushrise Park Minimap", "Unused Dreamy Wakeport Room",
+                        "Dreamy Mushrise Park Minimap", "Dozite 2 Final Room", "Broken Snoozemore Projection Video", "Deep Pi'illo Castle Block Room", "Snoozemore Projection Video",
+                        "Dreambert Explains Island History", "Dreambert Introduces Antasma", "Left End of Track Room", "Bowser's Introduction", "Save Tutorial", "Fountain Breaks 3DS Screen",
+                        "Glitched 00 Room", "Bedsmith Umbrella Puzzle Basement", "Blimport Minimap", "Dreamy Room", "WHAT THE-", "Dreamy Room", "Kylie Koopa Puzzle Menu", "Base Right Mega Pi'illo Room 2",
+                        "Base Left Mega Pi'illo", "Peak Left Mega Pi'illo Entrance", "Peak Left Mega Pi'illo Room 2", "Peak Left Mega Pi'illo Room 3", "Peak Right Mega Pi'illo Entrance", "Peak Right Mega Pi'illo Main",
+                        "Summit Dream Portal Room", "Summit Massif Shop", "Summit Room 4", "Summit Room 5", "Summit Room 6", "Summit Room 7", "Summit Room 8", "Summit Room 8 Detour", "Summit Room 9", "Summit Room 9 Detour",
+                        "Summit Cone Tornado Tutorial Room", "Summit Fountain Room", "Summit Between Fountain and Shop", "Summit After Healing 1", "Summit First Tornado Block Room",
+                        "Summit After Healing 3", "Summit After Healing 3 Side Room", "Summit After Healing 4", "Summit Snowstorm Room", "Summit Before Arena", "Summit Mount Pajamaja Arena",
+                        "Early Dreamy Pajamaja Minimap", "Summit Room 3", "Pajamaja Rock Frame Room 1", "Pajamaja Rock Frame Room 2", "Pajamaja Rock Frame Room 3", "Multi-Access Dream World",
+                        "Base Southwest Ball Hop Pi'illo Entrance", "Base Southwest Ball Hop Pi'illo", "Unused Dreamy Pajamaja", "Peak Before Jump Pi'illo Entrance", "Peak Before Jump Pi'illo Main", "Right Branching Path Pi'illo",
+                        "Crash", "Crash", "Crash", "Crash", "Crash", "Minimap", "Crash", "Crash", "Crash", "Annoying Quadruple Bomb Room", "Pi'illo Master 1", "Pi'illo Master 2 Room 1",
+                        "Pi'illo Master 2 Room 2", "Pi'illo Master 2 Room 3", "Southeast Pi'illo Master Room 1", "Southeast Pi'illo Master Room 2", "Southwest Pi'illo Master Room 1", "Southwest Pi'illo Master Room 2",
+                        "West Pi'illo Master Room 1", "West Pi'illo Master Room 2", "Northwest Pi'illo Master", "Zeekeeper Entrance", "Zeekeeper Tower", "Zeekeeper Coin Labyrinth", "Zeekeeper Wrong Path",
+                        "Zeekeeper Monster Path", "Zeekeeper Correct Path", "Zeekeeper After Correct Path", "Zeekeeper Many Pipe Room", "Zeekeeper First Windy Room", "Zeekeeper Vertical Windy Room",
+                        "Zeekeeper First Luiginary Work Room", "Zeekeeper Large Sneeze Room", "Zeekeeper Large Luiginary Work Room", "Zeekeeper Right Moustache Room", "Zeekeeper Left Moustache Room",
+                        "Zeekeeper Underground 1-2 Reference", "Lower Elevator Pi'illo", "Other Pi'illo in First Pi'illo Master Room", "Upper Double Pi'illo", "Lower Double Pi'illo", "Poison Water Pi'illo",
+                        "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap",
+                        "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Giant Room Fling Pi'illo Entrance", "Minimap", "Kamek 1 Entrance", "Kamek 1 Main Room", "Kamek 1 Antigravity Intro",
+                        "Kamek 1 Red Coin Room", "Kamek 1 Swimming Kick Tutorial", "Kamek 1 Enemy Room", "Kamek 1 Spike Maze", "Kamek 1 Arena", "Kamek 2 Entrance", "Kamek 2 Door", "Kamek 2 Rising Lava",
+                        "Kamek 2 Before Arena", "Kamek 2 Arena", "Kamek 3 Entrance", "Kamek 3 Room 2", "Kamek 3 Room 3", "Kamek 3 Room 4", "Kamek 3 Arena", "Left Flame Room 1", "Left Flame Room 2", "Left Flame Room 3",
+                        "Left Flame Room 4", "Bottom Right Flame Room 1", "Bottom Right Flame Room 2", "Bottom Right Flame Room 3", "Top Right Flame Room 1", "Top Right Flame Room 2", "Top Right Flame Room 3",
+                        "Bowser's Dream Entrance", "Bowser's Dream First Bowser Encounter", "Bowser's Dream Path Back 1", "Bowser's Dream Path Back 2", "Bowser's Dream Path Back 3", "Bowser's Dream Path Back 4",
+                        "Bowser's Dream Path Back 5", "Bowser's Dream Path Back 6", "Bowser's Dream Path Back 7", "Bowser's Dream Shop", "Bowser's Dream Giant Cannon", "Bowser's Dream More Giant Cannons",
+                        "Bowser's Dream Arena", "Bowser's Dream Arena After Boss", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Dreamy Mount Pajamaja", "Dreamy Neo Bowser Castle",
+                        "Dreamy Somnom Woods", "Dreamy Driftwood Shore", "Boss Brickle Runs Off", "Bottom Left", "Ring Game", "Main Track Room Entrance", "Final Boss Room Copy", "Intro",
+                        "Glitched Mushrise Minimap", "Glitched Mushrise Minimap", "Top Right Flame Room 4", "Big Fling Pi'illo Room 2"]
+    #for n in range(len(item_local_names)):
+    #    print(hex(n) + " " + item_local_names[n])
 
     #Names for items
     item_names = [["Coin", "5 Coins", "10 Coins", "50 Coins", "100 Coins"],
