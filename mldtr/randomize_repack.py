@@ -603,8 +603,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     #Fixes the Mammoshka boss fight
     script = fevent_manager.parsed_script(0x007D, 0)
     cast(SubroutineExt, script.subroutines[0x2d]).labels = {
+        'label_0': 0x88,
         'label_3': 0x15E,
     }
+    script.subroutines[0x2d].commands[5] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xC438], 1.0, 0x01, PLACEHOLDER_OFFSET], offset_arguments={4: 'label_0'})
     script.subroutines[0x2d].commands[11] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xC438], 1.0, 0x01, PLACEHOLDER_OFFSET], offset_arguments={4: 'label_3'})
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -624,7 +626,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         branch_if(Variables[0xE00F], '==', 0.0, 'label_0')
         branch_if(Variables[0xE010], '==', 0.0, 'label_0')
         branch_if(Variables[0xE011], '==', 0.0, 'label_0')
-        branch('sub_0x52')
+        call('sub_0x52')
 
         label('label_0', manager=fevent_manager)
         say(None, TextboxSoundsPreset.SILENT, "You don't have the\nrequired abilities.[Pause 45]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
