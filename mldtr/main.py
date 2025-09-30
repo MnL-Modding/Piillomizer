@@ -647,7 +647,7 @@ def main():
     #Settings to make the Ball Hop skip less
     window.ball_nerf_check = ttk.Checkbutton(
         tabMain,
-        text = "Nerf Ball Hop",
+        text = "Reduce Ball Hop Skips",
         variable = window.ball_nerf,
         onvalue = 1,
         offvalue = 0
