@@ -305,8 +305,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC422] = 1.0 #Mega Cush and Shawn intro
         Variables[0xC425] = 1.0 #The people at the top of the mountain look evil
         Variables[0xC424] = 1.0 #Dreambeats cutscene
+        Variables[0xC426] = 1.0 #Retreated to Dream World
         Variables[0xC640] = 1.0 #First entered Mount Pajamaja Summit dreampoint
         Variables[0xC641] = 1.0 #Trapped in Mount Pajamaja Summit
+        Variables[0xC427] = 1.0 #Exited Pajamaja Summit Cutscene
         Variables[0xC4AD] = 1.0 #Gold pipes appear in early game areas
         Variables[0xCC7F] = 1.0 #Peach is in Driftwood Shores Cutscene
         Variables[0xCC80] = 1.0 #Part of same cutscene as above?
@@ -611,28 +613,28 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Blocks Dream World in the Summit until you have the needed abilities
-    script = fevent_manager.parsed_script(0x007F, 0)
-    script_index = 0x007F * 2
+    #script = fevent_manager.parsed_script(0x007F, 0)
+    #script_index = 0x007F * 2
 
     # Workaround for dynamic scope in Nuitka
-    if '__compiled__' in globals():
-        inspect.currentframe().f_locals['script_index'] = script_index
+    #if '__compiled__' in globals():
+    #    inspect.currentframe().f_locals['script_index'] = script_index
 
-    cast(SubroutineExt, script.subroutines[0x52]).name = 'sub_0x52'
-    @subroutine(subs=script.subroutines, hdr=script.header)
-    def summit_access(sub: Subroutine):
-        branch_if(Variables[0xE00A], '==', 0.0, 'label_0')
-        branch_if(Variables[0xE00E], '==', 0.0, 'label_0')
-        branch_if(Variables[0xE00F], '==', 0.0, 'label_0')
-        branch_if(Variables[0xE010], '==', 0.0, 'label_0')
-        branch_if(Variables[0xE011], '==', 0.0, 'label_0')
-        call('sub_0x52')
+    #cast(SubroutineExt, script.subroutines[0x52]).name = 'sub_0x52'
+    #@subroutine(subs=script.subroutines, hdr=script.header)
+    #def summit_access(sub: Subroutine):
+    #    branch_if(Variables[0xE00A], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xE00E], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xE00F], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xE010], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xE011], '==', 0.0, 'label_0')
+    #    call('sub_0x52')
 
-        label('label_0', manager=fevent_manager)
-        say(None, TextboxSoundsPreset.SILENT, "You don't have the\nrequired abilities.[Pause 45]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+    #    label('label_0', manager=fevent_manager)
+    #    say(None, TextboxSoundsPreset.SILENT, "You don't have the\nrequired abilities.[Pause 45]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
-    script.header.triggers[0] = (0x018203EE, 0x02140450, 0x00000000, 0x00000000, 0x01000040, len(script.subroutines)-1, 0x00078002)
-    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+    #script.header.triggers[0] = (0x018203EE, 0x02140450, 0x00000000, 0x00000000, 0x01000040, len(script.subroutines)-1, 0x00078002)
+    #update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
 
     #Adds a trigger right before Bowser in Neo Bowser Castle that warps you out if you haven't defeated all bosses
