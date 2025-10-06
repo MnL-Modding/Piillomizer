@@ -269,8 +269,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC987] = 1.0 #Talked to the hoo who wants a girlfriend
         Variables[0xC988] = 1.0 #Accepted his sidequest
         Variables[0xC96B] = 1.0 #Panel tutorial cutscene
-        Variables[0xC969] = 1.0 #Panel tutorial complete
-        Variables[0xC96C] = 1.0 #Bridge is down
+        #Variables[0xC969] = 1.0 #Panel tutorial complete
+        #Variables[0xC96C] = 1.0 #Bridge is down
         Variables[0xC96D] = 1.0 #Toad is no longer worried
         Variables[0xC96A] = 1.0 #Big Massif is awake
         Variables[0xC601] = 1.0 #Hooraws Bail
@@ -813,7 +813,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     [0x100, 0xF2, 0x296, 0x25, -14, 0.0, 0.0, 0.0, 8, 0], [0x102, 0x53, 0x0BA, 0x85, -2, 0.0, 0.0, 0.0, 8, 0], [0x103, 0x77, 0x138, 0x4D, -2, 0.0, 0.0, 0.0, 8, 0],
                     [0x103, 0x7C, 0x293, 0x84, -2, 180.0, 0.0, 646.0, 8, 0], [0x104, 0x89, 0x0E7, 0x84, -2, 0.0, 0.0, 0.0, 8, 0], [0x109, 0x90, 0x131, 0x76, -2, 0.0, 0.0, 0.0, 8, 0],
                     [0x109, 0x90, 0x132, 0x86, -2, 0.0, 0.0, 0.0, 8, 0], [0x109, 0x91, 0x133, 0x86, -2, 0.0, 0.0, 0.0, 8, 0], [0x109, 0x91, 0x134, 0x8E, -2, 0.0, 0.0, 0.0, 8, 0],
-                    [0x10A, 0x78, 0x123, 0x95, -4, 0.0, 0.0, 0.0, 8, 0], [0x10B, 0x6A, 0x205, 0x4F, -2, 0.0, 0.0, 0.0, 8, 0], [0x10D, 0x56, 0x106, 0x67, -2, 400.0, 140.0, 0.0, 4, 0],
+                    [0x10A, 0x78, 0x123, 0x95, -3, 0.0, 0.0, 0.0, 8, 0], [0x10B, 0x6A, 0x205, 0x4F, -2, 0.0, 0.0, 0.0, 8, 0], [0x10D, 0x56, 0x106, 0x67, -2, 400.0, 140.0, 0.0, 4, 0],
                     [0x111, 0x7C, 0x10E, 0xA0, -2, 80.0, 480.0, 0.0, 4, 0], [0x11A, 0xA3, 0x10E, 0x9A, -2, 700.0, 1310.0, 0.0, 4, 0], [0x116, 0x92, 0x10E, 0x9D, -2, 110.0, 750.0, 0.0, 4, 0],
                     [0x112, 0x7D, 0x10E, 0x9C, -2, 180.0, 80.0, 0.0, 12, 0], [0x12A, 0xBB, 0x294, 0x73, -2, 1100.0, 480.0, 0.0, 12, 0], [0x12B, 0x9A, 0x12C, 0xAB, -2, 400.0, 140.0, 0.0, 4, 0],
                     [0x12B, 0x9B, 0x1E1, 0x7B, -2, 90.0, 370.0, 0.0, 4, 0], [0x12D, 0x8E, 0x039, 0x126, -2, 0.0, 0.0, 0.0, 4, 0], [0x134, 0x8F, 0x133, 0x87, -2, 192.0, 30.0, 0.0, 4, 0],
@@ -1308,9 +1308,12 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                                              len(script.header.to_bytes(fevent_manager)))
 
                 script = fevent_manager.parsed_script(m[2], 0)
-                script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
-                                                                                 [m[0], m[5], m[6], m[7], m[8], 0x00,
-                                                                                  new_pos, 0xFFFFFFFD, 0x00])
+                try:
+                    script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
+                                                                                     [m[0], m[5], m[6], m[7], m[8], 0x00,
+                                                                                      new_pos, 0xFFFFFFFD, 0x00])
+                except IndexError:
+                    print(hex(m[0]))
                 update_commands_with_offsets(fevent_manager, script.subroutines,
                                              len(script.header.to_bytes(fevent_manager)))
 
