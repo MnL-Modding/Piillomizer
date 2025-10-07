@@ -201,7 +201,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       [[0x098]], [[0x099, 15], [0x099, 15]], [[0x09A]], [[0x09B]], [[0x09C]], [[0x09D, 15, 3, 6, -1, 15, 5, 6]], [[0x09E]], [[0x09F]], [[0x0A0]], [[0x0A1]],
                       [[0x0A2], [0x0A2, 6, 7, 8, 12, 13], [0x0A2]], [[0x0A3], [0x0A3], [0x0A3], [0x0A3]], [[0x0A4], [0x0A4]], [[0x0A5], [0x0A5]], [[0x0A6]],
                       [[0x0A7], [0x0A7]], [[0x0A8], [0x0A8]], [[0x0A9]], [[0x0AA, 6, 7, 8, 12, 13], [0x0AA, 6, 7, 8, 12, 13]], [[0x0AB]],
-                      [[0x0AC], [0x0AC]], [[0x0AD], [0x0AD]], [[0x0AE]],
+                      [[0x0AC, 15, 6], [0x0AC, 15, 6]], [[0x0AD, 15, 6], [0x0AD, 15, 6]], [[0x0AE, 15, 6]],
                       [[0x0AF, 15, 16, 17, -1, 15, 16, 5], [0x0AF, 15, 16, 17, 18, 19, 20, 21, -1, 15, 16, 5], [0x0AF, 15, 16, 17, -1, 15, 16, 5], [0x0AF, 15, 16, 5]],
                       [[0x0B0, 15, 6], [0x0B0, 15, 6]], [[0x0B1, 15, 16, 6], [0x0B1, 15, 16, 6]],
 
@@ -384,14 +384,14 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     enemy != 22 and enemy != 24 and enemy != 26 and
                     enemy != 28 and enemy != 32 and enemy != 34 and
                     enemy != 40 and enemy != 43 and enemy != 44 and
-                    enemy != 48 and enemy != 51 and not(53 <= enemy <= 56) and
+                    enemy != 51 and not(53 <= enemy <= 56) and
                     enemy != 63 and enemy != 83 and enemy != 88 and enemy != 89 and enemy != 97 and
                     enemy != 103 and enemy != 105 and enemy != 108 and enemy != 114 and
                     enemy != 132 and not(134 <= enemy <= 136) and enemy < 139):
                 #Appends data to enemy array if it's an enemy
                 if (enemy == 13 or enemy == 18 or enemy == 25 or
                         enemy == 27 or enemy == 29 or enemy == 38 or
-                        enemy == 39 or enemy == 41 or (58 <= enemy <= 61) or
+                        enemy == 39 or enemy == 41 or enemy == 48 or (58 <= enemy <= 61) or
                         (68 <= enemy <= 71) or (85 <= enemy <= 94) or
                         (100 <= enemy <= 102) or enemy == 104 or enemy == 106 or
                         enemy == 113 or (115 <= enemy <= 120) or enemy == 19 or
@@ -425,7 +425,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         #Logic for real world enemies
         enemy_logic = [[13], [18, 15, 5, -1, 15, 6], [19], [21, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0], [31, 15, 6], [33, 15, 6], [35, 15, 6],
-                           [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6],
+                           [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6], [48, 15, 22],
                            [49, 15, 22, 6], [50, 15, 22, 6], [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, -1, 1, 5], [64, 23, 1, 6, -1, 1, 5, 6],
                            [65, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [66, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [67, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
                            [68, 15, 16, 1, -1, 15, 16, 5], [69, 15, 16, 1, -1, 15, 16, 5], [70, 15, 16, 1, -1, 15, 16, 5],
@@ -496,6 +496,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 while boss_logic[bl][0] != b[0]:
                     bl += 1
                 boss_logic[bl] = b
+
+            #for enemy in range(len(enemy_logic)):
+            #    print(enemy_logic[enemy][0])
+            #    print(enemy_logic[enemy][0] == enemy_stats_rand[enemy][0])
         #Loads in FMap as a 3D array
         parsed_fmapdat = []
         with (
@@ -1195,6 +1199,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             spot_type = item_locals[i][2]
                             spot_type &= 0xE30E
                             spot_type += item_pool[nitem][0] & 0x1CF0
+                            if spot_type % 0x10 == 2:
+                                spot_type &= 0xFF0F
+                                spot_type += 0x10
                             #print(hex(spot_type))
                             narray = [item_locals[i][0], item_locals[i][1], spot_type, item_pool[nitem][1],
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]

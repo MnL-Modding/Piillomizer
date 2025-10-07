@@ -213,6 +213,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC074] = 1.0 #"Where were you" cutscene when leaving Dream's Deep
         #Variables[0xCABF] = 1.0 #Opens gate at bottom of Mushrise Park
         Variables[0xC335] = 1.0 #Dozing Sands badge cutscene
+        emit_command(0x0033, [0x2003, 0x01], Variables[0x3000]) #Gives defense badge
+        emit_command(0x0033, [0x200A, 0x01], Variables[0x3000]) #Gives bronze badge
         Variables[0xC376] = 1.0 #Guy fell down sand slope
         Variables[0xC336] = 1.0 #Shelltops hammer Sandoons
         Variables[0xC337] = 1.0 #Saved Shelltops
@@ -268,7 +270,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC96F] = 1.0 #Attack piece cutscene Zeekeeper guy
         Variables[0xC987] = 1.0 #Talked to the hoo who wants a girlfriend
         Variables[0xC988] = 1.0 #Accepted his sidequest
-        Variables[0xC96B] = 1.0 #Panel tutorial cutscene
+        #Variables[0xC96B] = 1.0 #Panel tutorial cutscene
         #Variables[0xC969] = 1.0 #Panel tutorial complete
         #Variables[0xC96C] = 1.0 #Bridge is down
         Variables[0xC96D] = 1.0 #Toad is no longer worried
@@ -638,46 +640,46 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
 
     #Adds a trigger right before Bowser in Neo Bowser Castle that warps you out if you haven't defeated all bosses
-    script = fevent_manager.parsed_script(0x015E, 0)
-    script_index = 0x015E * 2
+    #script = fevent_manager.parsed_script(0x015E, 0)
+    #script_index = 0x015E * 2
 
     # Workaround for dynamic scope in Nuitka
-    if '__compiled__' in globals():
-        inspect.currentframe().f_locals['script_index'] = script_index
+    #if '__compiled__' in globals():
+    #    inspect.currentframe().f_locals['script_index'] = script_index
 
-    @subroutine(subs=script.subroutines, hdr=script.header)
-    def defeat_all_bosses(sub: Subroutine):
-        branch_if(Variables[0xCC28], '==', 0.0, 'label_0')
-        branch_if(Variables[0xCB07], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC92F], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC04C], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC367], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC057], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC60E], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC423], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC649], '==', 0.0, 'label_0')
-        branch_if(Variables[0xCB45], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC637], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC5AE], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC0BF], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC0B8], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC0CA], '==', 0.0, 'label_0')
-        branch_if(Variables[0xC45C], '==', 0.0, 'label_0')
-        branch('label_1')
+    #@subroutine(subs=script.subroutines, hdr=script.header)
+    #def defeat_all_bosses(sub: Subroutine):
+    #    branch_if(Variables[0xCC28], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xCB07], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC92F], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC04C], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC367], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC057], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC60E], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC423], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC649], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xCB45], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC637], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC5AE], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC0BF], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC0B8], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC0CA], '==', 0.0, 'label_0')
+    #    branch_if(Variables[0xC45C], '==', 0.0, 'label_0')
+    #    branch('label_1')
 
-        label('label_0', manager=fevent_manager)
-        set_blocked_buttons(Screen.TOP, ButtonFlags.ALL, res=Variables[0x3000])
-        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL, res=Variables[0x3001])
-        set_movement_multipliers(Screen.TOP, 0.0, 0.0)
-        set_movement_multipliers(Screen.BOTTOM, 0.0, 0.0)
-        set_touches_blocked(True)
-        say(None, TextboxSoundsPreset.SILENT, "You must defeat all bosses\nbefore you can face Bowser.[Pause 45]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-        change_room(0x01C8, position=(1400.0, 0.0, 1360.0), init_sub=-0x1)
+    #    label('label_0', manager=fevent_manager)
+    #    set_blocked_buttons(Screen.TOP, ButtonFlags.ALL, res=Variables[0x3000])
+    #    set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL, res=Variables[0x3001])
+    #    set_movement_multipliers(Screen.TOP, 0.0, 0.0)
+    #    set_movement_multipliers(Screen.BOTTOM, 0.0, 0.0)
+    #    set_touches_blocked(True)
+    #    say(None, TextboxSoundsPreset.SILENT, "You must defeat all bosses\nbefore you can face Bowser.[Pause 45]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+    #    change_room(0x01C8, position=(1400.0, 0.0, 1360.0), init_sub=-0x1)
 
-        label('label_1', manager=fevent_manager)
+    #    label('label_1', manager=fevent_manager)
 
-    script.header.triggers.append((0x00000000, 0x01F302A8, 0x00000000, 0x00000000, 0xFFFF0046, len(script.subroutines)-1, 0x00078022))
-    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+    #script.header.triggers.append((0x00000000, 0x01F302A8, 0x00000000, 0x00000000, 0xFFFF0046, len(script.subroutines)-1, 0x00078022))
+    #update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Adds dialogue to Toadsworth in Pi'illo Castle so he can tell you what bosses you have left to defeat
     script = fevent_manager.parsed_script(0x0082, 0)

@@ -119,10 +119,11 @@ def randomize(window):
     #Sets seed to an input if the user input a seed
     if window.seed.get() != "":
         try:
-            if int(window.seed.get(), 16) < 0x100000000:
-                seed = int(window.seed.get(), 16)
+            seed = int(window.seed.get(), 16)
         except ValueError:
             seed = int.from_bytes(window.seed.get().encode('utf-8'))
+        if seed > 0xFFFFFFFF:
+            seed %= 0x100000000
 
     if os.path.exists(parent_folder + title_id):
         while os.path.exists(parent_folder + title_id + "-seed" + hex(seed)):
