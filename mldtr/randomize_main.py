@@ -59,7 +59,7 @@ def get_minimap(room_id):
         return 0x245
 
 def get_spot_type(spot):
-    if spot[2] == 0x0012 or spot[2] == 0x0013:
+    if spot[2] % 0x10 == 2:
         return 5
     elif spot[-2] == 0:
         return 1
@@ -1771,6 +1771,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         if b > 0:
             if new_item_locals[b-1][0] != new_item_locals[b][0]:
                 parsed_fmapdat[new_item_locals[b][0]][7].clear()
+        else:
+            parsed_fmapdat[new_item_locals[b][0]][7].clear()
                 #if newlen > 0:
                 #    for j in range(newlen):
                 #        i = 0
@@ -1804,7 +1806,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 availability = False
             x += 1
         if availability:
-            #print(len(struct.pack('<HHHHHH', *new_item_locals[b][2:8])))
+            #print(hex(new_item_locals[b][7]))
             parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
         #if new_item_locals[b][2] % 2 == 1:
         #    print(len(parsed_fmapdat[new_item_locals[b][0]][7]) % 12)
