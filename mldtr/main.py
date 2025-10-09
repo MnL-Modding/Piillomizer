@@ -511,7 +511,7 @@ def main():
 
     window.deep_castle_check = ttk.Checkbutton(
         tabMain,
-        text = "Deep Castle",
+        text = "Pi'illo Key",
         variable = window.key15,
         onvalue = 1.0,
         offvalue = 0.0,

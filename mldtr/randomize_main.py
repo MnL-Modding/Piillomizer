@@ -78,11 +78,16 @@ def is_available(logic, key, settings):
     was_true = False
     for d in range(len(logic)-1):
         #Checks if you have the items needed for the check
-        if key[logic[d+1]] < 1 or logic[d+1] == -3:
+        if (key[logic[d+1]] < 1 and logic[d+1] > -1) or logic[d+1] == -3:
             available = False
         #If it's an or statement, it resets the generation for the next statement
         #while setting wasTrue depending on whether the chunk was true or not
-        if logic[d+1] < 0:
+        if logic[d+1] == -1:
+            #try:
+            #    if logic[0] == 87 and logic[1] == 15 and key[15] == 1:
+            #        print(available)
+            #except IndexError:
+            #    pass
             if not available:
                 available = True
             else:
@@ -90,7 +95,7 @@ def is_available(logic, key, settings):
     if was_true:
         available = True
     return available
-
+#46d8f468
 def randomize_data(input_folder, stat_mult, settings, seed):
     with tqdm(total=2089, desc="Initializing...") as pbar:
         #Sets the seed to what it was in main
@@ -194,13 +199,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       [[0x07D, 23, 1, 4, 6, 8, 10], [0x07D, 23, 1, 4, 6, 8, 10]], [[0x07E, 23, 1, 4, 6, 8, 10], [0x07E, 23, 1, 4, 6, 8, 10]],
                       [[0x07F, 23, 1, 4, 6, 8, 10], [0x07F, 23, 1, 4, 6, 8, 10]], [[0x080, 23, 1, 4, 6, 8, 10]], [[0x081, 1, 4, 5]],
 
-                      [[0x082], [0x082], [0x082], [0x082], [0x082], [0x082]], [[0x083]], [[0x084], [0x084]], [[0x085], [0x085]],
-                      [[0x086, 15], [0x086, 15], [0x086], [0x086, 15], [0x086, 15]], [[0x087]], [[0x088]], [[0x089], [0x089]],
-                      [[0x08A], [0x08A], [0x08A], [0x08A], [0x08A], [0x08A]], [[0x08B]], [[0x08C]], [[0x08D]], [[0x08E]], [[0x08F, 15], [0x08F, 15, 5]],
-                      [[0x090]], [[0x091, 14]], [[0x092]], [[0x093, 14], [0x093, 14]], [[0x094], [0x094, 14]], [[0x095], [0x095]], [[0x096], [0x096]], [[0x097], [0x097]],
-                      [[0x098]], [[0x099, 15], [0x099, 15]], [[0x09A]], [[0x09B]], [[0x09C]], [[0x09D, 15, 3, 6, -1, 15, 5, 6]], [[0x09E]], [[0x09F]], [[0x0A0]], [[0x0A1]],
-                      [[0x0A2], [0x0A2, 6, 7, 8, 12, 13], [0x0A2]], [[0x0A3], [0x0A3], [0x0A3], [0x0A3]], [[0x0A4], [0x0A4]], [[0x0A5], [0x0A5]], [[0x0A6]],
-                      [[0x0A7], [0x0A7]], [[0x0A8], [0x0A8]], [[0x0A9]], [[0x0AA, 6, 7, 8, 12, 13], [0x0AA, 6, 7, 8, 12, 13]], [[0x0AB]],
+                      [[0x082, 14], [0x082, 14], [0x082, 14], [0x082, 14], [0x082, 14], [0x082, 14]], [[0x083]], [[0x084, 14], [0x084, 14]], [[0x085, 14], [0x085, 14]],
+                      [[0x086, 14, 15], [0x086, 14, 15], [0x086, 14], [0x086, 14, 15], [0x086, 14, 15]], [[0x087, 14]], [[0x088, 14]], [[0x089, 14], [0x089, 14]],
+                      [[0x08A, 14], [0x08A, 14], [0x08A, 14], [0x08A, 14], [0x08A, 14], [0x08A, 14]], [[0x08B, 14]], [[0x08C, 14]], [[0x08D, 14]], [[0x08E, 14]], [[0x08F, 14, 15], [0x08F, 14, 15, 5]],
+                      [[0x090]], [[0x091, 14]], [[0x092]], [[0x093, 14], [0x093, 14]], [[0x094, 14], [0x094, 14]], [[0x095, 14], [0x095, 14]], [[0x096, 14], [0x096, 14]], [[0x097, 14], [0x097, 14]],
+                      [[0x098, 14]], [[0x099, 14, 15], [0x099, 14, 15]], [[0x09A, 14]], [[0x09B]], [[0x09C]], [[0x09D, 15, 3, 6, -1, 15, 5, 6]], [[0x09E]], [[0x09F]], [[0x0A0]], [[0x0A1]],
+                      [[0x0A2, 14], [0x0A2, 14, 6, 7, 8, 12, 13], [0x0A2, 14]], [[0x0A3, 14], [0x0A3, 14], [0x0A3, 14], [0x0A3, 14]], [[0x0A4, 14], [0x0A4, 14]], [[0x0A5, 14], [0x0A5, 14]], [[0x0A6, 14]],
+                      [[0x0A7, 14], [0x0A7, 14]], [[0x0A8, 14], [0x0A8, 14]], [[0x0A9, 14]], [[0x0AA, 14, 6, 7, 8, 12, 13], [0x0AA, 14, 6, 7, 8, 12, 13]], [[0x0AB]],
                       [[0x0AC, 15, 6], [0x0AC, 15, 6]], [[0x0AD, 15, 6], [0x0AD, 15, 6]], [[0x0AE, 15, 6]],
                       [[0x0AF, 15, 16, 17, -1, 15, 16, 5], [0x0AF, 15, 16, 17, 18, 19, 20, 21, -1, 15, 16, 5], [0x0AF, 15, 16, 17, -1, 15, 16, 5], [0x0AF, 15, 16, 5]],
                       [[0x0B0, 15, 6], [0x0B0, 15, 6]], [[0x0B1, 15, 16, 6], [0x0B1, 15, 16, 6]],
@@ -432,7 +437,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                            [71, 15, 16, 1, -1, 15, 16, 5], [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
                            [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
                            [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                           [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5], [87, 15, -1, 1, 4, 5],
+                           [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6, 7, 12, 13], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5], [87, 15, -1, 1, 4, 5],
                            [90, 1, 4, 5], [91, 15, 16, 2, 4], [92, 15], [93, 15],
                            [94, 15, 16, 5], [98, 22, 1, 2, 4, 5, 6], [99, 22, 1, 2, 4, 5, 6], [100, 15, 1, 3, 5], [101, 15, 1, 5], [102, 15, 1, 5], [104, 15, 1, 5],
                            [106, 15, 1, 5], [110, 15, 1, 3, 5, 6], [111, 15, 1, 3, 5, 6], [112, 15, 1, 2, 3, 5, 6], [113, 15, 27, 1, 5], [115, 15, 27, 1, 5],
@@ -487,10 +492,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
                 replace_boss = [[62, 23, 1, 4, 6, 8, 10], [95, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10], [96, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10]]
             for e in replace_enemy:
-                el = 0
-                while enemy_logic[el][0] != e[0]:
-                    el += 1
-                enemy_logic[el] = e
+                try:
+                    enemy_logic[enemy_logic.index(e[0])] = e
+                except ValueError:
+                    pass
             for b in replace_boss:
                 bl = 0
                 while boss_logic[bl][0] != b[0]:
@@ -498,7 +503,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 boss_logic[bl] = b
 
             #for enemy in range(len(enemy_logic)):
-            #    print(enemy_logic[enemy][0])
+            #    print(enemy_logic[enemy])
             #    print(enemy_logic[enemy][0] == enemy_stats_rand[enemy][0])
         #Loads in FMap as a 3D array
         parsed_fmapdat = []
@@ -544,9 +549,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 parsed_fmapdat[0x5D][3][spot[0][i]] = 0x78
             for i in range(len(spot[1])):
                 parsed_fmapdat[0x67][3][spot[1][i]] = 0x78
-            #with open("Dozing Edit.bin", 'rb') as new_model:
-            #    parsed_fmapdat[0xC8][12] = new_model.read()
-            #    print(len(parsed_fmapdat[0xC8][12]))
         block_id = 2500
         rooms_to_init = [0x001, 0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                          0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
@@ -658,7 +660,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                [[1568], [1568, -3], [1568, -3], [1568, -3]], [[1569], [1569, -3], [1569, -3], [1569, -3]], [[1570, 5], [1570, -3], [1570, -3], [1570, -3]], [[1571, 2]], [[1572, 2]],
                                [[1543, 1], [1543, 1]], [[1544, 1], [1544, 1]], [[1545, 1], [1545, 1]], [[2398, 1], [2398, 1]], [[2547, 3, -1, 5], [2547, 5], [2547, 5]], [[2399, 5], [2399, 3, -1, 5], [2399, 3, -1, 5]], [[1547, 5], [1547], [1547]], [[1548, 2, 5], [1548, 2], [1548, 2]],
                                [[2548, 4], [2548, 3]], [[1555, 4], [1555, 0, 3]], [[1556, 4], [1556, 0, 3]], [[1557, 2, 4], [1557, 0]], [[2400, 2, 4], [2400, 0]], [[1558, 3], [1558, 0, 3]],
-                               [[2549, 1], [2549, 1], [2549, -3], [2549, 1, 4, -1, 1, 5], [2549, 1]], [[2550, -3], [2550], [2550, -3], [2550, -3], [2550, -3]], [[2551, 4], [2551, 0, 4], [2551, -3], [2551, 4], [2551, 4]],
+                               [[2549, -3], [2549], [2549, -3], [2549, -3], [2549, -3]], [[2550, 1, 3], [2550, 1, 3], [2550, -3], [2550, 1, 4, -1, 1, 3, 5], [2550, 1, 3]], [[2551, 4], [2551, 0, 4], [2551, -3], [2551, 4], [2551, 4]],
                                [[1559], [1559, 0], [1559, -3], [1559, 4, -1, 5], [1559]], [[1560, 2], [1560, 2], [1560, -3], [1560, 2, 4, -1, 2, 5], [1560, 2]], [[1561, 2], [1561, 2], [1561, -3], [1561, 2, 4, -1, 2, 5], [1561, 2]],
                                [[2401, 2], [2401, 2], [2401, -3], [2401, 2, 3, -1, 2, 5], [2401, 2]], [[2552, 1, 4], [2552, 1]], [[1563, 3, -1, 5], [1563, 0, 3, -1, 0, 5]], [[1564], [1564, 0]], [[1565, 2, 4], [1565, 2, 4]], [[988, 2], [988, 2]]]
 
@@ -707,12 +709,12 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         if settings[1][1] == 0:
             item_logic_chunk[10] = [[2578, 15, 16, 17, 18, 19, 20, 21, 6, 8, 9, -1, 15, 16, 5, 6, 8, 9], [2579, 15, 16, 17, 18, 19, 20, 21, 6, 8, 9, -1, 15, 16, 5, 6, 8, 9], [568, 16, 17, 18, 19, 20, 21, 6, 9, -1, 16, 5, 6, 9], [569, 16, 17, 18, 19, 20, 21, 6, 9, -1, 16, 5, 6, 9], [577, 16, 4, 5, 6], [578, 16, 4, 5, 6], [579, 16, 4, 5, 6], [580, 16, 4, 5, 6],
-            [581, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [582, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [583, 16, 17, 1, 6, -1, 16, 1, 5, 6], [584, 16, 17, 2, 6, -1, 16, 2, 5, 6], [585, 16, 17, 2, 6, -1, 16, 2, 5, 6], [2546, 6, 7, 8, 12, 13], [2547, 6, 7, 8, 12, 13],
-            [861, 6, 7, 8, 12, 13], [862, 6, 7, 8, 12, 13], [2548, 6, 7, 8, 12, 13], [2081, 15, 2, 4, 5, 6, 8],]
+            [581, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [582, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [583, 16, 17, 1, 6, -1, 16, 1, 5, 6], [584, 16, 17, 2, 6, -1, 16, 2, 5, 6], [585, 16, 17, 2, 6, -1, 16, 2, 5, 6], [2546, 14, 6, 7, 8, 12, 13], [2547, 14, 6, 7, 8, 12, 13],
+            [861, 14, 6, 7, 8, 12, 13], [862, 14, 6, 7, 8, 12, 13], [2548, 14, 6, 7, 8, 12, 13], [2081, 15, 2, 4, 5, 6, 8],]
         else:
             item_logic_chunk[10] = [[2578, 15, 16, 17, 18, 19, 20, 21, 6, 8, 9], [2579, 15, 16, 17, 18, 19, 20, 21, 6, 8, 9], [568, 16, 17, 18, 19, 20, 21, 6, 9], [569, 16, 17, 18, 19, 20, 21, 6, 9], [577, 16, 4, 5, 6], [578, 16, 4, 5, 6], [579, 16, 4, 5, 6], [580, 16, 4, 5, 6],
-            [581, 16, 17, 18, 19, 20, 21, 6], [582, 16, 17, 18, 19, 20, 21, 6], [583, 16, 17, 1, 6], [584, 16, 17, 2, 6], [585, 16, 17, 2, 6], [2546, 6, 7, 8, 12, 13], [2547, 6, 7, 8, 12, 13],
-            [861, 6, 7, 8, 12, 13], [862, 6, 7, 8, 12, 13], [2548, 6, 7, 8, 12, 13], [2081, 15, 2, 4, 5, 6, 8],]
+            [581, 16, 17, 18, 19, 20, 21, 6], [582, 16, 17, 18, 19, 20, 21, 6], [583, 16, 17, 1, 6], [584, 16, 17, 2, 6], [585, 16, 17, 2, 6], [2546, 14, 6, 7, 8, 12, 13], [2547, 14, 6, 7, 8, 12, 13],
+            [861, 14, 6, 7, 8, 12, 13], [862, 14, 6, 7, 8, 12, 13], [2548, 14, 6, 7, 8, 12, 13], [2081, 15, 2, 4, 5, 6, 8],]
 
         if settings[1][0] == 0 and settings[1][1] == 0:
             item_logic_chunk[11] = [[1624, 1, 4, 5], [2404, 1, 4, 5], [315, 16, 17, 2, -1, 16, 2, 5], [316, 16, 17, 2, -1, 16, 2, 5], [317, 16, 17, 18, 19, 20, 21, 2, -1, 16, 2, 5], [318, 16, 5], [2396, 16, 4, 5], [2330, 16, 2, 4, 5],
@@ -756,19 +758,19 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                     [726, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6], [727, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6], [728, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6],
                                     [760, 15, 22, 0, 6], [761, 15, 22, 0, 6], [764, 15, 22, 2, 6], [765, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6]]
         if settings[1][1] == 0 and settings[1][0] == 0:
-            item_logic_chunk[14] = [[36, 15, 5], [37, 15, 5], [38, 15, 5], [39, 15, 5], [40, 15, 5], [319, 15, 16, 5], [320, 15, 16, 5], [987, 15, 16, 5], [41, 15, 5, -1, 15, 6], [42, 15, 5, -1, 15, 6],
+            item_logic_chunk[14] = [[36, 14, 15, 5], [37, 14, 15, 5], [38, 14, 15, 5], [39, 14, 15, 5], [40, 14, 15, 5], [319, 15, 16, 5], [320, 15, 16, 5], [987, 15, 16, 5], [41, 15, 5, -1, 15, 6], [42, 15, 5, -1, 15, 6],
                                     [43, 15, 5, -1, 15, 6], [2383, 15, 5, -1, 15, 6], [45, 15, 5, -1, 15, 6], [46, 15, 5, -1, 15, 6], [47, 15, 5, -1, 15, 6], [2591, 15, 16, 0, 6], [879, 23, 1, 3, 6, -1, 1, 5, 6],
                                     [880, 23, 1, 3, 6, -1, 1, 5, 6]]
         elif settings[1][0] == 1 and settings[1][1] == 1:
-            item_logic_chunk[14] = [[36, 15, 5], [37, 15, 5], [38, 15, 5], [39, 15, 5], [40, 15, 5], [319, 15, 16, 17, 18, 19, 20, 21, 1, 5], [320, 15, 16, 17, 18, 19, 20, 21, 1, 5],
+            item_logic_chunk[14] = [[36, 14, 15, 5], [37, 14, 15, 5], [38, 14, 15, 5], [39, 14, 15, 5], [40, 14, 15, 5], [319, 15, 16, 17, 18, 19, 20, 21, 1, 5], [320, 15, 16, 17, 18, 19, 20, 21, 1, 5],
                                     [987, 15, 16, 17, 18, 19, 20, 21, 1, 5], [41, 15, 5, -1, 15, 6], [42, 15, 5, -1, 15, 6], [43, 15, 5, -1, 15, 6], [2383, 15, 5, -1, 15, 6], [45, 15, 5, -1, 15, 6],
                                     [46, 15, 5, -1, 15, 6], [47, 15, 5, -1, 15, 6], [2591, 15, 16, 0, 6], [879, 23, 3, 6, -1, 23, 5, 6], [880, 23, 3, 6, -1, 23, 5, 6]]
         elif settings[1][0] == 1:
-            item_logic_chunk[14] = [[36, 15, 5], [37, 15, 5], [38, 15, 5], [39, 15, 5], [40, 15, 5], [319, 15, 16, 5], [320, 15, 16, 5], [987, 15, 16, 5], [41, 15, 5, -1, 15, 6], [42, 15, 5, -1, 15, 6],
+            item_logic_chunk[14] = [[36, 14, 15, 5], [37, 14, 15, 5], [38, 14, 15, 5], [39, 14, 15, 5], [40, 14, 15, 5], [319, 15, 16, 5], [320, 15, 16, 5], [987, 15, 16, 5], [41, 15, 5, -1, 15, 6], [42, 15, 5, -1, 15, 6],
                                     [43, 15, 5, -1, 15, 6], [2383, 15, 5, -1, 15, 6], [45, 15, 5, -1, 15, 6], [46, 15, 5, -1, 15, 6], [47, 15, 5, -1, 15, 6], [2591, 15, 16, 0, 6], [879, 23, 3, 6, -1, 5, 6],
                                     [880, 23, 3, 6, -1, 5, 6]]
         else:
-            item_logic_chunk[14] = [[36, 15, 5], [37, 15, 5], [38, 15, 5], [39, 15, 5], [40, 15, 5], [319, 15, 16, 17, 18, 19, 20, 21, 1, 5], [320, 15, 16, 17, 18, 19, 20, 21, 1, 5],
+            item_logic_chunk[14] = [[36, 14, 15, 5], [37, 14, 15, 5], [38, 14, 15, 5], [39, 14, 15, 5], [40, 14, 15, 5], [319, 15, 16, 17, 18, 19, 20, 21, 1, 5], [320, 15, 16, 17, 18, 19, 20, 21, 1, 5],
                                     [987, 15, 16, 17, 18, 19, 20, 21, 1, 5], [41, 15, 5, -1, 15, 6], [42, 15, 5, -1, 15, 6], [43, 15, 5, -1, 15, 6], [2383, 15, 5, -1, 15, 6], [45, 15, 5, -1, 15, 6],
                                     [46, 15, 5, -1, 15, 6], [47, 15, 5, -1, 15, 6], [2591, 15, 16, 0, 6], [879, 23, 3, 6, -1, 23, 5, 6], [880, 23, 3, 6, -1, 23, 5, 6]]
         if settings[1][0] == 0:
@@ -1146,9 +1148,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                               [0x01, 0xB04C], [0x02, 0xB04C], [0x04, 0xB04C], [0x08, 0xB04C], [0x10, 0xB04C]],]
 
         #Logic for the key items, so they only spawn when others are already in the pool
-        logic_logic = [[0], [1, 0], [2, 1], [3], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5], [6], [7, 6], [8, 6], [9, 6], [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10],
-                       [12, 7], [13, 7], [14], [15], [16, 15], [17, 15, 16], [18, 15, 16], [19, 15, 16], [20, 15, 16], [21, 15, 16], [22, 15], [23, 1],
-                       [24, 1, 3, 6], [25, 24], [26, 25], [27, 15, 1]]
+        logic_logic = [[0, 15], [1, 0], [2, 1], [3, 15, -1, 1], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5, 14, -1, 15], [6, 15], [7, 6], [8, 6], [9, 6],
+                       [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10], [12, 7], [13, 7], [14], [15], [16, 15], [17, 15, 16], [18, 17], [19, 17], [20, 17], [21, 17],
+                       [22, 15], [23, 1], [24, 1, 3, 6], [25, 24], [26, 25], [27, 15, 1]]
         pbar.update(2)
 
         #Removes items from the key item pool depending on the settings
@@ -1157,7 +1159,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 s = find_index_in_2d_list(key_item_pool, l)
                 key_item_check[s[0]] += 1
                 del key_item_pool[s[0]]
-                del logic_logic[s[0]]
+                #del logic_logic[s[0]]
                 pbar.update(1)
 
     with tqdm(total=len(item_pool)+len(key_item_pool)+(len(attack_piece_pool[0])*len(attack_piece_pool)), desc="Randomizing...") as rbar:
@@ -1223,9 +1225,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 new_item_locals.append(narray)
                                 new_item_logic.append(item_logic[i])
                                 spottype = get_spot_type(item_locals[i])
-                                repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6] + 0xD000,
-                                                    attack_piece_pool[attack][nitem][1], attack_piece_pool[attack][nitem][0], 0xCD20 + attackcut])
-                                attackcut += 1
+                                if item_locals[i][2] % 0x10 == 2:
+                                    repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6] + 0xD000,
+                                                        attack_piece_pool[attack][nitem][1], attack_piece_pool[attack][nitem][0], 0xCD20 + attackcut])
+                                    attackcut += 1
+                                else:
+                                    repack_data.append([spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6] + 0xD000,
+                                                        attack_piece_pool[attack][nitem][1], attack_piece_pool[attack][nitem][0]])
                                 del attack_piece_pool[attack][nitem]
                                 del item_locals[i]
                                 del item_logic[i]
@@ -1239,7 +1245,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         if len(new_item_locals) >= 50:
                             offset -= 50
                         else:
-                            offset -= 25
+                            offset -= 10
                     can_key = False
                     for i in range(len(new_item_locals) - offset):
                         if new_item_locals[i+offset][3] != 0 and find_index_in_2d_list(repack_data, new_item_locals[i+offset][7] + 0xD000) is None:
@@ -1553,7 +1559,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     #Names for key items
     key_item_names = ["Progressive Hammers 1", "Progressive Hammers 2", "Progressive Hammers 3", "Progressive Spin 1", "Progressive Spin 2", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack High Jump",
-                      "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Deep Pi'illo Castle", "Blimport Bridge", "Mushrise Park Gate",
+                      "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
                       "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
 
     #Names for attack pieces
@@ -1574,7 +1580,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             if new_item_locals[i][0] == new_item_locals[i-1][0]:
                 rooms.append(new_item_locals[i])
             else:
-                #rooms = sorted(rooms, key=lambda local: local[7])
+                rooms = sorted(rooms, key=lambda local: local[7])
+
+                #Sorts the room into a specific spot
                 if get_room(rooms[-1][0]) == "Mushrise Park":
                     room = 3
                 elif get_room(rooms[-1][0]) == "Dozing Sands":
@@ -1597,6 +1605,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     room = 6
                 elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shore":
                     room = 12
+                elif get_room(rooms[-1][0]) == "Dreamy Wakeport":
+                    room = 8
                 elif get_room(rooms[-1][0]) == "Neo Bowser Castle":
                     room = 15
                 elif get_room(rooms[-1][0]) == "Somnom Woods":
@@ -1729,10 +1739,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             room_name = item_local_names[new_item_locals[s][0]]
         else:
             room_name = hex(new_item_locals[s][0])
-        spoiler_log.write(room_name + " " + check_type + " " + number + " - " + item + "\n")
+        spoiler_log.write(room_name + " " + check_type + " " + hex(new_item_locals[s][7]) + " - " + item + "\n")
     spoiler_log.write("\nKey Item Order:\n")
     for k in key_order:
         spoiler_log.write(key_item_names[k] + "\n")
+    spoiler_log.write("\nTracker Stuff:\nStrike Badge\nGuard Badge\nBronze Badge\nVirus Badge\nMaster Badge\nRisk Badge\nSilver Badge\nExpert Badge\nMiracle Badge\nGold Badge\nCurrent Room: ")
 
     print("Repacking enemy stats...")
     #Repackages randomized enemy stats
@@ -1793,9 +1804,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 availability = False
             x += 1
         if availability:
+            #print(len(struct.pack('<HHHHHH', *new_item_locals[b][2:8])))
             parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
         #if new_item_locals[b][2] % 2 == 1:
-        #    print(str(new_item_locals[b][0]) + " " + str(new_item_locals[b][7]))
+        #    print(len(parsed_fmapdat[new_item_locals[b][0]][7]) % 12)
 
     with (
         code_bin_path.open('r+b') as code_bin,

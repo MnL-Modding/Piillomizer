@@ -7,7 +7,7 @@ from mnlscript import CodeCommandWithOffsets, emit_command, update_commands_with
 from mnlscript.dt import PLACEHOLDER_OFFSET, Variables, change_room, MusicFlag, set_action_icons_shown, \
     set_actor_attribute, Actors, tint_screen, set_blocked_buttons, ButtonFlags, set_movement_multipliers, \
     set_touches_blocked, branch_if, TextboxSoundsPreset, say, wait, Globals, call, branch, TextboxAlignment, \
-    add_in_place, start_battle, WorldType, Transition, Sound
+    add_in_place, start_battle, WorldType, Transition, Sound, TextboxTailType, ActorAttribute
 from typing import cast
 import math
 import functools
@@ -135,7 +135,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xCC27] = 1.0 #Got badges and watched tutorial
         Variables[0xE01D] = 1.0 #Gives access to badges and expert challenges
         Variables[0xCCCC] = 1.0 #Smoldergeist badge tutorial
-        Variables[0xE075] = 1.0 #Fixes bridge in Deep Pi'illo Castle
+        #Variables[0xE075] = 1.0 #Fixes bridge in Deep Pi'illo Castle
         Variables[0xC5CA] = 1.0 #How did you come OUT of the hidden area!?
         Variables[0xCC29] = 1.0 #First entered collection room
         Variables[0xCC2A] = 1.0 #Swim to Dream World
@@ -213,8 +213,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC074] = 1.0 #"Where were you" cutscene when leaving Dream's Deep
         #Variables[0xCABF] = 1.0 #Opens gate at bottom of Mushrise Park
         Variables[0xC335] = 1.0 #Dozing Sands badge cutscene
-        emit_command(0x0033, [0x2003, 0x01], Variables[0x3000]) #Gives defense badge
-        emit_command(0x0033, [0x200A, 0x01], Variables[0x3000]) #Gives bronze badge
+        #emit_command(0x0033, [0x2003, 0x01], Variables[0x3000]) #Gives bronze badge
         Variables[0xC376] = 1.0 #Guy fell down sand slope
         Variables[0xC336] = 1.0 #Shelltops hammer Sandoons
         Variables[0xC337] = 1.0 #Saved Shelltops
@@ -270,8 +269,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC96F] = 1.0 #Attack piece cutscene Zeekeeper guy
         Variables[0xC987] = 1.0 #Talked to the hoo who wants a girlfriend
         Variables[0xC988] = 1.0 #Accepted his sidequest
-        #Variables[0xC96B] = 1.0 #Panel tutorial cutscene
-        #Variables[0xC969] = 1.0 #Panel tutorial complete
+        Variables[0xC96B] = 1.0 #Panel tutorial cutscene
+        Variables[0xC969] = 1.0 #Panel tutorial complete
         #Variables[0xC96C] = 1.0 #Bridge is down
         Variables[0xC96D] = 1.0 #Toad is no longer worried
         Variables[0xC96A] = 1.0 #Big Massif is awake
@@ -468,17 +467,102 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC0B8] = settings[2][13]
         Variables[0xC0CA] = settings[2][14]
         Variables[0xC45C] = settings[2][15]
-        change_room(0x001c, position=(800.0, 0.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x001c, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
-    #Sets up Pi'illo Castle grounds so you can go past the invisible wall and the NPCs are still there
-    script = fevent_manager.parsed_script(0x001c, 0)
-    script.subroutines[0x53].commands[1] = CodeCommandWithOffsets(0x0126, [0x00, 0x01])
-    script.subroutines[0x54].commands[318] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xCC80], 1.0, 0x01, PLACEHOLDER_OFFSET], offset_arguments={4: 'end'})
-    cast(SubroutineExt, script.subroutines[0x54]).labels = {
-        'end': script.subroutines[0x54].serialized_len(fevent_manager, 0, with_footer=False) - 6,
-    }
+    #Makes Pi'illo Castle inaccessible without the right key items, and removes the invisible walls
+    script = fevent_manager.parsed_script(0x01c, 0)
+    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
+    script.header.init_subroutine = None
+    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+    def new_init(sub: Subroutine):
+        emit_command(0x0059, [0x00, 0x01])
+        emit_command(0x0059, [0x01, 0x01])
+        set_actor_attribute(0x18, 0x01, 1.0)
+        set_actor_attribute(0x18, 0x00, 1.0)
+        set_actor_attribute(0x19, 0x01, 1.0)
+        set_actor_attribute(0x19, 0x00, 1.0)
+        set_actor_attribute(0x1A, 0x01, 1.0)
+        set_actor_attribute(0x1A, 0x00, 1.0)
+        emit_command(0x00B4, [0x18, 0x00, 0x0140, 0x0000, 0x02E4])
+        emit_command(0x00B4, [0x19, 0x00, 0x01C2, 0x0000, 0x02E4])
+        emit_command(0x00B4, [0x1A, 0x00, 0x01C2, 0x0000, 0x0398])
+        set_actor_attribute(0x18, 0x17, 8.0)
+        set_actor_attribute(0x19, 0x17, 8.0)
+        set_actor_attribute(0x1A, 0x17, 0.0)
+        set_actor_attribute(0x1B, 0x01, 1.0)
+        set_actor_attribute(0x1B, 0x00, 1.0)
+        set_actor_attribute(0x1C, 0x01, 1.0)
+        set_actor_attribute(0x1C, 0x00, 1.0)
+        set_actor_attribute(0x1D, 0x01, 1.0)
+        set_actor_attribute(0x1D, 0x00, 1.0)
+        set_actor_attribute(0x1E, 0x01, 1.0)
+        set_actor_attribute(0x1E, 0x00, 1.0)
+        emit_command(0x00B4, [0x1B, 0x00, 0x041A, 0x0026, 0x02EE])
+        emit_command(0x00B4, [0x1C, 0x00, 0x047E, 0x000A, 0x02EE])
+        emit_command(0x00B4, [0x1D, 0x00, 0x047E, 0x000A, 0x03A2])
+        emit_command(0x00B4, [0x1E, 0x00, 0x041A, 0x0026, 0x03A2])
+        set_actor_attribute(0x1B, 0x17, 8.0)
+        set_actor_attribute(0x1C, 0x17, 8.0)
+        set_actor_attribute(0x1D, 0x17, 0.0)
+        set_actor_attribute(0x1E, 0x17, 0.0)
+        set_actor_attribute(0x1F, 0x01, 1.0)
+        set_actor_attribute(0x1F, 0x00, 1.0)
+        set_actor_attribute(0x21, 0x01, 1.0)
+        set_actor_attribute(0x21, 0x00, 1.0)
+        emit_command(0x00B4, [0x1F, 0x00, 0x030C, 0x003C, 0x03E8])
+        emit_command(0x00B4, [0x21, 0x00, 0x0384, 0x003C, 0x03E8])
+        set_actor_attribute(0x1F, 0x17, 4.0)
+        set_actor_attribute(0x21, 0x17, 12.0)
+        set_actor_attribute(0x1B, 0x2D, 1.0)
+        set_actor_attribute(0x1B, 0x2E, 1.0)
+        set_actor_attribute(0x1B, ActorAttribute.OBJECT_COLLISION, 1.0)
+        set_actor_attribute(0x1B, 0x32, 1.0)
+        set_actor_attribute(0x1C, 0x2D, 1.0)
+        set_actor_attribute(0x1C, 0x2E, 1.0)
+        set_actor_attribute(0x1C, ActorAttribute.OBJECT_COLLISION, 1.0)
+        set_actor_attribute(0x1C, 0x32, 1.0)
+        set_actor_attribute(0x1D, 0x2D, 1.0)
+        set_actor_attribute(0x1D, 0x2E, 1.0)
+        set_actor_attribute(0x1D, ActorAttribute.OBJECT_COLLISION, 1.0)
+        set_actor_attribute(0x1D, 0x32, 1.0)
+        set_actor_attribute(0x1E, 0x2D, 1.0)
+        set_actor_attribute(0x1E, 0x2E, 1.0)
+        set_actor_attribute(0x1E, ActorAttribute.OBJECT_COLLISION, 1.0)
+        set_actor_attribute(0x1E, 0x32, 1.0)
+        set_actor_attribute(0x1F, 0x2D, 1.0)
+        set_actor_attribute(0x1F, 0x2E, 1.0)
+        set_actor_attribute(0x1F, ActorAttribute.OBJECT_COLLISION, 1.0)
+        set_actor_attribute(0x1F, 0x32, 1.0)
+        set_actor_attribute(0x20, 0x2D, 1.0)
+        set_actor_attribute(0x20, 0x2E, 1.0)
+        set_actor_attribute(0x20, ActorAttribute.OBJECT_COLLISION, 1.0)
+        set_actor_attribute(0x20, 0x32, 1.0)
+        set_actor_attribute(0x21, 0x2D, 1.0)
+        set_actor_attribute(0x21, 0x2E, 1.0)
+        set_actor_attribute(0x21, ActorAttribute.OBJECT_COLLISION, 1.0)
+        set_actor_attribute(0x21, 0x32, 1.0)
+        emit_command(0x0126, [0x00, 0x01])
+        branch_if(Variables[0xE075], '==', 1.0, 'label_0')
+        emit_command(0x00B4, [0x1B, 0x00, 0x0300, 0x0084, 0x0200])
+        emit_command(0x00B4, [0x1C, 0x00, 0x0340, 0x0084, 0x0200])
+        emit_command(0x00B4, [0x18, 0x00, 0x0370, 0x0084, 0x0200])
+        emit_command(0x00B4, [0x19, 0x00, 0x03A0, 0x0084, 0x0200])
+        emit_command(0x00B4, [0x1D, 0x00, 0x0320, 0x00A8, 0x0200])
+        emit_command(0x00B4, [0x1E, 0x00, 0x0358, 0x00A8, 0x0200])
+        emit_command(0x00B4, [0x1A, 0x00, 0x0388, 0x00A8, 0x0200])
+        emit_command(0x00B4, [0x1F, 0x00, 0x02E8, 0x00A8, 0x0200])
+        emit_command(0x00B4, [0x21, 0x00, 0x03B8, 0x00A8, 0x0200])
+
+        label('label_0', manager=fevent_manager)
+        set_action_icons_shown(True, animated=False)
+        tint_screen('00000000', initial='------FF', transition_duration=16)
+        set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
+        set_movement_multipliers(Screen.TOP, 1.0, 1.0)
+        set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
+        set_touches_blocked(False)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Removes the hammer tutorial cutscene
@@ -538,10 +622,21 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     def fix_bowser_and_antasma(sub: Subroutine):
         branch_if(Variables[0xC04C], "==", 1.0, 'label_0')
         start_battle(0x0002500C, WorldType.DREAM, transition=Transition.BOSS, music=Sound(5, 0x0006), unk4=0x0E)
+        #emit_command(0x0033, [0x200A, 0x01], Variables[0x3000]) #Gives guard badge
         Variables[0xC04C] = 1.0
 
         label('label_0', manager=fevent_manager)
     script.header.triggers[0] = (0xFFF00320, 0x001005DC, 0x00000000, 0x00000000, 0x000A006E, len(script.subroutines)-1, 0x00010002)
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+    #Fixes the gate in Wakeport
+    script = fevent_manager.parsed_script(0x039, 0)
+    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
+    script.header.init_subroutine = None
+    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+    def fix_gate(sub: Subroutine):
+        emit_command(0x0126, [0x00, 0x01])
+        call('init')
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Stops Massifs pushing rock cutscene from appearing
@@ -681,7 +776,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     #script.header.triggers.append((0x00000000, 0x01F302A8, 0x00000000, 0x00000000, 0xFFFF0046, len(script.subroutines)-1, 0x00078022))
     #update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
-    #Adds dialogue to Toadsworth in Pi'illo Castle so he can tell you what bosses you have left to defeat
+    #Adds dialogue to Toadsworth in Pi'illo Castle, guiding you to his overpriced badge shop
     script = fevent_manager.parsed_script(0x0082, 0)
     script_index = 0x0082 * 2
 
@@ -690,71 +785,418 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         inspect.currentframe().f_locals['script_index'] = script_index
 
     @subroutine(subs=script.subroutines, hdr=script.header)
-    def bosses_to_defeat(sub: Subroutine):
-        say(0x06, TextboxSoundsPreset.TOAD, "I daresay, you still have\nthese bosses to defeat:", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-        branch_if(Variables[0xCC28], '==', 1.0, 'label_0')
-        say(0x06, TextboxSoundsPreset.TOAD, "Smoldergeist", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+    def buy_overpriced_badges(sub: Subroutine):
+        set_blocked_buttons(Screen.TOP, ButtonFlags.ALL)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL)
+        set_movement_multipliers(Screen.TOP, 0.0, 0.0)
+        set_movement_multipliers(Screen.BOTTOM, 0.0, 0.0)
+        set_touches_blocked(True)
+        branch_if(Variables[0xCDA0], '==', 1.0, 'label_0')
+        say(0x06, TextboxSoundsPreset.TOAD, 'I daresay, you should stimulate the economy\nby going to the badge shop![Wait]')
+        branch('label_1')
 
         label('label_0', manager=fevent_manager)
-        branch_if(Variables[0xCB07], '==', 1.0, 'label_1')
-        say(0x06, TextboxSoundsPreset.TOAD, "Dreamy Mario", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+        say(0x06, TextboxSoundsPreset.TOAD, 'See? Even an old tycoon like me\ncan save local businesses![Wait]')
 
         label('label_1', manager=fevent_manager)
-        branch_if(Variables[0xC92F], '==', 1.0, 'label_2')
-        say(0x06, TextboxSoundsPreset.TOAD, "Grobot", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_2', manager=fevent_manager)
-        branch_if(Variables[0xC04C], '==', 1.0, 'label_3')
-        say(0x06, TextboxSoundsPreset.TOAD, "Bowser and Antasma", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_3', manager=fevent_manager)
-        branch_if(Variables[0xC367], '==', 1.0, 'label_4')
-        say(0x06, TextboxSoundsPreset.TOAD, "Torkscrew", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_4', manager=fevent_manager)
-        branch_if(Variables[0xC057], '==', 1.0, 'label_5')
-        say(0x06, TextboxSoundsPreset.TOAD, "Drilldozer", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_5', manager=fevent_manager)
-        branch_if(Variables[0xC60E], '==', 1.0, 'label_6')
-        say(0x06, TextboxSoundsPreset.TOAD, "Big Massif", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_6', manager=fevent_manager)
-        branch_if(Variables[0xC423], '==', 1.0, 'label_7')
-        say(0x06, TextboxSoundsPreset.TOAD, "Mammoshka", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_7', manager=fevent_manager)
-        branch_if(Variables[0xC649], '==', 1.0, 'label_8')
-        say(0x06, TextboxSoundsPreset.TOAD, "Mount Pajamaja", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_8', manager=fevent_manager)
-        branch_if(Variables[0xCB45], '==', 1.0, 'label_9')
-        say(0x06, TextboxSoundsPreset.TOAD, "The Elite Trio", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_9', manager=fevent_manager)
-        branch_if(Variables[0xC637], '==', 1.0, 'label_10')
-        say(0x06, TextboxSoundsPreset.TOAD, "Earthwake", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_10', manager=fevent_manager)
-        branch_if(Variables[0xC5AE], '==', 1.0, 'label_11')
-        say(0x06, TextboxSoundsPreset.TOAD, "Pi'illodium", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_11', manager=fevent_manager)
-        branch_if(Variables[0xC0BF], '==', 1.0, 'label_12')
-        say(0x06, TextboxSoundsPreset.TOAD, "The Zeekeeper", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_12', manager=fevent_manager)
-        branch_if(Variables[0xC0CA], '==', 1.0, 'label_13')
-        say(0x06, TextboxSoundsPreset.TOAD, "Giant Bowser", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_13', manager=fevent_manager)
-        branch_if(Variables[0xC45C], '==', 1.0, 'label_14')
-        say(0x06, TextboxSoundsPreset.TOAD, "Antasma", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
-
-        label('label_14', manager=fevent_manager)
-        say(0x06, TextboxSoundsPreset.TOAD, "Pummel them all, I say!\nPUMMEL THEM ALL!!!", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None)
+        set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
+        set_movement_multipliers(Screen.TOP, 1.0, 1.0)
+        set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
+        set_touches_blocked(False)
 
     script.header.actors[6] = (0x00000000, 0x80000000, 0xFFFF0018, 0xFFFFFFFF, len(script.subroutines)-1, 0x00591168)
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+    # Changes Pi'illo Castle's badge shop to be Toadsworth's Overpriced Badge Shop
+    script = fevent_manager.parsed_script(0x0088, 0)
+    script_index = 0x0088 * 2
+
+    # Workaround for dynamic scope in Nuitka
+    if '__compiled__' in globals():
+        inspect.currentframe().f_locals['script_index'] = script_index
+
+    @subroutine(subs=script.subroutines, hdr=script.header)
+    def buy_overpriced_badges(sub: Subroutine):
+        set_blocked_buttons(Screen.TOP, ButtonFlags.ALL)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL)
+        set_movement_multipliers(Screen.TOP, 0.0, 0.0)
+        set_movement_multipliers(Screen.BOTTOM, 0.0, 0.0)
+        set_touches_blocked(True)
+        branch_if(Variables[0xCDA0], '==', 1.0, 'label_0')
+        #Intro dialogue
+        Variables[0xCDA0] = 1.0
+        say(0x06, TextboxSoundsPreset.TOAD, 'Hello... valued customer...[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        say(0x06, TextboxSoundsPreset.TOAD, 'Huh? Oh, sorry, I\'m just a little bummed...[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        say(0x06, TextboxSoundsPreset.TOAD, 'See, ever since the economic recession\nof 2021, we had to sell our shop\nto Toadsworth.[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        say(0x06, TextboxSoundsPreset.TOAD, 'I have nothing against the guy, but...[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        say(0x06, TextboxSoundsPreset.TOAD, '...well, you\'ll see when you see our prices.[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        say(0x06, TextboxSoundsPreset.TOAD, 'Anyway, with that out of the way...[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+
+        label('label_0', manager=fevent_manager)
+        #Choose a badge - page 1
+        say(0x06, TextboxSoundsPreset.TOAD, 'Which badge will it be?\n[Option][Indent 10]Strike Badge - 400 coins\n[Option][Indent 10]Guard Badge - 500 coins\n[Option][Indent 10]Bronze Badge - 500 coins\n' +
+                                            '[Option][Indent 10]Virus Badge - 800 coins\n[Option][Indent 10]Master Badge - 1200 coins\n[Option][Indent 10]Next Page\n[Option][Indent 10]Never mind', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.MIDDLE_LEFT)
+        emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+        branch_if(Variables[0x1000], '==', 6.0, 'label_2')
+        branch_if(Variables[0x1000], '==', 5.0, 'label_3')
+        branch('label_4')
+
+        label('label_4', manager=fevent_manager)
+        #Confirmation - page 1
+        Variables[0x1001] = Variables[0x1000]
+        say(0x06, TextboxSoundsPreset.TOAD, 'Are you sure this is the one?\n[Option][Indent 10]Yes\n[Option][Indent 10]No', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+        branch_if(Variables[0x1000], '==', 1.0, 'label_0')
+        branch_if(Variables[0x1001], '==', 0.0, 'label_8')
+        branch_if(Variables[0x1001], '==', 1.0, 'label_9')
+        branch_if(Variables[0x1001], '==', 2.0, 'label_10')
+        branch_if(Variables[0x1001], '==', 3.0, 'label_11')
+        branch_if(Variables[0x1001], '==', 4.0, 'label_12')
+
+        label('label_8', manager=fevent_manager)
+        #Gives the Strike Badge
+        branch_if(Variables[0xCDA1], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 400.0, 'label_13')
+        emit_command(0x0031, [-0x00000190], Variables[0x1002])
+        emit_command(0x0033, [0x2009, 0x01], Variables[0x3000])
+        Variables[0xCDA1] = 1.0
+        branch('label_7')
+
+        label('label_9', manager=fevent_manager)
+        #Gives the Guard Badge
+        branch_if(Variables[0xCDA2], '==', 1.0, 'label_9')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 500.0, 'label_13')
+        emit_command(0x0031, [-0x000001F4], Variables[0x1002])
+        emit_command(0x0033, [0x200A, 0x01], Variables[0x3000])
+        Variables[0xCDA2] = 1.0
+        branch('label_7')
+
+        label('label_10', manager=fevent_manager)
+        #Gives the Bronze Badge
+        branch_if(Variables[0xCDA3], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 500.0, 'label_13')
+        emit_command(0x0031, [-0x000001F4], Variables[0x1002])
+        emit_command(0x0033, [0x2003, 0x01], Variables[0x3000])
+        Variables[0xCDA3] = 1.0
+        branch('label_7')
+
+        label('label_11', manager=fevent_manager)
+        #Gives the Virus Badge
+        branch_if(Variables[0xCDA4], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 800.0, 'label_13')
+        emit_command(0x0031, [-0x00000320], Variables[0x1002])
+        emit_command(0x0033, [0x200B, 0x01], Variables[0x3000])
+        Variables[0xCDA4] = 1.0
+        branch('label_7')
+
+        label('label_12', manager=fevent_manager)
+        #Gives the Master Badge
+        branch_if(Variables[0xCDA5], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 1200.0, 'label_13')
+        emit_command(0x0031, [-0x000004B0], Variables[0x1002])
+        emit_command(0x0033, [0x2001, 0x01], Variables[0x3000])
+        Variables[0xCDA5] = 1.0
+        branch('label_7')
+
+        label('label_3', manager=fevent_manager)
+        #Choose a badge - page 2
+        say(0x06, TextboxSoundsPreset.TOAD, 'We also have...\n[Option][Indent 10]Risk Badge - 1200 coins\n[Option][Indent 10]Silver Badge - 3000 coins\n[Option][Indent 10]Expert Badge - 5000 coins\n' +
+                                            '[Option][Indent 10]Miracle Badge - 5000 coins\n[Option][Indent 10]Gold Badge - 10000 coins\n[Option][Indent 10]Previous Page\n[Option][Indent 10]Never mind', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.MIDDLE_LEFT)
+        emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+        branch_if(Variables[0x1000], '==', 6.0, 'label_2')
+        branch_if(Variables[0x1000], '==', 5.0, 'label_0')
+        branch('label_5')
+
+        label('label_5', manager=fevent_manager)
+        #Confirmation - page 2
+        Variables[0x1001] = Variables[0x1000]
+        say(0x06, TextboxSoundsPreset.TOAD, 'Are you sure this is the one?\n[Option][Indent 10]Yes\n[Option][Indent 10]No', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+        branch_if(Variables[0x1000], '==', 1.0, 'label_0')
+        branch_if(Variables[0x1001], '==', 0.0, 'label_14')
+        branch_if(Variables[0x1001], '==', 1.0, 'label_15')
+        branch_if(Variables[0x1001], '==', 2.0, 'label_16')
+        branch_if(Variables[0x1001], '==', 3.0, 'label_17')
+        branch_if(Variables[0x1001], '==', 4.0, 'label_18')
+
+        label('label_14', manager=fevent_manager)
+        #Gives the Risk Badge
+        branch_if(Variables[0xCDA6], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 1200.0, 'label_13')
+        emit_command(0x0031, [-0x000004B0], Variables[0x1002])
+        emit_command(0x0033, [0x200C, 0x01], Variables[0x3000])
+        Variables[0xCDA6] = 1.0
+        branch('label_7')
+
+        label('label_15', manager=fevent_manager)
+        #Gives the Expert Badge
+        branch_if(Variables[0xCDA7], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 3000.0, 'label_13')
+        emit_command(0x0031, [-0x00000BB8], Variables[0x1002])
+        emit_command(0x0033, [0x200D, 0x01], Variables[0x3000])
+        Variables[0xCDA7] = 1.0
+        branch('label_7')
+
+        label('label_16', manager=fevent_manager)
+        #Gives the Silver Badge
+        branch_if(Variables[0xCDA8], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 5000.0, 'label_13')
+        emit_command(0x0031, [-0x00001388], Variables[0x1002])
+        emit_command(0x0033, [0x2004, 0x01], Variables[0x3000])
+        Variables[0xCDA8] = 1.0
+        branch('label_7')
+
+        label('label_17', manager=fevent_manager)
+        #Gives the Miracle Badge
+        branch_if(Variables[0xCDA9], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 5000.0, 'label_13')
+        emit_command(0x0031, [-0x00001388], Variables[0x1002])
+        emit_command(0x0033, [0x2002, 0x01], Variables[0x3000])
+        Variables[0xCDA9] = 1.0
+        branch('label_7')
+
+        label('label_18', manager=fevent_manager)
+        #Gives the Gold Badge
+        branch_if(Variables[0xCDAA], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 10000.0, 'label_13')
+        emit_command(0x0031, [-0x00002710], Variables[0x1002])
+        emit_command(0x0033, [0x2005, 0x01], Variables[0x3000])
+        Variables[0xCDAA] = 1.0
+        branch('label_7')
+
+        label('label_6', manager=fevent_manager)
+        #Message for if you already have the badge you tried to buy
+        say(0x06, TextboxSoundsPreset.TOAD, 'Sir, you already have that badge.[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        branch('label_0')
+
+        label('label_7', manager=fevent_manager)
+        #Message for when you buy the badge
+        say(0x06, TextboxSoundsPreset.TOAD, 'Thank you for your service...[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        branch('label_0')
+
+        label('label_13', manager=fevent_manager)
+        #Message for if you don't have enough coins
+        say(0x06, TextboxSoundsPreset.TOAD, 'Sir, you don\'t have enough coins.[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+        branch('label_0')
+
+        label('label_2', manager=fevent_manager)
+        #Message for if you're done browsing
+        say(0x06, TextboxSoundsPreset.TOAD, 'Thank you, sirs...[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.TOP_LEFT)
+
+        label('label_1', manager=fevent_manager)
+        set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
+        set_movement_multipliers(Screen.TOP, 1.0, 1.0)
+        set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
+        set_touches_blocked(False)
+
+    script.header.actors[7] = (0x0000040B, 0x0004042E, 0xFFFF0004, 0xFFFFFFFF, len(script.subroutines)-1, 0x0090010A)
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+    # Changes Dozing Sands's badge shop to be Toadsworth's Overpriced Badge Shop
+    script = fevent_manager.parsed_script(0x005D, 0)
+    script_index = 0x005D * 2
+
+    # Workaround for dynamic scope in Nuitka
+    if '__compiled__' in globals():
+        inspect.currentframe().f_locals['script_index'] = script_index
+
+    @subroutine(subs=script.subroutines, hdr=script.header)
+    def buy_overpriced_badges(sub: Subroutine):
+        set_blocked_buttons(Screen.TOP, ButtonFlags.ALL)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL)
+        set_movement_multipliers(Screen.TOP, 0.0, 0.0)
+        set_movement_multipliers(Screen.BOTTOM, 0.0, 0.0)
+        set_touches_blocked(True)
+        branch_if(Variables[0xCDA0], '==', 1.0, 'label_0')
+        #Intro dialogue
+        Variables[0xCDA0] = 1.0
+        say(0x02, TextboxSoundsPreset.TOAD, 'Oh, great, it\'s YOU guys.[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        say(0x02, TextboxSoundsPreset.TOAD, 'Yeah, thanks SO MUCH for supporting us\nduring the financial crash of 2021.[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        say(0x02, TextboxSoundsPreset.TOAD, 'Thanks to you, we had to sell\nthe business to Toadsworth![Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        say(0x02, TextboxSoundsPreset.TOAD, 'All I can say is, if you don\'t like\nthese prices, you know who to blame.[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        say(0x02, TextboxSoundsPreset.TOAD, 'Anyway...[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+
+        label('label_0', manager=fevent_manager)
+        #Choose a badge - page 1
+        say(0x02, TextboxSoundsPreset.TOAD, 'What will it be?\n[Option][Indent 10]Strike Badge - 400 coins\n[Option][Indent 10]Guard Badge - 500 coins\n[Option][Indent 10]Bronze Badge - 500 coins\n' +
+                                            '[Option][Indent 10]Virus Badge - 800 coins\n[Option][Indent 10]Master Badge - 1200 coins\n[Option][Indent 10]Next Page\n[Option][Indent 10]Never mind', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+        branch_if(Variables[0x1000], '==', 6.0, 'label_2')
+        branch_if(Variables[0x1000], '==', 5.0, 'label_3')
+        branch('label_4')
+
+        label('label_4', manager=fevent_manager)
+        #Confirmation - page 1
+        Variables[0x1001] = Variables[0x1000]
+        say(0x02, TextboxSoundsPreset.TOAD, 'This one calling your name?\n[Option][Indent 10]Yes\n[Option][Indent 10]No', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+        branch_if(Variables[0x1000], '==', 1.0, 'label_0')
+        branch_if(Variables[0x1001], '==', 0.0, 'label_8')
+        branch_if(Variables[0x1001], '==', 1.0, 'label_9')
+        branch_if(Variables[0x1001], '==', 2.0, 'label_10')
+        branch_if(Variables[0x1001], '==', 3.0, 'label_11')
+        branch_if(Variables[0x1001], '==', 4.0, 'label_12')
+
+        label('label_8', manager=fevent_manager)
+        #Gives the Strike Badge
+        branch_if(Variables[0xCDA1], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 400.0, 'label_13')
+        emit_command(0x0031, [-0x00000190], Variables[0x1002])
+        emit_command(0x0033, [0x2009, 0x01], Variables[0x3000])
+        Variables[0xCDA1] = 1.0
+        branch('label_7')
+
+        label('label_9', manager=fevent_manager)
+        #Gives the Guard Badge
+        branch_if(Variables[0xCDA2], '==', 1.0, 'label_9')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 500.0, 'label_13')
+        emit_command(0x0031, [-0x000001F4], Variables[0x1002])
+        emit_command(0x0033, [0x200A, 0x01], Variables[0x3000])
+        Variables[0xCDA2] = 1.0
+        branch('label_7')
+
+        label('label_10', manager=fevent_manager)
+        #Gives the Bronze Badge
+        branch_if(Variables[0xCDA3], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 500.0, 'label_13')
+        emit_command(0x0031, [-0x000001F4], Variables[0x1002])
+        emit_command(0x0033, [0x2003, 0x01], Variables[0x3000])
+        Variables[0xCDA3] = 1.0
+        branch('label_7')
+
+        label('label_11', manager=fevent_manager)
+        #Gives the Virus Badge
+        branch_if(Variables[0xCDA4], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 800.0, 'label_13')
+        emit_command(0x0031, [-0x00000320], Variables[0x1002])
+        emit_command(0x0033, [0x200B, 0x01], Variables[0x3000])
+        Variables[0xCDA4] = 1.0
+        branch('label_7')
+
+        label('label_12', manager=fevent_manager)
+        #Gives the Master Badge
+        branch_if(Variables[0xCDA5], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 1200.0, 'label_13')
+        emit_command(0x0031, [-0x000004B0], Variables[0x1002])
+        emit_command(0x0033, [0x2001, 0x01], Variables[0x3000])
+        Variables[0xCDA5] = 1.0
+        branch('label_7')
+
+        label('label_3', manager=fevent_manager)
+        #Choose a badge - page 2
+        say(0x02, TextboxSoundsPreset.TOAD, 'Ooo, a big spender, are ya?\n[Option][Indent 10]Risk Badge - 1200 coins\n[Option][Indent 10]Silver Badge - 3000 coins\n[Option][Indent 10]Expert Badge - 5000 coins\n' +
+                                            '[Option][Indent 10]Miracle Badge - 5000 coins\n[Option][Indent 10]Gold Badge - 10000 coins\n[Option][Indent 10]Previous Page\n[Option][Indent 10]Never mind', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+        branch_if(Variables[0x1000], '==', 6.0, 'label_2')
+        branch_if(Variables[0x1000], '==', 5.0, 'label_0')
+        branch('label_5')
+
+        label('label_5', manager=fevent_manager)
+        #Confirmation - page 2
+        Variables[0x1001] = Variables[0x1000]
+        say(0x02, TextboxSoundsPreset.TOAD, 'This one calling your name?\n[Option][Indent 10]Yes\n[Option][Indent 10]No', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+        branch_if(Variables[0x1000], '==', 1.0, 'label_0')
+        branch_if(Variables[0x1001], '==', 0.0, 'label_14')
+        branch_if(Variables[0x1001], '==', 1.0, 'label_15')
+        branch_if(Variables[0x1001], '==', 2.0, 'label_16')
+        branch_if(Variables[0x1001], '==', 3.0, 'label_17')
+        branch_if(Variables[0x1001], '==', 4.0, 'label_18')
+
+        label('label_14', manager=fevent_manager)
+        #Gives the Risk Badge
+        branch_if(Variables[0xCDA6], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 1200.0, 'label_13')
+        emit_command(0x0031, [-0x000004B0], Variables[0x1002])
+        emit_command(0x0033, [0x200C, 0x01], Variables[0x3000])
+        Variables[0xCDA6] = 1.0
+        branch('label_7')
+
+        label('label_15', manager=fevent_manager)
+        #Gives the Expert Badge
+        branch_if(Variables[0xCDA7], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 3000.0, 'label_13')
+        emit_command(0x0031, [-0x00000BB8], Variables[0x1002])
+        emit_command(0x0033, [0x200D, 0x01], Variables[0x3000])
+        Variables[0xCDA7] = 1.0
+        branch('label_7')
+
+        label('label_16', manager=fevent_manager)
+        #Gives the Silver Badge
+        branch_if(Variables[0xCDA8], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 5000.0, 'label_13')
+        emit_command(0x0031, [-0x00001388], Variables[0x1002])
+        emit_command(0x0033, [0x2004, 0x01], Variables[0x3000])
+        Variables[0xCDA8] = 1.0
+        branch('label_7')
+
+        label('label_17', manager=fevent_manager)
+        #Gives the Miracle Badge
+        branch_if(Variables[0xCDA9], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 5000.0, 'label_13')
+        emit_command(0x0031, [-0x00001388], Variables[0x1002])
+        emit_command(0x0033, [0x2002, 0x01], Variables[0x3000])
+        Variables[0xCDA9] = 1.0
+        branch('label_7')
+
+        label('label_18', manager=fevent_manager)
+        #Gives the Gold Badge
+        branch_if(Variables[0xCDAA], '==', 1.0, 'label_6')
+        emit_command(0x0030, [], Variables[0x1002])
+        branch_if(Variables[0x1002], '<', 10000.0, 'label_13')
+        emit_command(0x0031, [-0x00002710], Variables[0x1002])
+        emit_command(0x0033, [0x2005, 0x01], Variables[0x3000])
+        Variables[0xCDAA] = 1.0
+        branch('label_7')
+
+        label('label_6', manager=fevent_manager)
+        #Message for if you already have the badge you tried to buy
+        say(0x02, TextboxSoundsPreset.TOAD, 'Look, I know you\'re eager to give me coins,\nbut you already have that badge![Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        branch('label_0')
+
+        label('label_7', manager=fevent_manager)
+        #Message for when you buy the badge
+        say(0x02, TextboxSoundsPreset.TOAD, 'Yes! CHA-CHING! I\'ll be eating happy tonight![Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        branch('label_0')
+
+        label('label_13', manager=fevent_manager)
+        #Message for if you don't have enough coins
+        say(0x02, TextboxSoundsPreset.TOAD, 'Ah, you think you can scam me again, don\'t you?[Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+        branch('label_0')
+
+        label('label_2', manager=fevent_manager)
+        #Message for if you're done browsing
+        say(0x02, TextboxSoundsPreset.TOAD, 'Thanks for actually stopping by this time![Wait]', tail=TextboxTailType.SMALL, alignment=TextboxAlignment.BOTTOM_CENTER)
+
+        label('label_1', manager=fevent_manager)
+        set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
+        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
+        set_movement_multipliers(Screen.TOP, 1.0, 1.0)
+        set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
+        set_touches_blocked(False)
+
+    script.header.actors[3] = (0x000002AA, 0x000602C1, 0xFFFF0001, 0xFFFFFFFF, len(script.subroutines)-1, 0x0090010A)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Fixes the initialization subroutine in rooms with attack pieces
@@ -864,7 +1306,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     print("Repacking randomized data...")
     #Repacks all the randomized data
     blockcount = 0
-    block_info = []
+    block_fix = []
     spotnum = 0
     for i in repack_data:
         #Sets the script to look at the room hammers will be placed
@@ -1034,7 +1476,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         if i[6] == 0xE013:
             addon = "Luiginary Ball Hammer"
         if i[6] == 0xE075:
-            addon = "Deep Pi'illo Castle"
+            addon = "Pi'illo Castle Key"
         if i[6] == 0xC369:
             addon = "Blimport Bridge"
         if i[6] == 0xCABF:
@@ -1054,9 +1496,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             addon = "Dream Egg"
         if i[6] == 0xE0A0:
             item = "the first [Color #2C65FF]" + addon
-        elif i[6] == 0xC960 or i[6] == 0xE075 or i[6] == 0xC3B9 or i[6] == 0xC47E:
+        elif i[6] == 0xC960 or i[6] == 0xC3B9 or i[6] == 0xC47E:
             item = "access to [Color #2C65FF]" + addon
-        elif (i[6] == 0xCABF or i[6] == 0xC369 or i[6] == 0xE004 or i[6] == 0xE005 or (0xE00D <= i[6] <= 0xE013)):
+        elif (i[6] == 0xCABF or i[6] == 0xC369 or i[6] == 0xE004 or i[6] == 0xE005 or (0xE00D <= i[6] <= 0xE013) or i[6] == 0xE075):
             item = "the [Color #2C65FF]" + addon
         elif 0xB030 <= i[6] <= 0xB05C:
             item = "an Attack Piece\nfor the [Color #2C65FF]" + addon
@@ -1079,22 +1521,25 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     emit_command(0x008C, [len(script.header.actors), script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
                 except ValueError:
                     emit_command(0x008C, [len(script.header.actors), len(script.header.sprite_groups), 0x0000, 0x01])
-            if (i[5] < 0xC000 or i[5] > 0xCFFF) and i[0] != 0 and i[0] != 1:
-                branch_if(Variables[i[5]], '==', 0.0, 'label_0')
-            if i[6] > 0xC000:
-                branch_if(Variables[i[6]], '==', 1.0, 'label_0')
-            elif i[6] > 0xB0E0 or i[6] < 0xB000:
-                if i[-1] > 10:
-                    branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
+                branch_if(Variables[i[5]], '==', 1.0, 'label_0')
+                Variables[i[5]] = 1.0
+            elif i[0] == 5:
+                if (i[5] < 0xC000 or i[5] > 0xCFFF) and i[0] != 0 and i[0] != 1:
+                    branch_if(Variables[i[5]], '==', 0.0, 'label_0')
+                if i[6] > 0xC000:
+                    branch_if(Variables[i[6]], '==', 1.0, 'label_0')
+                elif i[6] > 0xB0E0 or i[6] < 0xB000:
+                    if i[-1] > 10:
+                        branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
+                    else:
+                        branch_if(Variables[i[-2]], '==', 1.0, 'label_0')
                 else:
-                    branch_if(Variables[i[-2]], '==', 1.0, 'label_0')
-            else:
-                if i[-1] > 10:
-                    branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
-                    Variables[i[-1]] = 1.0
-                else:
-                    branch_if(Variables[i[-2]], '==', 1.0, 'label_0')
-                    Variables[i[-2]] = 1.0
+                    if i[-1] > 10:
+                        branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
+                        Variables[i[-1]] = 1.0
+                    else:
+                        branch_if(Variables[i[-2]], '==', 1.0, 'label_0')
+                        Variables[i[-2]] = 1.0
             if i[6] == 0xE001 or i[6] == 0xE002:
                 branch_if(Variables[i[7]], '==', 1.0, 'label_0')
                 branch_if(Variables[0xE000], '==', 0.0, 'label_1')
@@ -1110,7 +1555,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 branch_if(Variables[0xC346], '==', 0.0, 'label_1')
                 Variables[0xE09F] = 1.0
                 say(None, TextboxSoundsPreset.SILENT,
-                    "You got the final [Color #2C65FF]" + addon + "[Color #000000]![Pause 60]",
+                    "[DelayOff]You got the final [Color #2C65FF]" + addon + "[Color #000000]![Pause 60]",
                     offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             if i[6] > 0xC000:
@@ -1127,7 +1572,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 branch_if(Variables[check_2], '!=', 0x1F, 'label_1')
                 Variables[attack_id] = 1.0
                 say(None, TextboxSoundsPreset.SILENT,
-                    "You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 60]",
+                    "[DelayOff]You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 60]",
                     offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             elif i[6] >= 0x6000:
@@ -1149,13 +1594,13 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 else:
                     Variables[i[-2]] = 1.0
             if i[6] < 0x1000:
-                say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             elif (i[-1] < 0xC020 or i[-1] >= 0xC0A0) and i[-1] > 10:
-                say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
             elif i[-2] < 0xC020 or i[-2] >= 0xC0A0:
-                say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xB000 < i[6] < 0xB0E0) or (0xC343 <= i[6] <= 0xC346):
@@ -1164,19 +1609,19 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     Variables[i[7]] = 1.0
                     if i[6] == 0xE004:
                         Variables[0xE003] = 1.0
-                        say(None, TextboxSoundsPreset.SILENT, "You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                     else:
                         Variables[0xE000] = 1.0
-                        say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]Hammers[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got [Color #2C65FF]Hammers[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 else:
-                    say(None, TextboxSoundsPreset.SILENT, "You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002:
                 label('label_2', manager=fevent_manager)
                 Variables[i[7]] = 1.0
                 Variables[invi] = 1.0
-                say(None, TextboxSoundsPreset.SILENT, "You got [Color #2C65FF]" + invi_name[invi - 0xE001] + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got [Color #2C65FF]" + invi_name[invi - 0xE001] + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             label('label_0', manager=fevent_manager)
@@ -1198,13 +1643,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 sprite_index = len(script.header.sprite_groups) - 1
             script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
             blockcount += 1
-            if i[6] > 0xB0F0:
-                if (i[6] < 0xE000 or i[6] > 0xE004) and i[6] != 0xB0F7:
-                    block_info.append([i[6], 0.0])
-                else:
-                    block_info.append([i[7], 0.0])
-            else:
-                block_info.append([i[6], i[7]])
+            block_fix.append(i[5])
         elif i[0] == 5:
             #Updates triggers if it's a bean spot
             if i[3] > 0:
@@ -1237,12 +1676,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             @subroutine(subs=script.subroutines, hdr=script.header, init=True)
             def fix_blocks(sub: Subroutine):
                 for a in range(blockcount):
-                    if block_info[a][1] == 0.0:
-                        branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
-                    else:
-                        Variables[0x100F] = Variables[block_info[a][0]] & int(block_info[a][1])
-                        Variables[0x100F] >>= int(math.log2(block_info[a][1]))
-                        branch_if(Variables[0x100F], '!=', 1.0, 'label_' + str(a))
+                    branch_if(Variables[block_fix[a]], '==', 0.0, 'label_' + str(a))
                     set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
                     try:
                         emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
@@ -1265,6 +1699,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                         except ValueError:
                             pass
                         call('og_init')
+            #block_fix = []
             update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
             while find_index_in_2d_list(room_sub_dat, i[1], 0) is not None:
@@ -1277,12 +1712,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 @subroutine(subs=script.subroutines, hdr=script.header)
                 def new_warp(sub: Subroutine):
                     for a in range(blockcount):
-                        if block_info[a][1] == 0.0:
-                            branch_if(Variables[block_info[a][0]], '==', block_info[a][1], 'label_' + str(a))
-                        else:
-                            Variables[0x100F] = Variables[block_info[a][0]] & int(block_info[a][1])
-                            Variables[0x100F] >>= int(math.log2(block_info[a][1]))
-                            branch_if(Variables[0x100F], '!=', 1.0, 'label_' + str(a))
+                        branch_if(Variables[block_fix[a]], '==', 0.0, 'label_' + str(a))
                         set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
                         try:
                             emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
@@ -1323,7 +1753,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 del room_sub_dat[find_index_in_2d_list(room_sub_dat, i[1], 0)]
 
             blockcount = 0
-            block_info = []
+            block_fix = []
             spotnum = 0
 
         #Recompiles things
