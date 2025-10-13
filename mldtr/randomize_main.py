@@ -1,15 +1,11 @@
-import itertools
 import math
 import struct
 import random
 import os
-
-from mnllib import Subroutine
-from mnlscript import update_commands_with_offsets, subroutine
 from tqdm import tqdm
 from mldtr import randomize_repack
 from mnllib.n3ds import fs_std_code_bin_path, fs_std_romfs_path
-from mnllib.dt import FMAPDAT_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_PATH, NUMBER_OF_ROOMS, \
+from mnllib.dt import FMAPDAT_PATH, NUMBER_OF_ROOMS, \
     determine_version_from_code_bin, load_enemy_stats, save_enemy_stats, FEventScriptManager, \
     FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS
 
@@ -429,7 +425,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
 
         #Logic for real world enemies
-        enemy_logic = [[13], [18, 15, 5, -1, 15, 6], [19], [21, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0], [31, 15, 6], [33, 15, 6], [35, 15, 6],
+        enemy_logic = [[13], [18, 15, 5, -1, 15, 6], [19, 14, -1, 15, 6], [21, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0], [31, 15, 6], [33, 15, 6], [35, 15, 6],
                            [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6], [48, 15, 22],
                            [49, 15, 22, 6], [50, 15, 22, 6], [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, -1, 1, 5], [64, 23, 1, 6, -1, 1, 5, 6],
                            [65, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [66, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [67, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
@@ -530,6 +526,14 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #Initializes the item pool
         item_pool = []
 
+        #Initializes the ids that can be used for the new blocks
+        unused_blocks = [0, 1, 2, 3, 4, 5, 6, 44, 48, 49, 50, 51, 93, 105, 106, 120, 122, 124, 126, 128, 130, 133, 143, 149, 150, 167, 170, 172, 174, 176, 178, 190, 192, 194, 196, 198, 200,
+                         202, 204, 206, 208, 210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230, 232, 321, 451, 1622, 1644, 1650, 2306, 2307, 2308, 2309, 2310, 2311, 2312, 2313, 2314,
+                         2315, 2316, 2317, 2318, 2319, 2320, 2321, 2322, 2323, 2324, 2325, 2326, 2327, 2328, 2329, 2352, 2353, 2412, 2413, 2414, 2415, 2416, 2417, 2418,
+                         2419, 2420, 2421, 2422, 2423, 2424, 2425, 2426, 2427, 2428, 2429, 2430, 2431, 2432, 2433, 2434, 2435, 2436, 2437, 2438, 2439, 2440, 2441, 2442, 2443, 2444,
+                         2445, 2446, 2447, 2448, 2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456, 2457, 2458, 2459, 2460, 2461, 2462, 2463, 2464, 2465, 2466, 2467, 2468, 2469, 2470,
+                         2471, 2472, 2473, 2474, 2475, 2476, 2477, 2478, 2479, 2480, 2481, 2482, 2483]
+
         # Creates an item_data array with all the blocks and bean spots
         item_locals = []
         # Updates the collision for Nerfed Ball Hop
@@ -549,7 +553,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 parsed_fmapdat[0x5D][3][spot[0][i]] = 0x78
             for i in range(len(spot[1])):
                 parsed_fmapdat[0x67][3][spot[1][i]] = 0x78
-        block_id = 2500
+        block_id = 0
         rooms_to_init = [0x001, 0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                          0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
                          0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
@@ -577,7 +581,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     #Adds blocks in place of attack piece blocks and ability cutscenes
                     new_block = [0x10, 0x0, int(((script.header.triggers[trigger][0] % 0x10000) + (script.header.triggers[trigger][1] % 0x10000))/2) - 0x20,
                                  script.header.triggers[trigger][4] % 0x10000 + 0x55,
-                                 int(((script.header.triggers[trigger][0] // 0x10000) + (script.header.triggers[trigger][1] // 0x10000)) / 2), block_id]
+                                 int(((script.header.triggers[trigger][0] // 0x10000) + (script.header.triggers[trigger][1] // 0x10000)) / 2), unused_blocks[block_id]]
                     if new_block[4] > 30000:
                         new_block[4] = 0
                     #print(new_block)
@@ -586,7 +590,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 for a in range(len(script.header.actors)):
                     if (script.header.actors[a][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
                         new_block = [0x10, 0x0, script.header.actors[a][0] % 0x10000, script.header.actors[a][0] // 0x10000,
-                                     script.header.actors[a][1] % 0x10000, block_id]
+                                     script.header.actors[a][1] % 0x10000, unused_blocks[block_id]]
                         block_id += 1
                         temp.append(new_block)
                 for b in range(len(temp)):
@@ -605,6 +609,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     item_locals.append([room, treasure_index * 12, treasure_type, x, y, z, treasure_id])
                     item_pool.append([treasure_type, item_id])
 
+        #print(unused_blocks[block_id])
         #for item in item_locals:
         #   print(str(item) + "\n")
 
@@ -1638,7 +1643,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         else:
             rooms.append(new_item_locals[i])
 
-    #rooms = sorted(rooms, key=lambda local: local[7])
+    rooms = sorted(rooms, key=lambda local: local[7])
     if get_room(rooms[-1][0]) == "Mushrise Park":
         room = 3
     elif get_room(rooms[-1][0]) == "Dozing Sands":
@@ -1699,7 +1704,15 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     #Creates a spoiler log
     spoiler_log = open(input_folder + "/Spoiler Log.txt", "w")
-    spoiler_log.write("Seed: " + hex(seed) + "\n\n")
+    spoiler_log.write("Seed: " + hex(seed) + "\nReduced Mini Mario Requirements: ")
+    if settings[1][0] == 1:
+        spoiler_log.write("On\nReduced Ball Hop Skips: ")
+    else:
+        spoiler_log.write("Off\nReduced Ball Hop Skips: ")
+    if settings[1][1] == 1:
+        spoiler_log.write("On\n\n")
+    else:
+        spoiler_log.write("Off\n\n")
     room_check = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     for s in range(len(new_item_locals)):
         if s > 0:
@@ -1740,10 +1753,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         else:
             room_name = hex(new_item_locals[s][0])
         spoiler_log.write(room_name + " " + check_type + " " + hex(new_item_locals[s][7]) + " - " + item + "\n")
-    spoiler_log.write("\nKey Item Order:\n")
+    spoiler_log.write("\nTracker Stuff:\nStrike Badge\nGuard Badge\nBronze Badge\nVirus Badge\nMaster Badge\nRisk Badge\nSilver Badge\nExpert Badge\nMiracle Badge\nGold Badge\nCurrent Room: \n\nKey Item Order:")
     for k in key_order:
-        spoiler_log.write(key_item_names[k] + "\n")
-    spoiler_log.write("\nTracker Stuff:\nStrike Badge\nGuard Badge\nBronze Badge\nVirus Badge\nMaster Badge\nRisk Badge\nSilver Badge\nExpert Badge\nMiracle Badge\nGold Badge\nCurrent Room: ")
+        spoiler_log.write("\n" + key_item_names[k])
 
     print("Repacking enemy stats...")
     #Repackages randomized enemy stats
