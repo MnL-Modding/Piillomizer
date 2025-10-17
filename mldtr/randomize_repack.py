@@ -360,6 +360,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC9D4] = 1.0 #Can enter the cave
         Variables[0xC9DD] = 1.0 #Listened to the old coot vent
         #Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
+        Variables[0xC9F8] = 1.0 #Popple notices the collector's hiding something
         Variables[0xC9E1] = 1.0 #Wiggler first cutscene watched
         Variables[0xC9E2] = 1.0 #Wiggler second cutscene watched
         wait(3)
@@ -473,6 +474,11 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
     #Makes Pi'illo Castle inaccessible without the right key items, and removes the invisible walls
     script = fevent_manager.parsed_script(0x01c, 0)
+    script_index = 0x001c * 2
+
+    # Workaround for dynamic scope in Nuitka
+    if '__compiled__' in globals():
+        inspect.currentframe().f_locals['script_index'] = script_index
     cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
     script.header.init_subroutine = None
     @subroutine(subs=script.subroutines, hdr=script.header, init=True)
@@ -558,6 +564,11 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         label('label_0', manager=fevent_manager)
         set_action_icons_shown(True, animated=False)
         tint_screen('00000000', initial='------FF', transition_duration=16)
+        #for l in range(0x0F):
+        #    emit_command(0x0037, [0x00, l], Variables[0x1000])
+        #    say(None, TextboxSoundsPreset.SILENT,
+        #            str(l) + "[Var 1000 digits=2][Pause 30]",
+        #            offset=(0.0, 0.0, 0.0), alignment=TextboxAlignment.TOP_CENTER)
         set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
         set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
         set_movement_multipliers(Screen.TOP, 1.0, 1.0)
@@ -1508,7 +1519,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             item = "an [Color #2C65FF]" + addon
         else:
             item = "a [Color #2C65FF]" + addon
-        actor = 0x00
         if i[0] == 7:
             actor = 0
             while script.header.actors[actor][2] != 0xF70016:

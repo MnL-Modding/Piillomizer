@@ -1802,12 +1802,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #        check_spot.append([new_item_locals[b][7], b])
         #        break
         #    x += 1
-        if b < len(new_item_locals) - 1:
-            if new_item_locals[b][0] != new_item_locals[b+1][0]:
-                new_item_locals[b][2] += 1
-            #print("Block type: " + hex(new_item_locals[b][2]) + " Block ID: " + hex(new_item_locals[b][7]))
-        else:
-            new_item_locals[b][2] += 1
+
         #i = 0
         #while parsed_fmapdat[new_item_locals[b][0]][7][i*12+10:i*12+12] != new_item_locals[b][7].to_bytes(2, 'little'):
         #    i += 1
@@ -1819,7 +1814,32 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             x += 1
         if availability:
             #print(hex(new_item_locals[b][7]))
+            #Sets the last block of the room to True if it's the last block
+            if b < len(new_item_locals) - 1:
+                if new_item_locals[b][0] != new_item_locals[b+1][0]:
+                    new_item_locals[b][2] += 1
+                #print("Block type: " + hex(new_item_locals[b][2]) + " Block ID: " + hex(new_item_locals[b][7]))
+            else:
+                new_item_locals[b][2] += 1
             parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
+        elif b < len(new_item_locals) - 1:
+            #Fixes the last block in FMap if the actual last block is in FEvent
+            if new_item_locals[b][0] != new_item_locals[b+1][0] and len(parsed_fmapdat[new_item_locals[b][0]][7]) > 1:
+                new_end = b
+                isnt_key = False
+                while not isnt_key:
+                    new_end -= 1
+                    c = 0
+                    while c < len(repack_data):
+                        if repack_data[c][5] == new_item_locals[new_end][-1] + 0xD000 and (repack_data[c][0] == 0 or repack_data[c][0] == 1):
+                            isnt_key = True
+                        c += 1
+                if new_item_locals[new_end][0] == new_item_locals[b][0]:
+                    new_item_locals[new_end][2] += 1
+                    parsed_fmapdat[new_item_locals[new_end][0]][7] = parsed_fmapdat[new_item_locals[new_end][0]][7][0:-12]
+                    parsed_fmapdat[new_item_locals[new_end][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[new_end][2:8]))
+                    #print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
+
         #if new_item_locals[b][2] % 2 == 1:
         #    print(len(parsed_fmapdat[new_item_locals[b][0]][7]) % 12)
 
