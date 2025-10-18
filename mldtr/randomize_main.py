@@ -616,7 +616,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         item_logic_chunk = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
         #Logic for every single block and bean spot (The numbers after the ID point to their spots in the ability info)
         item_logic_chunk[0] = [[[52, 5], [52, 5], [52, 5], [52, 5]], [[53, 5], [53, 5], [53, 5], [53, 5]], [[2500, 3, -1, 5, -1, 6], [2500, 3, -1, 5, -1, 6], [2500, 3, -1, 5, -1, 6], [2500, 3, -1, 5, -1, 6], [2500, -3], [2500, 0, 3, -1, 0, 5, -1, 0, 6], [2500, 0, 3, -1, 0, 5, -1, 0, 6], [2500, -3]],
-                               [[54], [54], [54], [54], [54, -3], [54, 0], [54, 0], [54, -3]], [[55, -3], [55, -3], [55, -3], [55, -3], [55, -3], [55], [55, 5], [53, -3]],
+                               [[54, 0, -1, 3, -1, 5], [54, 0, -1, 3, -1, 5], [54, 0, -1, 3, -1, 5], [54, 0, -1, 3, -1, 5], [54, -3], [54, 0], [54, 0], [54, -3]], [[55, -3], [55, -3], [55, -3], [55, -3], [55, -3], [55], [55, 5], [53, -3]],
                                [[56, 0], [56, 0], [56, 0], [56, 0], [56, -3], [56, 0], [56, 0], [56, -3]], [[57, 0], [57, 0], [57, 0], [57, 0], [57, -3], [57, 0], [57, 0], [57, -3]], [[58], [58], [58], [58], [58, -3], [58, 0], [58, 0], [58, -3]],
                                [[59, 2], [59, 2], [59, 2], [59, 2], [59, -3], [59, 2], [59, 2], [59, -3]], [[60, -3], [60, -3], [60, -3], [60, -3], [60, 2], [60, -3], [60, -3], [60, 2]],
                                [[61, 2], [61, 2], [61, 2], [61, 2], [61, 2], [61, 2], [61, 2], [61, 2]], [[2388, -3], [2388, -3], [2388, -3], [2388, -3], [2388, -3], [2388, 2], [2388, 2], [2388, -3]],
@@ -1828,17 +1828,19 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 new_end = b
                 isnt_key = False
                 while not isnt_key:
+                    isnt_key = True
                     new_end -= 1
                     c = 0
                     while c < len(repack_data):
                         if repack_data[c][5] == new_item_locals[new_end][-1] + 0xD000 and (repack_data[c][0] == 0 or repack_data[c][0] == 1):
-                            isnt_key = True
+                            isnt_key = False
                         c += 1
                 if new_item_locals[new_end][0] == new_item_locals[b][0]:
                     new_item_locals[new_end][2] += 1
                     parsed_fmapdat[new_item_locals[new_end][0]][7] = parsed_fmapdat[new_item_locals[new_end][0]][7][0:-12]
                     parsed_fmapdat[new_item_locals[new_end][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[new_end][2:8]))
-                    #print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
+                    print(hex(new_item_locals[new_end][-1]))
+                    print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
 
         #if new_item_locals[b][2] % 2 == 1:
         #    print(len(parsed_fmapdat[new_item_locals[b][0]][7]) % 12)
