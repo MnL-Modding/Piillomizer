@@ -527,9 +527,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         item_pool = []
 
         #Initializes the ids that can be used for the new blocks
-        unused_blocks = [0, 1, 2, 3, 4, 5, 6, 44, 48, 49, 50, 51, 93, 105, 106, 120, 122, 124, 126, 128, 130, 133, 143, 149, 150, 167, 170, 172, 174, 176, 178, 190, 192, 194, 196, 198, 200,
-                         202, 204, 206, 208, 210, 212, 214, 216, 218, 220, 222, 224, 226, 228, 230, 232, 321, 451, 1622, 1644, 1650, 2306, 2307, 2308, 2309, 2310, 2311, 2312, 2313, 2314,
-                         2315, 2316, 2317, 2318, 2319, 2320, 2321, 2322, 2323, 2324, 2325, 2326, 2327, 2328, 2329, 2352, 2353, 2412, 2413, 2414, 2415, 2416, 2417, 2418,
+        unused_blocks = [0, 1, 2, 3, 4, 5, 6, 44, 48, 49, 50, 51, 93, 105, 106, 134, 135, 136, 137, 138, 139, 140, 179, 180, 181, 182, 183, 156, 453, 454, 455, 456, 457, 458, 459, 460, 483,
+                         484, 485, 514, 515, 516, 517, 518, 519, 520, 521, 522, 524, 525, 526, 527, 528, 234, 239, 240, 241, 242, 2306, 2307, 2308, 2309, 2310, 2311, 2312, 2313, 2314,
+                         2315, 2316, 2317, 2318, 2319, 2320, 2321, 2322, 2323, 2324, 2325, 2326, 2327, 2328, 2329, 243, 244, 2412, 2413, 2414, 2415, 2416, 2417, 2418,
                          2419, 2420, 2421, 2422, 2423, 2424, 2425, 2426, 2427, 2428, 2429, 2430, 2431, 2432, 2433, 2434, 2435, 2436, 2437, 2438, 2439, 2440, 2441, 2442, 2443, 2444,
                          2445, 2446, 2447, 2448, 2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456, 2457, 2458, 2459, 2460, 2461, 2462, 2463, 2464, 2465, 2466, 2467, 2468, 2469, 2470,
                          2471, 2472, 2473, 2474, 2475, 2476, 2477, 2478, 2479, 2480, 2481, 2482, 2483]
@@ -1179,7 +1179,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         key_item_pool_checked = []
         new_enemy_stats = []
         attack = random.randint(0, len(attack_piece_pool) - 1)
-        while attack == 4 or attack == 8 or attack == 9 or attack == 12 or attack == 13 or attack == 14:
+        while attack == 4 or attack == 8 or attack == 9 or attack == 11 or attack == 13 or attack == 14:
             attack = random.randint(0, len(attack_piece_pool) - 1)
         offset = 0
         key_order = []
@@ -1839,8 +1839,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     new_item_locals[new_end][2] += 1
                     parsed_fmapdat[new_item_locals[new_end][0]][7] = parsed_fmapdat[new_item_locals[new_end][0]][7][0:-12]
                     parsed_fmapdat[new_item_locals[new_end][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[new_end][2:8]))
-                    print(hex(new_item_locals[new_end][-1]))
-                    print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
+                    #print(hex(new_item_locals[new_end][-1]))
+                    #print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
 
         #if new_item_locals[b][2] % 2 == 1:
         #    print(len(parsed_fmapdat[new_item_locals[b][0]][7]) % 12)
