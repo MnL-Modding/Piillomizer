@@ -403,25 +403,25 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       enemy == 84 or enemy == 98 or enemy == 99 or
                       (110 <= enemy <= 112) or (121 <= enemy <= 125) or enemy == 133):
                     enemy_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
                 #Appends data to boss array if it's a boss
                 elif (enemy == 17 or enemy == 30 or enemy == 42 or
                       enemy == 62 or enemy == 95 or enemy == 96 or
                       enemy == 107 or enemy == 108):
                     boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
                 #Appends data to dream boss array if it's a dream boss
                 elif (enemy == 23 or enemy == 36 or enemy == 52 or
                       (79 <= enemy <= 81) or (126 <= enemy <= 131) or enemy == 137):
                     dream_boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
                 #Appends data to filler array if it's a "filler" enemy (one used in bosses that only exists for spectacle)
                 else:
                     filler_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, enemy_stats[enemy].coin_rate,
+                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
 
         #Logic for real world enemies
@@ -1766,7 +1766,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
         enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
         enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
-        enemy_stats[new_enemy_stats[enemy][0]].coin_rate = new_enemy_stats[enemy][7]
         enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
         enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
         enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
