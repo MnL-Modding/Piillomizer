@@ -167,6 +167,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xCB33] = 1.0 #Doors close for Luiginary sneeze tutorial
         Variables[0xCB10] = 1.0 #Luiginary sneeze tutorial
         Variables[0xCC31] = 1.0 #First Pi'illo saved, can access Pi'illo folk in collection
+        Variables[0xCC33] = 1.0 #Second Pi'illo under bridge is saved
+        Variables[0xCC37] = 1.0 #Third Pi'illo under bridge is saved
         Variables[0xCABD] = 1.0 #Shell Hutch Tutorial
         Variables[0xC300] = 1.0 #First Boss Brickle cutscene watched
         Variables[0xC322] = 1.0 #Flowers are down
@@ -242,7 +244,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC07E] = 1.0 #Ha! I'm over HERE now!
         Variables[0xC07D] = 1.0 #Centrifugal force
         Variables[0xC07F] = 1.0 #Break dream stone with hammer (duh)
-        Variables[0xC389] = 1.0 #First main Deco Pi'illo nightmare chunk broken
+        Variables[0xC389] = 1.0 #First main Deco Pi'illo is saved
+        Variables[0xC362] = 1.0 #Second main Deco Pi'illo is saved
+        Variables[0xC361] = 1.0 #Third main Deco Pi'illo is saved
+        Variables[0xC34A] = 1.0 #Final main Deco Pi'illo is saved
         Variables[0xC347] = 1.0 #Torkscrew eats Pi'illo
         Variables[0xC348] = 1.0 #Barrier is broken
         Variables[0xC349] = 1.0 #Minigame is played
@@ -574,6 +579,22 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         set_movement_multipliers(Screen.TOP, 1.0, 1.0)
         set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
         set_touches_blocked(False)
+    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+    #Makes the pipe in Blimport that takes you under the bridge require either Luiginary Works or the Ball Hop
+    script = fevent_manager.parsed_script(0x039, 0)
+    cast(SubroutineExt, script.subroutines[0x3]).name = 'sub_0x1'
+    @subroutine(subs=script.subroutines, hdr=script.header)
+    def fix_pipe(sub: Subroutine):
+        branch_if(Variables[0xE005], '==', 1.0, 'label_0')
+        branch_if(Variables[0xE006], '==', 1.0, 'label_0')
+        branch('label_1')
+
+        label('label_0', manager=fevent_manager)
+        call('sub_0x1')
+
+        label('label_1', manager=fevent_manager)
+    script.header.actors[4] = (0x00280190, 0x00000744, 0x0000000B, 0xFFFFFFFF, len(script.subroutines)-1, 0x01980143)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Removes the hammer tutorial cutscene
@@ -1339,6 +1360,11 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             block_sprite = 0x0015
             block_sprite_hit = 0x0012
 
+        if i[0] == 6:
+            block_actor = 0x17001C3
+        else:
+            block_actor = 0x748143
+
         #Labels which item the subroutine gives
         addon = ""
         if i[6] < 0x6000:
@@ -1525,7 +1551,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 actor += 1
         @subroutine(subs=script.subroutines, hdr=script.header)
         def get_item(sub: Subroutine):
-            if i[0] == 0 or i[0] == 1:
+            if i[0] != 5:
                 set_actor_attribute(len(script.header.actors), 0x30, 0.0)
                 try:
                     emit_command(0x008C, [len(script.header.actors), script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
@@ -1533,7 +1559,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     emit_command(0x008C, [len(script.header.actors), len(script.header.sprite_groups), 0x0000, 0x01])
                 branch_if(Variables[i[5]], '==', 1.0, 'label_0')
                 Variables[i[5]] = 1.0
-            elif i[0] == 5:
+            else:
                 if (i[5] < 0xC000 or i[5] > 0xCFFF) and i[0] != 0 and i[0] != 1:
                     branch_if(Variables[i[5]], '==', 0.0, 'label_0')
                 if i[6] > 0xC000:
@@ -1640,8 +1666,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
         cast(SubroutineExt, get_item).name = sub_name
 
-        if i[0] == 0 or i[0] == 1:
-            #Updates actors if it's an overworld block
+        if i[0] != 5:
+            #Updates actors if it's a block
             try:
                 sprite_index = script.header.sprite_groups.index(block_sprite)
             except ValueError:
@@ -1651,7 +1677,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     script.header.sprite_groups.append(block_sprite_hit)
                 script.header.sprite_groups.append(block_sprite)
                 sprite_index = len(script.header.sprite_groups) - 1
-            script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
+            script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, block_actor))
             blockcount += 1
             block_fix.append(i[5])
         elif i[0] == 5:
