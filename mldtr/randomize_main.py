@@ -9,9 +9,6 @@ from mnllib.dt import FMAPDAT_PATH, NUMBER_OF_ROOMS, \
     determine_version_from_code_bin, load_enemy_stats, save_enemy_stats, FEventScriptManager, \
     FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS, FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS
 
-#input_folder = 'C:/Users/Dimit/AppData/Roaming/Azahar/load/mods/00040000000D5A00'
-#stat_mult = [5, 5]
-
 def get_room(id):
     if 0x000 <= id <= 0x00C or id == 0x00F or id == 0x018 or id == 0x1C8 or 0x050 <= id <= 0x055:
         return "Mushrise Park"
@@ -388,9 +385,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     enemy != 28 and enemy != 32 and enemy != 34 and
                     enemy != 40 and enemy != 43 and enemy != 44 and
                     enemy != 51 and not(53 <= enemy <= 56) and
-                    enemy != 63 and enemy != 83 and enemy != 88 and enemy != 89 and enemy != 97 and
-                    enemy != 103 and enemy != 105 and enemy != 108 and enemy != 114 and
-                    enemy != 132 and not(134 <= enemy <= 136) and enemy < 139):
+                    enemy != 63 and enemy != 83 and enemy != 88 and enemy != 89 and enemy != 92 and
+                    enemy != 93 and enemy != 97 and enemy != 103 and enemy != 105 and enemy != 108 and
+                    enemy != 114 and enemy != 132 and not(134 <= enemy <= 136) and enemy < 139):
                 #Appends data to enemy array if it's an enemy
                 if (enemy == 13 or enemy == 18 or enemy == 25 or
                         enemy == 27 or enemy == 29 or enemy == 38 or
@@ -404,6 +401,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       enemy == 50 or (64 <= enemy <= 67) or (72 <= enemy <= 78) or
                       enemy == 84 or enemy == 98 or enemy == 99 or
                       (110 <= enemy <= 112) or (121 <= enemy <= 125) or enemy == 133):
+                    if enemy == 85:
+                        enemy_stats_rand.append([92, enemy_stats[92].hp, enemy_stats[92].power, enemy_stats[92].defense,
+                                                 enemy_stats[92].speed, enemy_stats[92].exp, enemy_stats[92].coins, 0, enemy_stats[92].item_chance, enemy_stats[92].item_type,
+                                                 enemy_stats[92].rare_item_chance, enemy_stats[92].rare_item_type, enemy_stats[92].level])
+                        enemy_stats_rand.append([93, enemy_stats[93].hp, enemy_stats[93].power, enemy_stats[93].defense,
+                                                 enemy_stats[93].speed, enemy_stats[93].exp, enemy_stats[93].coins, 0, enemy_stats[93].item_chance, enemy_stats[93].item_type,
+                                                 enemy_stats[93].rare_item_chance, enemy_stats[93].rare_item_type, enemy_stats[93].level])
                     enemy_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
                                              enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
                                              enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
@@ -435,8 +439,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                            [71, 15, 16, 1, -1, 15, 16, 5], [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
                            [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
                            [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                           [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6, 7, 12, 13], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5], [87, 15, -1, 1, 4, 5],
-                           [90, 1, 4, 5], [91, 15, 16, 2, 4], [92, 15], [93, 15],
+                           [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6, 7, 12, 13], [92, 15], [93, 15], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5],
+                           [87, 15, -1, 1, 4, 5], [90, 1, 4, 5], [91, 15, 16, 2, 4],
                            [94, 15, 16, 5], [98, 22, 1, 2, 4, 5, 6], [99, 22, 1, 2, 4, 5, 6], [100, 15, 1, 3, 5], [101, 15, 1, 5], [102, 15, 1, 5], [104, 15, 1, 5],
                            [106, 15, 1, 5], [110, 15, 1, 3, 5, 6], [111, 15, 1, 3, 5, 6], [112, 15, 1, 2, 3, 5, 6], [113, 15, 27, 1, 5], [115, 15, 27, 1, 5],
                            [116, 15, 27, 1, 5], [117, 15, 27, 1, 4, 5], [118, 15, 27, 1, 4, 5], [119, 15, 27, 1, 4, 5], [120, 15, 27, 1, 4, 5],[121, 15, 27, 1, 5, 6],
@@ -600,6 +604,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         parsed_fmapdat[room][7][b*12+d*2:b*12+d*2] = bytearray(struct.pack('<H', temp[b][d]))
             except ValueError:
                 pass
+            #print(parsed_fmapdat[room][0])
             for treasure_index in range(math.floor(len(parsed_fmapdat[room][7])/12)):
                 treasure_type, item_id, x, y, z, treasure_id = struct.unpack('<HHHHHH', parsed_fmapdat[room][7][treasure_index*12:treasure_index*12+12])
                 if (room != 0x00D and room != 0x015 and room != 0x016 and room != 0x01D and room != 0x037 and room != 0x04E and room != 0x052 and
