@@ -354,6 +354,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             room_logic[r[0][0]] = r
             #print(hex(r[0][0]))
             #print(room_logic[r[0][0]])
+            
+        #Fixes the experience cap to go way higher
 
         # Opens code.bin for enemy stat randomization
         code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
@@ -605,6 +607,14 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     new_block = [0x10, 0x0, int(((script.header.triggers[trigger][0] % 0x10000) + (script.header.triggers[trigger][1] % 0x10000))/2) - 0x20,
                                  script.header.triggers[trigger][4] % 0x10000 + 0x55,
                                  int(((script.header.triggers[trigger][0] // 0x10000) + (script.header.triggers[trigger][1] // 0x10000)) / 2), unused_blocks[block_id]]
+                    if room == 0x0F6 or room == 0x0C6 or room == 0x1E7:
+                        new_block[3] += 0x20
+                    elif room == 0x10C:
+                        new_block[3] += 0x55
+                    elif room == 0x06C:
+                        new_block[2] += 0x55
+                    elif room == 0x17D or room == 0x177 or room == 0x17A:
+                        new_block[2] += 0x120
                     if new_block[4] > 30000:
                         new_block[4] = 0
                     #print(new_block)
@@ -630,8 +640,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     pbar.update(1)
                     if treasure_type % 2 == 1:
                         treasure_type -= 1
-                    item_locals.append([room, treasure_index * 12, treasure_type, x, y, z, treasure_id])
-                    item_pool.append([treasure_type, item_id])
+                    item_locals.append([room, treasure_index * 12, (treasure_type + ((item_id % 2) * 0x10000)), x, y, z, treasure_id])
+                    item_pool.append([treasure_type, (item_id // 2) * 2])
 
         #print(unused_blocks[block_id])
         #for item in item_locals:
@@ -1178,6 +1188,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         logic_logic = [[0, 15], [1, 0], [2, 1], [3, 15, -1, 1], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5, 14, -1, 15], [6, 15], [7, 6], [8, 6], [9, 6],
                        [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10], [12, 7], [13, 7], [14], [15], [16, 15], [17, 15, 16], [18, 17], [19, 17], [20, 17], [21, 17],
                        [22, 15], [23, 1], [24, 1, 3, 6], [25, 24], [26, 25], [27, 15, 1]]
+
+        #Replaces parts of key item logic with logic more suited to the settings
+        if settings[1][0] == 1:
+            logic_logic[3] = [3, 15, -1, 0, 23]
+            logic_logic[4] = [4, 15, 16, 3, -1, 23, 0, 3]
+            logic_logic[10] = [10, 15, 3, 6, -1, 23, 0, 3, 6]
+            logic_logic[23] = [23, 0]
+            logic_logic[24] = [24, 0, 3, 6]
+            logic_logic[27] = [27, 15]
+
         pbar.update(2)
 
         #Removes items from the key item pool depending on the settings
@@ -1232,7 +1252,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 spot_type &= 0xFF0F
                                 spot_type += 0x10
                             #print(hex(spot_type))
-                            narray = [item_locals[i][0], item_locals[i][1], spot_type, item_pool[nitem][1],
+                            narray = [item_locals[i][0], item_locals[i][1], spot_type, item_pool[nitem][1] + (item_locals[i][2] // 0x10000),
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                             new_item_locals.append(narray)
                             new_item_logic.append(item_logic[i])
@@ -1319,6 +1339,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         #del new_item_locals[old_spot]
                         offset = len(new_item_locals)
                     else:
+                        #If it can't find an item to turn into a key item, it throws an attack piece back into the pool
                         attack_spot = find_index_in_2d_list(repack_data, new_item_locals[0][7] + 0xD000)
                         while attack_spot is None:
                             r = random.randint(0, len(new_item_locals)-1)
@@ -1326,13 +1347,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         if attack_spot is not None:
                             if len(repack_data[attack_spot[0]]) > 7 and repack_data[attack_spot[0]][6] < 0xC000:
                                 attack_piece_pool.append([[repack_data[attack_spot[0]][7], repack_data[attack_spot[0]][6]]])
-                            else:
-                                key_spot = find_index_in_2d_list(key_item_pool_checked, repack_data[attack_spot[0]][6])
-                                if key_spot is not None:
-                                    key_item_pool.append(key_item_pool_checked[key_spot[0]])
-                                    del key_item_pool_checked[key_spot[0]]
-                                    key_item_check[key_item_pool[-1][1]] -= 1
-                            del repack_data[attack_spot[0]]
+                                del repack_data[attack_spot[0]]
                         else:
                             item_pool.append([new_item_locals[0][2], new_item_locals[0][3]])
                         item_locals.append([new_item_locals[0][0], new_item_locals[0][1], new_item_locals[0][2],
