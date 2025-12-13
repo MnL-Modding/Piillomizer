@@ -56,6 +56,12 @@ def get_spot_type(spot):
         return 5
     elif spot[2] % 0x10 == 4:
         return 6
+    elif spot[2] // 0x10000 == 1:
+        if (spot[2] // 0x8000) % 2 == 1:
+            return 2
+        return 3
+    elif (spot[2] // 0x8000) % 2 == 1:
+        return 4
     elif spot[-2] == 0:
         return 1
     return 0
@@ -615,6 +621,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         new_block[2] += 0x55
                     elif room == 0x17D or room == 0x177 or room == 0x17A:
                         new_block[2] += 0x120
+                        new_block[3] += 0x20
                     if new_block[4] > 30000:
                         new_block[4] = 0
                     #print(new_block)
@@ -676,7 +683,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                [[291, 1, -1, 2], [291, 1, -1, 2], [291, 1, -1, 2], [291, 1, -1, 2]], [[2518, 1, -1, 2], [2518, 1, -1, 2]], [[2519, 1, -1, 2], [2519, 1, -1, 2]], [[292, 2], [292, 2]], [[293, 1, -1, 2], [293, 1, -1, 2]],
                                [[294, 2], [294, 2]], [[295, 2], [295, 2]], [[296, 2], [296, 2]], [[2373, 1, -1, 2], [2373, 1, -1, 2]], [[2520], [2520]], [[2521], [2521]], [[303], [303]], [[304], [304]], [[305], [305]], [[306], [306]],
                                [[115, 0]], [[116, 0, 5]], [[2522, -3], [2522, 1, -1, 2], [2522, 1, -1, 2]], [[2523, -3], [2523, 1, -1, 2], [2523, 1, -1, 2]], [[2524, -3], [2524, 1], [2524, 1]], [[307, 2], [307, -3], [307, -3]], [[308, -3], [308, 1, 5, -1, 2, 5], [308, 1, 5, -1, 2, 5]],
-                               [[309, -3], [309, 1, -1, 2], [309, 1, -1, 2]], [[310, -3], [310, 1, -1, 2], [310, 1, -1, 2]], [[311, -3], [311, 1, -1, 2], [311, 1, -1, 2]], [[312, -3], [312, 1], [312, 1]], [[2374, -3], [2374, 1, 5, -1, 2, 5], [2374, 1, 5, -1, 2, 5]],
+                               [[309], [309, -3], [309, -3]], [[310, -3], [310, 1, -1, 2], [310, 1, -1, 2]], [[311, -3], [311, 1, -1, 2], [311, 1, -1, 2]], [[312, -3], [312, 1], [312, 1]], [[2374, -3], [2374, 1, 5, -1, 2, 5], [2374, 1, 5, -1, 2, 5]],
                                [[313, 3, 5], [313, 3, 5]], [[314, 3, 5], [314, 3, 5]], [[15], [15], [15]], [[16, 2], [16, 2], [16, 2]]]
 
         item_logic_chunk[2] = [[[2525], [2525]], [[2526], [2526]], [[119, 6], [119, 6]], [[121, 6], [121, 6]], [[123, 6], [123, 6]], [[125, 6], [125, 6]], [[2527, 6], [2527, 6]], [[127, 6], [127, 6]], [[129, 6], [129, 6]],
@@ -1187,7 +1194,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #Logic for the key items, so they only spawn when others are already in the pool
         logic_logic = [[0, 15], [1, 0], [2, 1], [3, 15, -1, 1], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5, 14, -1, 15], [6, 15], [7, 6], [8, 6], [9, 6],
                        [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10], [12, 7], [13, 7], [14], [15], [16, 15], [17, 15, 16], [18, 17], [19, 17], [20, 17], [21, 17],
-                       [22, 15], [23, 1], [24, 1, 3, 6], [25, 24], [26, 25], [27, 15, 1]]
+                       [22, 15], [23, 1], [24, 15, 16, 1, 3, 6], [25, 24], [26, 25], [27, 15, 1]]
 
         #Replaces parts of key item logic with logic more suited to the settings
         if settings[1][0] == 1:
@@ -1195,7 +1202,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             logic_logic[4] = [4, 15, 16, 3, -1, 23, 0, 3]
             logic_logic[10] = [10, 15, 3, 6, -1, 23, 0, 3, 6]
             logic_logic[23] = [23, 0]
-            logic_logic[24] = [24, 0, 3, 6]
+            logic_logic[24] = [24, 15, 16, 0, 3, 6]
             logic_logic[27] = [27, 15]
 
         pbar.update(2)
@@ -1224,6 +1231,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         while attack == 4 or attack == 8 or attack == 9 or attack == 11 or attack == 13 or attack == 14:
             attack = random.randint(0, len(attack_piece_pool) - 1)
         offset = 0
+        prev_offset = 0
         key_order = []
 
         while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
@@ -1289,17 +1297,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             if prevlen <= len(item_pool) + len(key_item_pool) + len(attack_piece_pool) and len(key_item_pool) > 0 and len(new_item_locals) > 0:
                 if len(key_item_pool) > 0:
                     if offset == len(new_item_locals):
-                        if len(new_item_locals) >= 50:
-                            offset -= 50
-                        else:
-                            offset -= 10
+                        #print(offset)
+                        offset = prev_offset
+                        #print(offset)
                     can_key = False
                     for i in range(len(new_item_locals) - offset):
-                        if new_item_locals[i+offset][3] != 0 and find_index_in_2d_list(repack_data, new_item_locals[i+offset][7] + 0xD000) is None:
+                        if find_index_in_2d_list(repack_data, new_item_locals[i+offset][7] + 0xD000) is None:
                             can_key = True
                     if can_key:
                         old_spot = random.randint(offset, len(new_item_locals) - 1)
-                        while new_item_locals[old_spot][3] == 0 or find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000) is not None:
+                        while find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000) is not None:
                             old_spot = random.randint(offset, len(new_item_locals) - 1)
                         item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
                                             new_item_locals[old_spot][2], new_item_locals[old_spot][4],
@@ -1337,7 +1344,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         del item_locals[i]
                         #del item_logic[i]
                         #del new_item_locals[old_spot]
+                        prev_offset = offset
                         offset = len(new_item_locals)
+                        #print("Previous offset:" + str(prev_offset))
+                        #print("Current offset: " + str(offset))
                     else:
                         #If it can't find an item to turn into a key item, it throws an attack piece back into the pool
                         attack_spot = find_index_in_2d_list(repack_data, new_item_locals[0][7] + 0xD000)
@@ -1615,7 +1625,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                           "Mount Pajamaja Summit", "Dreamy Wakeport", "Somnom Woods", "Dreamy Somnom Woods", "Mushrise Park Caves", "Neo Bowser Castle"]
 
     #Names for the different kinds of checks
-    check_names = ["Block", "Block", "Rotated Block", "Mini Mario Block", "High Up Block", "Bean Spot", "Sneeze Block", "Attack Piece Block", "Rotated Block", "Rotated Block"]
+    check_names = ["Block", "Block", "Rotated Block", "Rotated Block", "Rotated Block", "Bean Spot", "Sneeze Block", "Attack Piece Block", "Rotated Block", "Rotated Block"]
 
     #Sorts the new item locals array in order of room ID and spot ID
     new_item_locals = sorted(new_item_locals, key=lambda local: local[0])

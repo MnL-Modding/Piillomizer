@@ -1554,13 +1554,14 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             block_sprite = 0x0000
             block_sprite_hit = 0x0001
         else:
-            block_sprite = 0x0015
+            block_sprite = 0x0011
             block_sprite_hit = 0x0012
 
-        if i[0] == 6:
+        if 2 <= i[0] <= 4 or i[0] == 6:
             block_actor = 0x17001C3
         else:
             block_actor = 0x748143
+        block_attr = 0xFFFF
 
         #Labels which item the subroutine gives
         addon = ""
@@ -1874,10 +1875,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     script.header.sprite_groups.append(block_sprite_hit)
                 script.header.sprite_groups.append(block_sprite)
                 sprite_index = len(script.header.sprite_groups) - 1
-            script.header.actors.append((i[3]*0x10000 + i[2], i[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, block_actor))
+            script.header.actors.append((i[3]*0x10000 + i[2], i[4], block_attr*0x10000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, block_actor))
             blockcount += 1
             block_fix.append(i[5])
-        elif i[0] == 5:
+        else:
             #Updates triggers if it's a bean spot
             if i[3] > 0:
                 script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
@@ -2056,39 +2057,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
             script = fevent_manager.parsed_script(i, 0)
             del room_sub_dat[find_index_in_2d_list(room_sub_dat, i, 0)]
-
-    # Sets up the bottom screen to show what items you can and can't get
-    #print("Setting up bottom screen...")
-    #offset_data = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
-    #sub_info = []
-    #for s in range(len(new_item_locals)):
-    #    if new_item_locals[s][0] < len(offset_data):
-    #        script = fevent_manager.parsed_script(get_minimap(new_item_locals[s][0]), 0)
-    #        sub_info.append([len(script.header.actors), new_item_locals[s][0], len(script.subroutines)])
-    #        script.header.actors.append((0xFFFF0000 + new_item_locals[s][4] + offset_data[new_item_locals[s][0]][0],
-    #                                     0x00010000 + new_item_locals[s][6] + offset_data[new_item_locals[s][0]][1],
-    #                                     0x0005 + len(script.subroutines) * 0x10000, 0xFFFFFFFF, 0xFFFFFFFF,
-    #                                     0x04500000))
-    #        @subroutine(subs=script.subroutines, hdr=script.header)
-    #        def get_block_availability(sub: Subroutine):
-    #            #for l in range(len(new_item_logic[s]) - 1):
-    #            #    if find_index_in_2d_list(key_item_pool_checked, new_item_logic[s][l+1], 1) is not None:
-    #            #        branch_if(Variables[key_item_pool_checked[find_index_in_2d_list(key_item_pool_checked, new_item_logic[s][l+1], 1)][0]], '==', 0.0, 'label_0')
-    #            #set_actor_attribute(len(script.header.actors) - 1, 0x01, 1.0)
-    #            #set_actor_attribute(len(script.header.actors) - 1, 0x00, 1.0)
-    #            #emit_command(0x004E, [len(script.header.actors) - 1, 0x01, 0x1E, 1.0])
-
-    #            #label('label_0', manager=fevent_manager)
-    #            branch_if(Variables[new_item_locals[s][7] + 0xD000], '==', 0.0, 'label_1')
-    #            set_actor_attribute(len(script.header.actors) - 1, 0x01, 0.0)
-    #            set_actor_attribute(len(script.header.actors) - 1, 0x00, 0.0)
-    #            emit_command(0x004E, [len(script.header.actors) - 1, 0x01, 0x1E, 0.0])
-
-    #            label('label_1', manager=fevent_manager)
-    #        sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
-    #        cast(SubroutineExt, get_block_availability).name = sub_name
-    #        update_commands_with_offsets(fevent_manager, script.subroutines,
-    #                                     len(script.header.to_bytes(fevent_manager)))
 
     print("Saving...")
     #Recompiles FEvent
