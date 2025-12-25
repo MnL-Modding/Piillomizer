@@ -1699,9 +1699,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         if i[6] == 0xE00D:
             addon = "Luiginary Ball Ability"
         if i[6] == 0xE00E:
-            addon = "Luiginary Stack Spring Jump"
-        if i[6] == 0xE00F:
             addon = "Luiginary Stack Ground Pound"
+        if i[6] == 0xE00F:
+            addon = "Luiginary Stack Spring Jump"
         if i[6] == 0xE010:
             addon = "Luiginary Cone Jump"
         if i[6] == 0xE011:

@@ -117,8 +117,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         # 5 - Ball Hop
         # 6 - Luiginary Works
         # 7 - Luiginary Ball
-        # 8 - Luiginary Stack Spring Jump
-        # 9 - Luiginary Stack Ground Pound
+        # 8 - Luiginary Stack Ground Pound
+        # 9 - Luiginary Stack Spring Jump
         # 10 - Luiginary Cone Jump
         # 11 - Luiginary Cone Storm
         # 12 - Luiginary Ball Hookshot
@@ -363,6 +363,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             
         #Fixes the experience cap to go way higher
 
+        #Sets base stats to be added on, creating a custom level curve
+        #[Level, HP, POW, DEF, SPEED, EXP, COINS]
+        init_enemy_stats = [2, 8, 27 * stat_mult[0], 12, 15, 3 * stat_mult[1], 1]
+
         # Opens code.bin for enemy stat randomization
         code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
         enemy_stats = load_enemy_stats(code_bin=code_bin_path)
@@ -460,12 +464,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                            [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6], [48, 15, 22],
                            [49, 15, 22, 6], [50, 15, 22, 6], [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, -1, 1, 5], [64, 23, 1, 6, -1, 1, 5, 6],
                            [65, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [66, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [67, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
-                           [68, 15, 16, 1, -1, 15, 16, 5], [69, 15, 16, 1, -1, 15, 16, 5], [70, 15, 16, 1, -1, 15, 16, 5],
-                           [71, 15, 16, 1, -1, 15, 16, 5], [72, 15, 16, 1, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                           [74, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6], [75, 15, 16, 24, 1, 6, -1, 15, 16, 24, 5, 6],
-                           [76, 15, 16, 24, 25, 1, 6, -1, 15, 16, 24, 25, 5, 6], [77, 15, 16, 1, 6, -1, 15, 16, 5, 6],
-                           [78, 15, 16, 1, 6, -1, 15, 16, 5, 6], [84, 6, 7, 12, 13], [92, 15], [93, 15], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5],
-                           [87, 15, -1, 1, 4, 5], [90, 1, 4, 5], [91, 15, 16, 2, 4],
+                           [68, 15, 16, 1, 3, -1, 15, 16, 5], [69, 15, 16, 1, 3, -1, 15, 16, 5], [70, 15, 16, 1, 3, -1, 15, 16, 5],
+                           [71, 15, 16, 1, 3, -1, 15, 16, 5], [72, 15, 16, 1, 3, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 3, 6, -1, 15, 16, 5, 6],
+                           [74, 15, 16, 1, 3, 6], [75, 15, 16, 1, 3, 6], [76, 15, 16, 1, 3, 6], [77, 15, 16, 1, 3, 6, -1, 15, 16, 0, 5, 6], [78, 15, 16, 1, 3, 6, -1, 15, 16, 0, 5, 6],
+                           [84, 6, 7, 12, 13], [92, 15], [93, 15], [85, 15, -1, 1, 4, 5], [86, 15, -1, 1, 4, 5],
+                           [87, 15, -1, 1, 4, 5], [90, 1, 4, 5], [91, 15, 16, 1, 3, -1, 15, 22, 5],
                            [94, 15, 16, 5], [98, 22, 1, 2, 4, 5, 6], [99, 22, 1, 2, 4, 5, 6], [100, 15, 1, 3, 5], [101, 15, 1, 5], [102, 15, 1, 5], [104, 15, 1, 5],
                            [106, 15, 1, 5], [110, 15, 1, 3, 5, 6], [111, 15, 1, 3, 5, 6], [112, 15, 1, 2, 3, 5, 6], [113, 15, 27, 1, 5], [115, 15, 27, 1, 5],
                            [116, 15, 27, 1, 5], [117, 15, 27, 1, 4, 5], [118, 15, 27, 1, 4, 5], [119, 15, 27, 1, 4, 5], [120, 15, 27, 1, 4, 5],[121, 15, 27, 1, 5, 6],
@@ -490,9 +493,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         if settings[1][0] == 1 or settings[1][1] == 1:
             if settings[1][0] == 1 and settings[1][1] == 1:
                 replace_enemy = [[41, 15, 16, 17, 2], [47, 15, 16, 17, 6], [58, 23], [59, 23], [60, 23], [61, 23], [64, 23, 0, 6], [65, 23, 4, 6, 8, 10],
-                                 [66, 23, 4, 6, 8, 10], [67, 23, 4, 6, 8, 10], [68, 15, 16], [69, 15, 16], [70, 15, 16], [71, 15, 16],
-                                 [72, 15, 16, 6], [73, 15, 16, 6], [74, 15, 16, 24, 6], [75, 15, 16, 24, 6], [76, 15, 16, 24, 25, 6], [77, 15, 16, 6], [78, 15, 16, 6],
-                                 [85, 15, -1, 23, 4, 5], [86, 15, -1, 23, 4, 5], [87, 15, -1, 23, 4, 5], [90, 23, 4, 5], [94, 15, 16, 17, 18, 19, 20, 21, 5],
+                                 [66, 23, 4, 6, 8, 10], [67, 23, 4, 6, 8, 10], [68, 15, 16, 0, 3, -1, 15, 16, 5], [69, 15, 16, 0, 3, -1, 15, 16, 5],
+                                 [70, 15, 16, 0, 3, -1, 15, 16, 5], [71, 15, 16, 0, 3, -1, 15, 16, 5],
+                                 [72, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6], [73, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6], [74, 15, 16, 0, 3, 6], [75, 15, 16, 0, 3, 6],
+                                 [76, 15, 16, 0, 3, 6], [77, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6], [78, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6],
+                                 [85, 15, -1, 23, 4, 5], [86, 15, -1, 23, 4, 5], [87, 15, -1, 23, 4, 5], [90, 23, 4, 5], [91, 15, 16, 0, 3, -1, 15, 22, 5], [94, 15, 16, 17, 18, 19, 20, 21, 5],
                                  [100, 15, 3, 5], [101, 15, 5], [102, 15, 5], [104, 15, 5], [106, 15, 5], [110, 15, 3, 5, 6], [111, 15, 3, 5, 6], [112, 15, 2, 3, 5, 6], [113, 15, 27, 5], [115, 15, 27, 5], [116, 15, 27, 5],
                                  [117, 15, 27, 4, 5], [118, 15, 27, 4, 5], [119, 15, 27, 4, 5], [120, 15, 27, 4, 5], [121, 15, 27, 5, 6],
                                  [122, 15, 27, 4, 5, 6], [123, 15, 27, 4, 5, 6], [124, 15, 27, 5, 6], [125, 15, 27, 5, 6], [133, 15, 27, 4, 5, 6],]
@@ -500,10 +505,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 replace_boss = [[62, 23, 4, 6, 8, 10], [95, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10], [96, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10]]
             elif settings[1][0] == 1:
                 replace_enemy = [[58], [59, 23, -1, 5], [60, 23, -1, 5], [61, 23, -1, 5], [64, 23, 6, -1, 5, 6], [65, 23, 4, 6, 10, -1, 3, 5, 6, 10],
-                                 [66, 23, 4, 6, 10, -1, 3, 5, 6, 10], [67, 23, 4, 6, 10, -1, 3, 5, 6, 10], [68, 15, 16], [69, 15, 16],
-                                 [70, 15, 16], [71, 15, 16], [72, 15, 16, 6], [73, 15, 16, 6],
-                                 [74, 15, 16, 24, 6], [75, 15, 16, 24, 6], [76, 15, 16, 24, 25, 6], [77, 15, 16, 6],
-                                 [78, 15, 16, 6], [85, 15, -1, 4, 5], [86, 15, -1, 4, 5], [87, 15, -1, 4, 5], [90, 4, 5],
+                                 [66, 23, 4, 6, 10, -1, 3, 5, 6, 10], [67, 23, 4, 6, 10, -1, 3, 5, 6, 10], [68, 15, 16, 0, 3, -1, 15, 16, 5], [69, 15, 16, 0, 3, -1, 15, 16, 5],
+                                 [70, 15, 16, 0, 3, -1, 15, 16, 5], [71, 15, 16, 0, 3, -1, 15, 16, 5], [72, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6],
+                                 [73, 15, 16, 0, 3, 6], [74, 15, 16, 0, 3, 6], [75, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6], [76, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6], [77, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6],
+                                 [78, 15, 16, 0, 3, 6], [85, 15, -1, 4, 5], [86, 15, -1, 4, 5], [87, 15, -1, 4, 5], [90, 4, 5], [91, 15, 16, 0, 3, -1, 15, 22, 5],
                                  [101, 15, 5], [102, 15, 5], [104, 15, 5], [106, 15, 5], [110, 15, 3, 5, 6], [111, 15, 3, 5, 6], [112, 15, 2, 3, 5, 6], [113, 15, 27, 5], [115, 15, 27, 5], [116, 15, 27, 5],
                                  [117, 15, 27, 4, 5], [118, 15, 27, 4, 5], [119, 15, 27, 4, 5], [120, 15, 27, 4, 5], [121, 15, 27, 5, 6], [122, 15, 27, 4, 5, 6],
                                  [123, 15, 27, 4, 5, 6], [124, 15, 27, 5, 6], [125, 15, 27, 5, 6], [133, 15, 27, 4, 5, 6],]
@@ -519,10 +524,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
                 replace_boss = [[62, 23, 1, 4, 6, 8, 10], [95, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10], [96, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2, 4, 5, 6, 8, 10]]
             for e in replace_enemy:
-                try:
-                    enemy_logic[enemy_logic.index(e[0])] = e
-                except ValueError:
-                    pass
+                el = 0
+                while enemy_logic[el][0] != e[0]:
+                    el += 1
+                enemy_logic[el] = e
             for b in replace_boss:
                 bl = 0
                 while boss_logic[bl][0] != b[0]:
@@ -1152,7 +1157,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         #Creates an item pool for the key items
         key_item_pool = [[0xE002, 0], [0xE002, 1], [0xE002, 2], [0xE004, 3], [0xE004, 4], [0xE005, 5], [0xE00A, 6], [0xE00D, 7],
-                         [0xE00E, 8], [0xE00F, 9], [0xE010, 10], [0xE011, 11], [0xE012, 12], [0xE013, 13], [0xE075, 14], [0xC369, 15],
+                         [0xE00F, 8], [0xE00E, 9], [0xE010, 10], [0xE011, 11], [0xE012, 12], [0xE013, 13], [0xE075, 14], [0xC369, 15],
                          [0xCABF, 16], [0xE0A0, 17], [0xC343, 18], [0xC344, 19], [0xC345, 20], [0xC346, 21], [0xC960, 22], [0xC3B9, 23],
                          [0xB0F7, 24], [0xB0F7, 25], [0xB0F7, 26], [0xC47E, 27]]
 
@@ -1233,6 +1238,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         offset = 0
         prev_offset = 0
         key_order = []
+        add_level = 0
+        init_add = [0, 0, 0, 0, 0, 0, 0]
 
         while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
             prevlen = len(item_pool) + len(key_item_pool) + len(attack_piece_pool)
@@ -1305,9 +1312,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         if find_index_in_2d_list(repack_data, new_item_locals[i+offset][7] + 0xD000) is None:
                             can_key = True
                     if can_key:
+                        #print(len(new_item_locals))
                         old_spot = random.randint(offset, len(new_item_locals) - 1)
                         while find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000) is not None:
                             old_spot = random.randint(offset, len(new_item_locals) - 1)
+                        #print(old_spot)
                         item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
                                             new_item_locals[old_spot][2], new_item_locals[old_spot][4],
                                             new_item_locals[old_spot][5], new_item_locals[old_spot][6],
@@ -1349,39 +1358,38 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         #print("Previous offset:" + str(prev_offset))
                         #print("Current offset: " + str(offset))
                     else:
-                        #If it can't find an item to turn into a key item, it throws an attack piece back into the pool
-                        attack_spot = find_index_in_2d_list(repack_data, new_item_locals[0][7] + 0xD000)
-                        while attack_spot is None:
-                            r = random.randint(0, len(new_item_locals)-1)
-                            attack_spot = find_index_in_2d_list(repack_data, new_item_locals[r][7] + 0xD000)
-                        if attack_spot is not None:
-                            if len(repack_data[attack_spot[0]]) > 7 and repack_data[attack_spot[0]][6] < 0xC000:
-                                attack_piece_pool.append([[repack_data[attack_spot[0]][7], repack_data[attack_spot[0]][6]]])
-                                del repack_data[attack_spot[0]]
-                        else:
-                            item_pool.append([new_item_locals[0][2], new_item_locals[0][3]])
-                        item_locals.append([new_item_locals[0][0], new_item_locals[0][1], new_item_locals[0][2],
-                                            new_item_locals[0][4], new_item_locals[0][5], new_item_locals[0][6],
-                                            new_item_locals[0][7]])
-                        item_logic.append([0])
-                        del new_item_locals[0]
-                        del new_item_logic[0]
+                        #If it can't find an item to turn into a key item, it searches a bit farther back
+                        prev_offset -= 10
             i = 0
 
             #Randomizes enemy stats
             while i < len(enemy_logic):
                 if len(enemy_logic) > 0:
                     if is_available(enemy_logic[i], key_item_check, settings):
-                        temp = enemy_stats_rand[i]
-                        for n in range(len(enemy_stats_rand[0])-1):
-                            enemy_stats_rand[i][n+1] = enemy_stats_rand[0][n+1]
-                            for j in range(i-1):
-                                enemy_stats_rand[j][n+1] = enemy_stats_rand[j+1][n+1]
-                            if i > 0:
-                                enemy_stats_rand[i-1][n+1] = temp[n+1]
-                        new_enemy_stats.append(enemy_stats_rand[i])
+                        new_enemy_stats.append([enemy_logic[i][0], int(init_enemy_stats[1]), int(init_enemy_stats[2]), int(init_enemy_stats[3]),
+                                                int(init_enemy_stats[4]), int(init_enemy_stats[5]), int(init_enemy_stats[6]), 0, 0, 0, 0, 0,
+                                                int(init_enemy_stats[0])])
+                        #Increase level by 1 every 3 enemies
+                        #Increase HP by 1.5 every enemy
+                        #Increase POW by 2 every enemy
+                        #Increase DEF by 1.5 every enemy
+                        #Increase SPEED by 1 every enemy
+                        #Increase EXP by 2.5 every enemy
+                        #Increase COINS by 0.75 every enemy
+                        add_level += 1
+                        if add_level == 3:
+                            init_enemy_stats[0] += 1
+                            add_level = 1
+                        init_enemy_stats[1] += 3
+                        init_enemy_stats[2] += 2.5 * stat_mult[0]
+                        init_enemy_stats[3] += 3
+                        init_enemy_stats[4] += 1.5
+                        init_enemy_stats[5] += 2.5 * stat_mult[1]
+                        init_enemy_stats[6] += 0.5
+
                         if new_enemy_stats[-1][0] == 87:
                             new_enemy_stats[-1][5] //= 4
+                            new_enemy_stats[-1][6] //= 4
                             new_enemy_stats.append([88, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
                                                     new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
                                                     new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
@@ -1396,12 +1404,21 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         new_enemy_stats[-1][0] == 124):
                             new_enemy_stats[-1][1] //= 2
                             new_enemy_stats[-1][5] //= 5
+                            new_enemy_stats[-1][6] //= 5
                             if new_enemy_stats[-1][0] == 33:
                                 new_enemy_stats[-1][5] //= 6
                         elif new_enemy_stats[-1][0] == 31 or new_enemy_stats[-1][0] == 46:
                             new_enemy_stats[-1][5] //= 2
+                            new_enemy_stats[-1][6] //= 2
                         elif new_enemy_stats[-1][0] == 35:
                             new_enemy_stats[-1][5] //= 3
+                            new_enemy_stats[-1][5] //= 3
+
+                        for stat in range(len(new_enemy_stats[-1])):
+                            if new_enemy_stats[-1][stat] < 1:
+                                new_enemy_stats[-1][stat] = 1
+                            elif new_enemy_stats[-1][stat] > 0xFFFF:
+                                new_enemy_stats[-1][stat] = 0xFFFF
 
                         del enemy_stats_rand[i]
                         del enemy_logic[i]
@@ -1616,8 +1633,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                    "DEF Mush Jam", "Duplex Crown", " -- ", "Mushroom Amulet", "DoB Ring", "Mini Ring", "Silver Statue", "Gold Statue"]]
 
     #Names for key items
-    key_item_names = ["Progressive Hammers 1", "Progressive Hammers 2", "Progressive Hammers 3", "Progressive Spin 1", "Progressive Spin 2", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack High Jump",
-                      "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
+    key_item_names = ["Progressive Hammers 1", "Progressive Hammers 2", "Progressive Hammers 3", "Progressive Spin 1", "Progressive Spin 2", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack Ground Pound",
+                      "Luiginary Stack Spring Jump", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
                       "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
 
     #Names for attack pieces
@@ -1819,11 +1836,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
         enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
         enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
-        enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
-        enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
-        enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
-        enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
+        if new_enemy_stats[enemy][9] > 1:
+            enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
+            enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
+            enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
+            enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
         enemy_stats[new_enemy_stats[enemy][0]].level = new_enemy_stats[enemy][12]
+        if new_enemy_stats[enemy][0] == 113:
+            enemy_stats[114].power = new_enemy_stats[enemy][2]
+            enemy_stats[114].speed = new_enemy_stats[enemy][4]
+            enemy_stats[114].level = new_enemy_stats[enemy][12]
         #print(new_enemy_stats[enemy])
     #Packs enemy stats
     save_enemy_stats(enemy_stats, code_bin=code_bin_path)
