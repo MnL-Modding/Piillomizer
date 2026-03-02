@@ -347,11 +347,11 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xCC82] = 1.0 #Doctor Snoozemore Appears
         Variables[0xCC83] = 1.0 #Doctor Snoozemore Cutscene Watched
         Variables[0xC0B4] = 1.0 #Pi'illo Castle dream's deep opens
-        Variables[0xC0A1] = 1.0 #Ultibed appears in pause menu
-        Variables[0xC5CC] = 1.0 #You must find the Ultibed parts cutscene
         Variables[0xC09F] = 1.0 #Luiginary Ball tutorial
         Variables[0xC0A3] = 1.0 #Learning Luiginary Ball Hookshot
         Variables[0xC0A4] = 1.0 #Learning Luiginary Ball Throw
+        Variables[0xC5CC] = 1.0 #You must find the Ultibed parts cutscene
+        Variables[0xC0A1] = 1.0 #Ultibed appears in pause menu
         Variables[0xC438] = 1.0 #Ultibed cutscene in Mount Pajamaja is watched
         Variables[0xC4AE] = 1.0 #Fixes a glitch in the rock code
         Variables[0xC9A2] = 1.0 #Ball Hop tutorial
@@ -363,7 +363,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC9B3] = 1.0 #Ultibed in Mushrise Park start
         Variables[0xC9F3] = 1.0 #Guy lets you into a rock area
         Variables[0xC9F4] = 1.0 #Tree blocking other rock area is removed
-        Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
+        #Variables[0xC9D9] = 1.0 #Driftwood Jelly Sheets have been stolen
         Variables[0xC9D4] = 1.0 #Can enter the cave
         Variables[0xC9DD] = 1.0 #Listened to the old coot vent
         #Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
@@ -381,6 +381,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC5B0] = 1.0 #Camera pans to show the rest of the area
         Variables[0xC5C8] = 1.0 #Met first Pi'illo Master
         Variables[0xC5A2] = 1.0 #Watched cutscene with children of Sommon
+        Variables[0xC5A5] = 1.0 #Children of Sommon introduce minigame
+        Variables[0xC5A6] = 1.0 #First ball hop minigame is complete
         Variables[0xC45E] = 1.0 #Elite Trio flee
         Variables[0xC43B] = 1.0 #Kamek randomized the rooms in the first area
         Variables[0xC475] = 1.0 #Switch is on the other side
@@ -429,7 +431,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xE001] = int(settings[0][1])
         Variables[0xE002] = int(settings[0][2])
         Variables[0xE003] = int(settings[0][3])
-        Variables[0xE004] = int(settings[0][4])
+        Variables[0xE004] = 1.0
         Variables[0xE005] = int(settings[0][5])
         Variables[0xE00A] = int(settings[0][6])
         Variables[0xE00D] = int(settings[0][7])
@@ -475,7 +477,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC0B8] = settings[2][13]
         Variables[0xC0CA] = settings[2][14]
         Variables[0xC45C] = settings[2][15]
-        change_room(0x001c, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x0077, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -1468,7 +1470,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     [0x06E, 0x4C, 0x20A, 0x99, -2, 0.0, 0.0, 0.0, 8, 0], [0x070, 0xEA, 0x208, 0x7D, -11, 0.0, 0.0, 0.0, 8, 0], [0x070, 0xEA, 0x208, 0x80, -11, 0.0, 0.0, 0.0, 8, 0],
                     [0x072, 0x111, 0x20C, 0x4E, -2, 0.0, 0.0, 0.0, 8, 0], [0x072, 0x111, 0x20D, 0x93, -2, 0.0, 0.0, 0.0, 8, 0], [0x076, 0xFC, 0x250, 0x4E, -2, 0.0, 0.0, 0.0, 8, 0],
                     [0x076, 0xFC, 0x290, 0xA6, -2, 0.0, 0.0, 0.0, 8, 0], [0x077, 0x7B, 0x1EC, 0x4F, -2, 0.0, 0.0, 0.0, 8, 0], [0x077, 0x7B, 0x1ED, 0x57, -2, 0.0, 0.0, 0.0, 8, 0],
-                    [0x077, 0x7C, 0x1E9, 0x4E, -2, 0.0, 0.0, 0.0, 8, 0], [0x077, 0x7C, 0x1EB, 0x89, -2, 0.0, 0.0, 0.0, 8, 0],
+                    [0x077, 0x7C, 0x1E9, 0x4E, -2, 0.0, 0.0, 0.0, 8, 0], [0x077, 0x7C, 0x1EB, 0x89, -2, 0.0, 0.0, 0.0, 8, 0], [0x077, 0x88, 0x067, 0x7C, -2, 0.0, 0.0, 0.0, 0, 0],
 
                     [0x089, 0x4D, 0x082, 0x70, -2, 150.0, 0.0, 880.0, 2, 0], [0x08A, 0x54, 0x08C, 0x44, -2, 480.0, 0.0, 330.0, 6, 0], [0x08A, 0x56, 0x08E, 0x2A, -2, 1190.0, 0.0, 365.0, 10, 0],
                     [0x08E, 0x2B, 0x08A, 0x55, -2, 215.0, 0.0, 720.0, 2, 0], [0x0A3, 0xC5, 0x0A4, 0xCA, -17, 405.0, 490.0, 0.0, 4, 0], [0x0A3, 0xC5, 0x0A4, 0xCA, -2, 1211.0, 320.0, 0.0, 12, 0],
@@ -1531,6 +1533,97 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     [0x22A, 0x114, 0x22B, 0x113, -2, 237.0, 30.0, 0.0, 12, 0], [0x22A, 0x117, 0x22B, 0x115, -2, 237.0, 30.0, 0.0, 12, 0], [0x22B, 0x114, 0x22A, 0x113, -2, 870.0, 440.0, 0.0, 12, 0],
                     [0x22E, 0x11D, 0x22F, 0x115, -2, 1585.0, 100.0, 0.0, 12, 0], [0x22F, 0x116, 0x22E, 0x11C, -2, 1427.0, 30.0, 0.0, 12, 0], [0x231, 0x117, 0x233, 0x115, -2, 1095.0, 140.0, 0.0, 12, 0],
                     [0x232, 0x117, 0x233, 0x113, -2, 1095.0, 90.0, 0.0, 12, 0], [0x233, 0x116, 0x231, 0x116, -2, 465.0, 200.0, 0.0, 12, 0], [0x233, 0x114, 0x232, 0x116, -2, 162.0, 30.0, 0.0, 12, 0]]
+
+    #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
+    print("Fixing softlocks...")
+    rock_add = [[0x077, 0, 640, 600, 964, 6, [4]]]
+    ability_names = ["Hammers", "Mini Mario", "Mole Mario", "Spin Jump", "Side Drill", "Ball Hop", "Luiginary Works", "Luiginary Works", "Luiginary Ball Ability", "Luiginary Stack Spring Jump",
+                      "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
+                      "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
+    ability_ids = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005]
+
+    for r in rock_add:
+        script = fevent_manager.parsed_script(r[0], 0)
+        script_index = r[0] * 2
+        t = "You still need:"
+        for a in r[6]:
+            t += "\n[Color #2C65FF]" + ability_names[a] + "[Color #000000]"
+        @subroutine(subs=script.subroutines, hdr=script.header)
+        def abilities_needed(sub: Subroutine):
+            say(None, TextboxSoundsPreset.SILENT, t, offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+        try:
+            sprite_index = script.header.sprite_groups.index(0x5F)
+        except ValueError:
+            script.header.sprite_groups.append(0x5F)
+            sprite_index = len(script.header.sprite_groups)-1
+
+        for ac in range(r[5]):
+            if r[1] == 0:
+                script.header.actors.append((r[3] * 0x10000 + r[2] + ac*0x60, r[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
+            else:
+                script.header.actors.append((r[3] * 0x10000 + r[2], r[4] + ac*0x60, 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
+
+        cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
+        script.header.init_subroutine = None
+        @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+        def despawn_rocks(sub: Subroutine):
+            for de in r[6]:
+                branch_if(Variables[ability_ids[de]], '==', 0.0, 'label_0')
+            for ro in range(r[5]):
+                set_actor_attribute(len(script.header.actors)-ro-1, 0x00, 0.0)
+                set_actor_attribute(len(script.header.actors)-ro-1, 0x01, 0.0)
+
+            label('label_0', manager=fevent_manager)
+            call('init')
+
+        temp_room_sub_dat = []
+        old_init = script.header.init_subroutine
+        while find_index_in_2d_list(room_sub_dat, r[0], 0) is not None:
+            m = room_sub_dat[find_index_in_2d_list(room_sub_dat, r[0], 0)]
+            if m[1] != old_init:
+                #print(m)
+                cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
+            else:
+                cast(SubroutineExt, script.subroutines[m[1]]).name = 'og_init'
+
+            @subroutine(subs=script.subroutines, hdr=script.header)
+            def new_warp_fix(sub: Subroutine):
+                for ro in range(r[5]):
+                    set_actor_attribute(len(script.header.actors)-ro-1, 0x00, 1.0)
+                    set_actor_attribute(len(script.header.actors)-ro-1, 0x01, 1.0)
+                for de in r[6]:
+                    branch_if(Variables[ability_ids[de]], '==', 0.0, 'label_0')
+                for ro in range(r[5]):
+                    set_actor_attribute(len(script.header.actors)-ro-1, 0x00, 0.0)
+                    set_actor_attribute(len(script.header.actors)-ro-1, 0x01, 0.0)
+
+                label('label_0', manager=fevent_manager)
+                if m[1] != old_init:
+                    call('sub_' + str(m[1]))
+                else:
+                    call('og_init')
+
+            sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
+            cast(SubroutineExt, new_warp_fix).name = sub_name
+            new_pos = len(script.subroutines) - 1
+            update_commands_with_offsets(fevent_manager, script.subroutines,
+                                         len(script.header.to_bytes(fevent_manager)))
+
+            script = fevent_manager.parsed_script(m[2], 0)
+            script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
+                                                                  [m[0], m[5], m[6], m[7], m[8], m[9],
+                                                                   new_pos, 0xFFFFFFFD, 0x00])
+            update_commands_with_offsets(fevent_manager, script.subroutines,
+                                         len(script.header.to_bytes(fevent_manager)))
+
+            temp_room_sub_dat.append(m)
+            del room_sub_dat[find_index_in_2d_list(room_sub_dat, r[0], 0)]
+            script = fevent_manager.parsed_script(r[0], 0)
+        for i in temp_room_sub_dat:
+            room_sub_dat.append(i)
+
+        update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     print("Repacking randomized data...")
     #Repacks all the randomized data
