@@ -623,8 +623,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     #    'label_151': 0x2D55,
     #}
 
-    #Allows you to access Torkscrew even if the cutscene breaks
-    @subroutine(subs=script.subroutines, hdr=script.header)
+    #Allows you to access Torkscrew even if the cutscene breaks by changing the initialization subroutine
+    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init_doz'
+    script.header.init_subroutine = None
+    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
     def access_torkscrew(sub: Subroutine):
         branch_if(Variables[0xE09F], "==", 0.0, 'label_0')
         branch_if(Variables[0xC367], "==", 1.0, 'label_0')
@@ -632,12 +634,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         change_room(0x02AB, position=(1000.0, 0.0, 2000.0), init_sub=-0x1)
 
         label('label_0', manager=fevent_manager)
+        call('init_doz')
 
-    #Adds trigger so you can fight the boss
-    script.header.triggers.append((0x02F50000, 0x2FFF2FFF, 0x00000000, 0x00000000, 0xFFFF0000, 0x0000005C, 0x00078022))
-
-    #Skips the post-boss cutscene
-    #script.subroutines[0x49].commands[6] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'label_151'})
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Fixes Smoldergeist
@@ -1534,13 +1532,16 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     [0x22E, 0x11D, 0x22F, 0x115, -2, 1585.0, 100.0, 0.0, 12, 0], [0x22F, 0x116, 0x22E, 0x11C, -2, 1427.0, 30.0, 0.0, 12, 0], [0x231, 0x117, 0x233, 0x115, -2, 1095.0, 140.0, 0.0, 12, 0],
                     [0x232, 0x117, 0x233, 0x113, -2, 1095.0, 90.0, 0.0, 12, 0], [0x233, 0x116, 0x231, 0x116, -2, 465.0, 200.0, 0.0, 12, 0], [0x233, 0x114, 0x232, 0x116, -2, 162.0, 30.0, 0.0, 12, 0]]
 
-    #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
+    #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical, 2 = Up, 3 = Square), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
     print("Fixing softlocks...")
-    rock_add = [[0x077, 0, 640, 600, 964, 6, [4]]]
-    ability_names = ["Hammers", "Mini Mario", "Mole Mario", "Spin Jump", "Side Drill", "Ball Hop", "Luiginary Works", "Luiginary Works", "Luiginary Ball Ability", "Luiginary Stack Spring Jump",
+    rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0,  1140, 0, 1628, 3, [0, 1]],
+
+                [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 9, 10, 11]]]
+    ability_names = ["Hammers", "Mini Mario", "Mole Mario", "Spin Jump", "Side Drill", "Ball Hop", "Luiginary Works", "Luiginary Ball Ability", "Luiginary Stack Spring Jump",
                       "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
                       "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
-    ability_ids = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005]
+    ability_ids = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005, 0xE00A, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
+                   0xE075, 0xC369, 0xCABF, 0xE0A0, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xB0F7, 0xB0F7, 0xC47E]
 
     for r in rock_add:
         script = fevent_manager.parsed_script(r[0], 0)
@@ -1561,8 +1562,13 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         for ac in range(r[5]):
             if r[1] == 0:
                 script.header.actors.append((r[3] * 0x10000 + r[2] + ac*0x60, r[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
-            else:
+            elif r[1] == 1:
                 script.header.actors.append((r[3] * 0x10000 + r[2], r[4] + ac*0x60, 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
+            elif r[1] == 3:
+                script.header.actors.append((r[3] * 0x10000 + r[2] + ac*0x60, r[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
+                script.header.actors.append((r[3] * 0x10000 + r[2] + 0x60*r[5] - ac*0x60, r[4] + 0x60*r[5], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
+                script.header.actors.append((r[3] * 0x10000 + r[2], r[4] + 0x60*r[5] - ac*0x60, 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
+                script.header.actors.append((r[3] * 0x10000 + r[2] + 0x60*r[5], r[4] + ac*0x60, 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
 
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
         script.header.init_subroutine = None
@@ -1573,6 +1579,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             for ro in range(r[5]):
                 set_actor_attribute(len(script.header.actors)-ro-1, 0x00, 0.0)
                 set_actor_attribute(len(script.header.actors)-ro-1, 0x01, 0.0)
+            if r[1] == 3:
+                for ro in range(r[5]*3):
+                    set_actor_attribute(len(script.header.actors)-ro-r[5], 0x00, 0.0)
+                    set_actor_attribute(len(script.header.actors)-ro-r[5], 0x01, 0.0)
 
             label('label_0', manager=fevent_manager)
             call('init')
@@ -1589,9 +1599,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
             @subroutine(subs=script.subroutines, hdr=script.header)
             def new_warp_fix(sub: Subroutine):
-                for ro in range(r[5]):
-                    set_actor_attribute(len(script.header.actors)-ro-1, 0x00, 1.0)
-                    set_actor_attribute(len(script.header.actors)-ro-1, 0x01, 1.0)
                 for de in r[6]:
                     branch_if(Variables[ability_ids[de]], '==', 0.0, 'label_0')
                 for ro in range(r[5]):
@@ -1604,6 +1611,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 else:
                     call('og_init')
 
+            m[1] = len(script.subroutines)-1
             sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
             cast(SubroutineExt, new_warp_fix).name = sub_name
             new_pos = len(script.subroutines) - 1

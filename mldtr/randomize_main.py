@@ -1913,7 +1913,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 #print("Block type: " + hex(new_item_locals[b][2]) + " Block ID: " + hex(new_item_locals[b][7]))
             else:
                 new_item_locals[b][2] += 1
-            parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
+            try:
+                parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
+            except struct.error:
+                print(hex(new_item_locals[b][7]))
         elif b < len(new_item_locals) - 1:
             #Fixes the last block in FMap if the actual last block is in FEvent
             if new_item_locals[b][0] != new_item_locals[b+1][0] and len(parsed_fmapdat[new_item_locals[b][0]][7]) > 1:
@@ -1930,7 +1933,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 if new_item_locals[new_end][0] == new_item_locals[b][0]:
                     new_item_locals[new_end][2] += 1
                     parsed_fmapdat[new_item_locals[new_end][0]][7] = parsed_fmapdat[new_item_locals[new_end][0]][7][0:-12]
-                    parsed_fmapdat[new_item_locals[new_end][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[new_end][2:8]))
+                    try:
+                        parsed_fmapdat[new_item_locals[new_end][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[new_end][2:8]))
+                    except struct.error:
+                        print(hex(new_item_locals[new_end][7]))
                     #print(hex(new_item_locals[new_end][-1]))
                     #print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
 
