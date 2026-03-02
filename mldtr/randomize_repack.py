@@ -431,7 +431,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xE001] = int(settings[0][1])
         Variables[0xE002] = int(settings[0][2])
         Variables[0xE003] = int(settings[0][3])
-        Variables[0xE004] = 1.0
+        Variables[0xE004] = int(settings[0][4])
         Variables[0xE005] = int(settings[0][5])
         Variables[0xE00A] = int(settings[0][6])
         Variables[0xE00D] = int(settings[0][7])
