@@ -1,4 +1,4 @@
 - module-name: "mldtr"
   data-files:
-    dirs:
+    - dirs:
       - "files"
