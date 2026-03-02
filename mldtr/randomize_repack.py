@@ -477,7 +477,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC0B8] = settings[2][13]
         Variables[0xC0CA] = settings[2][14]
         Variables[0xC45C] = settings[2][15]
-        change_room(0x0077, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
+        change_room(0x001c, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
