@@ -453,9 +453,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xE09F] = 1.0
         Variables[0xC960] = int(settings[0][22])
         Variables[0xC3B9] = int(settings[0][23])
-        Variables[0xB0F7] += int(settings[0][24])
-        Variables[0xB0F7] += int(settings[0][25])
-        Variables[0xB0F7] += int(settings[0][26])
+        add_in_place(settings[0][24] + settings[0][25] + settings[0][26], Variables[0xB0F7])
+        add_in_place(settings[0][24] + settings[0][25] + settings[0][26], Variables[0xB02D])
         Variables[0xC47E] = int(settings[0][27])
         if settings[1][0] == 1:
             Variables[0xE0AA] = 1.0
@@ -1441,13 +1440,15 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     room_sub_dat = [[0x000, 0x5A, 0x296, 0x25, -35, 0.0, 0.0, 0.0, 8, 0], [0x001, 0x8D, 0x02C, 0x91, -2, 1816.0, 0.0, 860.0, 8, 0], [0x001, 0x8D, 0x02C, 0x92, -2, 1816.0, 0.0, 860.0, 8, 0],
                     [0x003, 0x69, 0x030, 0x91, -2, 180.0, 0.0, 646.0, 8, 0], [0x003, 0x69, 0x030, 0x92, -2, 180.0, 0.0, 646.0, 8, 0], [0x004, 0x120, 0x19A, 0x74, -2, 1816.0, 0.0, 860.0, 8, 0],
                     [0x004, 0x120, 0x19A, 0x75, -2, 1816.0, 0.0, 860.0, 8, 0], [0x004, 0x120, 0x09D, 0x86, -2, 0.0, 0.0, 0.0, 8, 0], [0x004, 0x101, 0x005, 0x104, -3, 1200.0, 300.0, 1800.0, 0, 0],
-                    [0x005, 0xE1, 0x004, 0x12A, -2, 1430.0, 300.0, 300.0, 8, 0], [0x008, 0x75, 0x199, 0x74, -2, 180.0, 0.0, 646.0, 8, 0], [0x008, 0x75, 0x032, 0x7E, -2, 0.0, 0.0, 0.0, 8, 0],
-                    [0x00B, 0x82, 0x296, 0x25, -32, 0.0, 0.0, 0.0, 8, 0], [0x00B, 0xA0, 0x1E, 0x76, -2, 0.0, 0.0, 0.0, 8, 0], [0x00B, 0xA0, 0x1E, 0x77, -2, 0.0, 0.0, 0.0, 8, 0],
+                    [0x005, 0xE1, 0x004, 0x12A, -2, 1430.0, 300.0, 300.0, 8, 0], [0x007, 0x119, 0x018, 0x77, -2, 0.0, 0.0, 0.0, 0, 0], [0x008, 0x75, 0x199, 0x74, -2, 180.0, 0.0, 646.0, 8, 0],
+                    [0x008, 0x75, 0x032, 0x7E, -2, 0.0, 0.0, 0.0, 8, 0], [0x00B, 0x82, 0x296, 0x25, -32, 0.0, 0.0, 0.0, 8, 0], [0x00B, 0xA0, 0x1E, 0x76, -2, 0.0, 0.0, 0.0, 8, 0],
+                    [0x00B, 0xA0, 0x1E, 0x77, -2, 0.0, 0.0, 0.0, 8, 0],
 
                     [0x012, 0x104, 0x0B1, 0x74, -2, 0.0, 0.0, 0.0, 8, 0], [0x012, 0x104, 0x13E, 0x83, -2, 0.0, 0.0, 0.0, 8, 0], [0x013, 0x124, 0x0EE, 0x8D, -2, 0.0, 0.0, 0.0, 8, 0],
-                    [0x013, 0x124, 0x0EE, 0x8E, -2, 0.0, 0.0, 0.0, 8, 0], [0x019, 0x120, 0x0EC, 0x8D, -2, 0.0, 0.0, 0.0, 8, 0], [0x019, 0x120, 0x0EC, 0x8E, -2, 0.0, 0.0, 0.0, 8, 0],
-                    [0x019, 0x11E, 0x0B5, 0x8D, -2, 0.0, 0.0, 0.0, 8, 0], [0x019, 0x11E, 0x0B5, 0x8E, -2, 0.0, 0.0, 0.0, 8, 0], [0x027, 0xF4, 0x028, 0xEE, -2, 350.0, 160.0, 0.0, 4, 0],
-                    [0x027, 0xF6, 0x028, 0xF0, -2, 800.0, 70.0, 0.0, 4, 0], [0x028, 0xEF, 0x027, 0xF3, -2, 260.0, 250.0, 0.0, 4, 0], [0x028, 0xF1, 0x027, 0xF5, -2, 1110.0, 910.0, 0.0, 4, 0],
+                    [0x013, 0x124, 0x0EE, 0x8E, -2, 0.0, 0.0, 0.0, 8, 0], [0x019, 0x120, 0x0EC, 0x8D, -2, 0.0, 0.0, 0.0, 8, 0],
+                    [0x019, 0x120, 0x0EC, 0x8E, -2, 0.0, 0.0, 0.0, 8, 0], [0x019, 0x11E, 0x0B5, 0x8D, -2, 0.0, 0.0, 0.0, 8, 0], [0x019, 0x11E, 0x0B5, 0x8E, -2, 0.0, 0.0, 0.0, 8, 0],
+                    [0x027, 0xF4, 0x028, 0xEE, -2, 350.0, 160.0, 0.0, 4, 0], [0x027, 0xF6, 0x028, 0xF0, -2, 800.0, 70.0, 0.0, 4, 0], [0x028, 0xEF, 0x027, 0xF3, -2, 260.0, 250.0, 0.0, 4, 0],
+                    [0x028, 0xF1, 0x027, 0xF5, -2, 1110.0, 910.0, 0.0, 4, 0],
 
                     [0x034, 0xE8, 0x296, 0x25, -23, 0.0, 0.0, 0.0, 8, 0], [0x035, 0x11E, 0x12E, 0x76, -2, 0.0, 0.0, 0.0, 8, 0], [0x035, 0x11E, 0x12F, 0x80, -2, 0.0, 0.0, 0.0, 8, 0],
                     [0x036, 0x10F, 0x130, 0x8F, -2, 0.0, 0.0, 0.0, 8, 0], [0x036, 0x10F, 0x130, 0x90, -2, 0.0, 0.0, 0.0, 8, 0], [0x038, 0x143, 0x296, 0x25, -2, 0.0, 0.0, 0.0, 8, 0],
@@ -1534,7 +1535,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
     #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical, 2 = Up, 3 = Square), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
     print("Fixing softlocks...")
-    rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0,  1140, 0, 1628, 3, [0, 1]],
+    rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1140, 0, 1628, 3, [0, 1]], [0x018, 1, 640, 280, 324, 3, [0]],
 
                 [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 9, 10, 11]]]
     ability_names = ["Hammers", "Mini Mario", "Mole Mario", "Spin Jump", "Side Drill", "Ball Hop", "Luiginary Works", "Luiginary Ball Ability", "Luiginary Stack Spring Jump",
@@ -1586,6 +1587,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
             label('label_0', manager=fevent_manager)
             call('init')
+        #print(r[0])
 
         temp_room_sub_dat = []
         old_init = script.header.init_subroutine
@@ -1650,10 +1652,14 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             inspect.currentframe().f_locals['script_index'] = script_index
 
         #Sets up which block it should look at
+        block_attr = 0xFFFF
         if (get_room(i[1]) == "Mushrise Park" or get_room(i[1]) == "Dozing Sands" or get_room(i[1]) == "Blimport" or get_room(i[1]) == "Wakeport" or get_room(i[1]) == "Driftwood Shore" or
                 get_room(i[1]) == "Mount Pajamaja" or get_room(i[1]) == "Pi'illo Castle" or get_room(i[1]) == "Neo Bowser Castle" or get_room(i[1]) == "Somnom Woods"):
             block_sprite = 0x0000
             block_sprite_hit = 0x0001
+        elif i[0] == 6:
+            block_sprite = 0x0004
+            block_sprite_hit = 0x0012
         else:
             block_sprite = 0x0011
             block_sprite_hit = 0x0012
@@ -1662,7 +1668,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             block_actor = 0x17001C3
         else:
             block_actor = 0x748143
-        block_attr = 0xFFFF
 
         #Labels which item the subroutine gives
         addon = ""

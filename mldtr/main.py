@@ -196,7 +196,8 @@ def credit():
              "This program is made under the GNU General Public License v3.0.\n" +
              "UI design and general coding: Dimitri Bee\n" +
              "FMap data and some cutscene flags: Pixiuchu\n" +
-             "Mnlscript and some pointers: DimiDimit\n\n")
+             "Mnlscript and some pointers: DimiDimit\n\n" +
+             "Also Mnlscript: Merc")
 
 def main():
     # Create the window
@@ -276,11 +277,13 @@ def main():
     window.menu = ttk.Notebook(window)
     tabMain = ttk.Frame(window.menu)
     tabEnemy = ttk.Frame(window.menu)
+    tabKey = ttk.Frame(window.menu)
     tabMusic = ttk.Frame(window.menu)
 
     #Names tabs
     window.menu.add(tabMain, text = "Main")
     window.menu.add(tabEnemy, text = "Enemy")
+    window.menu.add(tabKey, text = "Key")
     window.menu.add(tabMusic, text = "Music")
     window.menu.pack(expand = 1, fill = "both", pady=40)
 
@@ -381,10 +384,10 @@ def main():
     window.category_check.place(x=180, y=195)
 
     #Buttons for the different ability options
-    window.key_label = ttk.Label(tabMain, text = "Key Items you want to EXCLUDE:")
+    window.key_label = ttk.Label(tabKey, text = "Key Items you want to START WITH:")
     window.key_label.place(x=129, y=20)
     window.hammer_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Hammers",
         variable = window.key1,
         onvalue = 1.0,
@@ -393,7 +396,7 @@ def main():
     window.hammer_check.place(x=12, y=50)
 
     window.mini_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Mini Mario",
         variable = window.key2,
         onvalue = 1.0,
@@ -402,7 +405,7 @@ def main():
     window.mini_check.place(x=129, y=50)
 
     window.mole_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Mole Mario",
         variable = window.key3,
         onvalue = 1.0,
@@ -411,7 +414,7 @@ def main():
     window.mole_check.place(x=246, y=50)
 
     window.spin_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Spin Jump",
         variable = window.key4,
         onvalue = 1.0,
@@ -420,7 +423,7 @@ def main():
     window.spin_check.place(x=359, y=50)
 
     window.drill_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Side Drill",
         variable = window.key5,
         onvalue = 1.0,
@@ -429,7 +432,7 @@ def main():
     window.drill_check.place(x=12, y=75)
 
     window.ball_hop_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Ball Hop",
         variable = window.key6,
         onvalue = 1.0,
@@ -438,7 +441,7 @@ def main():
     window.ball_hop_check.place(x=129, y=75)
 
     window.works_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Luigi Works",
         variable = window.key7,
         onvalue = 1.0,
@@ -447,7 +450,7 @@ def main():
     window.works_check.place(x=246, y=75)
 
     window.ball_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Luigi Ball",
         variable = window.key8,
         onvalue = 1.0,
@@ -456,7 +459,7 @@ def main():
     window.ball_check.place(x=359, y=75)
 
     window.stack_jump_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Luigi Stack Jump",
         variable = window.key9,
         onvalue = 1.0,
@@ -465,7 +468,7 @@ def main():
     window.stack_jump_check.place(x=12, y=100)
 
     window.stack_pound_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Luigi Stack Pound",
         variable = window.key10,
         onvalue = 1.0,
@@ -474,7 +477,7 @@ def main():
     window.stack_pound_check.place(x=129, y=100)
 
     window.cone_jump_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Luigi Cone Jump",
         variable = window.key11,
         onvalue = 1.0,
@@ -483,7 +486,7 @@ def main():
     window.cone_jump_check.place(x=246, y=100)
 
     window.cone_storm_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Cone Storm",
         variable = window.key12,
         onvalue = 1.0,
@@ -492,7 +495,7 @@ def main():
     window.cone_storm_check.place(x=359, y=100)
 
     window.ball_hookshot_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Luigi Ball Hook",
         variable = window.key13,
         onvalue = 1.0,
@@ -501,7 +504,7 @@ def main():
     window.ball_hookshot_check.place(x=12, y=125)
 
     window.ball_throw_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Luigi Ball Throw",
         variable = window.key14,
         onvalue = 1.0,
@@ -510,7 +513,7 @@ def main():
     window.ball_throw_check.place(x=129, y=125)
 
     window.deep_castle_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Pi'illo Key",
         variable = window.key15,
         onvalue = 1.0,
@@ -519,7 +522,7 @@ def main():
     window.deep_castle_check.place(x=246, y=125)
 
     window.blimp_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Bridge",
         variable = window.key16,
         onvalue = 1.0,
@@ -528,7 +531,7 @@ def main():
     window.blimp_check.place(x=359, y=125)
 
     window.gate_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Mushrise Gate",
         variable = window.key17,
         onvalue = 1.0,
@@ -537,7 +540,7 @@ def main():
     window.gate_check.place(x=12, y=150)
 
     window.dozite0_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Dozite 0",
         variable = window.key18,
         onvalue = 1.0,
@@ -546,7 +549,7 @@ def main():
     window.dozite0_check.place(x=129, y=150)
 
     window.dozite1_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Dozite 1",
         variable = window.key19,
         onvalue = 1.0,
@@ -555,7 +558,7 @@ def main():
     window.dozite1_check.place(x=246, y=150)
 
     window.dozite2_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Dozite 2",
         variable = window.key20,
         onvalue = 1.0,
@@ -564,7 +567,7 @@ def main():
     window.dozite2_check.place(x=359, y=150)
 
     window.dozite3 = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Dozite 3",
         variable = window.key21,
         onvalue = 1.0,
@@ -573,7 +576,7 @@ def main():
     window.dozite3.place(x=12, y=175)
 
     window.dozite4 = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Dozite 4",
         variable = window.key22,
         onvalue = 1.0,
@@ -582,7 +585,7 @@ def main():
     window.dozite4.place(x=129, y=175)
 
     window.wakeport_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Wakeport",
         variable = window.key23,
         onvalue = 1.0,
@@ -591,7 +594,7 @@ def main():
     window.wakeport_check.place(x=246, y=175)
 
     window.pajamaja_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Mt Pajamaja",
         variable = window.key24,
         onvalue = 1.0,
@@ -600,7 +603,7 @@ def main():
     window.pajamaja_check.place(x=359, y=175)
 
     window.egg1_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Dream Egg 1",
         variable = window.key25,
         onvalue = 1.0,
@@ -609,7 +612,7 @@ def main():
     window.egg1_check.place(x=12, y=200)
 
     window.egg2_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Dream Egg 2",
         variable = window.key26,
         onvalue = 1.0,
@@ -618,7 +621,7 @@ def main():
     window.egg2_check.place(x=129, y=200)
 
     window.egg3_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Dream Egg 3",
         variable = window.key27,
         onvalue = 1.0,
@@ -627,13 +630,21 @@ def main():
     window.egg3_check.place(x=246, y=200)
 
     window.neo_castle_check = ttk.Checkbutton(
-        tabMain,
+        tabKey,
         text = "Neo Castle",
         variable = window.key28,
         onvalue = 1.0,
         offvalue = 0.0,
     )
     window.neo_castle_check.place(x=359, y=200)
+
+    #Text to welcome the user to the Pi'illomizer
+    window.welcome = ttk.Label(tabMain, text="Welcome to the Mario and Luigi Dream Team randomizer, Pi'illomizer!\n\n" +
+                                             "To use, dump both the romfs AND exefs, and open them using the button above.\n\n" +
+                                             "If you need help dumping the ExeFS, refer to the ReadMe.md attached.\n\n" +
+                                             "Once that's done, don't forget to check the other tabs for more options!\n\n" +
+                                             "Enough tutorials! Hope you enjoy the Mario and Luigi Dream Team Pi'illomizer!")
+    window.welcome.place(x=10, y=25)
 
     #Settings to reduce Mini Mario requirements
     window.mini_nerf_check = ttk.Checkbutton(
@@ -643,7 +654,7 @@ def main():
         onvalue = 1,
         offvalue = 0
     )
-    window.mini_nerf_check.place(x=16, y=250)
+    window.mini_nerf_check.place(x=125, y=200)
 
     #Settings to make the Ball Hop skip less
     window.ball_nerf_check = ttk.Checkbutton(
@@ -653,7 +664,7 @@ def main():
         onvalue = 1,
         offvalue = 0
     )
-    window.ball_nerf_check.place(x=240, y=250)
+    window.ball_nerf_check.place(x=150, y=250)
 
     #Settings for the bosses
     window.key_label = ttk.Label(tabEnemy, text = "Bosses you want to EXCLUDE:")

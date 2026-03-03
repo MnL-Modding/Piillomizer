@@ -56,11 +56,11 @@ def get_spot_type(spot):
         return 5
     elif spot[2] % 0x10 == 4:
         return 6
-    elif spot[2] // 0x10000 == 1:
+    elif spot[2] // 0x10000 == 1 and spot[2] % 0x10 != 0x8:
         if (spot[2] // 0x8000) % 2 == 1:
             return 2
         return 3
-    elif (spot[2] // 0x8000) % 2 == 1:
+    elif (spot[2] // 0x8000) % 2 == 1 and spot[2] % 0x10 != 0x8:
         return 4
     elif spot[-2] == 0:
         return 1
@@ -664,6 +664,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #print(unused_blocks[block_id])
         #for item in item_locals:
         #   print(str(item) + "\n")
+        #for item in range(len(item_pool)):
+        #    if item_pool[item][1] % 2 == 1:
+        #        print(item_locals[item][-1])
 
         item_logic_chunk = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
         #Logic for every single block and bean spot (The numbers after the ID point to their spots in the ability info)
@@ -1219,13 +1222,19 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         pbar.update(2)
 
         #Removes items from the key item pool depending on the settings
-        for l in range(len(settings)):
+        l = 0
+        s = 0
+        while l < len(settings[0]):
             if settings[0][l] == 1.0:
-                s = find_index_in_2d_list(key_item_pool, l)
-                key_item_check[s[0]] += 1
-                del key_item_pool[s[0]]
-                #del logic_logic[s[0]]
+                key_item_check[key_item_pool[s][1]] += 1
+                del key_item_pool[s]
+                del logic_logic[s]
                 pbar.update(1)
+                s -= 1
+            l += 1
+            s += 1
+        #print(key_item_pool)
+        #print(key_item_check)
 
     with tqdm(total=len(item_pool)+len(key_item_pool)+(len(attack_piece_pool[0])*len(attack_piece_pool)), desc="Randomizing...") as rbar:
         new_item_locals = []
@@ -1246,7 +1255,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         prev_offset = 0
         key_order = []
         add_level = 0
-        init_add = [0, 0, 0, 0, 0, 0, 0]
 
         while len(item_pool) + len(key_item_pool) + len(attack_piece_pool) > 0:
             prevlen = len(item_pool) + len(key_item_pool) + len(attack_piece_pool)
@@ -1289,7 +1297,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                     attack = random.randint(0, len(attack_piece_pool) - 1)
                             if len(attack_piece_pool) > 0:
                                 nitem = random.randint(0, len(attack_piece_pool[attack]) - 1)
-                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2], 0,
+                                narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2] & 0x0012, 0,
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                                 new_item_locals.append(narray)
                                 new_item_logic.append(item_logic[i])
@@ -1338,8 +1346,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
                         # Code for putting key items in blocks and bean spots
                         nitem = random.randint(0, len(key_item_pool) - 1)
-                        while not is_available(logic_logic[key_item_pool[nitem][1]], key_item_check, settings):
+                        while not is_available(logic_logic[nitem], key_item_check, settings):
                             nitem = random.randint(0, len(key_item_pool) - 1)
+                        #print(nitem)
+                        #print(len(key_item_pool))
+                        #print(key_item_check)
                         spottype = get_spot_type(item_locals[i])
                         if (key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004) and key_item_pool[nitem][0] != 0xB0F7:
                             key_data.append(
@@ -1925,7 +1936,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             try:
                 parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
             except struct.error:
-                print(hex(new_item_locals[b][7]))
+                print(hex(new_item_locals[b][2]))
         elif b < len(new_item_locals) - 1:
             #Fixes the last block in FMap if the actual last block is in FEvent
             if new_item_locals[b][0] != new_item_locals[b+1][0] and len(parsed_fmapdat[new_item_locals[b][0]][7]) > 1:
@@ -1936,8 +1947,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     new_end -= 1
                     c = 0
                     while c < len(repack_data):
-                        if repack_data[c][5] == new_item_locals[new_end][-1] + 0xD000 and (repack_data[c][0] == 0 or repack_data[c][0] == 1):
+                        if repack_data[c][5] == new_item_locals[new_end][-1] + 0xD000 and repack_data[c][0] != 5:
                             isnt_key = False
+                            #print(repack_data[c][0])
                         c += 1
                 if new_item_locals[new_end][0] == new_item_locals[b][0]:
                     new_item_locals[new_end][2] += 1
@@ -1945,7 +1957,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     try:
                         parsed_fmapdat[new_item_locals[new_end][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[new_end][2:8]))
                     except struct.error:
-                        print(hex(new_item_locals[new_end][7]))
+                        print(hex(new_item_locals[new_end][2]))
                     #print(hex(new_item_locals[new_end][-1]))
                     #print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
 

@@ -1,3 +1,5 @@
+Welcome to the Mario and Luigi Dream Team randomizer, Pi'illomizer!
+
 How to install:
 1) Install poetry using python in the terminal: "python3 -m pip install poetry"
 2) Install project dependencies in terminal: "python3 -m poetry install"
@@ -9,31 +11,9 @@ How to use:
 3) Randomize to your heart's content
 
 How to get RomFS and ExeFS:
-1) Hold START while booting your modded 3DS
-2) Navigate to your game's title ID in either SYSNAND SD (SD Card) or SYSNAND CTRNAND (Game card), which should end in D5A00
-3) Enter the directory, and navigate to the ExeFS and RomFS, then copy them to gm9/out
-4) Move files to your computer, preferrably in a folder titled "00040000000D5A00"
-
-The key items are as follows:
-- Hammers
-- Mini Mario
--  Mole Mario
-- Spin Jump
-- Side Drill
-- Ball Hop
-- Enter Dream Works
-- Luiginary Tornado
-- Luiginary Ball
-- Luiginary Stack High Jump
-- Luiginary Stack Ground Pound
-- Luiginary Tornado Storm
-- Luiginary Ball Toss
-- Luiginary Ball Hookshot
-- Deep Pi'illo Castle's bridge
-- Blimport Bridge
-- Mushrise Park lower gate
-- Dozites (All 5, including the first one)
-- Access to Wakeport
-- Access to Mount Pajamaja
-- Dream Eggs
-- Access to Neo Bowser Castle
+1) Hold START while booting your modded 3DS to boot into GodMode9
+2) Navigate to your region's title ID, in either SYSNAND SD (SD Card) or SYSNAND CTRNAND (Game card)
+3) Enter the directory, then select either the .app (digital) or .3ds (cartridge) with the biggest filesize
+4) Press A on it, select "NCCH Image Options", then "Extract .code". This will extract it to gm9/out
+5) Move (titleid).code to your computer in the same directory as your romfs called "exefs", and rename it to code.bin
+6) Enjoy!
