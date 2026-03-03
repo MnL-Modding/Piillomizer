@@ -1233,6 +1233,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         #[Trigger type, Room ID, X Pos, Y Pos, Z Pos, Collectible/Cutscene ID, Ability/Item/Key Item/Attack(, Attack Piece ID/Coin Amount/Item Cutscene/Hammer or Spin Cutscene, Coin Cutscene)]
         repack_data = []
+        key_data = []
         i = 0
         itemcut = 0
         attackcut = 0
@@ -1315,12 +1316,12 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         #print(offset)
                     can_key = False
                     for i in range(len(new_item_locals) - offset):
-                        if find_index_in_2d_list(repack_data, new_item_locals[i+offset][7] + 0xD000) is None:
+                        if find_index_in_2d_list(key_data, new_item_locals[i+offset][7] + 0xD000) is None:
                             can_key = True
                     if can_key:
                         #print(len(new_item_locals))
                         old_spot = random.randint(offset, len(new_item_locals) - 1)
-                        while find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000) is not None:
+                        while find_index_in_2d_list(key_data, new_item_locals[old_spot][7] + 0xD000) is not None:
                             old_spot = random.randint(offset, len(new_item_locals) - 1)
                         #print(old_spot)
                         item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
@@ -1328,7 +1329,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                             new_item_locals[old_spot][5], new_item_locals[old_spot][6],
                                             new_item_locals[old_spot][7]])
                         item_pool.append([new_item_locals[old_spot][2], new_item_locals[old_spot][3]])
-                        #del new_item_locals[old_spot]
+                        repack_index = find_index_in_2d_list(repack_data, new_item_locals[old_spot][7])
+                        if repack_index is not None:
+                            if repack_data[repack_index[0]][5] // 0x1000 == 0xB:
+                                attack_piece_pool.append([[repack_data[repack_index[0]][7], repack_data[repack_index[0]][6]]])
+                                attack = -1
                         i = -1
 
                         # Code for putting key items in blocks and bean spots
@@ -1337,16 +1342,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             nitem = random.randint(0, len(key_item_pool) - 1)
                         spottype = get_spot_type(item_locals[i])
                         if (key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004) and key_item_pool[nitem][0] != 0xB0F7:
-                            repack_data.append(
+                            key_data.append(
                                 [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
                                  item_locals[i][6] + 0xD000, key_item_pool[nitem][0]])
                         elif key_item_pool[nitem][0] != 0xE000:
-                            repack_data.append(
+                            key_data.append(
                                 [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
                                  item_locals[i][6] + 0xD000, key_item_pool[nitem][0], 0xCDC0 + itemcut])
                             itemcut += 1
                         else:
-                            repack_data.append(
+                            key_data.append(
                                 [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
                                  item_locals[i][6] + 0xD000, key_item_pool[nitem][0] + key_item_pool[nitem][1],
                                  0xCDC0 + itemcut])
@@ -1366,6 +1371,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     else:
                         #If it can't find an item to turn into a key item, it searches a bit farther back
                         prev_offset -= 10
+                        offset = len(new_item_locals)
             i = 0
 
             #Randomizes enemy stats
@@ -1516,6 +1522,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     #hammer_local = find_index_in_2d_list(repack_data, 0xC369)
     #print(repack_data[hammer_local[0]])
+
+    for k in key_data:
+        repack_data.append(k)
 
     print("Generating spoiler log...")
     #Names for all the locations
@@ -1833,7 +1842,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 else:
                     item = attack_piece_names[int((repack_data[k[0]][6] - 0xB059) / 2) + 13]
                     offset = 1
-                item += " Attack Piece " + str(((repack_data[k[0]][7] // 2) + 1) * ((repack_data[k[0]][6] + offset) % 2 + 1))
+                item += " Attack Piece " + str(int(math.log2(repack_data[k[0]][7]) + 1) + (((repack_data[k[0]][6] + offset) % 2) * 5))
             else:
                 item = key_item_names[key_item_pool_checked[ab[0]][1]]
         if new_item_locals[s][0] < len(item_local_names):
