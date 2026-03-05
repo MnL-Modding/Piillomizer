@@ -1841,7 +1841,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             block_sprite = 0x0000
             block_sprite_hit = 0x0001
         elif i[0] == 6:
-            block_sprite = 0x0004
+            block_sprite = 0x0010
             block_sprite_hit = 0x0012
         else:
             block_sprite = 0x0011
