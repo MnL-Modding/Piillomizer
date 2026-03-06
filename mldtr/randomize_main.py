@@ -103,6 +103,25 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         random.seed(seed)
         pbar.update(1)
 
+        #An array containing the maximum values of each item
+        max_values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0]
+
         #Logic for what's required to enter FROM each loading zone (order goes from left to right, and top to bottom only if there's the same horizontally)
         #The first entry in each chunk of logic means nothing, and is just there so you know what the room is.
         #After that, the key items are as follows:
@@ -1284,6 +1303,15 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 spot_type &= 0xFF0F
                                 spot_type += 0x10
                             #print(hex(spot_type))
+                            if item_pool[nitem][1] // 0x1000 == 0:
+                                if item_pool[nitem][0] // 0x10 % 0x10 <= 0x1:
+                                    max_values[item_pool[nitem][1] % 0x1000 // 2] += 1
+                                else:
+                                    max_values[(item_pool[nitem][1] % 0x1000 // 2) + 5] += 1
+                            elif item_pool[nitem][1] // 0x1000 == 2:
+                                max_values[(item_pool[nitem][1] % 0x1000 // 2) + 10] += 1
+                            elif item_pool[nitem][1] // 0x1000 == 6:
+                                max_values[(item_pool[nitem][1] % 0x1000 // 2) + 45] += 1
                             narray = [item_locals[i][0], item_locals[i][1], spot_type, item_pool[nitem][1] + (item_locals[i][2] // 0x10000),
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                             new_item_locals.append(narray)
@@ -1334,6 +1362,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         while find_index_in_2d_list(key_data, new_item_locals[old_spot][7] + 0xD000) is not None:
                             old_spot = random.randint(offset, len(new_item_locals) - 1)
                         #print(old_spot)
+
                         item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
                                             new_item_locals[old_spot][2], new_item_locals[old_spot][4],
                                             new_item_locals[old_spot][5], new_item_locals[old_spot][6],
@@ -1344,6 +1373,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             if repack_data[repack_index[0]][5] // 0x1000 == 0xB:
                                 attack_piece_pool.append([[repack_data[repack_index[0]][7], repack_data[repack_index[0]][6]]])
                                 attack = -1
+                        else:
+                            if new_item_locals[old_spot][3] // 0x1000 == 0:
+                                if new_item_locals[old_spot][2] // 0x10 % 0x10 <= 0x1:
+                                    max_values[new_item_locals[old_spot][3] % 0x1000 // 2] -= 1
+                                else:
+                                    max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 5] -= 1
+                            elif new_item_locals[old_spot][3] // 0x1000 == 2:
+                                max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 10] -= 1
+                            elif new_item_locals[old_spot][3] // 0x1000 == 6:
+                                max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 45] -= 1
                         i = -1
 
                         # Code for putting key items in blocks and bean spots
@@ -1539,6 +1578,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     for k in key_data:
         repack_data.append(k)
 
+    #print(max_values)
     print("Generating spoiler log...")
     #Names for all the locations
     item_local_names = ["Entrance", "Hammer Room", "West of Hammer Room", "River Rocks",
@@ -1866,6 +1906,26 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     spoiler_log.write("\nTracker Stuff:\nStrike Badge\nGuard Badge\nBronze Badge\nVirus Badge\nMaster Badge\nRisk Badge\nSilver Badge\nExpert Badge\nMiracle Badge\nGold Badge\nCurrent Room: \n\nKey Item Order:")
     for k in key_order:
         spoiler_log.write("\n" + key_item_names[k])
+
+    #Creates Tracker.dat
+    tracker_dat = open(input_folder + "/Tracker.dat", "wb")
+    for l in range(len(new_item_locals)):
+        tracker_dat.write(new_item_locals[l][-1].to_bytes(2, 'big'))
+        if find_index_in_2d_list(repack_data, new_item_locals[l][-1] + 0xD000) is not None:
+            k = find_index_in_2d_list(repack_data, new_item_locals[l][-1] + 0xD000)
+            to_write = repack_data[k[0]][6]
+            if repack_data[k[0]][6] // 0x1000 == 0xB and to_write != 0xB0F7:
+                to_write += int(math.log2(repack_data[k[0]][7]) + 1) * 0x100
+            tracker_dat.write(to_write.to_bytes(2, 'big'))
+        else:
+            to_write = new_item_locals[l][3]
+            if new_item_locals[l][2] // 0x10 % 0x10 > 1:
+                to_write += 0xA000
+            tracker_dat.write(to_write.to_bytes(2, 'big'))
+    #print(len(new_item_locals) - (len(new_item_locals)//16)*16)
+    tracker_dat.write(b'\x00'*((len(new_item_locals) - (len(new_item_locals)//16)*16)*2))
+    tracker_dat.write(b'\x00'*(16 * 18))
+    tracker_dat.write(bytes(max_values))
 
     print("Repacking enemy stats...")
     #Repackages randomized enemy stats

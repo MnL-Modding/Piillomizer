@@ -196,7 +196,7 @@ def credit():
              "This program is made under the GNU General Public License v3.0.\n" +
              "UI design and general coding: Dimitri Bee\n" +
              "FMap data and some cutscene flags: Pixiuchu\n" +
-             "Mnlscript and some pointers: DimiDimit\n\n" +
+             "Mnlscript and some pointers: DimiDimit\n" +
              "Also Mnlscript: Merc")
 
 def main():

@@ -1713,9 +1713,12 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     print("Fixing softlocks...")
     rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1140, 0, 1628, 3, [0, 1]], [0x018, 1, 640, 280, 324, 3, [0]],
 
-                [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 9, 10, 11]],
+                [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 9, 10, 11]], [0x288, 0, 552, 40, 510, 2, [6]],
+                [0x03A, 0, 936, 10, 800, 2, [6]],
 
-                [0x0AA, 2, 400, 70, 0, 1, [6, 7, 8, 12, 13]]]
+                [0x13A, 0, 1585, 0, 1310, 1, [6]],
+
+                [0x0AA, 2, 400, 70, 0, 1, [6, 7, 8, 12, 13]], [0x0D8, 2, 400, 0, 0, 1, [6]], [0x0AD, 2, 600, 0, 0, 1, [6]]]
     ability_names = ["Hammers", "Mini Mario", "Mole Mario", "Spin Jump", "Side Drill", "Ball Hop", "Luiginary Works", "Luiginary Ball Ability", "Luiginary Stack Spring Jump",
                       "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
                       "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
@@ -1750,7 +1753,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 script.header.actors.append((r[3] * 0x10000 + r[2], r[4] + 0x60*r[5] - ac*0x60, 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
                 script.header.actors.append((r[3] * 0x10000 + r[2] + 0x60*r[5], r[4] + ac*0x60, 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
             else:
-                script.header.actors.append((r[3] * 0x10000 + ac*0x60 + r[2], r[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
+                script.header.actors.append((r[3] * 0x10000 + ac*0x600000 + r[2], r[4], 0xFFFF0000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x02900143))
 
         cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init'
         old_init = script.header.init_subroutine
@@ -1796,18 +1799,19 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
                 cast(SubroutineExt, new_warp_fix).name = sub_name
                 new_pos = len(script.subroutines) - 1
-                update_commands_with_offsets(fevent_manager, script.subroutines,
-                                             len(script.header.to_bytes(fevent_manager)))
-
-                script = fevent_manager.parsed_script(m[2], 0)
-                script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
-                                                                      [m[0], m[5], m[6], m[7], m[8], m[9],
-                                                                       new_pos, 0xFFFFFFFD, 0x00])
-                update_commands_with_offsets(fevent_manager, script.subroutines,
-                                             len(script.header.to_bytes(fevent_manager)))
             else:
                 #print(m[1])
                 m[1] = script.header.init_subroutine
+                new_pos = script.header.init_subroutine
+            update_commands_with_offsets(fevent_manager, script.subroutines,
+                                         len(script.header.to_bytes(fevent_manager)))
+
+            script = fevent_manager.parsed_script(m[2], 0)
+            script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
+                                                                  [m[0], m[5], m[6], m[7], m[8], m[9],
+                                                                   new_pos, 0xFFFFFFFD, 0x00])
+            update_commands_with_offsets(fevent_manager, script.subroutines,
+                                         len(script.header.to_bytes(fevent_manager)))
                 #print(m[1])
 
             temp_room_sub_dat.append(m)
