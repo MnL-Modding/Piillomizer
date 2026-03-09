@@ -120,7 +120,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0, 0]
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0]
 
         #Logic for what's required to enter FROM each loading zone (order goes from left to right, and top to bottom only if there's the same horizontally)
         #The first entry in each chunk of logic means nothing, and is just there so you know what the room is.
@@ -1326,7 +1327,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 if len(attack_piece_pool) > 0:
                                     attack = random.randint(0, len(attack_piece_pool) - 1)
                             if len(attack_piece_pool) > 0:
-                                nitem = random.randint(0, len(attack_piece_pool[attack]) - 1)
+                                nitem = 0
+                                if attack > -1:
+                                    nitem = random.randint(0, len(attack_piece_pool[attack]) - 1)
                                 narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2] & 0x0012, 0,
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
                                 new_item_locals.append(narray)
@@ -1368,11 +1371,12 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                             new_item_locals[old_spot][5], new_item_locals[old_spot][6],
                                             new_item_locals[old_spot][7]])
                         item_pool.append([new_item_locals[old_spot][2], new_item_locals[old_spot][3]])
-                        repack_index = find_index_in_2d_list(repack_data, new_item_locals[old_spot][7])
+                        repack_index = find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000)
                         if repack_index is not None:
-                            if repack_data[repack_index[0]][5] // 0x1000 == 0xB:
+                            if repack_data[repack_index[0]][6] // 0x1000 == 0xB:
                                 attack_piece_pool.append([[repack_data[repack_index[0]][7], repack_data[repack_index[0]][6]]])
                                 attack = -1
+                                del repack_data[repack_index[0]]
                         else:
                             if new_item_locals[old_spot][3] // 0x1000 == 0:
                                 if new_item_locals[old_spot][2] // 0x10 % 0x10 <= 0x1:
@@ -1412,7 +1416,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         key_item_pool_checked.append(key_item_pool[nitem])
                         key_order.append(key_item_pool[nitem][1])
                         del key_item_pool[nitem]
-                        #del logic_logic[nitem]
+                        del logic_logic[nitem]
                         del item_locals[i]
                         #del item_logic[i]
                         #del new_item_locals[old_spot]
@@ -1578,6 +1582,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     for k in key_data:
         repack_data.append(k)
 
+    #print(key_item_pool_checked)
     #print(max_values)
     print("Generating spoiler log...")
     #Names for all the locations
@@ -1924,7 +1929,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             tracker_dat.write(to_write.to_bytes(2, 'big'))
     #print(len(new_item_locals) - (len(new_item_locals)//16)*16)
     tracker_dat.write(b'\x00'*((len(new_item_locals) - (len(new_item_locals)//16)*16)*2))
-    tracker_dat.write(b'\x00'*(16 * 18))
+    tracker_dat.write(b'\x00'*(16 * 20))
     tracker_dat.write(bytes(max_values))
 
     print("Repacking enemy stats...")
