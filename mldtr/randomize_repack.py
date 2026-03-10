@@ -367,6 +367,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC9D4] = 1.0 #Can enter the cave
         Variables[0xC9DD] = 1.0 #Listened to the old coot vent
         #Variables[0xC9DE] = 1.0 #Second Crab Minigame complete
+        Variables[0xC9B0] = 1.0 #Dozing Sands glowing rock introduction
+        Variables[0xC9B1] = 1.0 #Dreambert assumes he knows what the rock means
         Variables[0xC9F8] = 1.0 #Popple notices the collector's hiding something
         Variables[0xC9E1] = 1.0 #Wiggler first cutscene watched
         Variables[0xC9E2] = 1.0 #Wiggler second cutscene watched
@@ -1712,9 +1714,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical, 2 = Up, 3 = Square), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
     print("Fixing softlocks...")
     rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1140, 0, 1628, 3, [0, 1]], [0x018, 1, 640, 280, 324, 3, [0]],
+                [0x184, 0, 520, 0, 800, 3, [0]],
 
                 [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 9, 10, 11]], [0x288, 0, 552, 40, 510, 2, [6]],
-                [0x03A, 0, 936, 10, 800, 2, [6]],
+                [0x03A, 0, 936, 10, 800, 2, [6]], [0x104, 0, 735, 180, 355, 1, [6]],
 
                 [0x13A, 0, 1585, 0, 1310, 1, [6]],
 

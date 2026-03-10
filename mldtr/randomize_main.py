@@ -1322,13 +1322,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             del item_logic[i]
                         elif len(attack_piece_pool) > 0:
                             #Code for putting attacks in blocks and bean spots
-                            if len(attack_piece_pool[attack]) == 0:
-                                del attack_piece_pool[attack]
-                                if len(attack_piece_pool) > 0:
-                                    attack = random.randint(0, len(attack_piece_pool) - 1)
                             if len(attack_piece_pool) > 0:
                                 nitem = 0
-                                if attack > -1:
+                                if len(attack_piece_pool[attack]) > 1:
                                     nitem = random.randint(0, len(attack_piece_pool[attack]) - 1)
                                 narray = [item_locals[i][0], item_locals[i][1], item_locals[i][2] & 0x0012, 0,
                                         item_locals[i][3], item_locals[i][4], item_locals[i][5], item_locals[i][6]]
@@ -1345,6 +1341,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 del attack_piece_pool[attack][nitem]
                                 del item_locals[i]
                                 del item_logic[i]
+                            if len(attack_piece_pool[attack]) == 0:
+                                del attack_piece_pool[attack]
+                                #print(attack_piece_pool)
+                                if len(attack_piece_pool) > 0:
+                                    attack = random.randint(0, len(attack_piece_pool) - 1)
                         i -= 1
                         rbar.update(1)
                     i += 1
@@ -1375,7 +1376,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         if repack_index is not None:
                             if repack_data[repack_index[0]][6] // 0x1000 == 0xB:
                                 attack_piece_pool.append([[repack_data[repack_index[0]][7], repack_data[repack_index[0]][6]]])
-                                attack = -1
+                                attack = len(attack_piece_pool) - 1
+                                #print(attack_piece_pool[attack])
                                 del repack_data[repack_index[0]]
                         else:
                             if new_item_locals[old_spot][3] // 0x1000 == 0:
