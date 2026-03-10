@@ -587,6 +587,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         #print(len(parsed_fmapdat[0x40][6]))
 
+        #Fixes the loading zones in Dozing Sands
+        parsed_fmapdat[0xaf][6][28*4+2:28*4+4] = 0x102.to_bytes(2, 'little')
+        parsed_fmapdat[0xaf][6][28*5+2:28*5+4] = 0x102.to_bytes(2, 'little')
+
         #Initializes the item pool
         item_pool = []
 
