@@ -2238,6 +2238,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
             while find_index_in_2d_list(room_sub_dat, i[1], 0) is not None:
                 m = room_sub_dat[find_index_in_2d_list(room_sub_dat, i[1], 0)]
+                #if i[1] == 5:
+                #    print(m)
                 #print(m)
                 if m[1] != old_init:
                     cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
@@ -2278,6 +2280,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     update_commands_with_offsets(fevent_manager, script.subroutines,
                                                  len(script.header.to_bytes(fevent_manager)))
                 else:
+                    new_pos = script.header.init_subroutine
                     update_commands_with_offsets(fevent_manager, script.subroutines,
                                                  len(script.header.to_bytes(fevent_manager)))
 
@@ -2285,7 +2288,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     try:
                         script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
                                                                                          [m[0], m[5], m[6], m[7], m[8], 0x00,
-                                                                                          old_init, 0xFFFFFFFD, 0x00])
+                                                                                          new_pos, 0xFFFFFFFD, 0x00])
                     except IndexError:
                         print(hex(m[0]))
                     update_commands_with_offsets(fevent_manager, script.subroutines,
@@ -2294,6 +2297,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 script = fevent_manager.parsed_script(i[1], 0)
                 del room_sub_dat[find_index_in_2d_list(room_sub_dat, i[1], 0)]
 
+            try:
+                del attack_dat[attack_dat.index(i[1])]
+            except ValueError:
+                pass
             blockcount = 0
             block_fix = []
             spotnum = 0
@@ -2326,6 +2333,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
         while find_index_in_2d_list(room_sub_dat, i, 0) is not None:
             m = room_sub_dat[find_index_in_2d_list(room_sub_dat, i, 0)]
+            #if i == 5:
+            #    print(m)
             #print(m)
             if m[1] != old_init:
                 cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
@@ -2366,6 +2375,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 update_commands_with_offsets(fevent_manager, script.subroutines,
                                              len(script.header.to_bytes(fevent_manager)))
             else:
+                new_pos = script.header.init_subroutine
                 update_commands_with_offsets(fevent_manager, script.subroutines,
                                              len(script.header.to_bytes(fevent_manager)))
 
@@ -2373,7 +2383,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 try:
                     script.subroutines[m[3]].commands[m[4]] = CodeCommand(0x0138,
                                                                                      [m[0], m[5], m[6], m[7], m[8], 0x00,
-                                                                                      old_init, 0xFFFFFFFD, 0x00])
+                                                                                      new_pos, 0xFFFFFFFD, 0x00])
                 except IndexError:
                     print(hex(m[0]))
                 update_commands_with_offsets(fevent_manager, script.subroutines,
