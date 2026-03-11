@@ -392,94 +392,94 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         # Opens code.bin for enemy stat randomization
         code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
         enemy_stats = load_enemy_stats(code_bin=code_bin_path)
-        enemy_stats_rand = []
-        boss_stats_rand = []
-        dream_boss_stats_rand = []
-        filler_stats_rand = []
-        for enemy in range(len(enemy_stats)):
-            pbar.update(1)
-            if stat_mult[0] > -1:
-                enemy_stats[enemy].power *= stat_mult[0]
-                if enemy_stats[enemy].power > 0xFFFF:
-                    enemy_stats[enemy].power = 0xFFFF
-            else:
-                enemy_stats[enemy].power = 0xFFFF
-            if enemy == 87:
-                enemy_stats[enemy].exp *= 4
-            if stat_mult[1] > 0:
-                enemy_stats[enemy].exp *= stat_mult[1]
-                if enemy_stats[enemy].exp > 0xFFFF:
-                    enemy_stats[enemy].exp = 0xFFFF
-            if enemy == 19 or enemy == 33 or enemy == 45 or enemy == 47 or enemy == 49 or enemy == 64 or enemy == 72 or enemy == 78 or enemy == 99 or enemy == 112 or enemy == 121 or enemy == 123 or enemy == 124:
-                enemy_stats[enemy].hp *= 2
-                enemy_stats[enemy].exp *= 5
-                if enemy == 33:
-                    enemy_stats[enemy].exp *= 6
-            elif enemy == 31 or enemy == 46:
-                enemy_stats[enemy].exp *= 2
-            elif enemy == 35:
-                enemy_stats[enemy].exp *= 3
-            elif enemy == 17:
-                enemy_stats[enemy].hp *= 4
-                enemy_stats[enemy].power *= 4
-                enemy_stats[enemy].defense *= 4
-                enemy_stats[enemy].speed = 0x1F
-                enemy_stats[enemy].exp *= 4
-            elif enemy == 107:
-                enemy_stats[enemy].hp *= 2
-                enemy_stats[enemy].power *= 2
-                enemy_stats[enemy].defense *= 2
-                enemy_stats[enemy].speed *= 2
-                enemy_stats[enemy].exp *= 2
-            if (enemy > 12 and not(14 <= enemy <= 16) and enemy != 20 and
-                    enemy != 22 and enemy != 24 and enemy != 26 and
-                    enemy != 28 and enemy != 32 and enemy != 34 and
-                    enemy != 40 and enemy != 43 and enemy != 44 and
-                    enemy != 51 and not(53 <= enemy <= 56) and
-                    enemy != 63 and enemy != 83 and enemy != 88 and enemy != 89 and enemy != 92 and
-                    enemy != 93 and enemy != 97 and enemy != 103 and enemy != 105 and enemy != 108 and
-                    enemy != 114 and enemy != 132 and not(134 <= enemy <= 136) and enemy < 139):
-                #Appends data to enemy array if it's an enemy
-                if (enemy == 13 or enemy == 18 or enemy == 25 or
-                        enemy == 27 or enemy == 29 or enemy == 38 or
-                        enemy == 39 or enemy == 41 or enemy == 48 or (58 <= enemy <= 61) or
-                        (68 <= enemy <= 71) or (85 <= enemy <= 94) or
-                        (100 <= enemy <= 102) or enemy == 104 or enemy == 106 or
-                        enemy == 113 or (115 <= enemy <= 120) or enemy == 19 or
-                        enemy == 21 or enemy == 31 or
-                      enemy == 33 or enemy == 35 or enemy == 45 or
-                      enemy == 46 or enemy == 47 or enemy == 49 or
-                      enemy == 50 or (64 <= enemy <= 67) or (72 <= enemy <= 78) or
-                      enemy == 84 or enemy == 98 or enemy == 99 or
-                      (110 <= enemy <= 112) or (121 <= enemy <= 125) or enemy == 133):
-                    if enemy == 85:
-                        enemy_stats_rand.append([92, enemy_stats[92].hp, enemy_stats[92].power, enemy_stats[92].defense,
-                                                 enemy_stats[92].speed, enemy_stats[92].exp, enemy_stats[92].coins, 0, enemy_stats[92].item_chance, enemy_stats[92].item_type,
-                                                 enemy_stats[92].rare_item_chance, enemy_stats[92].rare_item_type, enemy_stats[92].level])
-                        enemy_stats_rand.append([93, enemy_stats[93].hp, enemy_stats[93].power, enemy_stats[93].defense,
-                                                 enemy_stats[93].speed, enemy_stats[93].exp, enemy_stats[93].coins, 0, enemy_stats[93].item_chance, enemy_stats[93].item_type,
-                                                 enemy_stats[93].rare_item_chance, enemy_stats[93].rare_item_type, enemy_stats[93].level])
-                    enemy_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
-                                             enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
-                #Appends data to boss array if it's a boss
-                elif (enemy == 17 or enemy == 30 or enemy == 42 or
-                      enemy == 62 or enemy == 95 or enemy == 96 or
-                      enemy == 107 or enemy == 108):
-                    boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
-                                             enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
-                #Appends data to dream boss array if it's a dream boss
-                elif (enemy == 23 or enemy == 36 or enemy == 52 or
-                      (79 <= enemy <= 81) or (126 <= enemy <= 131) or enemy == 137):
-                    dream_boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
-                                             enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
-                #Appends data to filler array if it's a "filler" enemy (one used in bosses that only exists for spectacle)
-                else:
-                    filler_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
-                                             enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
-                                             enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
+        #enemy_stats_rand = []
+        #boss_stats_rand = []
+        #dream_boss_stats_rand = []
+        #filler_stats_rand = []
+        #for enemy in range(len(enemy_stats)):
+        #    pbar.update(1)
+        #    if stat_mult[0] > -1:
+        #        enemy_stats[enemy].power *= stat_mult[0]
+        #        if enemy_stats[enemy].power > 0xFFFF:
+        #            enemy_stats[enemy].power = 0xFFFF
+        #    else:
+        #        enemy_stats[enemy].power = 0xFFFF
+        #    if enemy == 87:
+        #        enemy_stats[enemy].exp *= 4
+        #    if stat_mult[1] > 0:
+        #       enemy_stats[enemy].exp *= stat_mult[1]
+        #        if enemy_stats[enemy].exp > 0xFFFF:
+        #            enemy_stats[enemy].exp = 0xFFFF
+        #    if enemy == 19 or enemy == 33 or enemy == 45 or enemy == 47 or enemy == 49 or enemy == 64 or enemy == 72 or enemy == 78 or enemy == 99 or enemy == 112 or enemy == 121 or enemy == 123 or enemy == 124:
+        #        enemy_stats[enemy].hp *= 2
+        #        enemy_stats[enemy].exp *= 5
+        #        if enemy == 33:
+        #            enemy_stats[enemy].exp *= 6
+        #    elif enemy == 31 or enemy == 46:
+        #        enemy_stats[enemy].exp *= 2
+        #    elif enemy == 35:
+        #        enemy_stats[enemy].exp *= 3
+        #    elif enemy == 17:
+        #        enemy_stats[enemy].hp *= 4
+        #        enemy_stats[enemy].power *= 4
+        #        enemy_stats[enemy].defense *= 4
+        #        enemy_stats[enemy].speed = 0x1F
+        #        enemy_stats[enemy].exp *= 4
+        #    elif enemy == 107:
+        #        enemy_stats[enemy].hp *= 2
+        #        enemy_stats[enemy].power *= 2
+        #        enemy_stats[enemy].defense *= 2
+        #        enemy_stats[enemy].speed *= 2
+        #        enemy_stats[enemy].exp *= 2
+        #    if (enemy > 12 and not(14 <= enemy <= 16) and enemy != 20 and
+        #            enemy != 22 and enemy != 24 and enemy != 26 and
+        #            enemy != 28 and enemy != 32 and enemy != 34 and
+        #            enemy != 40 and enemy != 43 and enemy != 44 and
+        #            enemy != 51 and not(53 <= enemy <= 56) and
+        #            enemy != 63 and enemy != 83 and enemy != 88 and enemy != 89 and enemy != 92 and
+        #            enemy != 93 and enemy != 97 and enemy != 103 and enemy != 105 and enemy != 108 and
+        #            enemy != 114 and enemy != 132 and not(134 <= enemy <= 136) and enemy < 139):
+        #        #Appends data to enemy array if it's an enemy
+        #        if (enemy == 13 or enemy == 18 or enemy == 25 or
+        #                enemy == 27 or enemy == 29 or enemy == 38 or
+        #                enemy == 39 or enemy == 41 or enemy == 48 or (58 <= enemy <= 61) or
+        #                (68 <= enemy <= 71) or (85 <= enemy <= 94) or
+        #                (100 <= enemy <= 102) or enemy == 104 or enemy == 106 or
+        #                enemy == 113 or (115 <= enemy <= 120) or enemy == 19 or
+        #                enemy == 21 or enemy == 31 or
+        #              enemy == 33 or enemy == 35 or enemy == 45 or
+        #              enemy == 46 or enemy == 47 or enemy == 49 or
+        #              enemy == 50 or (64 <= enemy <= 67) or (72 <= enemy <= 78) or
+        #              enemy == 84 or enemy == 98 or enemy == 99 or
+        #              (110 <= enemy <= 112) or (121 <= enemy <= 125) or enemy == 133):
+        #            if enemy == 85:
+        #                enemy_stats_rand.append([92, enemy_stats[92].hp, enemy_stats[92].power, enemy_stats[92].defense,
+        #                                         enemy_stats[92].speed, enemy_stats[92].exp, enemy_stats[92].coins, 0, enemy_stats[92].item_chance, enemy_stats[92].item_type,
+        #                                         enemy_stats[92].rare_item_chance, enemy_stats[92].rare_item_type, enemy_stats[92].level])
+        #                enemy_stats_rand.append([93, enemy_stats[93].hp, enemy_stats[93].power, enemy_stats[93].defense,
+        #                                         enemy_stats[93].speed, enemy_stats[93].exp, enemy_stats[93].coins, 0, enemy_stats[93].item_chance, enemy_stats[93].item_type,
+        #                                         enemy_stats[93].rare_item_chance, enemy_stats[93].rare_item_type, enemy_stats[93].level])
+        #            enemy_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+        #                                     enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
+        #                                     enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
+        #        #Appends data to boss array if it's a boss
+        #        elif (enemy == 17 or enemy == 30 or enemy == 42 or
+        #              enemy == 62 or enemy == 95 or enemy == 96 or
+        #              enemy == 107 or enemy == 108):
+        #            boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+        #                                     enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
+        #                                     enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
+        #        #Appends data to dream boss array if it's a dream boss
+       #         elif (enemy == 23 or enemy == 36 or enemy == 52 or
+       #               (79 <= enemy <= 81) or (126 <= enemy <= 131) or enemy == 137):
+       #             dream_boss_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+       #                                      enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
+       #                                      enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
+       #         #Appends data to filler array if it's a "filler" enemy (one used in bosses that only exists for spectacle)
+       #         else:
+       #             filler_stats_rand.append([enemy, enemy_stats[enemy].hp, enemy_stats[enemy].power, enemy_stats[enemy].defense,
+       #                                      enemy_stats[enemy].speed, enemy_stats[enemy].exp, enemy_stats[enemy].coins, 0,
+       #                                      enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
 
         #Logic for real world enemies
         enemy_logic = [[13], [18, 15], [19, 14, -1, 15, 6], [21, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0], [31, 15, 6], [33, 15, 6], [35, 15, 6],
@@ -590,6 +590,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #Fixes the loading zones in Dozing Sands
         parsed_fmapdat[0xaf][6][28*4+2:28*4+4] = 0x102.to_bytes(2, 'little')
         parsed_fmapdat[0xaf][6][28*5+2:28*5+4] = 0x102.to_bytes(2, 'little')
+
+        #Fixes the softlock/crash that occurs if you go back to the starting area
+        parsed_fmapdat[0x1de][6][28:28*2] = parsed_fmapdat[0x64][6]
 
         #Initializes the item pool
         item_pool = []
@@ -1494,7 +1497,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             elif new_enemy_stats[-1][stat] > 0xFFFF:
                                 new_enemy_stats[-1][stat] = 0xFFFF
 
-                        del enemy_stats_rand[i]
+                        #del enemy_stats_rand[i]
                         del enemy_logic[i]
                         i -= 1
                     i += 1
