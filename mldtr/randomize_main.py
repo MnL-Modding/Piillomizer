@@ -98,7 +98,7 @@ def is_available(logic, key, settings):
     return available
 #46d8f468
 def randomize_data(input_folder, stat_mult, settings, seed):
-    with tqdm(total=2089, desc="Initializing...") as pbar:
+    with tqdm(total=1907, desc="Initializing...") as pbar:
         #Sets the seed to what it was in main
         random.seed(seed)
         pbar.update(1)
@@ -1280,6 +1280,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         attack = random.randint(0, len(attack_piece_pool) - 1)
         while attack == 4 or attack == 8 or attack == 9 or attack == 11 or attack == 13 or attack == 14:
             attack = random.randint(0, len(attack_piece_pool) - 1)
+        prevattack = attack
         offset = 0
         prev_offset = 0
         key_order = []
@@ -1350,8 +1351,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 del item_logic[i]
                             if len(attack_piece_pool[attack]) == 0:
                                 del attack_piece_pool[attack]
-                                #print(attack_piece_pool)
-                                if len(attack_piece_pool) > 0:
+                                if attack == -1:
+                                    attack = prevattack
+                                elif len(attack_piece_pool) > 0:
                                     attack = random.randint(0, len(attack_piece_pool) - 1)
                         i -= 1
                         rbar.update(1)
@@ -1383,7 +1385,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         if repack_index is not None:
                             if repack_data[repack_index[0]][6] // 0x1000 == 0xB:
                                 attack_piece_pool.append([[repack_data[repack_index[0]][7], repack_data[repack_index[0]][6]]])
-                                attack = len(attack_piece_pool) - 1
+                                prevattack = attack
+                                attack = -1
                                 #print(attack_piece_pool[attack])
                                 del repack_data[repack_index[0]]
                         else:
@@ -1944,6 +1947,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
     print("Repacking enemy stats...")
     #Repackages randomized enemy stats
     for enemy in range(len(new_enemy_stats)):
+        #print(new_enemy_stats[enemy])
         enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
         enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
         enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
