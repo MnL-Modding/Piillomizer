@@ -202,7 +202,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC00B] = 1.0 #Flung Brickle onto ledge
         Variables[0xC00C] = 1.0 #Boss Brickle wants you to attack the Dreamcaps
         Variables[0xC132] = 1.0 #Got all attack pieces and defeated Dreamcaps
-        Variables[0xE01B] = 1.0 #Unlock Dream World Attacks
+        #Variables[0xE01B] = 1.0 #Unlock Dream World Attacks
         Variables[0xC045] = 1.0 #Bunny hops away in flower room
         Variables[0xC024] = 1.0 #Cornered bunny and got nightmare chunk
         Variables[0xE076] = 1.0 #Bridge under Nightmare Chunk room breaks
@@ -2106,6 +2106,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 say(None, TextboxSoundsPreset.SILENT,
                     "[DelayOff]You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 60]",
                     offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                if attack_name == ("Luiginary Typhoon" or attack_name == "Luiginary Wall" or attack_name == "Luiginary Flame"
+                    or attack_name == "Luiginary Hammer" or attack_name == "Luiginary Stack Attack" or attack_name == "Luiginary Ball Attack"):
+                    Variables[0xE01B] = 1.0 #Unlocks the luiginary attack block
                 branch('label_0')
             elif i[6] >= 0x6000:
                 emit_command(0x0033, [int(math.floor((i[6] - 0x4000) / 2)) + 0x28, 0x01], Variables[0x300B])
@@ -2342,25 +2345,11 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 cast(SubroutineExt, script.subroutines[m[1]]).name = 'sub_' + str(m[1])
                 @subroutine(subs=script.subroutines, hdr=script.header)
                 def new_warp(sub: Subroutine):
-                    for a in range(blockcount):
-                        branch_if(Variables[block_fix[a]], '==', 0.0, 'label_' + str(a))
-                        set_actor_attribute(len(script.header.actors) - blockcount + a, 0x30, 0.0)
-                        try:
-                            emit_command(0x008C, [len(script.header.actors) - blockcount + a, script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
-                        except ValueError:
-                            emit_command(0x008C, [len(script.header.actors) - blockcount + a, len(script.header.sprite_groups), 0x0000, 0x01])
-                            script.header.sprite_groups.append(block_sprite_hit)
-                        label('label_' + str(a), manager=fevent_manager)
-                        if a == blockcount - 1:
-                            try:
-                                for at in range(len(script.header.actors) - blockcount):
-                                    if (script.header.actors[at][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[at][
-                                        5] % 0x100 == 0x43:
-                                        set_actor_attribute(at, 0x00, 0.0)
-                                        set_actor_attribute(at, 0x01, 0.0)
-                            except ValueError:
-                                pass
-                            call('sub_' + str(m[1]))
+                    for at in range(len(script.header.actors)):
+                        if (script.header.actors[at][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[at][5] % 0x100 == 0x43:
+                            set_actor_attribute(at, 0x00, 0.0)
+                            set_actor_attribute(at, 0x01, 0.0)
+                    call('sub_' + str(m[1]))
                 sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
                 cast(SubroutineExt, new_warp).name = sub_name
                 new_pos = len(script.subroutines) - 1

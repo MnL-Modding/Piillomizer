@@ -123,6 +123,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0]
 
+        #Logic for each area in Dream Team [Blimport, Pi'illo Castle, Under Blimport Bridge, Mushrise Park Main, Mushrise Park Hammers,
+        # Dozing Sands Entrance, Dozing Sands Tracks, Dozing Sands Dreamstone,
+        # Wakeport Main, Wakeport Ultibed, Mount Pajamaja Before Base, Mount Pajamaja Base Main, Mount Pajamaja Middle, Mount Pajamaja Peak,
+        # Driftwood Shore Entrance, Driftwood Shore Main, Somnom Woods Before First Pi'illo, Somnom Woods After First Pi'illo,
+        # Neo Bowser Castle Before Hammers, Neo Bowser Castle After Hammers, Neo Bowser Castle After Kamek 3, Neo Bowser Castle Bowser's Dream]
+        area_logic = [[], [14], [15], [15], [15, 0], [15, 16], [15, 16, 17, 1, -1, 15, 16, 17, 2, -1, 15, 16, 1, 5, -1, 15, 16, 2, 5],
+                      [15, 16, 17, 18, 19, 20, 21, -1, 15, 16, 5], [15, 22], [14, 15, 16, 22, 1, 2, 4, 5, 6, 7, 8, 13],
+                      [1], [23, 1, -1, 1, 5], [1, 4, 5, -1, 23, 1, 4, 6, 8, 10], [23, 1, 4, 6, 8, 10, -1, 1, 5],
+                      [15, 16], [15, 16, 5, -1, 15, 16, 1, 3], [15, 0, 5], [15, 0, 3, 5], [15, 27, 5]]
+
         #Logic for what's required to enter FROM each loading zone (order goes from left to right, and top to bottom only if there's the same horizontally)
         #The first entry in each chunk of logic means nothing, and is just there so you know what the room is.
         #After that, the key items are as follows:
@@ -1351,8 +1361,14 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 del item_logic[i]
                             if len(attack_piece_pool[attack]) == 0:
                                 del attack_piece_pool[attack]
-                                if attack == -1:
-                                    attack = prevattack
+                                if attack == -1 and len(attack_piece_pool) > 0:
+                                    if len(attack_piece_pool) > 1:
+                                        if len(attack_piece_pool[-2]) == 1:
+                                            attack = -1
+                                        elif prevattack < len(attack_piece_pool):
+                                            attack = prevattack
+                                        else:
+                                            attack = random.randint(0, len(attack_piece_pool) - 1)
                                 elif len(attack_piece_pool) > 0:
                                     attack = random.randint(0, len(attack_piece_pool) - 1)
                         i -= 1
@@ -1385,7 +1401,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         if repack_index is not None:
                             if repack_data[repack_index[0]][6] // 0x1000 == 0xB:
                                 attack_piece_pool.append([[repack_data[repack_index[0]][7], repack_data[repack_index[0]][6]]])
-                                prevattack = attack
+                                if attack != -1:
+                                    prevattack = attack
                                 attack = -1
                                 #print(attack_piece_pool[attack])
                                 del repack_data[repack_index[0]]
@@ -1482,17 +1499,12 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         new_enemy_stats[-1][0] == 49 or new_enemy_stats[-1][0] == 64 or new_enemy_stats[-1][0] == 72 or new_enemy_stats[-1][0] == 78 or
                         new_enemy_stats[-1][0] == 99 or new_enemy_stats[-1][0] == 112 or new_enemy_stats[-1][0] == 121 or new_enemy_stats[-1][0] == 123 or
                         new_enemy_stats[-1][0] == 124):
-                            new_enemy_stats[-1][1] //= 2
+                            new_enemy_stats[-1][1] //= 3
                             new_enemy_stats[-1][5] //= 5
                             new_enemy_stats[-1][6] //= 5
                             if new_enemy_stats[-1][0] == 33:
-                                new_enemy_stats[-1][5] //= 6
-                        elif new_enemy_stats[-1][0] == 31 or new_enemy_stats[-1][0] == 46:
-                            new_enemy_stats[-1][5] //= 2
-                            new_enemy_stats[-1][6] //= 2
-                        elif new_enemy_stats[-1][0] == 35:
-                            new_enemy_stats[-1][5] //= 3
-                            new_enemy_stats[-1][5] //= 3
+                                new_enemy_stats[-1][1] //= 2
+                                new_enemy_stats[-1][5] //= 2
 
                         for stat in range(len(new_enemy_stats[-1])):
                             if new_enemy_stats[-1][stat] < 1:
