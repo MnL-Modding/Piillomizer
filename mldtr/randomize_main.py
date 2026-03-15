@@ -1369,6 +1369,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                             attack = prevattack
                                         else:
                                             attack = random.randint(0, len(attack_piece_pool) - 1)
+                                    else:
+                                        attack = 0
                                 elif len(attack_piece_pool) > 0:
                                     attack = random.randint(0, len(attack_piece_pool) - 1)
                         i -= 1
