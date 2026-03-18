@@ -64,10 +64,141 @@ def get_room(id):
     else:
         return "Unknown"
 
-def get_minimap(room_id):
-    if get_room(room_id) == "Mushrise Park":
-        return 0x245
-    return 0
+def get_dream_origin(room):
+    if 0x1E <= room <= 0x2B or 0x2D <= room <= 0x2F or 0xF1 <= room <= 0xF3 or room == 0x19A or room == 0x1CD or room == 0x1CE:
+        return [0x00B, 0xA0]
+    elif room == 0x02C:
+        return [0x001, 0x8D]
+    elif room == 0x030:
+        return [0x003, 0x69]
+    elif room == 0x031 or room == 0x19B:
+        return [0x141, 0x6A]
+    elif room == 0x032 or room == 0x199:
+        return [0x008, 0x75]
+    elif room == 0x09D or room == 0x19A:
+        return [0x004, 0x120]
+    elif 0x0A2 <= room <= 0x0AA or 0x0F4 <= room <= 0x0FA:
+        return [0x097, 0x66]
+    elif 0x0AC <= room <= 0x0AE:
+        return [0x13A, 0x6C]
+    elif room == 0x0B1 or 0x13C <= room <= 0x13E:
+        return [0x012, 0x104]
+    elif 0x0B2 <= room <= 0x0B4 or room == 0x1D6:
+        return [0x28C, 0x97]
+    elif room == 0x0B5:
+        return [0x019, 0x11E]
+    elif room == 0x0B6:
+        return [0x1DC, 0x8D]
+    elif 0x0B7 <= room <= 0x0B9:
+        return [0x101, 0x72]
+    elif 0x0BA <= room <= 0x0C7 or 0x0E4 <= room <= 0x0E6:
+        return [0x102, 0x53]
+    elif 0x0D2 <= room <= 0x0D6 or 0x161 <= room <= 0x172 or room == 0x1C9 or room == 0x1CA:
+        return [0x03A, 0x10D]
+    elif 0x0D8 <= room <= 0x0DA:
+        return [0x13B, 0x82]
+    elif 0x0DB <= room <= 0x0DE:
+        return [0x13A, 0x6B]
+    elif 0x0E7 <= room <= 0x0EA:
+        return [0x104, 0x89]
+    elif room == 0x0EB:
+        return [0x05D, 0x50]
+    elif room == 0x0EC:
+        return [0x019, 0x120]
+    elif room == 0x0ED:
+        return [0x060, 0x7E]
+    elif room == 0x0EE:
+        return [0x013, 0x124]
+    elif room == 0x0EF or room == 0x292:
+        return [0x061, 0x5D]
+    elif room == 0x0F0 or room == 0x293:
+        return [0x103, 0x7C]
+    elif 0x0FB <= room <= 0x0FD or 0x224 <= room <= 0x233:
+        return [0x29D, 0x6B]
+    elif room == 0x106 or 0x10D <= room <= 0x122:
+        return [0x288, 0x7E]
+    elif 0x123 <= room <= 0x12C or room == 0x1CF or room == 0x1E1 or room == 0x294 or room == 0x295:
+        return [0x10A, 0x78]
+    elif room == 0x12D:
+        return [0x039, 0x127]
+    elif room == 0x12E or room == 0x12F:
+        return [0x035, 0x11E]
+    elif room == 0x130:
+        return [0x036, 0x10F]
+    elif room == 0x131 or room == 0x132:
+        return [0x109, 0x90]
+    elif room == 0x133 or room == 0x134:
+        return [0x109, 0x91]
+    elif room == 0x13F or room == 0x1E7:
+        return [0x068, 0x64]
+    elif 0x173 <= room <= 0x177:
+        return [0x03B, 0x116]
+    elif 0x178 <= room <= 0x17A:
+        return [0x04F, 0x109]
+    elif 0x17B <= room <= 0x17D:
+        return [0x04C, 0x107]
+    elif room == 0x17E:
+        return [0x038, 0x121]
+    elif 0x17F <= room <= 0x181:
+        return [0x03A, 0x10E]
+    elif room == 0x182:
+        return [0x048, 0x63]
+    elif room == 0x1E8:
+        return [0x068, 0x65]
+    elif 0x1E9 <= room <= 0x1EB:
+        return [0x077, 0x7C]
+    elif room == 0x1EC or room == 0x1ED:
+        return [0x077, 0x7B]
+    elif 0x1EE <= room <= 0x204:
+        return [0x07F, 0x58]
+    elif 0x205 <= room <= 0x207:
+        return [0x10B, 0x6A]
+    elif room == 0x209 or room == 0x20A:
+        return [0x06E, 0x4C]
+    elif room == 0x20C or room == 0x20D:
+        return [0x072, 0x111]
+    elif room == 0x20E:
+        return [0x06A, 0xF9]
+    elif room == 0x219:
+        return [0x189, 0x12A]
+    elif 0x21A <= room <= 0x21C:
+        return [0x18B, 0x12A]
+    elif room == 0x21D or room == 0x21E:
+        return [0x18D, 0x104]
+    elif room == 0x21F or room == 0x220:
+        return [0x190, 0x123]
+    elif room == 0x221 or room == 0x222:
+        return [0x191, 0x76]
+    elif room == 0x223:
+        return [0x193, 0x6A]
+    elif room == 0x234:
+        return [0x18A, 0x10A]
+    elif room == 0x235:
+        return [0x189, 0x12D]
+    elif room == 0x236:
+        return [0x18F, 0x105]
+    elif room == 0x237:
+        return [0x18F, 0x106]
+    elif room == 0x238:
+        return [0x186, 0x84]
+    elif room == 0x250 or room == 0x280:
+        return [0x076, 0xFC]
+    elif 0x252 <= room <= 0x259:
+        return [0x144, 0x133]
+    elif 0x25A <= room <= 0x25E:
+        return [0x14D, 0xB6]
+    elif 0x25F <= room <= 0x263:
+        return [0x151, 0x7D]
+    elif 0x264 <= room <= 0x267:
+        return [0x157, 0x68]
+    elif 0x268 <= room <= 0x26A:
+        return [0x157, 0x67]
+    elif 0x26B <= room <= 0x26D or room == 0x28F:
+        return [0x157, 0x69]
+    elif 0x26E <= room <= 0x27B:
+        return [0x15D, 0x5B]
+    else:
+        return [-1, -1]
 
 def find_index_in_2d_list(arr, target_value, index):
     for row in range(len(arr)):
@@ -586,22 +717,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         set_movement_multipliers(Screen.TOP, 1.0, 1.0)
         set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
         set_touches_blocked(False)
-    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
-    #Makes the pipe in Blimport that takes you under the bridge require either Luiginary Works or the Ball Hop
-    script = fevent_manager.parsed_script(0x039, 0)
-    cast(SubroutineExt, script.subroutines[0x3]).name = 'sub_0x1'
-    @subroutine(subs=script.subroutines, hdr=script.header)
-    def fix_pipe(sub: Subroutine):
-        branch_if(Variables[0xE005], '==', 1.0, 'label_0')
-        branch_if(Variables[0xE006], '==', 1.0, 'label_0')
-        branch('label_1')
-
-        label('label_0', manager=fevent_manager)
-        call('sub_0x1')
-
-        label('label_1', manager=fevent_manager)
-    script.header.actors[4] = (0x00280190, 0x00000744, 0x0000000B, 0xFFFFFFFF, len(script.subroutines)-1, 0x01980143)
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Removes the hammer tutorial cutscene
@@ -633,8 +749,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     def access_torkscrew(sub: Subroutine):
         branch_if(Variables[0xE09F], "==", 0.0, 'label_0')
         branch_if(Variables[0xC367], "==", 1.0, 'label_0')
-        Variables[0xC367] = 1.0
-        change_room(0x02AB, position=(1000.0, 0.0, 2000.0), init_sub=-0x1)
+        change_room(0x02AB, position=(1000.0, 0.0, 2000.0), init_sub=-0x01)
 
         label('label_0', manager=fevent_manager)
         call('init_doz')
@@ -668,13 +783,13 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
     #Fixes the gate in Wakeport
     script = fevent_manager.parsed_script(0x039, 0)
-    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init_wakegate'
-    wake_init = script.header.init_subroutine
-    script.header.init_subroutine = None
-    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
+    @subroutine(subs=script.subroutines, hdr=script.header)
     def fix_gate(sub: Subroutine):
+        set_actor_attribute(Variables[0x7007], 0x00, 0.0)
+        set_actor_attribute(Variables[0x7007], 0x01, 0.0)
         emit_command(0x0126, [0x00, 0x01])
-        call('init_wakegate')
+    script.header.actors.append((0x00000000, 0x00000000, (len(script.subroutines)-1)*0x10000 + script.header.sprite_groups.index(0x0001),
+                                 0xFFFFFFFF, len(script.subroutines)-1, 0x00748143))
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Stops Massifs pushing rock cutscene from appearing
@@ -1433,6 +1548,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Fixes attack piece blocks
+    print("Fixing blocks and softlocks...")
     attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                   0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
                   0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
@@ -1454,6 +1570,80 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 temp_list = list(script.header.actors[a])
                 temp_list[2] = (len(script.subroutines) - 1) * 0x10000 + temp_list[2] % 0x10000
                 script.header.actors[a] = tuple(temp_list)
+
+    # Adds the quick warp feature to every room that needs it
+    for s in range(0x2B0):
+        if get_room(s) != "Unknown" and s != 0x208:
+            original_world = -1
+            if get_dream_origin(s)[0] != -1:
+                original_world = get_dream_origin(s)[0]
+                original_sub = get_dream_origin(s)[1]
+            script = fevent_manager.parsed_script(s, 0)
+            script_index = s * 2
+
+            # Workaround for dynamic scope in Nuitka
+            if '__compiled__' in globals():
+                inspect.currentframe().f_locals['script_index'] = script_index
+            @subroutine(subs=script.subroutines, hdr=script.header)
+            def quick_warp(sub: Subroutine):
+                set_actor_attribute(Variables[0x7007], 0x00, 0.0)
+                set_actor_attribute(Variables[0x7007], 0x01, 0.0)
+                label('label_0', manager=fevent_manager)
+                Variables[0x1000] = Variables[0x702F] & (ButtonFlags.X + ButtonFlags.L + ButtonFlags.R)
+                branch_if(Variables[0x1000], '==', 1792.0, 'label_1')
+                wait(1)
+                branch('label_0')
+
+                label('label_1', manager=fevent_manager)
+                set_blocked_buttons(Screen.TOP, ButtonFlags.ALL)
+                set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL)
+                set_movement_multipliers(Screen.TOP, 0.0, 0.0)
+                set_movement_multipliers(Screen.BOTTOM, 0.0, 0.0)
+                set_touches_blocked(True)
+                if original_world == -1:
+                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]Go to the Warp Pipe menu?\n[Option]No          [Option]Yes", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                else:
+                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]Go to the Real World?\n[Option]No          [Option]Yes", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+                branch_if(Variables[0x1000], '==', 0.0, 'label_2')
+                if original_world == -1:
+                    branch_if(Variables[0xC47F], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC480], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC481], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC482], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC483], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC484], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC485], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC486], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC487], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC488], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC489], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC48A], '==', 1.0, 'label_3')
+                    branch_if(Variables[0xC4B9], '==', 1.0, 'label_3')
+                    set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
+                    set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
+                    set_movement_multipliers(Screen.TOP, 1.0, 1.0)
+                    set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
+                    set_touches_blocked(False)
+                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]Unlock a golden pipe first.[Pause 45]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    branch('label_0')
+
+                    label('label_3', manager=fevent_manager)
+                    change_room(0x0296, position=(0.0, 0.0, 0.0), init_sub=0x25, music=MusicFlag.FORCE_KEEP_CURRENT)
+                else:
+                    change_room(original_world, position=(0.0, 0.0, 0.0), init_sub=original_sub)
+
+                label('label_2', manager=fevent_manager)
+                set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
+                set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
+                set_movement_multipliers(Screen.TOP, 1.0, 1.0)
+                set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
+                set_touches_blocked(False)
+                branch('label_0')
+            script.header.sprite_groups.append(0x0001)
+            script.header.actors.append((0x00000000, 0x00000000, (len(script.subroutines)-1)*0x10000 + len(script.header.sprite_groups) - 1,
+                                         0xFFFFFFFF, len(script.subroutines)-1, 0x00748143))
+            update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Data for the other types of room entries [room ID, destination sub, room warped from ID, room warped from subroutine, room warped from change_room command ID, xpos, ypos, zpos, facing]
     room_sub_dat = [[0, 90, 662, 37, -35, 0.0, 0.0, 0.0, 0, 0], [1, 141, 44, 145, -2, 1816.0, 0.0, 860.0, 8, 0], [1, 141, 44, 146, -2, 1816.0, 0.0, 860.0, 8, 0],
@@ -1726,7 +1916,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     [686, 37, 676, 44, -2, 0.0, 0.0, 0.0, 0, 0], [688, 92, 350, 92, -2, 0.0, 0.0, 0.0, 0, 0]]
 
     #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical, 2 = Up, 3 = Square), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
-    print("Fixing softlocks...")
     rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1140, 0, 1628, 3, [0, 1]], [0x018, 1, 640, 280, 324, 3, [0]],
                 [0x184, 0, 520, 0, 800, 3, [0]], [0x04F, 3, 1840, 30, 1150, 1, [0]],
 
@@ -1734,7 +1923,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 [0x03A, 0, 936, 10, 800, 2, [6]], [0x03B, 0, 1205, 33, 1380, 1, [6]], [0x04C, 0, 975, 30, 920, 2, [6, 10]], [0x104, 0, 735, 180, 355, 1, [6]],
                 [0x144, 0, 1000, 100, 620, 4, [6]], [0x14D, 0, 1000, 100, 650, 4, [6]], [0x151, 0, 778, 30, 506, 4, [6]],
 
-                [0x13A, 0, 1585, 0, 1310, 1, [6]],
+                [0x13A, 0, 1585, 0, 1310, 1, [6]], [0x013, 0, 505, 75, 2080, 1, [6]], [0x019, 0, 980, 0, 2092, 1, [6]], [0x019, 0, 3005, 65, 2173, 1, [6]],
+                [0x28A, 0, 640, 0, 1230, 1, [6]], [0x101, 0, 530, 0, 910, 1, [6]], [0x061, 0, 1827, 155, 494, 1, [6, 7, 8, 12, 13]], [0x103, 0, 1469, 180, 616, 1, [6, 8, 9]],
+                [0x004, 0, 1122, 0, 1535, 1, [6, 10]],
 
                 [0x0AA, 2, 400, 70, 0, 1, [6, 7, 8, 12, 13]], [0x0D8, 2, 400, 0, 0, 1, [6]], [0x0AD, 2, 600, 0, 0, 1, [6]], [0x1E7, 2, 475, 1200, 0, 1, [6, 8]]]
 
@@ -1748,7 +1939,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         #print(r[0])
         script = fevent_manager.parsed_script(r[0], 0)
         script_index = r[0] * 2
-        t = "You still need:"
+        t = "Abilities required:"
         for a in r[6]:
             t += "\n[Color #2C65FF]" + ability_names[a] + "[Color #000000]"
         @subroutine(subs=script.subroutines, hdr=script.header)

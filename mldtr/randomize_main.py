@@ -186,7 +186,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       [[0x01D]], [[0x01E, 15, 6], [0x01E, 15, 6], [0x01E, 15, 6], [0x01E, 15, 6]], [[0x01F, 15, 6], [0x01F, 15, 6]], [[0x020, 15, 6], [0x020, 15, 6]], [[0x021, 15, 6], [0x021, 15, 6]],
                       [[0x022, 15, 6], [0x022, 15, 6], [0x022, 15, 6], [0x022, 15, 6]], [[0x023, 15, 6]], [[0x024, 15, 6], [0x024, 15, 6], [0x024, 15, 6]], [[0x025, 15, 6], [0x025, 15, 6], [0x025, 15, 6]],
                       [[0x026, 15, 6], [0x026, 15, 6], [0x026, 15, 6], [0x026, 15, 6]], [[0x027, 15, 6], [0x027, 15, 6], [0x027, 15, 6], [0x027, 15, 6]], [[0x028, 15, 6], [0x028, 15, 6]],
-                      [[0x029, 15, 6], [0x029, 15, 6]], [[0x02A, 15, 6], [0x02A, 15, 6]], [[0x02B, 15, 6]], [[0x02C, 15, 6]], [[0x02D, 15, 6], [0x02D, 15, 6]], [[0x02E, 15, 6], [0x02E, 15, 6]],
+                      [[0x029, 15, 6], [0x029, 15, 6]], [[0x02A, 15, 6], [0x02A, 15, 6]], [[0x02B, 15, 6]], [[0x02C, 15]], [[0x02D, 15, 6], [0x02D, 15, 6]], [[0x02E, 15, 6], [0x02E, 15, 6]],
                       [[0x02F, 15, 6], [0x02F, 15, 6]], [[0x030, 15, 0, 6]], [[0x031, 27, 6]], [[0x032, 15, 4, 5, 6]],
 
                       [[0x033, 15, 22], [0x033, 15]], [[0x034, 15, 22], [0x034, 15, 22], [0x034, 15, 22], [0x034, 15, 22], [0x34, 15, 22], [0x034, 15, 22], [0x034, 15, 22], [0x034, 15, 22], [0x034, 15, 22]],
@@ -239,13 +239,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       [[0x0A7, 14], [0x0A7, 14]], [[0x0A8, 14], [0x0A8, 14]], [[0x0A9, 14]], [[0x0AA, 14, 6, 7, 8, 12, 13], [0x0AA, 14, 6, 7, 8, 12, 13]], [[0x0AB]],
                       [[0x0AC, 15, 6], [0x0AC, 15, 6]], [[0x0AD, 15, 6], [0x0AD, 15, 6]], [[0x0AE, 15, 6]],
                       [[0x0AF, 15, 16, 17, -1, 15, 16, 5], [0x0AF, 15, 16, 17, 18, 19, 20, 21, -1, 15, 16, 5], [0x0AF, 15, 16, 17, -1, 15, 16, 5], [0x0AF, 15, 16, 5]],
-                      [[0x0B0, 15, 6], [0x0B0, 15, 6]], [[0x0B1, 15, 16, 6], [0x0B1, 15, 16, 6]],
+                      [[0x0B0, 15, 6], [0x0B0, 15, 6]], [[0x0B1, 15, 16], [0x0B1, 15, 16]],
 
                       [[0x0B2, 15, 16, 17, 1, -1, 15, 16, 1, 5, -1, 15, 16, 17, 2, -1, 15, 16, 2, 5], [0x0B2, 15, 16, 17, 1, 6, -1, 15, 16, 1, 5, 6, -1, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6],
                        [0x0B2, 15, 16, 17, 1, 6, -1, 15, 16, 1, 5, 6, -1, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]],
                       [[0x0B3, 15, 16, 17, 1, 6, -1, 15, 16, 1, 5, 6, -1, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6], [0x0B3, 15, 16, 17, 1, 6, -1, 15, 16, 1, 5, 6, -1, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]],
                       [[0x0B4, 15, 16, 17, 1, 6, -1, 15, 16, 1, 5, 6, -1, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6], [0x0B4, 15, 16, 17, 1, 6, -1, 15, 16, 1, 5, 6, -1, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]],
-                      [[0x0B5, 15, 16, 17, 1, 6, -1, 15, 16, 1, 5, 6, -1, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]], [[0x0B6, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]],
+                      [[0x0B5, 15, 16, 17, 1, 6, -1, 15, 16, 1, 5, 6, -1, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]], [[0x0B6, 15, 16, 17, 2, -1, 15, 16, 2, 5]],
                       [[0x0B7, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6], [0x0B7, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6], [0x0B7, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]],
                       [[0x0B8, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6], [0x0B8, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]], [[0x0B9, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6], [0x0B9, 15, 16, 17, 2, 6, -1, 15, 16, 2, 5, 6]],
 
@@ -307,7 +307,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                    [[0x0B2, 15, 16, 17, 1, 15, 16, 17, 2], [0x0B2, 15, 16, 17, 1, 6, -1, 15, 16, 17, 2, 6], [0x0B2, 15, 16, 17, 1, 6, -1, 15, 16, 17, 2, 6]],
                                    [[0x0B3, 15, 16, 17, 1, 6, -1, 15, 16, 17, 2, 6], [0x0B3, 15, 16, 17, 1, 6, -1, 15, 16, 17, 2, 6]],
                                    [[0x0B4, 15, 16, 17, 1, 6, -1, 15, 16, 17, 2, 6], [0x0B4, 15, 16, 17, 1, 6, -1, 15, 16, 17, 2, 6]],
-                                   [[0x0B5, 15, 16, 17, 1, 6, -1, 15, 16, 17, 2, 6]], [[0x0B6, 15, 16, 17, 2, 6]],
+                                   [[0x0B5, 15, 16, 17, 1, 6, -1, 15, 16, 17, 2, 6]], [[0x0B6, 15, 16, 17, 2]],
                                    [[0x0B7, 15, 16, 17, 2, 6], [0x0B7, 15, 16, 17, 2, 6], [0x0B7, 15, 16, 17, 2, 6]],
                                    [[0x0B8, 15, 16, 17, 2, 6], [0x0B8, 15, 16, 17, 2, 6]], [[0x0B9, 15, 16, 17, 2, 6], [0x0B9, 15, 16, 17, 2, 6]],
 
@@ -493,8 +493,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         #Logic for real world enemies
         enemy_logic = [[13], [18, 15], [19, 14, -1, 15, 6], [21, 15, 6], [25, 15, 0], [27, 15, 0], [29, 15, 0], [31, 15, 6], [33, 15, 6], [35, 15, 6],
-                           [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2], [45, 15, 16, 6], [46, 15, 16, 6], [47, 15, 16, 17, 6, -1, 15, 16, 5, 6], [48, 15, 22],
-                           [49, 15, 22, 6], [50, 15, 22, 6], [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, -1, 1, 5], [64, 23, 1, 6, -1, 1, 5, 6],
+                           [38, 15, 16], [39, 15, 16], [41, 15, 16, 5, -1, 15, 16, 17, 2], [45, 15, 16], [46, 15, 16, 17, 2, -1, 15, 16, 17, 1, -1, 15, 16, 5, 6], [47, 15, 16, 17, 2, -1, 15, 16, 17, 1, -1, 15, 16, 5, 6],
+                           [48, 15, 22], [49, 15, 22, 6], [50, 15, 22, 6], [58, 1], [59, 1], [60, 23, 1, -1, 1, 5], [61, 23, 1, -1, 1, 5], [64, 23, 1, 6, -1, 1, 5, 6],
                            [65, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [66, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10], [67, 23, 1, 4, 6, 10, -1, 1, 3, 5, 6, 10],
                            [68, 15, 16, 1, 3, -1, 15, 16, 5], [69, 15, 16, 1, 3, -1, 15, 16, 5], [70, 15, 16, 1, 3, -1, 15, 16, 5],
                            [71, 15, 16, 1, 3, -1, 15, 16, 5], [72, 15, 16, 1, 3, 6, -1, 15, 16, 5, 6], [73, 15, 16, 1, 3, 6, -1, 15, 16, 5, 6],
@@ -521,7 +521,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #Replaces logic where needed
         if settings[1][0] == 1 or settings[1][1] == 1:
             if settings[1][0] == 1 and settings[1][1] == 1:
-                replace_enemy = [[41, 15, 16, 17, 2], [47, 15, 16, 17, 6], [58, 23], [59, 23], [60, 23], [61, 23], [64, 23, 0, 6], [65, 23, 4, 6, 8, 10],
+                replace_enemy = [[41, 15, 16, 17, 2], [46, 15, 16, 17, 6], [47, 15, 16, 17, 6], [58, 23], [59, 23], [60, 23], [61, 23], [64, 23, 0, 6], [65, 23, 4, 6, 8, 10],
                                  [66, 23, 4, 6, 8, 10], [67, 23, 4, 6, 8, 10], [68, 15, 16, 0, 3, -1, 15, 16, 5], [69, 15, 16, 0, 3, -1, 15, 16, 5],
                                  [70, 15, 16, 0, 3, -1, 15, 16, 5], [71, 15, 16, 0, 3, -1, 15, 16, 5],
                                  [72, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6], [73, 15, 16, 0, 3, 6, -1, 15, 16, 0, 5, 6], [74, 15, 16, 0, 3, 6], [75, 15, 16, 0, 3, 6],
@@ -709,7 +709,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         item_logic_chunk = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
         #Logic for every single block and bean spot (The numbers after the ID point to their spots in the ability info)
-        item_logic_chunk[0] = [[[52, 5], [52, 5], [52, 5], [52, 5]], [[53, 5], [53, 5], [53, 5], [53, 5]], [[2500, 3, -1, 5, -1, 6], [2500, 3, -1, 5, -1, 6], [2500, 3, -1, 5, -1, 6], [2500, 3, -1, 5, -1, 6], [2500, -3], [2500, 0, 3, -1, 0, 5, -1, 0, 6], [2500, 0, 3, -1, 0, 5, -1, 0, 6], [2500, -3]],
+        item_logic_chunk[0] = [[[52, 5], [52, 5], [52, 5], [52, 5]], [[53, 5], [53, 5], [53, 5], [53, 5]], [[2500], [2500], [2500], [2500], [2500, -3], [2500, 0], [2500, 0], [2500, -3]],
                                [[54, 0, -1, 3, -1, 5], [54, 0, -1, 3, -1, 5], [54, 0, -1, 3, -1, 5], [54, 0, -1, 3, -1, 5], [54, -3], [54, 0], [54, 0], [54, -3]], [[55, -3], [55, -3], [55, -3], [55, -3], [55, -3], [55], [55, 5], [53, -3]],
                                [[56, 0], [56, 0], [56, 0], [56, 0], [56, -3], [56, 0], [56, 0], [56, -3]], [[57, 0], [57, 0], [57, 0], [57, 0], [57, -3], [57, 0], [57, 0], [57, -3]], [[58], [58], [58], [58], [58, -3], [58, 0], [58, 0], [58, -3]],
                                [[59, 2], [59, 2], [59, 2], [59, 2], [59, -3], [59, 2], [59, 2], [59, -3]], [[60, -3], [60, -3], [60, -3], [60, -3], [60, 2], [60, -3], [60, -3], [60, 2]],
@@ -741,7 +741,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         item_logic_chunk[2] = [[[2525], [2525]], [[2526], [2526]], [[119, 6], [119, 6]], [[121, 6], [121, 6]], [[123, 6], [123, 6]], [[125, 6], [125, 6]], [[2527, 6], [2527, 6]], [[127, 6], [127, 6]], [[129, 6], [129, 6]],
                                [[2528, -3], [2528, 6], [2528, -3], [2528, 6]], [[131, 6], [131, -3], [131, 6], [131, -3]], [[132, 6]], [[2392, 6]], [[141, 6], [141, 6], [141, 6]], [[142, -3], [142, 6], [142, -3]], [[2529, 6], [2529, 6], [2529, -3], [2529, -3]],
-                               [[2530, 6], [2530, 6]], [[2531], [2531, 6]], [[2393, 6], [2393, 6]], [[144, 6], [144, 6]], [[145, 6], [145, 6]], [[2532, 6], [2532, 6]], [[146, 6], [146, 6]], [[147, 6]], [[152, 6]], [[2394, 6], [2394, 6]], [[2395, 6], [2395, 6]], [[151, 6], [151, 6]]]
+                               [[2530, 6], [2530, 6]], [[2531], [2531, 6]], [[2393, 6], [2393, 6]], [[144, 6], [144, 6]], [[145, 6], [145, 6]], [[2532, 6], [2532, 6]], [[146, 6], [146, 6]], [[147, 6]], [[152]], [[2394, 6], [2394, 6]], [[2395, 6], [2395, 6]], [[151, 6], [151, 6]]]
 
         item_logic_chunk[3] = [[[1511, 22, 3], [1511, 3]], [[1512, 22, 2, 3, 5], [1512, 2, 3, 5]], [[1513, 22, 2, 3, 5], [1513, 2, 3, 5]], [[2533], [2533, -3], [2533], [2533, -3], [2533, -3], [2533], [2533, -3], [2533, -3], [2533, -3]],
                                [[1514], [1514, -3], [1514], [1514, -3], [1514, -3], [1514], [1514, -3], [1514, -3], [1514, -3]], [[1515, -3], [1515, 2], [1515, -3], [1515, 2], [1515, 2], [1515, -3], [1515, 2], [1515, 2]],
@@ -759,7 +759,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                [[1568], [1568, -3], [1568, -3], [1568, -3]], [[1569], [1569, -3], [1569, -3], [1569, -3]], [[1570, 5], [1570, -3], [1570, -3], [1570, -3]], [[1571, 2]], [[1572, 2]],
                                [[1543, 1], [1543, 1]], [[1544, 1], [1544, 1]], [[1545, 1], [1545, 1]], [[2398, 1], [2398, 1]], [[2547, 3, -1, 5], [2547, 5], [2547, 5]], [[2399, 5], [2399, 3, -1, 5], [2399, 3, -1, 5]], [[1547, 5], [1547], [1547]], [[1548, 2, 5], [1548, 2], [1548, 2]],
                                [[2548, 4], [2548, 3]], [[1555, 4], [1555, 0, 3]], [[1556, 4], [1556, 0, 3]], [[1557, 2, 4], [1557, 0]], [[2400, 2, 4], [2400, 0]], [[1558, 3], [1558, 0, 3]],
-                               [[2549, 1, 3], [2549, 1, 3], [2549, -3], [2549, 1, 4, -1, 1, 3, 5], [2549, 1, 3]], [[2550, -3], [2550], [2550, -3], [2550, -3], [2550, -3]], [[2551, 4], [2551, 0, 4], [2551, -3], [2551, 4], [2551, 4]],
+                               [[2551, 4], [2551, 0, 4], [2551, -3], [2551, 4], [2551, 4]], [[2549, 1, 3], [2549, 1, 3], [2549, -3], [2549, 1, 4, -1, 1, 3, 5], [2549, 1, 3]], [[2550, -3], [2550], [2550, -3], [2550, -3], [2550, -3]],
                                [[1559], [1559, 0], [1559, -3], [1559, 4, -1, 5], [1559]], [[1560, 2], [1560, 2], [1560, -3], [1560, 2, 4, -1, 2, 5], [1560, 2]], [[1561, 2], [1561, 2], [1561, -3], [1561, 2, 4, -1, 2, 5], [1561, 2]],
                                [[2401, 2], [2401, 2], [2401, -3], [2401, 2, 3, -1, 2, 5], [2401, 2]], [[2552, 1, 4], [2552, 1]], [[1563, 3, -1, 5], [1563, 0, 3, -1, 0, 5]], [[1564], [1564, 0]], [[1565, 2, 4], [1565, 2, 4]], [[988, 2], [988, 2]]]
 
@@ -776,7 +776,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                [[1584, 3], [1584]], [[1585, 2, 3], [1585, 2, 3]], [[1586, 3], [1586, 3]], [[2558]], [[1587, 3, -1, 5]], [[1588]], [[1589]], [[1590]], [[1591, 2, 3, -1, 2, 5]],
                                [[1592, 3, 5], [1592, 3], [1592, -3], [1592, -3], [1592, 3]], [[2403, -3], [2403, -3], [2403], [2403], [2403, -3]],
                                [[2559], [2559], [2559], [2559, 3], [2559], [2559, 3]], [[1593, 2], [1593, 2], [1593, 2], [1593, 2, 3], [1593, 2], [1593, 2, 3]],
-                               [[2560, 6]], [[1594, 2]], [[1595, 6]], [[1596]], [[1597]], [[2561, 5], [2561, 5], [2561, 5]], [[2562, 3], [2562], [2562, 3]], [[1598], [1598, 3, 5], [1598, 5]], [[1599, 5], [1599, 3, 5], [1599, 5]],
+                               [[2560]], [[1594, 2]], [[1595]], [[1596]], [[1597]], [[2561, 5], [2561, 5], [2561, 5]], [[2562, 3], [2562], [2562, 3]], [[1598], [1598, 3, 5], [1598, 5]], [[1599, 5], [1599, 3, 5], [1599, 5]],
                                [[2333, 3, 5], [2333], [2333, 3]], [[1546, 3, 5], [1546, 3], [1546, 3]], [[2219, 3, 5], [2219, 3], [2219, 3]], [[1600, 2, 3, 5], [1600, 2, 3], [1600, 2, 3]], [[1601, 2, 3, 5], [1601, 2, 3], [1601, 2, 3]],
                                [[2334, 2, 3, 5], [2334, 2], [2334, 2, 3]], [[2563], [2563, 4]], [[1602, 4], [1602, 4]], [[2564, 4], [2564, 4], [2564, 4, 5], [2564, 4, 5]],
                                [[1603, 4, 6, 10], [1603, 4, 6, 10], [1603, 4, 5, 6, 10], [1603, 4, 5, 6, 10]], [[1604, 4], [1604, 4], [1604, 4, 5], [1604, 4, 5]], [[1605, 2], [1605, 2, 4], [1605, 2, 4, 5], [1605, 2, 4, 5]],
@@ -793,7 +793,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                [[166, 6], [166, 6]], [[168, 6]], [[169, 6]], [[171, 6]], [[173, 6]], [[175, 6]], [[177, 6]], [[1643, 6]], [[265, 2], [265, 18, 19, 20, 21, 2], [265, 2], [265, 2, 5]],
                                [[266, 2], [266, 18, 19, 20, 21, 2], [266, 2], [266, 2, 5]], [[267], [267, 18, 19, 20, 21], [267], [267, 5]], [[148, 6], [148, 6]],]
 
-        item_logic_chunk[8] = [[[413], [413]], [[414], [414]], [[452, 6], [452, 6]], [[461, 6], [461, 6]], [[462, 6]], [[463, 6]], [[464, 6]], [[450, 6]], [[486, 6], [486, 6]], [[2567], [2567, 6]], [[2568, 6], [2568, 6], [2568, 6]],
+        item_logic_chunk[8] = [[[413], [413]], [[414], [414]], [[452, 6], [452, 6]], [[461, 6], [461, 6]], [[462, 6]], [[463, 6]], [[464]], [[450]], [[486, 6], [486, 6]], [[2567], [2567, 6]], [[2568, 6], [2568, 6], [2568, 6]],
                                [[2569, 6], [2569, 6], [2569, 6]], [[2570, -3], [2570], [2570, -3]], [[2571], [2571, -3], [2571]], [[512], [512, -3], [512]], [[513], [513, -3], [513]], [[523], [523]], [[529, 6], [529, 6]], [[2572], [2572]],
                                [[545], [545]], [[546], [546]], [[2573, 6], [2573, 6]], [[2574, 6], [2574, 6]], [[2575], [2575]],]
 
@@ -806,11 +806,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         if settings[1][1] == 0:
             item_logic_chunk[10] = [[2578, 15, 16, 17, 18, 19, 20, 21, 6, 8, 9, -1, 15, 16, 5, 6, 8, 9], [2579, 15, 16, 17, 18, 19, 20, 21, 6, 8, 9, -1, 15, 16, 5, 6, 8, 9], [568, 16, 17, 18, 19, 20, 21, 6, 9, -1, 16, 5, 6, 9], [569, 16, 17, 18, 19, 20, 21, 6, 9, -1, 16, 5, 6, 9], [577, 16, 4, 5, 6], [578, 16, 4, 5, 6], [579, 16, 4, 5, 6], [580, 16, 4, 5, 6],
-            [581, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [582, 16, 17, 18, 19, 20, 21, 6, -1, 16, 5, 6], [583, 16, 17, 1, 6, -1, 16, 1, 5, 6], [584, 16, 17, 2, 6, -1, 16, 2, 5, 6], [585, 16, 17, 2, 6, -1, 16, 2, 5, 6], [2546, 14, 6, 7, 8, 12, 13], [2547, 14, 6, 7, 8, 12, 13],
+            [581, 16, 17, 18, 19, 20, 21, -1, 16, 5], [582, 16, 17, 18, 19, 20, 21, -1, 16, 5], [583, 16, 17, 1, 6, -1, 16, 1, 5, 6], [584, 16, 17, 2, -1, 16, 2, 5], [585, 16, 17, 2, -1, 16, 2, 5], [2546, 14, 6, 7, 8, 12, 13], [2547, 14, 6, 7, 8, 12, 13],
             [861, 14, 6, 7, 8, 12, 13], [862, 14, 6, 7, 8, 12, 13], [2548, 14, 6, 7, 8, 12, 13], [2081, 15, 2, 4, 5, 6, 8],]
         else:
             item_logic_chunk[10] = [[2578, 15, 16, 17, 18, 19, 20, 21, 6, 8, 9], [2579, 15, 16, 17, 18, 19, 20, 21, 6, 8, 9], [568, 16, 17, 18, 19, 20, 21, 6, 9], [569, 16, 17, 18, 19, 20, 21, 6, 9], [577, 16, 4, 5, 6], [578, 16, 4, 5, 6], [579, 16, 4, 5, 6], [580, 16, 4, 5, 6],
-            [581, 16, 17, 18, 19, 20, 21, 6], [582, 16, 17, 18, 19, 20, 21, 6], [583, 16, 17, 1, 6], [584, 16, 17, 2, 6], [585, 16, 17, 2, 6], [2546, 14, 6, 7, 8, 12, 13], [2547, 14, 6, 7, 8, 12, 13],
+            [581, 16, 17, 18, 19, 20, 21], [582, 16, 17, 18, 19, 20, 21], [583, 16, 17, 1, 6], [584, 16, 17, 2], [585, 16, 17, 2], [2546, 14, 6, 7, 8, 12, 13], [2547, 14, 6, 7, 8, 12, 13],
             [861, 14, 6, 7, 8, 12, 13], [862, 14, 6, 7, 8, 12, 13], [2548, 14, 6, 7, 8, 12, 13], [2081, 15, 2, 4, 5, 6, 8],]
 
         if settings[1][0] == 0 and settings[1][1] == 0:
@@ -1610,488 +1610,493 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     #print(key_item_pool_checked)
     #print(max_values)
-    print("Generating spoiler log...")
-    #Names for all the locations
-    item_local_names = ["Entrance", "Hammer Room", "West of Hammer Room", "River Rocks",
-                        "Upper Attack Piece Room", "Lower Attack Piece Room", "Gate Room",
-                        "Fountain Room", "Lower Ultibed Rock Room", "Right of Hammer Room", "Right Ultibed Rock Room", "Maintenance Hut", "Many Enemy Room",
-                        "Early Hammer Room", "Outside", "Mushrise Treeboard Room", "Western Track Room",
-                        "Drill Machine Tutorial Room", "Mini/Mole Mario Tutorial Room", "Middle Track Room",
-                        "Upper Track Room", "Early First Track Room", "Early Main Track Room", "Mini Mario Room",
-                        "Underground", "Southeastern Track Room", "East of Dreamstone", "West of Pi'illo Castle",
-                        "In Front of Pi'illo Castle", "Test Room", "Eldream Room 1",
-                        "Eldream Room 2", "Eldream Room 3", "Eldream Room 4",
-                        "Eldream Room 5", "Eldream Item Detour Room", "Eldream Fountain Room",
-                        "Eldream Room 7", "Eldream Bouncy Flower Room", "Eldream Pipe to Sewers",
-                        "Eldream Sewers", "Eldream Throw Boss Brickle", "Eldream Buildup to Final Attack Piece", "Eldream Final Attack Piece",
-                        "Pi'illo to Hammers", "Eldream Clouds 1", "Eldream Clouds 2", "Eldream Confront Bunny", "Pi'illo in River Room",
-                        "Pi'illo Room 2", "Ultibed Pi'illo Room 2", "Buildup 2", "Entrance", "Tour Center Location", "Shopping District", "Early Room 3",
-                        "Outside Rose Broquet", "Southern Panel Room", "Dream Egg Dreampoint Room", "Crab Minigame", "Entrance Right Room", "Entrance Middle Room",
-                        "Entrance Left Room", "Bedsmith Room First Floor", "Kylie Koopa's Photo Booth", "Tour Center", "Item Shop", "Badge Shop", "Gear Shop",
-                        "Rose Broquet Shop", "Broque Madame's Spot", "Ultibed Cave Entrance", "Ultibed Cave Middle Room", "Driftwood Jelly Sheets Resting Spot",
-                        "Entrance", "Guard Room", "Seabelle Dreampoint Room", "Middle Warp Pipe Room", "Unused Room", "Seabury Dreampoint Room",
-                        "Glitched Room 1", "Wakeport?", "Glitched Room 2", "Glitched Room 3", "Glitched Room 4", "Glitched Room 5",
-                        "Toad Crash Room", "Removed Second Check-X Quiz Room", "Second Toad Crash Room", "Gromba Battle Arena", "Bridge Room",
-                        "East of Pi'illo Castle", "Behind Pi'illo Castle", "Badge Room", "Mushrise Park Minimap", "Weak Trembling Fortress",
-                        "East Track Room", "Ultibed Cliff", "Desert Entrance", "Check-X Quiz", "Starting Room", "Test Room 2", "Entrance", "Rock Room",
-                        "First Mega Pi'illo Room", "Weird Lift Thingy Room", "2 Pi'illos in Rocks Room", "Weird Lift Thingy Second Room",
-                        "Spin Jump Tutorial Room", "Southeast Deviation", "Southwest Spin Jump Gaps", "Spin Jump Whirlwind Tutorial Room", "West Deviation",
-                        "Removed Room", "Peak Before Big Jump", "Big Fall", "Pajamaja Base Warp Pipe Room", "Side Drill Tutorial Room", "Large Room Before Snow",
-                        "Second Mega Pi'illo Room", "Path to Right Massif Ice Room", "Right Massif Ice Room", "Bros Wear Room", "Path to Left Massif Ice Room", "Left Massif Ice Room",
-                        "Mammoshka Arena", "Peak", "Frozen Dream World", "Peak Pipe", "Ball Hop Cave", "Lobby", "Early Minimap", "Golden Pipe Room", "Bedroom Entrance",
-                        "Platform Area", "Staff Break Room", "Shop", "Hotel Entrance", "Hotel Lobby", "Hotel Left Room", "Hotel Topleft Room", "Hotel Top Room", "Hotel Topright Room",
-                        "Ball Hop Room Entrance", "Ride to Underground", "Underground Entrance", "Removed Minigame", "Gromba Circle", "Smoldergeist Arena",
-                        "Stairs to Smoldergeist", "Underground Save Room", "Collection Room", "Battle Ring", "Restaurant District", "Hotel Balcony", "North Balcony", "Minimap 1",
-                        "Camera Block Pi'illo Room 2", "Black Screen Crash", "Early Mushrise Minimap 2", "Sick Map Warper", "Swimming", "Dreambert Entrance", "Dreambert Door Tutorial Room",
-                        "Dreambert Many Door Room", "Dreambert First Dreamy Enemy Room", "Dreambert Broque Shop", "Dreambert Many Enemy Room", "Dreambert Dreamy Mario Arena",
-                        "Dreambert Revival Room", "Entrance to Dream's Deep", "Unused", "First Fling Pi'illo Entrance", "First Fling Pi'illo Room 2", "First Fling Pi'illo Room 3",
-                        "Britta's Meeting Room", "Eldream Topright Detour", "First Dozite Room 1", "First Track Dozite Room 1", "First Track Dozite Room 2", "First Track Dozite Room 3",
-                        "Second Track Dozite", "Third Track Dozite", "Final Track Dozite Room 1", "Final Track Dozite Room 2", "Final Track Dozite Room 3", "Dream Stone Entrance",
-                        "Dream Stone First Drill Room", "Dream Stone Main Room", "Dream Stone Big Drill Room", "Dream Stone After Big Drill Room", "Dream Stone First Luiginary Room",
-                        "Dream Stone Switch Puzzle Room 1", "Dream Stone After Switch Puzzle 1", "Dream Stone Many Enemy Room", "Dream Stone Britta Shop", "Dream Stone After 2nd Spirit Talk",
-                        "Dream Stone Spinning Room", "Dream Stone Ground Pound Room", "Dream Stone Before Last Attack Pieces", "Beta Room 1", "Beta Room 2",
-                        "Unused Northwest Bedroom 1", "Unused Northwest Bedroom 2", "Unused Northeast Bedroom", "Early Underground Gromba Circle", "Early Smoldergeist",
-                        "Beta Room 3", "Beta Room 4", "Beta Room 5", "Dream Egg Dream Entrance", "Dream Egg Dream First Egg Departure", "Dream Egg Dream First Egg Entrance",
-                        "Dream Egg Dream First Egg Room 1", "Dream Egg Dream First Egg Room 2", "Glitched Room", "Second Throw Pi'illo Room 1", "Second Throw Pi'illo Room 2",
-                        "Second Throw Pi'illo Room 3", "First Pi'illo Room 1", "First Pi'illo Room 2", "First Pi'illo Room 3", "First Pi'illo Room 4", "Unused 1", "Unused 2",
-                        "Unused 3", "Unused 4", "Unused 5", "Dream Stone Dream Last Attack Pieces", "Dream Stone Dream After Last Attack Pieces", "Dream Stone Dream Zigzag",
-                        "Mattress Dream Entrance", "Mattress Dream Bottom Room", "Mattress Dream Top Room", "Mattress Dream Right Room", "Badge Room Pi'illo",
-                        "Southeast Track Room Pi'illo", "Eastern Track Room Pi'illo", "Main Track Room Pi'illo", "First Ultibed Pi'illo Room 2", "Second Ultibed Pi'illo Room 2",
-                        "Dream's Deep Entrance", "Dream's Deep Hallway Warps", "Bowser and Antasma Arena", "Dream's Deep Entrance", "Learn Luiginary Ball Room",
-                        "Learn Luiginary Hookshot Room", "Dream's Deep Room 4", "Dream's Deep Room 5", "Dream's Deep Room 6", "Learn Luiginary Throw Room",
-                        "Zeekeeper Cloud Ride", "Zeekeeper Before Boss", "Zeekeeper Arena", "Glitched 00 Room 1", "Glitched 00 Room 2", "Summit Ball Hop Gate", "End of Track Room",
-                        "Dreamstone Room", "Mattress Underground 1", "Mattress Underground 2", "Dreamy Dozing Sands Unused", "Massif Entrance", "Glitched 00 Room 3",
-                        "Buildup 1", "Wiggler and Popple Arena", "Bedsmith Basement", "Rock Frame Room", "Ball Hop Tutorial Room", "Massif Lobby", "Massif Hooraw Main Room",
-                        "Massif Topright of Main", "Massif Clock Tutorial", "Massif After Clock Tutorial", "Massif Heavy Zest Room 1", "Massif Heavy Zest Room 2", "Massif Heavy Zest Room 3",
-                        "Massif Heavy Zest Arena", "Massif Thunder Sass Room 1", "Massif Thunder Sass Room 2", "Massif Thunder Sass Room 3", "Massif Thunder Sass Arena",
-                        "Massif Topleft of Main Room 2", "Massif Topleft of Main Room 1", "Massif Sorrow Fist Room 1", "Massif Sorrow Fist Room 2", "Massif Sorrow Fist Room 3",
-                        "Massif Sorrow Fist Arena", "Massif Beef Cloud Before Arena", "Massif Beef Cloud Arena", "Massif Window Room", "Bedsmith Entrance", "Bedsmith Room 2", "Bedsmith Room 3",
-                        "Bedsmith Room 3 Detour", "Bedsmith Room 4", "Bedsmith Room 4 Detour", "Bedsmith Room 5", "Bedsmith Room 6", "Bedsmith Upper Umbrella Puzzle", "Bedsmith Earthwake Arena",
-                        "South Room Pi'illo", "After Puzzle Pi'illo Room 1", "After Puzzle Pi'illo Room 2", "Eastern Pi'illo", "Left of Wiggler Pi'illo Entrance", "Left of Wiggler Pi'illo Main Room",
-                        "Right of Wiggler Pi'illo Entrance", "Right of Wiggler Pi'illo Main Room", "Disco Blocks", "Ball Hop Room", "Jump Tutorial", "Path to Ultibed Room 2",
-                        "Under Blimport Bridge Falling Point", "Under Blimport Bridge First Pi'illo Room", "Under Blimport Bridge Second Fling Pi'illo Room", "First Dozite Wall of Enemies",
-                        "First Dozite Learn Luiginary Stack", "First Dozite Final Puzzle", "Base Right Mega Pi'illo Entrance", "Entrance Before Castle Falls", "Entrance", "Pipe Room", "Kamek 1 Left Room",
-                        "Kamek 1 Lobby", "Kamek 1 Right Room", "Kamek 1 Top Left", "Kamek 1 North of Lobby", "Kamek 1 Top Right", "First Elevator Lower Room", "First Elevator Upper Room",
-                        "First Bomb Room", "Kamek 2 Left Room", "Kamek 2 Lobby", "Kamek 2 Right Room", "Above Kamek 2", "West of Kamek 3 Lobby", "Kamek 3 Lobby", "Kamek 3 Right Room",
-                        "Kamek 3 Western Bomb Room", "Kamek 3 Middle Bomb Room", "Kamek 3 Eastern Bomb Room", "Elevator to Final Puzzle", "Final Puzzle Lobby", "Left Balcony", "Right Balcony",
-                        "Bottom Left of Final Puzzle Room", "Bottom Right of Final Puzzle Room", "Front Balcony", "Bowser's Dream Room", "Antasma Battle Arena", "Spiral to Final Boss", "Finall Bowser Arena",
-                        "Dream Egg Dream First Egg Room 3", "Dream Egg Dream First Egg Puzzle Room", "Dream Egg Dream Second Egg Lobby", "Dream Egg Dream Second Egg Room 1", "Dream Egg Dream Second Egg Room 2 Side Room",
-                        "Dream Egg Dream Second Egg Room 4", "Dream Egg Dream Second Egg Room 5", "Dream Egg Dream Second Egg Puzzle Room", "Dream Egg Dream Third Egg Lobby", "Dream Egg Dream Third Egg Room 1",
-                        "Dream Egg Dream Third Egg Room 3", "Dream Egg Dream First Egg Room 2 Side Room", "Dream Egg Dream Third Egg Puzzle Room", "Dream Egg Dream Third Egg Room 2", "Dream Egg Dream Shop Area",
-                        "Dream Egg Dream Second Egg Entrance", "Dream Egg Dream Third Egg Entrance", "Dream Egg Dream Elite Trio Arena", "Seatoon Entrance", "Seatoon Inner Tube Intro",
-                        "Seatoon Room 3", "Seatoon Room 4", "Seatoon Cutscene", "Seabury Entrance", "Seabury Puzzle", "Seabury Cutscene", "Seabelle Entrance", "Seabelle Puzzle", "Seabelle Cutscene",
-                        "Rose Broquet Pi'illo", "Under Dream Egg Dream Pi'illo Path Room", "Under Dream Egg Dream Pi'illo Left Room", "Under Dream Egg Dream Pi'illo Right Room", "Ultibed Path Pi'illo",
-                        "Entrance", "Woods Entrance", "Bedsmith Room", "Poison Water Puzzle 1", "Poison Water Puzzle 2", "Poison Water Side Drill Junction", "First Pi'illo Master Room", "Lower Elevator Room",
-                        "Main Puzzle Tracks Area", "Bottom Right Track Room", "Bottom Right Pi'illo Master Room", "Middle Right Track Room", "Top Right Track Room", "Bottom Left Track Room",
-                        "Middle Left Track Room", "Top Left Track Room Entrance", "Top Left Track Room Pi'illo", "Top Left Track Room Cave", "Room Before Pi'illodium", "Pi'illodium Arena",
-                        "Collapsing Antasma Cutscene", "Crash", "Ultibed Pi'illo Entrance", "Left of Camera Block Pi'illo Entrance", "Entrance Pi'illo Entrance", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap",
-                        "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Crash", "Crash", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap",
-                        "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Crash", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap",
-                        "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Crash", "Crash", "Crash", "Crash", "Dreamy Driftwood Shore Minimap", "Dreamy Driftwood Shore Minimap", "Dreamy Driftwood Shore Minimap",
-                        "Dream's Deep?", "Crash", "Dreamy Mount Pajamaja", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Minimap 1", "Minimap 2", "Minimap 3", "Minimap 4", "Minimap 5",
-                        "Path to Somnom Woods and Neo Bowser Castle", "Dream Egg Dream Second Egg Room 2", "Dream Egg Dream Second Egg Room 3", "Torkscrew Minigame", "Dreamy Driftwood Background",
-                        "Hallway of Luigis", "Long Drop", "Bedsmith Earthwake Arena After Fight", "Blimport", "Blimport", "Blimport", "Dreamy Mushrise Park Minimap", "Unused Dreamy Wakeport Room",
-                        "Dreamy Mushrise Park Minimap", "Dozite 2 Final Room", "Broken Snoozemore Projection Video", "Deep Pi'illo Castle Block Room", "Snoozemore Projection Video",
-                        "Dreambert Explains Island History", "Dreambert Introduces Antasma", "Left End of Track Room", "Bowser's Introduction", "Save Tutorial", "Fountain Breaks 3DS Screen",
-                        "Glitched 00 Room", "Bedsmith Umbrella Puzzle Basement", "Blimport Minimap", "Dreamy Room", "WHAT THE-", "Dreamy Room", "Kylie Koopa Puzzle Menu", "Base Right Mega Pi'illo Room 2",
-                        "Base Left Mega Pi'illo", "Peak Left Mega Pi'illo Entrance", "Peak Left Mega Pi'illo Room 2", "Peak Left Mega Pi'illo Room 3", "Peak Right Mega Pi'illo Entrance", "Peak Right Mega Pi'illo Main",
-                        "Summit Dream Portal Room", "Summit Massif Shop", "Summit Room 4", "Summit Room 5", "Summit Room 6", "Summit Room 7", "Summit Room 8", "Summit Room 8 Detour", "Summit Room 9", "Summit Room 9 Detour",
-                        "Summit Cone Tornado Tutorial Room", "Summit Fountain Room", "Summit Between Fountain and Shop", "Summit After Healing 1", "Summit First Tornado Block Room",
-                        "Summit After Healing 3", "Summit After Healing 3 Side Room", "Summit After Healing 4", "Summit Snowstorm Room", "Summit Before Arena", "Summit Mount Pajamaja Arena",
-                        "Early Dreamy Pajamaja Minimap", "Summit Room 3", "Pajamaja Rock Frame Room 1", "Pajamaja Rock Frame Room 2", "Pajamaja Rock Frame Room 3", "Multi-Access Dream World",
-                        "Base Southwest Ball Hop Pi'illo Entrance", "Base Southwest Ball Hop Pi'illo", "Unused Dreamy Pajamaja", "Peak Before Jump Pi'illo Entrance", "Peak Before Jump Pi'illo Main", "Right Branching Path Pi'illo",
-                        "Crash", "Crash", "Crash", "Crash", "Crash", "Minimap", "Crash", "Crash", "Crash", "Annoying Quadruple Bomb Room", "Pi'illo Master 1", "Pi'illo Master 2 Room 1",
-                        "Pi'illo Master 2 Room 2", "Pi'illo Master 2 Room 3", "Southeast Pi'illo Master Room 1", "Southeast Pi'illo Master Room 2", "Southwest Pi'illo Master Room 1", "Southwest Pi'illo Master Room 2",
-                        "West Pi'illo Master Room 1", "West Pi'illo Master Room 2", "Northwest Pi'illo Master", "Zeekeeper Entrance", "Zeekeeper Tower", "Zeekeeper Coin Labyrinth", "Zeekeeper Wrong Path",
-                        "Zeekeeper Monster Path", "Zeekeeper Correct Path", "Zeekeeper After Correct Path", "Zeekeeper Many Pipe Room", "Zeekeeper First Windy Room", "Zeekeeper Vertical Windy Room",
-                        "Zeekeeper First Luiginary Work Room", "Zeekeeper Large Sneeze Room", "Zeekeeper Large Luiginary Work Room", "Zeekeeper Right Moustache Room", "Zeekeeper Left Moustache Room",
-                        "Zeekeeper Underground 1-2 Reference", "Lower Elevator Pi'illo", "Other Pi'illo in First Pi'illo Master Room", "Upper Double Pi'illo", "Lower Double Pi'illo", "Poison Water Pi'illo",
-                        "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap",
-                        "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Giant Room Fling Pi'illo Entrance", "Minimap", "Kamek 1 Entrance", "Kamek 1 Main Room", "Kamek 1 Antigravity Intro",
-                        "Kamek 1 Red Coin Room", "Kamek 1 Swimming Kick Tutorial", "Kamek 1 Enemy Room", "Kamek 1 Spike Maze", "Kamek 1 Arena", "Kamek 2 Entrance", "Kamek 2 Door", "Kamek 2 Rising Lava",
-                        "Kamek 2 Before Arena", "Kamek 2 Arena", "Kamek 3 Entrance", "Kamek 3 Room 2", "Kamek 3 Room 3", "Kamek 3 Room 4", "Kamek 3 Arena", "Left Flame Room 1", "Left Flame Room 2", "Left Flame Room 3",
-                        "Left Flame Room 4", "Bottom Right Flame Room 1", "Bottom Right Flame Room 2", "Bottom Right Flame Room 3", "Top Right Flame Room 1", "Top Right Flame Room 2", "Top Right Flame Room 3",
-                        "Bowser's Dream Entrance", "Bowser's Dream First Bowser Encounter", "Bowser's Dream Path Back 1", "Bowser's Dream Path Back 2", "Bowser's Dream Path Back 3", "Bowser's Dream Path Back 4",
-                        "Bowser's Dream Path Back 5", "Bowser's Dream Path Back 6", "Bowser's Dream Path Back 7", "Bowser's Dream Shop", "Bowser's Dream Giant Cannon", "Bowser's Dream More Giant Cannons",
-                        "Bowser's Dream Arena", "Bowser's Dream Arena After Boss", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Dreamy Mount Pajamaja", "Dreamy Neo Bowser Castle",
-                        "Dreamy Somnom Woods", "Dreamy Driftwood Shore", "Boss Brickle Runs Off", "Bottom Left", "Ring Game", "Main Track Room Entrance", "Final Boss Room Copy", "Intro",
-                        "Glitched Mushrise Minimap", "Glitched Mushrise Minimap", "Top Right Flame Room 4", "Big Fling Pi'illo Room 2"]
-    #for n in range(len(item_local_names)):
-    #    print(hex(n) + " " + item_local_names[n])
+    with tqdm(total=len(new_item_locals)*2, desc="Generating Spoiler Log...") as sbar:
+        #Names for all the locations
+        item_local_names = ["Entrance", "Hammer Room", "West of Hammer Room", "River Rocks",
+                            "Upper Attack Piece Room", "Lower Attack Piece Room", "Gate Room",
+                            "Fountain Room", "Lower Ultibed Rock Room", "Right of Hammer Room", "Right Ultibed Rock Room", "Maintenance Hut", "Many Enemy Room",
+                            "Early Hammer Room", "Outside", "Mushrise Treeboard Room", "Western Track Room",
+                            "Drill Machine Tutorial Room", "Mini/Mole Mario Tutorial Room", "Middle Track Room",
+                            "Upper Track Room", "Early First Track Room", "Early Main Track Room", "Mini Mario Room",
+                            "Underground", "Southeastern Track Room", "East of Dreamstone", "West of Pi'illo Castle",
+                            "In Front of Pi'illo Castle", "Test Room", "Eldream Room 1",
+                            "Eldream Room 2", "Eldream Room 3", "Eldream Room 4",
+                            "Eldream Room 5", "Eldream Item Detour Room", "Eldream Fountain Room",
+                            "Eldream Room 7", "Eldream Bouncy Flower Room", "Eldream Pipe to Sewers",
+                            "Eldream Sewers", "Eldream Throw Boss Brickle", "Eldream Buildup to Final Attack Piece", "Eldream Final Attack Piece",
+                            "Pi'illo to Hammers", "Eldream Clouds 1", "Eldream Clouds 2", "Eldream Confront Bunny", "Pi'illo in River Room",
+                            "Pi'illo Room 2", "Ultibed Pi'illo Room 2", "Buildup 2", "Entrance", "Tour Center Location", "Shopping District", "Early Room 3",
+                            "Outside Rose Broquet", "Southern Panel Room", "Dream Egg Dreampoint Room", "Crab Minigame", "Entrance Right Room", "Entrance Middle Room",
+                            "Entrance Left Room", "Bedsmith Room First Floor", "Kylie Koopa's Photo Booth", "Tour Center", "Item Shop", "Badge Shop", "Gear Shop",
+                            "Rose Broquet Shop", "Broque Madame's Spot", "Ultibed Cave Entrance", "Ultibed Cave Middle Room", "Driftwood Jelly Sheets Resting Spot",
+                            "Entrance", "Guard Room", "Seabelle Dreampoint Room", "Middle Warp Pipe Room", "Unused Room", "Seabury Dreampoint Room",
+                            "Glitched Room 1", "Wakeport?", "Glitched Room 2", "Glitched Room 3", "Glitched Room 4", "Glitched Room 5",
+                            "Toad Crash Room", "Removed Second Check-X Quiz Room", "Second Toad Crash Room", "Gromba Battle Arena", "Bridge Room",
+                            "East of Pi'illo Castle", "Behind Pi'illo Castle", "Badge Room", "Mushrise Park Minimap", "Weak Trembling Fortress",
+                            "East Track Room", "Ultibed Cliff", "Desert Entrance", "Check-X Quiz", "Starting Room", "Test Room 2", "Entrance", "Rock Room",
+                            "First Mega Pi'illo Room", "Weird Lift Thingy Room", "2 Pi'illos in Rocks Room", "Weird Lift Thingy Second Room",
+                            "Spin Jump Tutorial Room", "Southeast Deviation", "Southwest Spin Jump Gaps", "Spin Jump Whirlwind Tutorial Room", "West Deviation",
+                            "Removed Room", "Peak Before Big Jump", "Big Fall", "Pajamaja Base Warp Pipe Room", "Side Drill Tutorial Room", "Large Room Before Snow",
+                            "Second Mega Pi'illo Room", "Path to Right Massif Ice Room", "Right Massif Ice Room", "Bros Wear Room", "Path to Left Massif Ice Room", "Left Massif Ice Room",
+                            "Mammoshka Arena", "Peak", "Frozen Dream World", "Peak Pipe", "Ball Hop Cave", "Lobby", "Early Minimap", "Golden Pipe Room", "Bedroom Entrance",
+                            "Platform Area", "Staff Break Room", "Shop", "Hotel Entrance", "Hotel Lobby", "Hotel Left Room", "Hotel Topleft Room", "Hotel Top Room", "Hotel Topright Room",
+                            "Ball Hop Room Entrance", "Ride to Underground", "Underground Entrance", "Removed Minigame", "Gromba Circle", "Smoldergeist Arena",
+                            "Stairs to Smoldergeist", "Underground Save Room", "Collection Room", "Battle Ring", "Restaurant District", "Hotel Balcony", "North Balcony", "Minimap 1",
+                            "Camera Block Pi'illo Room 2", "Black Screen Crash", "Early Mushrise Minimap 2", "Sick Map Warper", "Swimming", "Dreambert Entrance", "Dreambert Door Tutorial Room",
+                            "Dreambert Many Door Room", "Dreambert First Dreamy Enemy Room", "Dreambert Broque Shop", "Dreambert Many Enemy Room", "Dreambert Dreamy Mario Arena",
+                            "Dreambert Revival Room", "Entrance to Dream's Deep", "Unused", "First Fling Pi'illo Entrance", "First Fling Pi'illo Room 2", "First Fling Pi'illo Room 3",
+                            "Britta's Meeting Room", "Eldream Topright Detour", "First Dozite Room 1", "First Track Dozite Room 1", "First Track Dozite Room 2", "First Track Dozite Room 3",
+                            "Second Track Dozite", "Third Track Dozite", "Final Track Dozite Room 1", "Final Track Dozite Room 2", "Final Track Dozite Room 3", "Dream Stone Entrance",
+                            "Dream Stone First Drill Room", "Dream Stone Main Room", "Dream Stone Big Drill Room", "Dream Stone After Big Drill Room", "Dream Stone First Luiginary Room",
+                            "Dream Stone Switch Puzzle Room 1", "Dream Stone After Switch Puzzle 1", "Dream Stone Many Enemy Room", "Dream Stone Britta Shop", "Dream Stone After 2nd Spirit Talk",
+                            "Dream Stone Spinning Room", "Dream Stone Ground Pound Room", "Dream Stone Before Last Attack Pieces", "Beta Room 1", "Beta Room 2",
+                            "Unused Northwest Bedroom 1", "Unused Northwest Bedroom 2", "Unused Northeast Bedroom", "Early Underground Gromba Circle", "Early Smoldergeist",
+                            "Beta Room 3", "Beta Room 4", "Beta Room 5", "Dream Egg Dream Entrance", "Dream Egg Dream First Egg Departure", "Dream Egg Dream First Egg Entrance",
+                            "Dream Egg Dream First Egg Room 1", "Dream Egg Dream First Egg Room 2", "Glitched Room", "Second Throw Pi'illo Room 1", "Second Throw Pi'illo Room 2",
+                            "Second Throw Pi'illo Room 3", "First Pi'illo Room 1", "First Pi'illo Room 2", "First Pi'illo Room 3", "First Pi'illo Room 4", "Unused 1", "Unused 2",
+                            "Unused 3", "Unused 4", "Unused 5", "Dream Stone Dream Last Attack Pieces", "Dream Stone Dream After Last Attack Pieces", "Dream Stone Dream Zigzag",
+                            "Mattress Dream Entrance", "Mattress Dream Bottom Room", "Mattress Dream Top Room", "Mattress Dream Right Room", "Badge Room Pi'illo",
+                            "Southeast Track Room Pi'illo", "Eastern Track Room Pi'illo", "Main Track Room Pi'illo", "First Ultibed Pi'illo Room 2", "Second Ultibed Pi'illo Room 2",
+                            "Dream's Deep Entrance", "Dream's Deep Hallway Warps", "Bowser and Antasma Arena", "Dream's Deep Entrance", "Learn Luiginary Ball Room",
+                            "Learn Luiginary Hookshot Room", "Dream's Deep Room 4", "Dream's Deep Room 5", "Dream's Deep Room 6", "Learn Luiginary Throw Room",
+                            "Zeekeeper Cloud Ride", "Zeekeeper Before Boss", "Zeekeeper Arena", "Glitched 00 Room 1", "Glitched 00 Room 2", "Summit Ball Hop Gate", "End of Track Room",
+                            "Dreamstone Room", "Mattress Underground 1", "Mattress Underground 2", "Dreamy Dozing Sands Unused", "Massif Entrance", "Glitched 00 Room 3",
+                            "Buildup 1", "Wiggler and Popple Arena", "Bedsmith Basement", "Rock Frame Room", "Ball Hop Tutorial Room", "Massif Lobby", "Massif Hooraw Main Room",
+                            "Massif Topright of Main", "Massif Clock Tutorial", "Massif After Clock Tutorial", "Massif Heavy Zest Room 1", "Massif Heavy Zest Room 2", "Massif Heavy Zest Room 3",
+                            "Massif Heavy Zest Arena", "Massif Thunder Sass Room 1", "Massif Thunder Sass Room 2", "Massif Thunder Sass Room 3", "Massif Thunder Sass Arena",
+                            "Massif Topleft of Main Room 2", "Massif Topleft of Main Room 1", "Massif Sorrow Fist Room 1", "Massif Sorrow Fist Room 2", "Massif Sorrow Fist Room 3",
+                            "Massif Sorrow Fist Arena", "Massif Beef Cloud Before Arena", "Massif Beef Cloud Arena", "Massif Window Room", "Bedsmith Entrance", "Bedsmith Room 2", "Bedsmith Room 3",
+                            "Bedsmith Room 3 Detour", "Bedsmith Room 4", "Bedsmith Room 4 Detour", "Bedsmith Room 5", "Bedsmith Room 6", "Bedsmith Upper Umbrella Puzzle", "Bedsmith Earthwake Arena",
+                            "South Room Pi'illo", "After Puzzle Pi'illo Room 1", "After Puzzle Pi'illo Room 2", "Eastern Pi'illo", "Left of Wiggler Pi'illo Entrance", "Left of Wiggler Pi'illo Main Room",
+                            "Right of Wiggler Pi'illo Entrance", "Right of Wiggler Pi'illo Main Room", "Disco Blocks", "Ball Hop Room", "Jump Tutorial", "Path to Ultibed Room 2",
+                            "Under Blimport Bridge Falling Point", "Under Blimport Bridge First Pi'illo Room", "Under Blimport Bridge Second Fling Pi'illo Room", "First Dozite Wall of Enemies",
+                            "First Dozite Learn Luiginary Stack", "First Dozite Final Puzzle", "Base Right Mega Pi'illo Entrance", "Entrance Before Castle Falls", "Entrance", "Pipe Room", "Kamek 1 Left Room",
+                            "Kamek 1 Lobby", "Kamek 1 Right Room", "Kamek 1 Top Left", "Kamek 1 North of Lobby", "Kamek 1 Top Right", "First Elevator Lower Room", "First Elevator Upper Room",
+                            "First Bomb Room", "Kamek 2 Left Room", "Kamek 2 Lobby", "Kamek 2 Right Room", "Above Kamek 2", "West of Kamek 3 Lobby", "Kamek 3 Lobby", "Kamek 3 Right Room",
+                            "Kamek 3 Western Bomb Room", "Kamek 3 Middle Bomb Room", "Kamek 3 Eastern Bomb Room", "Elevator to Final Puzzle", "Final Puzzle Lobby", "Left Balcony", "Right Balcony",
+                            "Bottom Left of Final Puzzle Room", "Bottom Right of Final Puzzle Room", "Front Balcony", "Bowser's Dream Room", "Antasma Battle Arena", "Spiral to Final Boss", "Finall Bowser Arena",
+                            "Dream Egg Dream First Egg Room 3", "Dream Egg Dream First Egg Puzzle Room", "Dream Egg Dream Second Egg Lobby", "Dream Egg Dream Second Egg Room 1", "Dream Egg Dream Second Egg Room 2 Side Room",
+                            "Dream Egg Dream Second Egg Room 4", "Dream Egg Dream Second Egg Room 5", "Dream Egg Dream Second Egg Puzzle Room", "Dream Egg Dream Third Egg Lobby", "Dream Egg Dream Third Egg Room 1",
+                            "Dream Egg Dream Third Egg Room 3", "Dream Egg Dream First Egg Room 2 Side Room", "Dream Egg Dream Third Egg Puzzle Room", "Dream Egg Dream Third Egg Room 2", "Dream Egg Dream Shop Area",
+                            "Dream Egg Dream Second Egg Entrance", "Dream Egg Dream Third Egg Entrance", "Dream Egg Dream Elite Trio Arena", "Seatoon Entrance", "Seatoon Inner Tube Intro",
+                            "Seatoon Room 3", "Seatoon Room 4", "Seatoon Cutscene", "Seabury Entrance", "Seabury Puzzle", "Seabury Cutscene", "Seabelle Entrance", "Seabelle Puzzle", "Seabelle Cutscene",
+                            "Rose Broquet Pi'illo", "Under Dream Egg Dream Pi'illo Path Room", "Under Dream Egg Dream Pi'illo Left Room", "Under Dream Egg Dream Pi'illo Right Room", "Ultibed Path Pi'illo",
+                            "Entrance", "Woods Entrance", "Bedsmith Room", "Poison Water Puzzle 1", "Poison Water Puzzle 2", "Poison Water Side Drill Junction", "First Pi'illo Master Room", "Lower Elevator Room",
+                            "Main Puzzle Tracks Area", "Bottom Right Track Room", "Bottom Right Pi'illo Master Room", "Middle Right Track Room", "Top Right Track Room", "Bottom Left Track Room",
+                            "Middle Left Track Room", "Top Left Track Room Entrance", "Top Left Track Room Pi'illo", "Top Left Track Room Cave", "Room Before Pi'illodium", "Pi'illodium Arena",
+                            "Collapsing Antasma Cutscene", "Crash", "Ultibed Pi'illo Entrance", "Left of Camera Block Pi'illo Entrance", "Entrance Pi'illo Entrance", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap",
+                            "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Crash", "Crash", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap",
+                            "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Dreamy Dozing Minimap", "Crash", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap",
+                            "Dreamy Wakeport Minimap", "Dreamy Wakeport Minimap", "Crash", "Crash", "Crash", "Crash", "Dreamy Driftwood Shore Minimap", "Dreamy Driftwood Shore Minimap", "Dreamy Driftwood Shore Minimap",
+                            "Dream's Deep?", "Crash", "Dreamy Mount Pajamaja", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Minimap 1", "Minimap 2", "Minimap 3", "Minimap 4", "Minimap 5",
+                            "Path to Somnom Woods and Neo Bowser Castle", "Dream Egg Dream Second Egg Room 2", "Dream Egg Dream Second Egg Room 3", "Torkscrew Minigame", "Dreamy Driftwood Background",
+                            "Hallway of Luigis", "Long Drop", "Bedsmith Earthwake Arena After Fight", "Blimport", "Blimport", "Blimport", "Dreamy Mushrise Park Minimap", "Unused Dreamy Wakeport Room",
+                            "Dreamy Mushrise Park Minimap", "Dozite 2 Final Room", "Broken Snoozemore Projection Video", "Deep Pi'illo Castle Block Room", "Snoozemore Projection Video",
+                            "Dreambert Explains Island History", "Dreambert Introduces Antasma", "Left End of Track Room", "Bowser's Introduction", "Save Tutorial", "Fountain Breaks 3DS Screen",
+                            "Glitched 00 Room", "Bedsmith Umbrella Puzzle Basement", "Blimport Minimap", "Dreamy Room", "WHAT THE-", "Dreamy Room", "Kylie Koopa Puzzle Menu", "Base Right Mega Pi'illo Room 2",
+                            "Base Left Mega Pi'illo", "Peak Left Mega Pi'illo Entrance", "Peak Left Mega Pi'illo Room 2", "Peak Left Mega Pi'illo Room 3", "Peak Right Mega Pi'illo Entrance", "Peak Right Mega Pi'illo Main",
+                            "Summit Dream Portal Room", "Summit Massif Shop", "Summit Room 4", "Summit Room 5", "Summit Room 6", "Summit Room 7", "Summit Room 8", "Summit Room 8 Detour", "Summit Room 9", "Summit Room 9 Detour",
+                            "Summit Cone Tornado Tutorial Room", "Summit Fountain Room", "Summit Between Fountain and Shop", "Summit After Healing 1", "Summit First Tornado Block Room",
+                            "Summit After Healing 3", "Summit After Healing 3 Side Room", "Summit After Healing 4", "Summit Snowstorm Room", "Summit Before Arena", "Summit Mount Pajamaja Arena",
+                            "Early Dreamy Pajamaja Minimap", "Summit Room 3", "Pajamaja Rock Frame Room 1", "Pajamaja Rock Frame Room 2", "Pajamaja Rock Frame Room 3", "Multi-Access Dream World",
+                            "Base Southwest Ball Hop Pi'illo Entrance", "Base Southwest Ball Hop Pi'illo", "Unused Dreamy Pajamaja", "Peak Before Jump Pi'illo Entrance", "Peak Before Jump Pi'illo Main", "Right Branching Path Pi'illo",
+                            "Crash", "Crash", "Crash", "Crash", "Crash", "Minimap", "Crash", "Crash", "Crash", "Annoying Quadruple Bomb Room", "Pi'illo Master 1", "Pi'illo Master 2 Room 1",
+                            "Pi'illo Master 2 Room 2", "Pi'illo Master 2 Room 3", "Southeast Pi'illo Master Room 1", "Southeast Pi'illo Master Room 2", "Southwest Pi'illo Master Room 1", "Southwest Pi'illo Master Room 2",
+                            "West Pi'illo Master Room 1", "West Pi'illo Master Room 2", "Northwest Pi'illo Master", "Zeekeeper Entrance", "Zeekeeper Tower", "Zeekeeper Coin Labyrinth", "Zeekeeper Wrong Path",
+                            "Zeekeeper Monster Path", "Zeekeeper Correct Path", "Zeekeeper After Correct Path", "Zeekeeper Many Pipe Room", "Zeekeeper First Windy Room", "Zeekeeper Vertical Windy Room",
+                            "Zeekeeper First Luiginary Work Room", "Zeekeeper Large Sneeze Room", "Zeekeeper Large Luiginary Work Room", "Zeekeeper Right Moustache Room", "Zeekeeper Left Moustache Room",
+                            "Zeekeeper Underground 1-2 Reference", "Lower Elevator Pi'illo", "Other Pi'illo in First Pi'illo Master Room", "Upper Double Pi'illo", "Lower Double Pi'illo", "Poison Water Pi'illo",
+                            "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap",
+                            "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Minimap", "Giant Room Fling Pi'illo Entrance", "Minimap", "Kamek 1 Entrance", "Kamek 1 Main Room", "Kamek 1 Antigravity Intro",
+                            "Kamek 1 Red Coin Room", "Kamek 1 Swimming Kick Tutorial", "Kamek 1 Enemy Room", "Kamek 1 Spike Maze", "Kamek 1 Arena", "Kamek 2 Entrance", "Kamek 2 Door", "Kamek 2 Rising Lava",
+                            "Kamek 2 Before Arena", "Kamek 2 Arena", "Kamek 3 Entrance", "Kamek 3 Room 2", "Kamek 3 Room 3", "Kamek 3 Room 4", "Kamek 3 Arena", "Left Flame Room 1", "Left Flame Room 2", "Left Flame Room 3",
+                            "Left Flame Room 4", "Bottom Right Flame Room 1", "Bottom Right Flame Room 2", "Bottom Right Flame Room 3", "Top Right Flame Room 1", "Top Right Flame Room 2", "Top Right Flame Room 3",
+                            "Bowser's Dream Entrance", "Bowser's Dream First Bowser Encounter", "Bowser's Dream Path Back 1", "Bowser's Dream Path Back 2", "Bowser's Dream Path Back 3", "Bowser's Dream Path Back 4",
+                            "Bowser's Dream Path Back 5", "Bowser's Dream Path Back 6", "Bowser's Dream Path Back 7", "Bowser's Dream Shop", "Bowser's Dream Giant Cannon", "Bowser's Dream More Giant Cannons",
+                            "Bowser's Dream Arena", "Bowser's Dream Arena After Boss", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Crash", "Dreamy Mount Pajamaja", "Dreamy Neo Bowser Castle",
+                            "Dreamy Somnom Woods", "Dreamy Driftwood Shore", "Boss Brickle Runs Off", "Bottom Left", "Ring Game", "Main Track Room Entrance", "Final Boss Room Copy", "Intro",
+                            "Glitched Mushrise Minimap", "Glitched Mushrise Minimap", "Top Right Flame Room 4", "Big Fling Pi'illo Room 2"]
+        #for n in range(len(item_local_names)):
+        #    print(hex(n) + " " + item_local_names[n])
 
-    #Names for items
-    item_names = [["Coin", "5 Coins", "10 Coins", "50 Coins", "100 Coins"],
+        #Names for items
+        item_names = [["Coin", "5 Coins", "10 Coins", "50 Coins", "100 Coins"],
 
-                  ["Mushroom", "Super Mushroom", "Ultra Mushroom", "Max Mushroom", "Nut", "Super Nut", "Ultra Nut", "Max Nut", "Syrup Jar", "Supersyrup Jar", "Ultrasyrup Jar", "Max Syrup Jar",
-                   "Candy", "Super Candy", "Ultra Candy", "Max Candy", "1-Up Mushroom", "1-Up Deluxe", "Refreshing Herb", "Heart Bean", "Bros. Bean", "Power Bean", "Defense Bean", "Speed Bean",
-                   "Stache Bean", "Taunt Ball", "Shock Bomb", "Boo Biscuit", "Secret Box", "Heart Bean DX", "Bros Bean DX", "Power Bean DX", "Defense Bean DX", "Speed Bean DX", "Stache Bean DX"],
+                      ["Mushroom", "Super Mushroom", "Ultra Mushroom", "Max Mushroom", "Nut", "Super Nut", "Ultra Nut", "Max Nut", "Syrup Jar", "Supersyrup Jar", "Ultrasyrup Jar", "Max Syrup Jar",
+                       "Candy", "Super Candy", "Ultra Candy", "Max Candy", "1-Up Mushroom", "1-Up Deluxe", "Refreshing Herb", "Heart Bean", "Bros. Bean", "Power Bean", "Defense Bean", "Speed Bean",
+                       "Stache Bean", "Taunt Ball", "Shock Bomb", "Boo Biscuit", "Secret Box", "Heart Bean DX", "Bros Bean DX", "Power Bean DX", "Defense Bean DX", "Speed Bean DX", "Stache Bean DX"],
 
-                  ["Starter Badge", "Master Badge", "Expert Badge", "Bronze Badge", "Silver Badge", "Gold Badge", "Mush Badge", "Strike Badge", "Guard Badge", "Virus Badge", "Risk Badge", "Miracle Badge"],
+                      ["Starter Badge", "Master Badge", "Expert Badge", "Bronze Badge", "Silver Badge", "Gold Badge", "Mush Badge", "Strike Badge", "Guard Badge", "Virus Badge", "Risk Badge", "Miracle Badge"],
 
-                  ["Run-Down Boots", "Discount Boots", "So-So Boots", "Sandwich Boots", "Bare Boots", "Iron-Ball Boots", "Trusty Boots", "Snare Boots", "Coin Boots", "Super Boots", "EXP Boots",
-                   "Knockout Boots", "Heart Boots", "Elite Boots", "Anti-air Boots", "Action Boots", "Bros. Boots", "Singular Boots", "Glass Boots", "Coin Boots DX", "Iron-Ball Boots DX", "VIP Boots",
-                   "EXP Boots DX", "Anti-air Boots DX", "Bare Boots DX", "Star Boots", "Dark Boots", "Crystal Boots", "Wellington Boots", "Pro Boots", "Supreme Boots", "Challenge Boots", "Hiking Boots",
-                   "DoB Boots", "MINI Boots", "Run-Down Hammer", "Discount Hammer", "So-So Hammer", "Picnic Hammer", "Bare Hammer", "Iron-Ball Hammer", "Steady Hammer", "Fighter Hammer", "Sap Hammer",
-                   "Super Hammer", "Soft Hammer", "Knockout Hammer", "Flame Hammer", "Elite Hammer", "Blunt Hammer", "Action Hammer", "Spin Hammer", "Singular Hammer", "Glass Hammer", "Sap Hammer DX",
-                   "Iron-Ball Hammer DX", "VIP Hammer", "Flame Hammer DX", "Blunt Hammer DX", "Bare Hammer DX", "Star Hammer", "Dark Hammer", "Crystal Hammer", "Soft Hammer DX", "Pro Hammer", "Supreme Hammer",
-                   "Challenge Hammer", "Golden Hammer", "DoB Hammer", "MINI Hammer", "Thin Wear", "Picnic Wear", "Cozy Wear", "So-So Wear", "Retribution Wear", "Singular Wear", "Rally Wear", "Filler Wear",
-                   "Super Wear", "Fighter Wear", "Koopa Troopa Wear", "VIP Wear", "Counter Wear", "Safety Wear", "Fancy Wear", "Hero Wear", "Bros. Wear", "Metal Wear", "Snare Wear", "Heart Wear", "Boost Wear",
-                   "Star Wear", "Ironclad Wear", "King Wear", "Angel Wear", "Pro Wear", "Legendary Wear", "Challenge Wear", "Golden Wear", "DoB Wear", "Thick Gloves", "Shell Gloves", "Metal Gloves", "HP Gloves",
-                   "HP Gloves DX", "BP Gloves", "BP Gloves DX", "POW Gloves", "POW Gloves DX", "Speed Gloves", "Stache Gloves", "Lucky Gloves", "Lucky Gloves DX", "Gift Gloves", "Gift Gloves DX", "Filler Gloves",
-                   "Filler Gloves DX", "Strike Gloves", "Mushroom Gloves", "1-Up Gloves", "Pro Gloves", "Rookie Gloves", "Perfect POW Gloves", "Perfect Bro Gloves", "Coin Bro Gloves", "Coin Bro Gloves DX", "EXP Bro Gloves",
-                   "EXP Bro Gloves DX", "Bottomless Gloves", "MINI Gloves", "HP Scarf", "HP Scarf DX", "BP Scarf", "BP Scarf DX", "POW Scarf", "POW Scarf DX", "Speed Scarf", "Stache Scarf", "Bros. Ring", "HP Bangle",
-                   "HP Bangle DX", "BP Bangle", "BP Bangle DX", "Angel Bangle", "HP Knockout Bangle", "BP Knockout Bangle", "Healthy Ring", "Guard Shell", "Guard Shell DX", "Rally Belt", "Counter Belt", "POW Mush Jam",
-                   "DEF Mush Jam", "Duplex Crown", " -- ", "Mushroom Amulet", "DoB Ring", "Mini Ring", "Silver Statue", "Gold Statue"]]
+                      ["Run-Down Boots", "Discount Boots", "So-So Boots", "Sandwich Boots", "Bare Boots", "Iron-Ball Boots", "Trusty Boots", "Snare Boots", "Coin Boots", "Super Boots", "EXP Boots",
+                       "Knockout Boots", "Heart Boots", "Elite Boots", "Anti-air Boots", "Action Boots", "Bros. Boots", "Singular Boots", "Glass Boots", "Coin Boots DX", "Iron-Ball Boots DX", "VIP Boots",
+                       "EXP Boots DX", "Anti-air Boots DX", "Bare Boots DX", "Star Boots", "Dark Boots", "Crystal Boots", "Wellington Boots", "Pro Boots", "Supreme Boots", "Challenge Boots", "Hiking Boots",
+                       "DoB Boots", "MINI Boots", "Run-Down Hammer", "Discount Hammer", "So-So Hammer", "Picnic Hammer", "Bare Hammer", "Iron-Ball Hammer", "Steady Hammer", "Fighter Hammer", "Sap Hammer",
+                       "Super Hammer", "Soft Hammer", "Knockout Hammer", "Flame Hammer", "Elite Hammer", "Blunt Hammer", "Action Hammer", "Spin Hammer", "Singular Hammer", "Glass Hammer", "Sap Hammer DX",
+                       "Iron-Ball Hammer DX", "VIP Hammer", "Flame Hammer DX", "Blunt Hammer DX", "Bare Hammer DX", "Star Hammer", "Dark Hammer", "Crystal Hammer", "Soft Hammer DX", "Pro Hammer", "Supreme Hammer",
+                       "Challenge Hammer", "Golden Hammer", "DoB Hammer", "MINI Hammer", "Thin Wear", "Picnic Wear", "Cozy Wear", "So-So Wear", "Retribution Wear", "Singular Wear", "Rally Wear", "Filler Wear",
+                       "Super Wear", "Fighter Wear", "Koopa Troopa Wear", "VIP Wear", "Counter Wear", "Safety Wear", "Fancy Wear", "Hero Wear", "Bros. Wear", "Metal Wear", "Snare Wear", "Heart Wear", "Boost Wear",
+                       "Star Wear", "Ironclad Wear", "King Wear", "Angel Wear", "Pro Wear", "Legendary Wear", "Challenge Wear", "Golden Wear", "DoB Wear", "Thick Gloves", "Shell Gloves", "Metal Gloves", "HP Gloves",
+                       "HP Gloves DX", "BP Gloves", "BP Gloves DX", "POW Gloves", "POW Gloves DX", "Speed Gloves", "Stache Gloves", "Lucky Gloves", "Lucky Gloves DX", "Gift Gloves", "Gift Gloves DX", "Filler Gloves",
+                       "Filler Gloves DX", "Strike Gloves", "Mushroom Gloves", "1-Up Gloves", "Pro Gloves", "Rookie Gloves", "Perfect POW Gloves", "Perfect Bro Gloves", "Coin Bro Gloves", "Coin Bro Gloves DX", "EXP Bro Gloves",
+                       "EXP Bro Gloves DX", "Bottomless Gloves", "MINI Gloves", "HP Scarf", "HP Scarf DX", "BP Scarf", "BP Scarf DX", "POW Scarf", "POW Scarf DX", "Speed Scarf", "Stache Scarf", "Bros. Ring", "HP Bangle",
+                       "HP Bangle DX", "BP Bangle", "BP Bangle DX", "Angel Bangle", "HP Knockout Bangle", "BP Knockout Bangle", "Healthy Ring", "Guard Shell", "Guard Shell DX", "Rally Belt", "Counter Belt", "POW Mush Jam",
+                       "DEF Mush Jam", "Duplex Crown", " -- ", "Mushroom Amulet", "DoB Ring", "Mini Ring", "Silver Statue", "Gold Statue"]]
 
-    #Names for key items
-    key_item_names = ["Progressive Hammers 1", "Progressive Hammers 2", "Progressive Hammers 3", "Progressive Spin 1", "Progressive Spin 2", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack Spring Jump",
-                      "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
-                      "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
+        #Names for key items
+        key_item_names = ["Progressive Hammers 1", "Progressive Hammers 2", "Progressive Hammers 3", "Progressive Spin 1", "Progressive Spin 2", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack Spring Jump",
+                          "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
+                          "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
 
-    #Names for attack pieces
-    attack_piece_names = ["Mushrise Park", "Dreamy Mushrise Park", "Dozing Sands", "Dreamy Dozing Sands", "Wakeport", "Mount Pajamaja", "Dreamy Mount Pajamaja", "Driftwood Shore", "Dreamy Driftwood Shore",
-                          "Mount Pajamaja Summit", "Dreamy Wakeport", "Somnom Woods", "Dreamy Somnom Woods", "Mushrise Park Caves", "Neo Bowser Castle"]
+        #Names for attack pieces
+        attack_piece_names = ["Mushrise Park", "Dreamy Mushrise Park", "Dozing Sands", "Dreamy Dozing Sands", "Wakeport", "Mount Pajamaja", "Dreamy Mount Pajamaja", "Driftwood Shore", "Dreamy Driftwood Shore",
+                              "Mount Pajamaja Summit", "Dreamy Wakeport", "Somnom Woods", "Dreamy Somnom Woods", "Mushrise Park Caves", "Neo Bowser Castle"]
 
-    #Names for the different kinds of checks
-    check_names = ["Block", "Block", "Rotated Block", "Rotated Block", "Rotated Block", "Bean Spot", "Sneeze Block", "Attack Piece Block", "Rotated Block", "Rotated Block"]
+        #Names for the different kinds of checks
+        check_names = ["Block", "Block", "Rotated Block", "Rotated Block", "Rotated Block", "Bean Spot", "Sneeze Block", "Attack Piece Block", "Rotated Block", "Rotated Block"]
 
-    #Sorts the new item locals array in order of room ID and spot ID
-    new_item_locals = sorted(new_item_locals, key=lambda local: local[0])
-    repack_data = sorted(repack_data, key=lambda key: key[1])
-    rooms = []
-    areas = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
-    temp = []
-    for i in range(len(new_item_locals)):
-        if i > 0:
-            if new_item_locals[i][0] == new_item_locals[i-1][0]:
-                rooms.append(new_item_locals[i])
-            else:
-                rooms = sorted(rooms, key=lambda local: local[7])
-
-                #Sorts the room into a specific spot
-                if get_room(rooms[-1][0]) == "Mushrise Park":
-                    room = 3
-                elif get_room(rooms[-1][0]) == "Dozing Sands":
-                    room = 5
-                elif get_room(rooms[-1][0]) == "Blimport":
-                    room = 0
-                elif get_room(rooms[-1][0]) == "Dreamy Mushrise Park":
-                    room = 4
-                elif get_room(rooms[-1][0]) == "Wakeport":
-                    room = 7
-                elif get_room(rooms[-1][0]) == "Driftwood Shore":
-                    room = 11
-                elif get_room(rooms[-1][0]) == "Mount Pajamaja":
-                    room = 9
-                elif get_room(rooms[-1][0]) == "Pi'illo Castle":
-                    room = 1
-                elif get_room(rooms[-1][0]) == "Dreamy Pi'illo Castle":
-                    room = 2
-                elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
-                    room = 6
-                elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shore":
-                    room = 12
-                elif get_room(rooms[-1][0]) == "Dreamy Wakeport":
-                    room = 8
-                elif get_room(rooms[-1][0]) == "Neo Bowser Castle":
-                    room = 15
-                elif get_room(rooms[-1][0]) == "Somnom Woods":
-                    room = 13
-                elif get_room(rooms[-1][0]) == "Dreamy Mount Pajamaja":
-                    room = 10
-                elif get_room(rooms[-1][0]) == "Dreamy Somnom Woods":
-                    room = 14
-                elif get_room(rooms[-1][0]) == "Dreamy Neo Bowser Castle":
-                    room = 16
+        #Sorts the new item locals array in order of room ID and spot ID
+        new_item_locals = sorted(new_item_locals, key=lambda local: local[0])
+        repack_data = sorted(repack_data, key=lambda key: key[1])
+        rooms = []
+        areas = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+        temp = []
+        for i in range(len(new_item_locals)):
+            if i > 0:
+                if new_item_locals[i][0] == new_item_locals[i-1][0]:
+                    rooms.append(new_item_locals[i])
                 else:
-                    room = 17
-                if len(areas[room]) > 1:
-                    spot = 1
-                    while areas[room][spot-1][0] < areas[room][spot][0]:
-                        spot += 1
-                        if spot == len(areas[room]):
-                            break
-                    areas[room].insert(spot, rooms)
-                else:
-                    if len(areas[room]) == 0:
-                        areas[room].append(rooms)
+                    rooms = sorted(rooms, key=lambda local: local[7])
+
+                    #Sorts the room into a specific spot
+                    if get_room(rooms[-1][0]) == "Mushrise Park":
+                        room = 3
+                    elif get_room(rooms[-1][0]) == "Dozing Sands":
+                        room = 5
+                    elif get_room(rooms[-1][0]) == "Blimport":
+                        room = 0
+                    elif get_room(rooms[-1][0]) == "Dreamy Mushrise Park":
+                        room = 4
+                    elif get_room(rooms[-1][0]) == "Wakeport":
+                        room = 7
+                    elif get_room(rooms[-1][0]) == "Driftwood Shore":
+                        room = 11
+                    elif get_room(rooms[-1][0]) == "Mount Pajamaja":
+                        room = 9
+                    elif get_room(rooms[-1][0]) == "Pi'illo Castle":
+                        room = 1
+                    elif get_room(rooms[-1][0]) == "Dreamy Pi'illo Castle":
+                        room = 2
+                    elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
+                        room = 6
+                    elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shore":
+                        room = 12
+                    elif get_room(rooms[-1][0]) == "Dreamy Wakeport":
+                        room = 8
+                    elif get_room(rooms[-1][0]) == "Neo Bowser Castle":
+                        room = 15
+                    elif get_room(rooms[-1][0]) == "Somnom Woods":
+                        room = 13
+                    elif get_room(rooms[-1][0]) == "Dreamy Mount Pajamaja":
+                        room = 10
+                    elif get_room(rooms[-1][0]) == "Dreamy Somnom Woods":
+                        room = 14
+                    elif get_room(rooms[-1][0]) == "Dreamy Neo Bowser Castle":
+                        room = 16
                     else:
-                        if areas[room][0][0] <= areas[room][-1][0]:
+                        room = 17
+                    if len(areas[room]) > 1:
+                        spot = 1
+                        while areas[room][spot-1][0] < areas[room][spot][0]:
+                            spot += 1
+                            if spot == len(areas[room]):
+                                break
+                        areas[room].insert(spot, rooms)
+                    else:
+                        if len(areas[room]) == 0:
                             areas[room].append(rooms)
                         else:
-                            areas[room].insert(0, rooms)
-                rooms = [new_item_locals[i]]
-        else:
-            rooms.append(new_item_locals[i])
+                            if areas[room][0][0] <= areas[room][-1][0]:
+                                areas[room].append(rooms)
+                            else:
+                                areas[room].insert(0, rooms)
+                    rooms = [new_item_locals[i]]
+            else:
+                rooms.append(new_item_locals[i])
+            sbar.update(1)
 
-    rooms = sorted(rooms, key=lambda local: local[7])
-    if get_room(rooms[-1][0]) == "Mushrise Park":
-        room = 3
-    elif get_room(rooms[-1][0]) == "Dozing Sands":
-        room = 5
-    elif get_room(rooms[-1][0]) == "Blimport":
-        room = 0
-    elif get_room(rooms[-1][0]) == "Dreamy Mushrise Park":
-        room = 4
-    elif get_room(rooms[-1][0]) == "Wakeport":
-        room = 7
-    elif get_room(rooms[-1][0]) == "Driftwood Shore":
-        room = 11
-    elif get_room(rooms[-1][0]) == "Mount Pajamaja":
-        room = 9
-    elif get_room(rooms[-1][0]) == "Pi'illo Castle":
-        room = 1
-    elif get_room(rooms[-1][0]) == "Dreamy Pi'illo Castle":
-        room = 2
-    elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
-        room = 6
-    elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shore":
-        room = 12
-    elif get_room(rooms[-1][0]) == "Dreamy Wakeport":
-        room = 8
-    elif get_room(rooms[-1][0]) == "Neo Bowser Castle":
-        room = 15
-    elif get_room(rooms[-1][0]) == "Somnom Woods":
-        room = 13
-    elif get_room(rooms[-1][0]) == "Dreamy Mount Pajamaja":
-        room = 10
-    elif get_room(rooms[-1][0]) == "Dreamy Somnom Woods":
-        room = 14
-    elif get_room(rooms[-1][0]) == "Dreamy Neo Bowser Castle":
-        room = 16
-    else:
-        room = 17
-    if len(areas[room]) > 1:
-        spot = 1
-        while areas[room][spot - 1][0] < areas[room][spot][0]:
-            spot += 1
-            if spot == len(areas[room]):
-                break
-        areas[room].insert(spot, rooms)
-    else:
-        if len(areas[room]) == 0:
-            areas[room].append(rooms)
+        rooms = sorted(rooms, key=lambda local: local[7])
+        if get_room(rooms[-1][0]) == "Mushrise Park":
+            room = 3
+        elif get_room(rooms[-1][0]) == "Dozing Sands":
+            room = 5
+        elif get_room(rooms[-1][0]) == "Blimport":
+            room = 0
+        elif get_room(rooms[-1][0]) == "Dreamy Mushrise Park":
+            room = 4
+        elif get_room(rooms[-1][0]) == "Wakeport":
+            room = 7
+        elif get_room(rooms[-1][0]) == "Driftwood Shore":
+            room = 11
+        elif get_room(rooms[-1][0]) == "Mount Pajamaja":
+            room = 9
+        elif get_room(rooms[-1][0]) == "Pi'illo Castle":
+            room = 1
+        elif get_room(rooms[-1][0]) == "Dreamy Pi'illo Castle":
+            room = 2
+        elif get_room(rooms[-1][0]) == "Dreamy Dozing Sands":
+            room = 6
+        elif get_room(rooms[-1][0]) == "Dreamy Driftwood Shore":
+            room = 12
+        elif get_room(rooms[-1][0]) == "Dreamy Wakeport":
+            room = 8
+        elif get_room(rooms[-1][0]) == "Neo Bowser Castle":
+            room = 15
+        elif get_room(rooms[-1][0]) == "Somnom Woods":
+            room = 13
+        elif get_room(rooms[-1][0]) == "Dreamy Mount Pajamaja":
+            room = 10
+        elif get_room(rooms[-1][0]) == "Dreamy Somnom Woods":
+            room = 14
+        elif get_room(rooms[-1][0]) == "Dreamy Neo Bowser Castle":
+            room = 16
         else:
-            if areas[room][0][0] <= areas[room][-1][0]:
+            room = 17
+        if len(areas[room]) > 1:
+            spot = 1
+            while areas[room][spot - 1][0] < areas[room][spot][0]:
+                spot += 1
+                if spot == len(areas[room]):
+                    break
+            areas[room].insert(spot, rooms)
+        else:
+            if len(areas[room]) == 0:
                 areas[room].append(rooms)
             else:
-                areas[room].insert(0, rooms)
-    rooms = []
-    for r in range(len(areas)):
-        for p in range(len(areas[r])):
-            for i in range(len(areas[r][p])):
-                temp.append(areas[r][p][i])
-    new_item_locals = temp
-
-    #Creates a spoiler log
-    spoiler_log = open(input_folder + "/Spoiler Log.txt", "w")
-    spoiler_log.write("Seed: " + hex(seed) + "\nReduced Mini Mario Requirements: ")
-    if settings[1][0] == 1:
-        spoiler_log.write("On\nReduced Ball Hop Skips: ")
-    else:
-        spoiler_log.write("Off\nReduced Ball Hop Skips: ")
-    if settings[1][1] == 1:
-        spoiler_log.write("On\n\n")
-    else:
-        spoiler_log.write("Off\n\n")
-    room_check = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-    for s in range(len(new_item_locals)):
-        if s > 0:
-            #if new_item_locals[s][0] != new_item_locals[s-1][0] and new_item_locals[s][0] < len(item_local_names):
-            #    print(hex(new_item_locals[s][0]) + " " + item_local_names[new_item_locals[s][0]])
-            if get_room(new_item_locals[s][0]) != get_room(new_item_locals[s-1][0]):
-                spoiler_log.write("\n--" + get_room(new_item_locals[s][0]) + "--\n\n")
-        else:
-            spoiler_log.write("--Blimport--\n\n")
-        check_type = ""
-        if len(room_check) < new_item_locals[s][0] + 1:
-            while len(room_check) < new_item_locals[s][0] + 1:
-                room_check.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-        room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] += 1
-        number = str(room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])])
-        k = find_index_in_2d_list(repack_data, new_item_locals[s][7] + 0xD000)
-        if k is None:
-            item = item_names[new_item_locals[s][3] // 0x2000][int(new_item_locals[s][3] / 2) % 0x100]
-            check_type = check_names[get_spot_type(new_item_locals[s])]
-        else:
-            check_type = check_names[repack_data[k[0]][0]]
-            ab = find_index_in_2d_list(key_item_pool_checked, repack_data[k[0]][6])
-            if ab is None:
-                if repack_data[k[0]][6] < 0xB037:
-                    item = attack_piece_names[int((repack_data[k[0]][6] - 0xB030) / 2)]
-                    offset = 0
-                elif repack_data[k[0]][6] < 0xB059:
-                    item = attack_piece_names[int((repack_data[k[0]][6] - 0xB037) / 2) + 2]
-                    offset = 1
+                if areas[room][0][0] <= areas[room][-1][0]:
+                    areas[room].append(rooms)
                 else:
-                    item = attack_piece_names[int((repack_data[k[0]][6] - 0xB059) / 2) + 13]
-                    offset = 1
-                item += " Attack Piece " + str(int(math.log2(repack_data[k[0]][7]) + 1) + (((repack_data[k[0]][6] + offset) % 2) * 5))
+                    areas[room].insert(0, rooms)
+        rooms = []
+        for r in range(len(areas)):
+            for p in range(len(areas[r])):
+                for i in range(len(areas[r][p])):
+                    temp.append(areas[r][p][i])
+        new_item_locals = temp
+
+        #Creates a spoiler log
+        spoiler_log = open(input_folder + "/Spoiler Log.txt", "w")
+        spoiler_log.write("Seed: " + hex(seed) + "\nReduced Mini Mario Requirements: ")
+        if settings[1][0] == 1:
+            spoiler_log.write("On\nReduced Ball Hop Skips: ")
+        else:
+            spoiler_log.write("Off\nReduced Ball Hop Skips: ")
+        if settings[1][1] == 1:
+            spoiler_log.write("On\n\n")
+        else:
+            spoiler_log.write("Off\n\n")
+        room_check = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        for s in range(len(new_item_locals)):
+            if s > 0:
+                #if new_item_locals[s][0] != new_item_locals[s-1][0] and new_item_locals[s][0] < len(item_local_names):
+                #    print(hex(new_item_locals[s][0]) + " " + item_local_names[new_item_locals[s][0]])
+                if get_room(new_item_locals[s][0]) != get_room(new_item_locals[s-1][0]):
+                    spoiler_log.write("\n--" + get_room(new_item_locals[s][0]) + "--\n\n")
             else:
-                item = key_item_names[key_item_pool_checked[ab[0]][1]]
-        if new_item_locals[s][0] < len(item_local_names):
-            room_name = item_local_names[new_item_locals[s][0]]
-        else:
-            room_name = hex(new_item_locals[s][0])
-        spoiler_log.write(room_name + " " + check_type + " " + hex(new_item_locals[s][7]) + " - " + item + "\n")
-    spoiler_log.write("\nTracker Stuff:\nStrike Badge\nGuard Badge\nBronze Badge\nVirus Badge\nMaster Badge\nRisk Badge\nSilver Badge\nExpert Badge\nMiracle Badge\nGold Badge\nCurrent Room: \n\nKey Item Order:")
-    for k in key_order:
-        spoiler_log.write("\n" + key_item_names[k])
+                spoiler_log.write("--Blimport--\n\n")
+            check_type = ""
+            if len(room_check) < new_item_locals[s][0] + 1:
+                while len(room_check) < new_item_locals[s][0] + 1:
+                    room_check.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] += 1
+            number = str(room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])])
+            k = find_index_in_2d_list(repack_data, new_item_locals[s][7] + 0xD000)
+            if k is None:
+                item = item_names[new_item_locals[s][3] // 0x2000][int(new_item_locals[s][3] / 2) % 0x100]
+                check_type = check_names[get_spot_type(new_item_locals[s])]
+            else:
+                check_type = check_names[repack_data[k[0]][0]]
+                ab = find_index_in_2d_list(key_item_pool_checked, repack_data[k[0]][6])
+                if ab is None:
+                    if repack_data[k[0]][6] < 0xB037:
+                        item = attack_piece_names[int((repack_data[k[0]][6] - 0xB030) / 2)]
+                        offset = 0
+                    elif repack_data[k[0]][6] < 0xB059:
+                        item = attack_piece_names[int((repack_data[k[0]][6] - 0xB037) / 2) + 2]
+                        offset = 1
+                    else:
+                        item = attack_piece_names[int((repack_data[k[0]][6] - 0xB059) / 2) + 13]
+                        offset = 1
+                    item += " Attack Piece " + str(int(math.log2(repack_data[k[0]][7]) + 1) + (((repack_data[k[0]][6] + offset) % 2) * 5))
+                else:
+                    item = key_item_names[key_item_pool_checked[ab[0]][1]]
+            if new_item_locals[s][0] < len(item_local_names):
+                room_name = item_local_names[new_item_locals[s][0]]
+            else:
+                room_name = hex(new_item_locals[s][0])
+            spoiler_log.write(room_name + " " + check_type + " " + hex(new_item_locals[s][7]) + " - " + item + "\n")
+            sbar.update(1)
+        spoiler_log.write("\nTracker Stuff:\nStrike Badge\nGuard Badge\nBronze Badge\nVirus Badge\nMaster Badge\nRisk Badge\nSilver Badge\nExpert Badge\nMiracle Badge\nGold Badge\nCurrent Room: \n\nKey Item Order:")
+        for k in key_order:
+            spoiler_log.write("\n" + key_item_names[k])
 
-    #Creates Tracker.dat
-    tracker_dat = open(input_folder + "/Tracker.dat", "wb")
-    for l in range(len(new_item_locals)):
-        tracker_dat.write(new_item_locals[l][-1].to_bytes(2, 'big'))
-        if find_index_in_2d_list(repack_data, new_item_locals[l][-1] + 0xD000) is not None:
-            k = find_index_in_2d_list(repack_data, new_item_locals[l][-1] + 0xD000)
-            to_write = repack_data[k[0]][6]
-            if repack_data[k[0]][6] // 0x1000 == 0xB and to_write != 0xB0F7:
-                to_write += int(math.log2(repack_data[k[0]][7]) + 1) * 0x100
-            tracker_dat.write(to_write.to_bytes(2, 'big'))
-        else:
-            to_write = new_item_locals[l][3]
-            if new_item_locals[l][2] // 0x10 % 0x10 > 1:
-                to_write += 0xA000
-            tracker_dat.write(to_write.to_bytes(2, 'big'))
-    #print(len(new_item_locals) - (len(new_item_locals)//16)*16)
-    tracker_dat.write(b'\x00'*((len(new_item_locals) - (len(new_item_locals)//16)*16)*2))
-    tracker_dat.write(b'\x00'*(16 * 20))
-    tracker_dat.write(bytes(max_values))
+        #Creates Tracker.dat
+        tracker_dat = open(input_folder + "/Tracker.dat", "wb")
+        for l in range(len(new_item_locals)):
+            tracker_dat.write(new_item_locals[l][-1].to_bytes(2, 'big'))
+            if find_index_in_2d_list(repack_data, new_item_locals[l][-1] + 0xD000) is not None:
+                k = find_index_in_2d_list(repack_data, new_item_locals[l][-1] + 0xD000)
+                to_write = repack_data[k[0]][6]
+                if repack_data[k[0]][6] // 0x1000 == 0xB and to_write != 0xB0F7:
+                    to_write += int(math.log2(repack_data[k[0]][7]) + 1) * 0x100
+                tracker_dat.write(to_write.to_bytes(2, 'big'))
+            else:
+                to_write = new_item_locals[l][3]
+                if new_item_locals[l][2] // 0x10 % 0x10 > 1:
+                    to_write += 0xA000
+                tracker_dat.write(to_write.to_bytes(2, 'big'))
+        #print(len(new_item_locals) - (len(new_item_locals)//16)*16)
+        tracker_dat.write(b'\x00'*((len(new_item_locals) - (len(new_item_locals)//16)*16)*2))
+        tracker_dat.write(b'\x00'*(16 * 20))
+        tracker_dat.write(bytes(max_values))
 
-    print("Repacking enemy stats...")
-    #Repackages randomized enemy stats
-    for enemy in range(len(new_enemy_stats)):
-        #print(new_enemy_stats[enemy])
-        enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
-        enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
-        enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
-        enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
-        enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
-        enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
-        if new_enemy_stats[enemy][9] > 1:
-            enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
-            enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
-            enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
-            enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
-        enemy_stats[new_enemy_stats[enemy][0]].level = new_enemy_stats[enemy][12]
-        if new_enemy_stats[enemy][0] == 113:
-            enemy_stats[114].power = new_enemy_stats[enemy][2]
-            enemy_stats[114].speed = new_enemy_stats[enemy][4]
-            enemy_stats[114].level = new_enemy_stats[enemy][12]
-        #print(new_enemy_stats[enemy])
-    #Packs enemy stats
-    save_enemy_stats(enemy_stats, code_bin=code_bin_path)
+    with tqdm(total=len(new_enemy_stats), desc="Repacking Enemy Stats...") as ebar:
+        #Repackages randomized enemy stats
+        for enemy in range(len(new_enemy_stats)):
+            #print(new_enemy_stats[enemy])
+            enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
+            enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
+            enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
+            enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
+            enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
+            enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
+            if new_enemy_stats[enemy][9] > 1:
+                enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
+                enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
+                enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
+                enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
+            enemy_stats[new_enemy_stats[enemy][0]].level = new_enemy_stats[enemy][12]
+            if new_enemy_stats[enemy][0] == 113:
+                enemy_stats[114].power = new_enemy_stats[enemy][2]
+                enemy_stats[114].speed = new_enemy_stats[enemy][4]
+                enemy_stats[114].level = new_enemy_stats[enemy][12]
+            ebar.update(1)
+            #print(new_enemy_stats[enemy])
+        #Packs enemy stats
+        save_enemy_stats(enemy_stats, code_bin=code_bin_path)
 
-    print("Repacking FMap...")
-    newlen = 0
-    check_spot = []
-    for b in range(len(new_item_locals)):
-        if b > 0:
-            if new_item_locals[b-1][0] != new_item_locals[b][0]:
+    with tqdm(total=len(new_item_locals)+len(parsed_fmapdat), desc="Repacking FMap...") as fbar:
+        newlen = 0
+        check_spot = []
+        for b in range(len(new_item_locals)):
+            if b > 0:
+                if new_item_locals[b-1][0] != new_item_locals[b][0]:
+                    parsed_fmapdat[new_item_locals[b][0]][7].clear()
+            else:
                 parsed_fmapdat[new_item_locals[b][0]][7].clear()
-        else:
-            parsed_fmapdat[new_item_locals[b][0]][7].clear()
-                #if newlen > 0:
-                #    for j in range(newlen):
-                #        i = 0
-                #        while parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12] != check_spot[j][0].to_bytes(2, 'little') and i < len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])/12:
-                #            i += 1
-                #        #print(int.from_bytes(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12], "little"))
-                #        #print(len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])])/12)
-                #        parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7] = parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])]
-                #    newlen = 0
-                #    check_spot = []
-        #x = 0
-        #while x < len(repack_data):
-        #    if repack_data[x][5] == new_item_locals[b][-1] + 0xD000 and (repack_data[x][0] == 0 or repack_data[x][0] == 1):
-        #        newlen += 1
-        #        check_spot.append([new_item_locals[b][7], b])
-        #        break
-        #    x += 1
+                    #if newlen > 0:
+                    #    for j in range(newlen):
+                    #        i = 0
+                    #        while parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12] != check_spot[j][0].to_bytes(2, 'little') and i < len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])/12:
+                    #            i += 1
+                    #        #print(int.from_bytes(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+10:i*12+12], "little"))
+                    #        #print(len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])])/12)
+                    #        parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7] = parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][0:i*12] + parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7][i*12+12:len(parsed_fmapdat[new_item_locals[check_spot[j][1]][0]][7])]
+                    #    newlen = 0
+                    #    check_spot = []
+            #x = 0
+            #while x < len(repack_data):
+            #    if repack_data[x][5] == new_item_locals[b][-1] + 0xD000 and (repack_data[x][0] == 0 or repack_data[x][0] == 1):
+            #        newlen += 1
+            #        check_spot.append([new_item_locals[b][7], b])
+            #        break
+            #    x += 1
 
-        #i = 0
-        #while parsed_fmapdat[new_item_locals[b][0]][7][i*12+10:i*12+12] != new_item_locals[b][7].to_bytes(2, 'little'):
-        #    i += 1
-        availability = True
-        x = 0
-        while x < len(repack_data):
-            if repack_data[x][5] == new_item_locals[b][-1] + 0xD000 and repack_data[x][0] != 5:
-                availability = False
-            x += 1
-        if availability:
-            #print(hex(new_item_locals[b][7]))
-            #Sets the last block of the room to True if it's the last block
-            if b < len(new_item_locals) - 1:
-                if new_item_locals[b][0] != new_item_locals[b+1][0]:
+            #i = 0
+            #while parsed_fmapdat[new_item_locals[b][0]][7][i*12+10:i*12+12] != new_item_locals[b][7].to_bytes(2, 'little'):
+            #    i += 1
+            availability = True
+            x = 0
+            while x < len(repack_data):
+                if repack_data[x][5] == new_item_locals[b][-1] + 0xD000 and repack_data[x][0] != 5:
+                    availability = False
+                x += 1
+            if availability:
+                #print(hex(new_item_locals[b][7]))
+                #Sets the last block of the room to True if it's the last block
+                if b < len(new_item_locals) - 1:
+                    if new_item_locals[b][0] != new_item_locals[b+1][0]:
+                        new_item_locals[b][2] += 1
+                    #print("Block type: " + hex(new_item_locals[b][2]) + " Block ID: " + hex(new_item_locals[b][7]))
+                else:
                     new_item_locals[b][2] += 1
-                #print("Block type: " + hex(new_item_locals[b][2]) + " Block ID: " + hex(new_item_locals[b][7]))
-            else:
-                new_item_locals[b][2] += 1
-            try:
-                parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
-            except struct.error:
-                print(hex(new_item_locals[b][2]))
-        elif b < len(new_item_locals) - 1:
-            #Fixes the last block in FMap if the actual last block is in FEvent
-            if new_item_locals[b][0] != new_item_locals[b+1][0] and len(parsed_fmapdat[new_item_locals[b][0]][7]) > 1:
-                new_end = b
-                isnt_key = False
-                while not isnt_key:
-                    isnt_key = True
-                    new_end -= 1
-                    c = 0
-                    while c < len(repack_data):
-                        if repack_data[c][5] == new_item_locals[new_end][-1] + 0xD000 and repack_data[c][0] != 5:
-                            isnt_key = False
-                            #print(repack_data[c][0])
-                        c += 1
-                if new_item_locals[new_end][0] == new_item_locals[b][0]:
-                    new_item_locals[new_end][2] += 1
-                    parsed_fmapdat[new_item_locals[new_end][0]][7] = parsed_fmapdat[new_item_locals[new_end][0]][7][0:-12]
-                    try:
-                        parsed_fmapdat[new_item_locals[new_end][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[new_end][2:8]))
-                    except struct.error:
-                        print(hex(new_item_locals[new_end][2]))
-                    #print(hex(new_item_locals[new_end][-1]))
-                    #print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
+                try:
+                    parsed_fmapdat[new_item_locals[b][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[b][2:8]))
+                except struct.error:
+                    print(hex(new_item_locals[b][2]))
+            elif b < len(new_item_locals) - 1:
+                #Fixes the last block in FMap if the actual last block is in FEvent
+                if new_item_locals[b][0] != new_item_locals[b+1][0] and len(parsed_fmapdat[new_item_locals[b][0]][7]) > 1:
+                    new_end = b
+                    isnt_key = False
+                    while not isnt_key:
+                        isnt_key = True
+                        new_end -= 1
+                        c = 0
+                        while c < len(repack_data):
+                            if repack_data[c][5] == new_item_locals[new_end][-1] + 0xD000 and repack_data[c][0] != 5:
+                                isnt_key = False
+                                #print(repack_data[c][0])
+                            c += 1
+                    if new_item_locals[new_end][0] == new_item_locals[b][0]:
+                        new_item_locals[new_end][2] += 1
+                        parsed_fmapdat[new_item_locals[new_end][0]][7] = parsed_fmapdat[new_item_locals[new_end][0]][7][0:-12]
+                        try:
+                            parsed_fmapdat[new_item_locals[new_end][0]][7].extend(struct.pack('<HHHHHH', *new_item_locals[new_end][2:8]))
+                        except struct.error:
+                            print(hex(new_item_locals[new_end][2]))
+                        #print(hex(new_item_locals[new_end][-1]))
+                        #print(hex(new_item_locals[new_end][0]) + ": " + parsed_fmapdat[new_item_locals[new_end][0]][7].hex())
+            fbar.update(1)
 
-        #if new_item_locals[b][2] % 2 == 1:
-        #    print(len(parsed_fmapdat[new_item_locals[b][0]][7]) % 12)
+            #if new_item_locals[b][2] % 2 == 1:
+            #    print(len(parsed_fmapdat[new_item_locals[b][0]][7]) % 12)
 
-    with (
-        code_bin_path.open('r+b') as code_bin,
-        fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('wb') as fmapdat,
-    ):
-        version_pair = determine_version_from_code_bin(code_bin)
-        fmapdat_offset_table = bytearray()
-        for fmapdat_chunk_index, fmapdat_chunk in enumerate(parsed_fmapdat):
-            fmapdat_chunk_offset = fmapdat.tell()
-            if fmapdat_chunk_index < NUMBER_OF_ROOMS:
-                inside_chunk_offset = 13 * 4 * 2
-                for section_index, section in enumerate(fmapdat_chunk):
-                    if section_index == 12:
-                        # CGFX data needs to be aligned to 128 bytes
-                        cgfx_padding = (-inside_chunk_offset) % 128
-                        inside_chunk_offset += cgfx_padding
-                    section_length = len(section)
-                    fmapdat.write(struct.pack('<II', inside_chunk_offset, section_length))
-                    inside_chunk_offset += section_length
-                for section_index, section in enumerate(fmapdat_chunk):
-                    if section_index == 12:
-                        # CGFX data needs to be aligned to 128 bytes
-                        fmapdat.write(b'\x00' * cgfx_padding)
-                    fmapdat.write(section)
-            else:
-                # CGFX data needs to be aligned to 128 bytes
-                fmapdat_chunk_offset += fmapdat.write(b'\x00' * ((-fmapdat_chunk_offset) % 128))
-                inside_chunk_offset = fmapdat.write(fmapdat_chunk)
-            # FMapDat chunks have to be aligned to 4 bytes
-            inside_chunk_offset += fmapdat.write(b'\x00' * ((-inside_chunk_offset) % 4))
-            fmapdat_offset_table.extend(struct.pack('<II', fmapdat_chunk_offset, inside_chunk_offset))
-        code_bin.seek(FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
-        code_bin.write(fmapdat_offset_table)
-        code_bin.seek(FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
-        code_bin.write(fmapdat_offset_table)
+        with (
+            code_bin_path.open('r+b') as code_bin,
+            fs_std_romfs_path(FMAPDAT_PATH, data_dir=input_folder).open('wb') as fmapdat,
+        ):
+            version_pair = determine_version_from_code_bin(code_bin)
+            fmapdat_offset_table = bytearray()
+            for fmapdat_chunk_index, fmapdat_chunk in enumerate(parsed_fmapdat):
+                fmapdat_chunk_offset = fmapdat.tell()
+                if fmapdat_chunk_index < NUMBER_OF_ROOMS:
+                    inside_chunk_offset = 13 * 4 * 2
+                    for section_index, section in enumerate(fmapdat_chunk):
+                        if section_index == 12:
+                            # CGFX data needs to be aligned to 128 bytes
+                            cgfx_padding = (-inside_chunk_offset) % 128
+                            inside_chunk_offset += cgfx_padding
+                        section_length = len(section)
+                        fmapdat.write(struct.pack('<II', inside_chunk_offset, section_length))
+                        inside_chunk_offset += section_length
+                    for section_index, section in enumerate(fmapdat_chunk):
+                        if section_index == 12:
+                            # CGFX data needs to be aligned to 128 bytes
+                            fmapdat.write(b'\x00' * cgfx_padding)
+                        fmapdat.write(section)
+                else:
+                    # CGFX data needs to be aligned to 128 bytes
+                    fmapdat_chunk_offset += fmapdat.write(b'\x00' * ((-fmapdat_chunk_offset) % 128))
+                    inside_chunk_offset = fmapdat.write(fmapdat_chunk)
+                # FMapDat chunks have to be aligned to 4 bytes
+                inside_chunk_offset += fmapdat.write(b'\x00' * ((-inside_chunk_offset) % 4))
+                fmapdat_offset_table.extend(struct.pack('<II', fmapdat_chunk_offset, inside_chunk_offset))
+                fbar.update(1)
+            code_bin.seek(FMAPDAT_REAL_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
+            code_bin.write(fmapdat_offset_table)
+            code_bin.seek(FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
+            code_bin.write(fmapdat_offset_table)
 
     randomize_repack.pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, key_item_pool_checked)
 
