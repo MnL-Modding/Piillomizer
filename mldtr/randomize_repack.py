@@ -724,16 +724,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     script = fevent_manager.parsed_script(0x0001, 0)
     script.header.triggers[4] = (0, 0, 0, 0, 0, 0x0032, 0x78012)
 
-    #Fixes the bridge in Deep Pi'illo Castle
-    script = fevent_manager.parsed_script(0x13A, 0)
-    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'init_deepbridge'
-    script.header.init_subroutine = None
-    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
-    def lower_bridge(sub: Subroutine):
-        emit_command(0x0126, [0x00, 0x01])
-        call('init_deepbridge')
-    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
-
     #Sets the script to look at the room you fight Torkscrew
     script = fevent_manager.parsed_script(0x0102, 0)
 
@@ -779,17 +769,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
         label('label_0', manager=fevent_manager)
     script.header.triggers[0] = (0xFFF00320, 0x001005DC, 0x00000000, 0x00000000, 0x000A006E, len(script.subroutines)-1, 0x00010002)
-    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
-
-    #Fixes the gate in Wakeport
-    script = fevent_manager.parsed_script(0x039, 0)
-    @subroutine(subs=script.subroutines, hdr=script.header)
-    def fix_gate(sub: Subroutine):
-        set_actor_attribute(Variables[0x7007], 0x00, 0.0)
-        set_actor_attribute(Variables[0x7007], 0x01, 0.0)
-        emit_command(0x0126, [0x00, 0x01])
-    script.header.actors.append((0x00000000, 0x00000000, (len(script.subroutines)-1)*0x10000 + script.header.sprite_groups.index(0x0001),
-                                 0xFFFFFFFF, len(script.subroutines)-1, 0x00748143))
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
     #Stops Massifs pushing rock cutscene from appearing
@@ -1588,6 +1567,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             def quick_warp(sub: Subroutine):
                 set_actor_attribute(Variables[0x7007], 0x00, 0.0)
                 set_actor_attribute(Variables[0x7007], 0x01, 0.0)
+                if s == 0x039 or s == 0x13A:
+                    emit_command(0x0126, [0x00, 0x01])
                 label('label_0', manager=fevent_manager)
                 Variables[0x1000] = Variables[0x702F] & (ButtonFlags.X + ButtonFlags.L + ButtonFlags.R)
                 branch_if(Variables[0x1000], '==', 1792.0, 'label_1')
@@ -1640,8 +1621,12 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
                 set_touches_blocked(False)
                 branch('label_0')
-            script.header.sprite_groups.append(0x0001)
-            script.header.actors.append((0x00000000, 0x00000000, (len(script.subroutines)-1)*0x10000 + len(script.header.sprite_groups) - 1,
+            try:
+                sprite_index = script.header.sprite_groups.index(0x0001)
+            except ValueError:
+                script.header.sprite_groups.append(0x0001)
+                sprite_index = len(script.header.sprite_groups) - 1
+            script.header.actors.append((0x00000000, 0x00000000, (len(script.subroutines)-1)*0x10000 + sprite_index,
                                          0xFFFFFFFF, len(script.subroutines)-1, 0x00748143))
             update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -1939,6 +1924,11 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         #print(r[0])
         script = fevent_manager.parsed_script(r[0], 0)
         script_index = r[0] * 2
+
+        # Workaround for dynamic scope in Nuitka
+        if '__compiled__' in globals():
+            inspect.currentframe().f_locals['script_index'] = script_index
+
         t = "Abilities required:"
         for a in r[6]:
             t += "\n[Color #2C65FF]" + ability_names[a] + "[Color #000000]"
@@ -1998,6 +1988,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 get_room(i[1]) == "Mount Pajamaja" or get_room(i[1]) == "Pi'illo Castle" or get_room(i[1]) == "Neo Bowser Castle" or get_room(i[1]) == "Somnom Woods"):
             block_sprite = 0x0000
             block_sprite_hit = 0x0001
+            try:
+                script.header.sprite_groups[script.header.sprite_groups.index(0x0003)] = 0x0000
+            except ValueError:
+                pass
         elif i[0] == 6:
             block_sprite = 0x0010
             block_sprite_hit = 0x0012
@@ -2255,7 +2249,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 say(None, TextboxSoundsPreset.SILENT,
                     "[DelayOff]You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 60]",
                     offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                if attack_name == ("Luiginary Typhoon" or attack_name == "Luiginary Wall" or attack_name == "Luiginary Flame"
+                if (attack_name == "Luiginary Typhoon" or attack_name == "Luiginary Wall" or attack_name == "Luiginary Flame"
                     or attack_name == "Luiginary Hammer" or attack_name == "Luiginary Stack Attack" or attack_name == "Luiginary Ball Attack"):
                     Variables[0xE01B] = 1.0 #Unlocks the luiginary attack block
                 branch('label_0')
@@ -2283,9 +2277,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             elif (i[-1] < 0xC020 or i[-1] >= 0xC0A0) and i[-1] > 10:
                 say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
-            elif i[-2] < 0xC020 or i[-2] >= 0xC0A0:
-                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                branch('label_0')
+            #elif i[-2] < 0xC020 or i[-2] >= 0xC0A0:
+            #    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+            #    branch('label_0')
 
             if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xB000 < i[6] < 0xB0E0) or (0xC343 <= i[6] <= 0xC346):
                 label('label_1', manager=fevent_manager)
