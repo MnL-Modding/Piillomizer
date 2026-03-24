@@ -248,6 +248,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xCC1D] = 1.0 #Second Gromba Fight
         Variables[0xCC1E] = 1.0 #Reuniting with Luigi
         Variables[0xCC1F] = 1.0 #Meet Starlow for First Time
+        Variables[0xCC24] = 1.0 #Your sightseeing is finished
         Variables[0xCA53] = 1.0 #Opens gate to platform room
         Variables[0xE016] = 1.0 #Unlocks access to the pause menu
         Variables[0xCC25] = 1.0 #Watched Backstory for Pi'illo Island
@@ -438,6 +439,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC41C] = 1.0 #Side Drill Tutorial Part 2
         Variables[0xC4B3] = 1.0 #Rock in second Side Drill tutorial is broken
         Variables[0xC4B8] = 1.0 #Drink fountain tutorial
+        Variables[0xC4B6] = 1.0 #Drank from fountain the first time
         Variables[0xC3D4] = 1.0 #Massifs break ice tutorial
         Variables[0xC3D5] = 1.0 #Massifs break ice tutorial
         Variables[0xC3F2] = 1.0 #Wind blows things!?
@@ -447,6 +449,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC426] = 1.0 #Retreated to Dream World
         Variables[0xC640] = 1.0 #First entered Mount Pajamaja Summit dreampoint
         Variables[0xC641] = 1.0 #Trapped in Mount Pajamaja Summit
+        Variables[0xC642] = 1.0 #Luiginary temperature tutorial
+        Variables[0xCC9D] = 1.0 #We can erupt the volcano cutscene
+        Variables[0xC645] = 1.0 #Luiginary cone storm tutorial
+        Variables[0xC646] = 1.0 #Made it to the top, considering agitating the volcano
         Variables[0xC427] = 1.0 #Exited Pajamaja Summit Cutscene
         Variables[0xC4AD] = 1.0 #Gold pipes appear in early game areas
         Variables[0xCC7F] = 1.0 #Peach is in Driftwood Shores Cutscene
@@ -486,6 +492,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC438] = 1.0 #Ultibed cutscene in Mount Pajamaja is watched
         Variables[0xC4AE] = 1.0 #Fixes a glitch in the rock code
         Variables[0xC9A2] = 1.0 #Ball Hop tutorial
+        Variables[0xC9A3] = 1.0 #Finished learning the Ball Hop
+        Variables[0xC9A4] = 1.0 #Massifs are impatient yet again
         Variables[0xC9A6] = 1.0 #Massifs can't open gate
         Variables[0xC9A7] = 1.0 #Massifs give you attack pieces
         Variables[0xC304] = 1.0 #Spawns more rocks in Mushrise Park
@@ -511,11 +519,16 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC5A0] = 1.0 #Cog has been turned
         Variables[0xE0FA] = 1.0 #Switch in Somnom Woods has been turned
         Variables[0xC5A1] = 1.0 #Bedsmith builds the Ultibed
-        Variables[0xC5B0] = 1.0 #Camera pans to show the rest of the area
+        Variables[0xC5C6] = 1.0 #Camera pans to show the rest of the area
+        Variables[0xC5C5] = 1.0 #The first Pi'illo Master is ahead
         Variables[0xC5C8] = 1.0 #Met first Pi'illo Master
         Variables[0xC5A2] = 1.0 #Watched cutscene with children of Sommon
         Variables[0xC5A5] = 1.0 #Children of Sommon introduce minigame
         Variables[0xC5A6] = 1.0 #First ball hop minigame is complete
+        Variables[0xC70B] = 1.0 #First entered the tree room
+        #Variables[0xCB76] = 1.0 #Getting near the Zeekeeper
+        Variables[0xC746] = 1.0 #Almost reached the apex
+        Variables[0xC439] = 1.0 #We're finally at Neo Bowser Castle
         Variables[0xC45E] = 1.0 #Elite Trio flee
         Variables[0xC43B] = 1.0 #Kamek randomized the rooms in the first area
         Variables[0xC475] = 1.0 #Switch is on the other side
@@ -603,6 +616,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC057] = settings[2][5]
         Variables[0xC60E] = settings[2][6]
         Variables[0xC423] = settings[2][7]
+        Variables[0xC647] = settings[2][8]
+        Variables[0xC648] = settings[2][8]
         Variables[0xC649] = settings[2][8]
         Variables[0xCB45] = settings[2][9]
         Variables[0xC637] = settings[2][10]
@@ -612,111 +627,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC0CA] = settings[2][14]
         Variables[0xC45C] = settings[2][15]
         change_room(0x001c, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
-
-    update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
-
-    #Makes Pi'illo Castle inaccessible without the right key items, and removes the invisible walls
-    script = fevent_manager.parsed_script(0x01c, 0)
-    script_index = 0x001c * 2
-
-    # Workaround for dynamic scope in Nuitka
-    if '__compiled__' in globals():
-        inspect.currentframe().f_locals['script_index'] = script_index
-    cast(SubroutineExt, script.subroutines[script.header.init_subroutine]).name = 'og_init'
-    script.header.init_subroutine = None
-    @subroutine(subs=script.subroutines, hdr=script.header, init=True)
-    def new_init(sub: Subroutine):
-        emit_command(0x0059, [0x00, 0x01])
-        emit_command(0x0059, [0x01, 0x01])
-        set_actor_attribute(0x18, 0x01, 1.0)
-        set_actor_attribute(0x18, 0x00, 1.0)
-        set_actor_attribute(0x19, 0x01, 1.0)
-        set_actor_attribute(0x19, 0x00, 1.0)
-        set_actor_attribute(0x1A, 0x01, 1.0)
-        set_actor_attribute(0x1A, 0x00, 1.0)
-        emit_command(0x00B4, [0x18, 0x00, 0x0140, 0x0000, 0x02E4])
-        emit_command(0x00B4, [0x19, 0x00, 0x01C2, 0x0000, 0x02E4])
-        emit_command(0x00B4, [0x1A, 0x00, 0x01C2, 0x0000, 0x0398])
-        set_actor_attribute(0x18, 0x17, 8.0)
-        set_actor_attribute(0x19, 0x17, 8.0)
-        set_actor_attribute(0x1A, 0x17, 0.0)
-        set_actor_attribute(0x1B, 0x01, 1.0)
-        set_actor_attribute(0x1B, 0x00, 1.0)
-        set_actor_attribute(0x1C, 0x01, 1.0)
-        set_actor_attribute(0x1C, 0x00, 1.0)
-        set_actor_attribute(0x1D, 0x01, 1.0)
-        set_actor_attribute(0x1D, 0x00, 1.0)
-        set_actor_attribute(0x1E, 0x01, 1.0)
-        set_actor_attribute(0x1E, 0x00, 1.0)
-        emit_command(0x00B4, [0x1B, 0x00, 0x041A, 0x0026, 0x02EE])
-        emit_command(0x00B4, [0x1C, 0x00, 0x047E, 0x000A, 0x02EE])
-        emit_command(0x00B4, [0x1D, 0x00, 0x047E, 0x000A, 0x03A2])
-        emit_command(0x00B4, [0x1E, 0x00, 0x041A, 0x0026, 0x03A2])
-        set_actor_attribute(0x1B, 0x17, 8.0)
-        set_actor_attribute(0x1C, 0x17, 8.0)
-        set_actor_attribute(0x1D, 0x17, 0.0)
-        set_actor_attribute(0x1E, 0x17, 0.0)
-        set_actor_attribute(0x1F, 0x01, 1.0)
-        set_actor_attribute(0x1F, 0x00, 1.0)
-        set_actor_attribute(0x21, 0x01, 1.0)
-        set_actor_attribute(0x21, 0x00, 1.0)
-        emit_command(0x00B4, [0x1F, 0x00, 0x030C, 0x003C, 0x03E8])
-        emit_command(0x00B4, [0x21, 0x00, 0x0384, 0x003C, 0x03E8])
-        set_actor_attribute(0x1F, 0x17, 4.0)
-        set_actor_attribute(0x21, 0x17, 12.0)
-        set_actor_attribute(0x1B, 0x2D, 1.0)
-        set_actor_attribute(0x1B, 0x2E, 1.0)
-        set_actor_attribute(0x1B, ActorAttribute.OBJECT_COLLISION, 1.0)
-        set_actor_attribute(0x1B, 0x32, 1.0)
-        set_actor_attribute(0x1C, 0x2D, 1.0)
-        set_actor_attribute(0x1C, 0x2E, 1.0)
-        set_actor_attribute(0x1C, ActorAttribute.OBJECT_COLLISION, 1.0)
-        set_actor_attribute(0x1C, 0x32, 1.0)
-        set_actor_attribute(0x1D, 0x2D, 1.0)
-        set_actor_attribute(0x1D, 0x2E, 1.0)
-        set_actor_attribute(0x1D, ActorAttribute.OBJECT_COLLISION, 1.0)
-        set_actor_attribute(0x1D, 0x32, 1.0)
-        set_actor_attribute(0x1E, 0x2D, 1.0)
-        set_actor_attribute(0x1E, 0x2E, 1.0)
-        set_actor_attribute(0x1E, ActorAttribute.OBJECT_COLLISION, 1.0)
-        set_actor_attribute(0x1E, 0x32, 1.0)
-        set_actor_attribute(0x1F, 0x2D, 1.0)
-        set_actor_attribute(0x1F, 0x2E, 1.0)
-        set_actor_attribute(0x1F, ActorAttribute.OBJECT_COLLISION, 1.0)
-        set_actor_attribute(0x1F, 0x32, 1.0)
-        set_actor_attribute(0x20, 0x2D, 1.0)
-        set_actor_attribute(0x20, 0x2E, 1.0)
-        set_actor_attribute(0x20, ActorAttribute.OBJECT_COLLISION, 1.0)
-        set_actor_attribute(0x20, 0x32, 1.0)
-        set_actor_attribute(0x21, 0x2D, 1.0)
-        set_actor_attribute(0x21, 0x2E, 1.0)
-        set_actor_attribute(0x21, ActorAttribute.OBJECT_COLLISION, 1.0)
-        set_actor_attribute(0x21, 0x32, 1.0)
-        emit_command(0x0126, [0x00, 0x01])
-        branch_if(Variables[0xE075], '==', 1.0, 'label_0')
-        emit_command(0x00B4, [0x1B, 0x00, 0x0300, 0x0084, 0x0200])
-        emit_command(0x00B4, [0x1C, 0x00, 0x0340, 0x0084, 0x0200])
-        emit_command(0x00B4, [0x18, 0x00, 0x0370, 0x0084, 0x0200])
-        emit_command(0x00B4, [0x19, 0x00, 0x03A0, 0x0084, 0x0200])
-        emit_command(0x00B4, [0x1D, 0x00, 0x0320, 0x00A0, 0x0200])
-        emit_command(0x00B4, [0x1E, 0x00, 0x0358, 0x00A8, 0x0200])
-        emit_command(0x00B4, [0x1A, 0x00, 0x0388, 0x00A8, 0x0200])
-        emit_command(0x00B4, [0x1F, 0x00, 0x02E8, 0x00A0, 0x0200])
-        emit_command(0x00B4, [0x21, 0x00, 0x03B8, 0x00A8, 0x0200])
-
-        label('label_0', manager=fevent_manager)
-        set_action_icons_shown(True, animated=False)
-        tint_screen('00000000', initial='------FF', transition_duration=16)
-        #for l in range(0x0F):
-        #    emit_command(0x0037, [0x00, l], Variables[0x1000])
-        #    say(None, TextboxSoundsPreset.SILENT,
-        #            str(l) + "[Var 1000 digits=2][Pause 30]",
-        #            offset=(0.0, 0.0, 0.0), alignment=TextboxAlignment.TOP_CENTER)
-        set_blocked_buttons(Screen.TOP, ButtonFlags.NONE)
-        set_blocked_buttons(Screen.BOTTOM, ButtonFlags.NONE)
-        set_movement_multipliers(Screen.TOP, 1.0, 1.0)
-        set_movement_multipliers(Screen.BOTTOM, 1.0, 1.0)
-        set_touches_blocked(False)
 
     update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
@@ -1567,11 +1477,11 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             def quick_warp(sub: Subroutine):
                 set_actor_attribute(Variables[0x7007], 0x00, 0.0)
                 set_actor_attribute(Variables[0x7007], 0x01, 0.0)
-                if s == 0x039 or s == 0x13A:
+                if s == 0x01C or s == 0x039 or s == 0x13A:
                     emit_command(0x0126, [0x00, 0x01])
                 label('label_0', manager=fevent_manager)
-                Variables[0x1000] = Variables[0x702F] & (ButtonFlags.X + ButtonFlags.L + ButtonFlags.R)
-                branch_if(Variables[0x1000], '==', 1792.0, 'label_1')
+                Variables[0x1000] = Variables[0x702F] & (ButtonFlags.X + ButtonFlags.L)
+                branch_if(Variables[0x1000], '==', 1536.0, 'label_1')
                 wait(1)
                 branch('label_0')
 
@@ -1902,7 +1812,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
     #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical, 2 = Up, 3 = Square), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
     rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1140, 0, 1628, 3, [0, 1]], [0x018, 1, 640, 280, 324, 3, [0]],
-                [0x184, 0, 520, 0, 800, 3, [0]], [0x04F, 3, 1840, 30, 1150, 1, [0]],
+                [0x184, 0, 520, 0, 800, 3, [0]], [0x04F, 3, 1840, 30, 1150, 1, [0]], [0x01C, 0, 768, 132, 512, 3, [14]],
 
                 [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 9, 10, 11]], [0x288, 0, 552, 40, 510, 2, [6]],
                 [0x03A, 0, 936, 10, 800, 2, [6]], [0x03B, 0, 1205, 33, 1380, 1, [6]], [0x04C, 0, 975, 30, 920, 2, [6, 10]], [0x104, 0, 735, 180, 355, 1, [6]],
