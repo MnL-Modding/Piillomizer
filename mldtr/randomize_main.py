@@ -50,7 +50,7 @@ def get_room(id):
 def get_zone_id(room, id):
     #Returns the zone id corresponding to the room and item id being checked
     if (room == 0x000 or room == 0x001 or 0x006 <= room <= 0x008 or room == 0x00B or room == 0x1C8 or
-        0x01E <= room <= 0x02F or room == 0x033 or room == 0x108 or room == 0x183):
+        0x01E <= room <= 0x02F or room == 0x033 or room == 0x0B0 or room == 0x108 or room == 0x183):
         return 4
     elif room == 0x01B or room == 0x056 or room == 0x058 or room == 0x05B or room == 0x05C:
         return 0
@@ -265,7 +265,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         # Opens code.bin for enemy stat randomization
         code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
-        enemy_stats = load_enemy_stats(code_bin=code_bin_path)
         #enemy_stats_rand = []
         #boss_stats_rand = []
         #dream_boss_stats_rand = []
@@ -363,7 +362,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                        [[0x65], [0x66, 3], [0x67, 3], [0x68, 3], [0x69, 3], [0x6e], [0x6f]], [[0x64], [0x6a], [0x70]], [], [[0x71], [0x74], [0x79, 6], [0x7c, 6], [0x7d, 6]], [[0x75], [0x76], [0x77], [0x78], [0x7b, 6], [0x7a]], [], []]
 
         #Logic for bosses
-        boss_logic = [[], [[0x11], [0x17]], [], [], [[0x1e], [0x24, 6]], [], [], [], [[0x2a, 18, 19, 20, 21]], [[0x34, 6]], [[0x5f]], [], [], [], [[0x3e]],
+        boss_logic = [[], [[0x11], [0x17]], [], [], [[0x1e], [0x24, 6]], [], [], [], [[0x2a, 18, 19, 20, 21]], [[0x34, 1, 2, 6, 8, 9, -1, 2, 5, 6, 8, 9]], [[0x5f]], [], [], [], [[0x3e]],
                       [], [[0x4f, 25, 26, 10]], [], [], [[0x6b]], [], [[0x7e, 0, 3, 6]], [[0x7f, 0, 6], [0x80, 0, 6]], [], [[0x89], [0x91]]]
 
         pbar.update(6)
@@ -471,6 +470,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     new_block = [0x10, 0x0, int(((script.header.triggers[trigger][0] % 0x10000) + (script.header.triggers[trigger][1] % 0x10000))/2) - 0x20,
                                  script.header.triggers[trigger][4] % 0x10000 + 0x55,
                                  int(((script.header.triggers[trigger][0] // 0x10000) + (script.header.triggers[trigger][1] // 0x10000)) / 2), unused_blocks[block_id]]
+                    if room == 0x0F5:
+                        new_block[3] += 0x40
                     if room == 0x0F6 or room == 0x0C6 or room == 0x1E7:
                         new_block[3] += 0x20
                     elif room == 0x10C:
@@ -529,13 +530,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                        [0x48], [0x49], [0x4a, 16, 1], [0x4b, 16, 2], [0x4c, 2], [0x4d, 2], [0x4e, 0], [0x4f], [0x50], [0x51], [0x52, 2], [0x53, 2], [0x54, 2], [0x55, 2, 3, -1, 2, 5], [0x56, 4], [0x57], [0x58], [0x59, 4], [0x5a, 2],
                        [0x67], [0x68], [0x6b], [0x956, 0], [0x957, 0], [0x6c, 2], [0x6d, 2], [0x6e, 2], [0x6f, 2], [0xb6, 6], [0xb7, 6], [0x77, 6], [0x79, 6], [0x7b, 6], [0x7d, 6], [0x9c, 6], [0x7f, 6], [0x81, 6], [0x1c5, 6], [0x83, 6], [0x84, 6],
                        [0x958, 6], [0x8d, 6], [0x8e, 6], [0x1c6, 6], [0x1c7, 6], [0x1c8, 6], [0x959, 6], [0x90, 6], [0x91, 6], [0x1c9, 6], [0x92, 6], [0x93, 6], [0x98], [0x95a, 6], [0x95b, 6], [0x97, 6], [0x5e7, 3],
-                       [0x5e8, 2, 3, -1, 2, 5], [0x5e9, 2, 3, -1, 2, 5], [0x5e2, 1], [0x5e3, 3, -1, 5], [0x5e4, 3, 5], [0x5e5, 5], [0x5e6, 2], [0x82c, 1], [0x82d, 1, 2], [0x75, 1], [0x76, 1, 2, 5]],
+                       [0x5e8, 2, 3, -1, 2, 5], [0x5e9, 2, 3, -1, 2, 5], [0x94, 6], [0x5e2, 1], [0x5e3, 3, -1, 5], [0x5e4, 3, 5], [0x5e5, 5], [0x5e6, 2], [0x82c, 1], [0x82d, 1, 2], [0x75, 1], [0x76, 1, 2, 5]],
                       [[0x3e], [0x3f], [0x40], [0x41], [0x1], [0x2], [0x3], [0x4], [0x42], [0x5], [0x6], [0x2c], [0x30], [0x44], [0x45], [0x46], [0x47], [0x5b], [0x5c, 1, 5],
                        [0x955, 4, 5], [0x5e, 4, 5], [0x5f, 4, 5], [0x60, 4, 5], [0x61, 4, 5], [0x62, 4, 5], [0x63, 2, 4, 5], [0x64, 2, 4, 5], [0x65, 2, 4, 5], [0x66, 2, 4, 5], [0x70], [0x71], [0x72], [0x73], [0x74]],
 
-                      [[0xfd, 2], [0x5d], [0x69, 2], [0x6a, 1], [0x86, 2], [0x117, 2], [0x119, 2], [0x11a, 1], [0x11b], [0x11c, 2], [0x1e5], [0x60d, 1], [0x60e], [0x60f, 1], [0x610, 2], [0x611, 1], [0x612, 1],
+                      [[0xfd, 2], [0x5d], [0x69, 2], [0x6a, 1], [0x86, 2], [0x117, 2], [0x119, 2], [0x11a, 1], [0x11b, 17], [0x11c, 2], [0x1e5], [0x60d, 1], [0x60e], [0x60f, 1], [0x610, 2], [0x611, 1], [0x612, 1],
                        [0x607, 1], [0x608, 1], [0x609, 1], [0x95e, 1], [0x20a, 1, 4, -1, 5], [0x95f, 3, -1, 5], [0x60b], [0x60c, 2], [0x210, 1, 4, -1, 1, 5], [0x61b, 1, 4, -1, 0, 5], [0x61c, 1, 4, -1, 0, 5], [0x61d, 2, 4], [0x3dc, 2], [0xfe, 2],
-                       [0x100], [0x101], [0x102], [0xea], [0x10c, 2], [0x10d], [0x10e], [0x109, 2], [0x10a], [0x10b], [0x19d], [0x19e], [0x975, 6],
+                       [0x100], [0x101], [0x102], [0xea], [0x10c, 2], [0x10d], [0x10e], [0x109, 17, 2], [0x10a, 17], [0x10b, 17], [0x19d], [0x19e], [0x975, 6],
                        [0x53b, 1, 4, -1, 0, 5], [0x53c, 1, 4, -1, 0, 5], [0x53d, 1, 4, -1, 0, 5], [0x98f, 1, 4, -1, 0, 5], [0x568, 5, 6], [0x569, 5, 6]],
                       [[0x31, 2], [0x32, 2], [0x10f, 2], [0x110, 2], [0x111, 2], [0x112, 2], [0x113, 2], [0x33], [0x114, 2], [0x3c9, 2], [0x115], [0x116],
                        [0x87], [0x88], [0x11d, 2], [0x11e, 2], [0x11f], [0x120], [0x121], [0x122], [0x123], [0x89], [0x8a], [0x124, 2], [0x125], [0x126, 2], [0x127, 2], [0x128, 2], [0x945],
@@ -553,7 +554,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                        [0x266, 1, 2, 6, -1, 2, 5, 6], [0x267, 1, 2, 6, -1, 2, 5, 6], [0x268, 1, 2, 6, -1, 2, 5, 6], [0x269, 1, 2, 6, -1, 2, 5, 6], [0x26a, 1, 2, 6, -1, 2, 5, 6],
                        [0x26b, 1, 2, 6, -1, 2, 5, 6], [0x26c, 1, 2, 6, -1, 2, 5, 6], [0x26d, 1, 2, 6, -1, 2, 5, 6], [0x26e, 1, 2, 6, -1, 2, 5, 6], [0x26f, 1, 2, 6, -1, 2, 5, 6],
                        [0x270, 1, 2, 6, -1, 2, 5, 6], [0x271, 1, 2, 6, -1, 2, 5, 6], [0x272, 1, 2, 6, -1, 2, 5, 6], [0x273, 1, 2, 6, -1, 2, 5, 6],
-                       [0x579, 1, 2, 6, -1, 2, 5, 6], [0x57a, 1, 2, 6, -1, 2, 5, 6], [0x274, 1, 2, 6, -1, 2, 5, 6], [0x275, 1, 2, 6, -1, 2, 5, 6],
+                       [0x579, 1, 2, 6, -1, 2, 5, 6], [0x57a, 1, 2, 6, 8, -1, 2, 5, 6, 8], [0x274, 1, 2, 6, 8, 9, -1, 2, 5, 6, 8, 9], [0x275, 1, 2, 6, 8, 9, -1, 2, 5, 6, 8, 9],
                        [0x2f8, 0], [0x2f9, 0], [0x2fc, 2], [0x5f6, 1, -1, 5]],
                       [[0x5ec], [0x5fd], [0x5fe], [0x921], [0x922], [0x923], [0x5ff], [0x600], [0x601], [0x602], [0x276], [0x96c], [0x96d], [0x96e], [0x96f], [0x970], [0x971],
                        [0x972], [0x2b9], [0x973], [0x974], [0x2bc], [0x2bd], [0x2d6], [0x2d7], [0x2d8], [0x2fd], [0x2f2], [0x2f3], [0x2f4], [0x2f5], [0x9b2], [0x2f6], [0x2f7]],
@@ -603,9 +604,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                       [[0x8e1], [0x8e2], [0x8e3], [0x8e4], [0x8e5], [0x94e], [0x8f5], [0x8f6], [0x8f7]]]
 
         if settings[1][0] == 1:
-            item_logic[4][77] = [0x82c]
-            item_logic[4][78] = [0x82d, 2]
-            item_logic[4][80] = [0x76, 2, 5]
+            item_logic[4][78] = [0x82c]
+            item_logic[4][79] = [0x82d, 2]
+            item_logic[4][81] = [0x76, 2, 5]
             item_logic[6][11] = [0x60d]
             item_logic[6][15] = [0x611]
             item_logic[6][16] = [0x612]
@@ -876,6 +877,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         attackcut = 0
         key_item_pool_checked = []
         new_enemy_stats = []
+        enemy_added = []
         attack = random.randint(0, len(attack_piece_pool) - 1)
         while attack == 4 or attack == 8 or attack == 9 or attack == 11 or attack == 13 or attack == 14:
             attack = random.randint(0, len(attack_piece_pool) - 1)
@@ -1054,67 +1056,65 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 if len(enemy_logic) > 0 and is_available(area_logic[i], key_item_check, settings):
                     while j < len(enemy_logic[i]):
                         if is_available(enemy_logic[i][j], key_item_check, settings):
-                            new_enemy_stats.append([enemy_logic[i][j][0], int(init_enemy_stats[1]), int(init_enemy_stats[2]), int(init_enemy_stats[3]),
-                                                    int(init_enemy_stats[4]), int(init_enemy_stats[5]), int(init_enemy_stats[6]), 0, 0, 0, 0, 0,
-                                                    int(init_enemy_stats[0])])
-                            #Increase level by 1 every 3 enemies
-                            #Increase HP by 1.5 every enemy
-                            #Increase POW by 2 every enemy
-                            #Increase DEF by 1.5 every enemy
-                            #Increase SPEED by 1 every enemy
-                            #Increase EXP by 2.5 every enemy
-                            #Increase COINS by 0.75 every enemy
-                            add_level += 1
-                            if add_level == 3:
-                                init_enemy_stats[0] += 1
-                                add_level = 1
-                            init_enemy_stats[1] += 3
-                            init_enemy_stats[2] += 2.5 * stat_mult[0]
-                            init_enemy_stats[3] += 3
-                            init_enemy_stats[4] += 1.5
-                            init_enemy_stats[5] += 2.5 * stat_mult[1]
-                            init_enemy_stats[6] += 0.5
+                            try:
+                                enemy_added.index(enemy_logic[i][j][0])
+                            except ValueError:
+                                #print(enemy_logic[i][j][0])
+                                enemy_added.append(enemy_logic[i][j][0])
+                                new_enemy_stats.append([enemy_logic[i][j][0], int(init_enemy_stats[1]), int(init_enemy_stats[2]), int(init_enemy_stats[3]),
+                                                        int(init_enemy_stats[4]), int(init_enemy_stats[5]), int(init_enemy_stats[6]), 0, 0, 0, 0, 0,
+                                                        int(init_enemy_stats[0])])
+                                #Increase level by 1 every 3 enemies
+                                #Increase HP by 1.5 every enemy
+                                #Increase POW by 2 every enemy
+                                #Increase DEF by 1.5 every enemy
+                                #Increase SPEED by 1 every enemy
+                                #Increase EXP by 2.5 every enemy
+                                #Increase COINS by 0.75 every enemy
+                                add_level += 1
+                                if add_level == 3:
+                                    init_enemy_stats[0] += 1
+                                    add_level = 1
+                                init_enemy_stats[1] += 3
+                                init_enemy_stats[2] += 2.5 * stat_mult[0]
+                                init_enemy_stats[3] += 3
+                                init_enemy_stats[4] += 1.5
+                                init_enemy_stats[5] += 2.5 * stat_mult[1]
+                                init_enemy_stats[6] += 0.5
 
-                            if new_enemy_stats[-1][0] == 87:
-                                new_enemy_stats[-1][5] //= 4
-                                new_enemy_stats[-1][6] //= 4
-                                new_enemy_stats.append([88, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([89, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                            elif (new_enemy_stats[-1][0] == 19 or new_enemy_stats[-1][0] == 33 or new_enemy_stats[-1][0] == 45 or new_enemy_stats[-1][0] == 47 or
-                            new_enemy_stats[-1][0] == 49 or new_enemy_stats[-1][0] == 64 or new_enemy_stats[-1][0] == 72 or new_enemy_stats[-1][0] == 78 or
-                            new_enemy_stats[-1][0] == 99 or new_enemy_stats[-1][0] == 112 or new_enemy_stats[-1][0] == 121 or new_enemy_stats[-1][0] == 123 or
-                            new_enemy_stats[-1][0] == 124):
-                                new_enemy_stats[-1][1] //= 3
-                                new_enemy_stats[-1][5] //= 5
-                                new_enemy_stats[-1][6] //= 5
-                                if new_enemy_stats[-1][0] == 33:
-                                    new_enemy_stats[-1][1] //= 2
-                                    new_enemy_stats[-1][5] //= 2
+                                for stat in range(len(new_enemy_stats[-1])):
+                                    if new_enemy_stats[-1][stat] < 1:
+                                        new_enemy_stats[-1][stat] = 1
+                                    elif new_enemy_stats[-1][stat] > 0xFFFF:
+                                        new_enemy_stats[-1][stat] = 0xFFFF
+                                #print(init_enemy_stats)
+                                #print(new_enemy_stats[-1])
 
-                            for stat in range(len(new_enemy_stats[-1])):
-                                if new_enemy_stats[-1][stat] < 1:
-                                    new_enemy_stats[-1][stat] = 1
-                                elif new_enemy_stats[-1][stat] > 0xFFFF:
-                                    new_enemy_stats[-1][stat] = 0xFFFF
+                                if new_enemy_stats[-1][0] == 87:
+                                    new_enemy_stats[-1][5] //= 4
+                                    new_enemy_stats[-1][6] //= 4
+                                    new_enemy_stats.append([88, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    new_enemy_stats.append([89, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                elif (new_enemy_stats[-1][0] == 19 or new_enemy_stats[-1][0] == 33 or new_enemy_stats[-1][0] == 45 or new_enemy_stats[-1][0] == 47 or
+                                new_enemy_stats[-1][0] == 49 or new_enemy_stats[-1][0] == 64 or new_enemy_stats[-1][0] == 72 or new_enemy_stats[-1][0] == 78 or
+                                new_enemy_stats[-1][0] == 99 or new_enemy_stats[-1][0] == 112 or new_enemy_stats[-1][0] == 121 or new_enemy_stats[-1][0] == 123 or
+                                new_enemy_stats[-1][0] == 124):
+                                    new_enemy_stats[-1][1] //= 3
+                                    new_enemy_stats[-1][5] //= 5
+                                    new_enemy_stats[-1][6] //= 5
+                                    if new_enemy_stats[-1][0] == 33:
+                                        new_enemy_stats[-1][1] //= 2
+                                        new_enemy_stats[-1][5] //= 2
+                                    #print(new_enemy_stats[-1])
 
                             #del enemy_stats_rand[i]
-                            curr_enemy = enemy_logic[i][j][0]
-                            k = 0
-                            while k < len(enemy_logic):
-                                l = 0
-                                while l < len(enemy_logic[k]):
-                                    if len(enemy_logic[k]) > 0 and len(enemy_logic[i]) > 0:
-                                        if enemy_logic[k][l][0] == curr_enemy:
-                                            del enemy_logic[k][l]
-                                            l -= 1
-                                    l += 1
-                                k += 1
+                            del enemy_logic[i][j]
                             j -= 1
                         j += 1
                 j = 0
@@ -1124,80 +1124,75 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 if len(boss_logic) > 0 and is_available(area_logic[i], key_item_check, settings):
                     while j < len(boss_logic[i]):
                         if is_available(boss_logic[i][j], key_item_check, settings):
-                            new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + (len(new_enemy_stats) * 24)), int(init_boss_stats[2] + (len(new_enemy_stats) * 4 * stat_mult[0])),
-                                                    int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int(init_boss_stats[5] + (len(new_enemy_stats) * 75 * stat_mult[1])),
-                                                    int(init_boss_stats[6] + (len(new_enemy_stats))), 0, 0, 0, 0, 0, int(init_boss_stats[0] + ((len(new_enemy_stats) // 2.5) + 1))])
+                            try:
+                                enemy_added.index(boss_logic[i][j][0])
+                            except ValueError:
+                                #print(enemy_logic[i][j][0])
+                                enemy_added.append(boss_logic[i][j][0])
+                                new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + (len(new_enemy_stats) * 24)), int(init_boss_stats[2] + (len(new_enemy_stats) * 4 * stat_mult[0])),
+                                                        int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int((init_boss_stats[5] + (len(new_enemy_stats) * 75 * stat_mult[1])) / 2),
+                                                        int(init_boss_stats[6] + (len(new_enemy_stats))), 0, 0, 0, 0, 0, int(init_boss_stats[0] + ((len(new_enemy_stats) // 2.5) + 1))])
 
-                            for stat in range(len(new_enemy_stats[-1])):
-                                if new_enemy_stats[-1][stat] < 1:
-                                    new_enemy_stats[-1][stat] = 1
-                                elif new_enemy_stats[-1][stat] > 0xFFFF:
-                                    new_enemy_stats[-1][stat] = 0xFFFF
-                            #print(new_enemy_stats[-1])
+                                for stat in range(len(new_enemy_stats[-1])):
+                                    if new_enemy_stats[-1][stat] < 1:
+                                        new_enemy_stats[-1][stat] = 1
+                                    elif new_enemy_stats[-1][stat] > 0xFFFF:
+                                        new_enemy_stats[-1][stat] = 0xFFFF
+                                #print(new_enemy_stats[-1])
 
-                            if new_enemy_stats[-1][0] == 107:
-                                for m in range(5):
-                                    new_enemy_stats[-1][m+1] //= 2
-                                new_enemy_stats.append([108, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                            elif new_enemy_stats[-1][0] == 17:
-                                new_enemy_stats[-1][1] //= 4
-                                new_enemy_stats[-1][5] //= 4
-                                new_enemy_stats[-1][6] //= 4
-                            elif new_enemy_stats[-1][0] == 145:
-                                new_enemy_stats[-1][5] = 0
-                                new_enemy_stats[-1][6] = 0
-                                new_enemy_stats.append([146, new_enemy_stats[-1][1] // 8, new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([147, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([148, new_enemy_stats[-1][1] // 2, new_enemy_stats[-1][2] // 4, new_enemy_stats[-1][3] // 3,
-                                                        new_enemy_stats[-1][4] + 10, new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([149, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([150, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([151, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([152, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                            elif new_enemy_stats[-1][0] == 79:
-                                new_enemy_stats.append([80, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                new_enemy_stats.append([81, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                        new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                        new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                        new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                if new_enemy_stats[-1][0] == 107:
+                                    for m in range(5):
+                                        new_enemy_stats[-1][m+1] //= 2
+                                    new_enemy_stats.append([108, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                elif new_enemy_stats[-1][0] == 17:
+                                    new_enemy_stats[-1][1] //= 4
+                                    new_enemy_stats[-1][5] //= 4
+                                    new_enemy_stats[-1][6] //= 4
+                                elif new_enemy_stats[-1][0] == 145:
+                                    new_enemy_stats[-1][5] = 0
+                                    new_enemy_stats[-1][6] = 0
+                                    new_enemy_stats.append([146, new_enemy_stats[-1][1] // 8, new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    new_enemy_stats.append([147, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    new_enemy_stats.append([148, new_enemy_stats[-1][1] // 2, new_enemy_stats[-1][2] // 4, new_enemy_stats[-1][3] // 3,
+                                                            new_enemy_stats[-1][4] + 10, new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    new_enemy_stats.append([149, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    new_enemy_stats.append([150, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    new_enemy_stats.append([151, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    new_enemy_stats.append([152, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                elif new_enemy_stats[-1][0] == 79:
+                                    new_enemy_stats.append([80, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    new_enemy_stats.append([81, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                            new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                            new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                            new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
 
-                            k = 0
-                            curr_boss = boss_logic[i][j][0]
-                            while k < len(boss_logic):
-                                l = 0
-                                while l < len(boss_logic[k]):
-                                    if len(boss_logic[k]) > 0 and len(boss_logic[i]) > 0:
-                                        if boss_logic[k][l][0] == curr_boss:
-                                            del boss_logic[k][l]
-                                            l -= 1
-                                    l += 1
-                                k += 1
+                            del boss_logic[i][j]
                             j -= 1
                         j += 1
                 j = 0
@@ -1576,8 +1571,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
     with tqdm(total=len(new_enemy_stats), desc="Repacking Enemy Stats...") as ebar:
         #Repackages randomized enemy stats
+        enemy_stats = load_enemy_stats(code_bin=code_bin_path)
         for enemy in range(len(new_enemy_stats)):
             #print(new_enemy_stats[enemy])
+            #print(new_enemy_stats[enemy][0])
             enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
             enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
             enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
