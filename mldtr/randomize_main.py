@@ -172,6 +172,9 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         random.seed(seed)
         pbar.update(1)
 
+        if settings[3][0] == -1:
+            settings[3][0] = random.randint(0, 1)
+
         #An array containing the maximum values of each item
         max_values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -391,15 +394,15 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
             # Fixes the experience cap to go way higher
             if version_pair[0] == 'E':
-                if version_pair[1] == '1.0':
+                if version_pair[1] == '1.1':
                     code_bin.seek(0x3FF0D0)
                     code_bin.write(bytes.fromhex("50 C3"))
                     code_bin.seek(0x44FD30)
                     code_bin.write(bytes.fromhex("50 C3"))
                 else:
-                    code_bin.seek(0x4FF0D0)
+                    code_bin.seek(0x3FF1BC)
                     code_bin.write(bytes.fromhex("50 C3"))
-                    code_bin.seek(0x54FD30)
+                    code_bin.seek(0x45034C)
                     code_bin.write(bytes.fromhex("50 C3"))
 
         #print(len(parsed_fmapdat[0x40][6]))
@@ -536,7 +539,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
                       [[0xfd, 2], [0x5d], [0x69, 2], [0x6a, 1], [0x86, 2], [0x117, 2], [0x119, 2], [0x11a, 1], [0x11b, 17], [0x11c, 2], [0x1e5], [0x60d, 1], [0x60e], [0x60f, 1], [0x610, 2], [0x611, 1], [0x612, 1],
                        [0x607, 1], [0x608, 1], [0x609, 1], [0x95e, 1], [0x20a, 1, 4, -1, 5], [0x95f, 3, -1, 5], [0x60b], [0x60c, 2], [0x210, 1, 4, -1, 1, 5], [0x61b, 1, 4, -1, 0, 5], [0x61c, 1, 4, -1, 0, 5], [0x61d, 2, 4], [0x3dc, 2], [0xfe, 2],
-                       [0x100], [0x101], [0x102], [0xea], [0x10c, 2], [0x10d], [0x10e], [0x109, 17, 2], [0x10a, 17], [0x10b, 17], [0x19d], [0x19e], [0x975, 6],
+                       [0x100], [0x101], [0x102], [0xea], [0x10c, 2], [0x10d], [0x10e], [0x109, 17, 2, 5], [0x10a, 17, 5], [0x10b, 17], [0x19d], [0x19e], [0x975, 6],
                        [0x53b, 1, 4, -1, 0, 5], [0x53c, 1, 4, -1, 0, 5], [0x53d, 1, 4, -1, 0, 5], [0x98f, 1, 4, -1, 0, 5], [0x568, 5, 6], [0x569, 5, 6]],
                       [[0x31, 2], [0x32, 2], [0x10f, 2], [0x110, 2], [0x111, 2], [0x112, 2], [0x113, 2], [0x33], [0x114, 2], [0x3c9, 2], [0x115], [0x116],
                        [0x87], [0x88], [0x11d, 2], [0x11e, 2], [0x11f], [0x120], [0x121], [0x122], [0x123], [0x89], [0x8a], [0x124, 2], [0x125], [0x126, 2], [0x127, 2], [0x128, 2], [0x945],
@@ -794,10 +797,11 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #        print(item_locals[item][6])
 
         #Creates an item pool for the key items
-        key_item_pool = [[0xE002, 0], [0xE002, 1], [0xE002, 2], [0xE004, 3], [0xE004, 4], [0xE005, 5], [0xE00A, 6], [0xE00D, 7],
-                         [0xE00F, 8], [0xE00E, 9], [0xE010, 10], [0xE011, 11], [0xE012, 12], [0xE013, 13], [0xE075, 14], [0xC369, 15],
+        key_item_pool = [[0xE002 - settings[3][0], 0], [0xE002 - settings[3][0], 1], [0xE002 - settings[3][0], 2], [0xE004, 3], [0xE004, 4],
+                         [0xE005, 5], [0xE00A, 6], [0xE00D, 7], [0xE00F, 8], [0xE00E, 9], [0xE010, 10], [0xE011, 11], [0xE012, 12], [0xE013, 13], [0xE075, 14], [0xC369, 15],
                          [0xCABF, 16], [0xE0A0, 17], [0xC343, 18], [0xC344, 19], [0xC345, 20], [0xC346, 21], [0xC960, 22], [0xC3B9, 23],
                          [0xB0F7, 24], [0xB0F7, 25], [0xB0F7, 26], [0xC47E, 27]]
+        print(key_item_pool[0][0])
 
         #Checked array for the key items
         key_item_check = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -835,7 +839,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                               [0x01, 0xB04C], [0x02, 0xB04C], [0x04, 0xB04C], [0x08, 0xB04C], [0x10, 0xB04C]],]
 
         #Logic for the key items, so they only spawn when others are already in the pool
-        logic_logic = [[0, 15], [1, 0], [2, 1], [3, 15, -1, 1], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5, 14, -1, 15], [6, 15], [7, 6], [8, 6], [9, 6],
+        logic_logic = [[0, 15], [1, 0 + (settings[3][0]*2)], [2, 1 - settings[3][0]], [3, 15, -1, 1], [4, 15, 16, 3, -1, 23, 1, 3, -1, 1, 3, 5], [5, 14, -1, 15], [6, 15], [7, 6], [8, 6], [9, 6],
                        [10, 15, 3, 6, -1, 23, 1, 3, 6], [11, 10], [12, 7], [13, 7], [14], [15], [16, 15], [17, 15, 16], [18, 17], [19, 17], [20, 17], [21, 17],
                        [22, 15], [23, 1], [24, 15, 16, 1, 3, 6], [25, 24], [26, 25], [27, 15, 1]]
 
@@ -1353,7 +1357,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                        "DEF Mush Jam", "Duplex Crown", " -- ", "Mushroom Amulet", "DoB Ring", "Mini Ring", "Silver Statue", "Gold Statue"]]
 
         #Names for key items
-        key_item_names = ["Progressive Hammers 1", "Progressive Hammers 2", "Progressive Hammers 3", "Progressive Spin 1", "Progressive Spin 2", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack Spring Jump",
+        key_item_names = ["Progressive Hammers 1", "Progressive Hammers " + str(settings[3][0] + 2), "Progressive Hammers " + str(3 - settings[3][0]), "Progressive Spin 1", "Progressive Spin 2", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack Spring Jump",
                           "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
                           "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
 
@@ -1501,10 +1505,16 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         else:
             spoiler_log.write("Off\nReduced Ball Hop Skips: ")
         if settings[1][1] == 1:
-            spoiler_log.write("On\n\n")
+            spoiler_log.write("On\nSecond Progressive Hammers: ")
         else:
-            spoiler_log.write("Off\n\n")
+            spoiler_log.write("Off\nSecond Progressive Hammers: ")
+        if settings[3][0] == 1:
+            spoiler_log.write("Mole Mario\n\n")
+        else:
+            spoiler_log.write("Mini Mario\n\n")
         room_check = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        hammer_num = 1
+        spin_num = 1
         for s in range(len(new_item_locals)):
             if s > 0:
                 #if new_item_locals[s][0] != new_item_locals[s-1][0] and new_item_locals[s][0] < len(item_local_names):
@@ -1518,7 +1528,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 while len(room_check) < new_item_locals[s][0] + 1:
                     room_check.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] += 1
-            number = str(room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])])
             k = find_index_in_2d_list(repack_data, new_item_locals[s][7] + 0xD000)
             if k is None:
                 item = item_names[new_item_locals[s][3] // 0x2000][int(new_item_locals[s][3] / 2) % 0x100]
@@ -1545,7 +1554,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 room_name = hex(new_item_locals[s][0])
             spoiler_log.write(room_name + " " + check_type + " " + hex(new_item_locals[s][7]) + " - " + item + "\n")
             sbar.update(1)
-        spoiler_log.write("\nTracker Stuff:\nStrike Badge\nGuard Badge\nBronze Badge\nVirus Badge\nMaster Badge\nRisk Badge\nSilver Badge\nExpert Badge\nMiracle Badge\nGold Badge\nCurrent Room: \n\nKey Item Order:")
+        spoiler_log.write("\nKey Item Order:")
         for k in key_order:
             spoiler_log.write("\n" + key_item_names[k])
 

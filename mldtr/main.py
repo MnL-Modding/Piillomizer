@@ -164,6 +164,12 @@ def randomize(window):
     elif window.exp_mode.get() == "10x - Enemies are Overrated":
         window.enemy_stats[1] = 10
 
+    window.hammer = -1
+    if window.hammer_start.get() == "Mini Mario":
+        window.hammer = 0
+    elif window.hammer_start.get() == "Mole Mario":
+        window.hammer = 1
+
     #Appends settings to an array
     window.random_settings = [[window.key1.get(), window.key2.get(), window.key3.get(), window.key4.get(), window.key5.get(), window.key6.get(), window.key7.get(),
                                window.key8.get(), window.key9.get(), window.key10.get(), window.key11.get(), window.key12.get(), window.key13.get(), window.key14.get(),
@@ -172,7 +178,8 @@ def randomize(window):
                               [window.mini_nerf.get(), window.ball_nerf.get(), 0],
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
-                               window.boss15.get(), window.boss16.get()]]
+                               window.boss15.get(), window.boss16.get()],
+                              [window.hammer]]
 
     # Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed)
@@ -252,7 +259,10 @@ def main():
     window.key27 = tk.DoubleVar()
     window.key28 = tk.DoubleVar()
     window.mini_nerf = tk.IntVar()
-    window.ball_nerf = tk.IntVar()
+    window.ball_nerf = tk.IntVar(value=1)
+    window.hammer_start = tk.StringVar()
+    window.hammer_start.set("Random")
+    window.hammer_options = ["Random", "Mini Mario", "Mole Mario"]
 
     window.boss1 = tk.IntVar()
     window.boss2 = tk.IntVar()
@@ -829,6 +839,17 @@ def main():
         textvariable = window.seed
     )
     window.custom_seed.place(x=160, y=390)
+
+    #Lets you decide whether the first progressive hammer is Mini Mario, Mole Mario, or a random one
+    window.hammer_label = ttk.Label(tabKey, text = "Progressive Hammer to Start With:")
+    window.hammer_label.place(x=75, y=252)
+    window.hammer_to_start = ttk.OptionMenu(
+        tabKey,
+        window.hammer_start,
+        window.hammer_options[0],
+        *window.hammer_options
+    )
+    window.hammer_to_start.place(x=275, y=250)
 
     #Run the application loop
     window.mainloop()
