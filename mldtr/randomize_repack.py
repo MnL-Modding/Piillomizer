@@ -1454,6 +1454,42 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
     #print(i[1])
     for i in attack_dat:
         #print(i)
+        #Exceptions for camera blocks
+        if i == 0x040:
+            actor_blacklist = [6]
+        elif i == 0x04D:
+            actor_blacklist = [18]
+        elif i == 0x072:
+            actor_blacklist = [26]
+        elif i == 0x144:
+            #First is a camera block, second is a Kamek block
+            actor_blacklist = [18, 20]
+        elif i == 0x188:
+            actor_blacklist = [7]
+        #Exceptions for save blocks
+        elif i == 0x03A:
+            actor_blacklist = [28]
+        elif i == 0x18b:
+            actor_blacklist = [23]
+        #Exceptions for Dozing Sands track calling blocks
+        elif i == 0x010:
+            actor_blacklist = [11]
+        elif i == 0x013:
+            actor_blacklist = [19]
+        elif i == 0x014:
+            actor_blacklist = [11]
+        elif i == 0x019:
+            actor_blacklist = [19]
+        #Exceptions for Kamek blocks
+        elif i == 0x145:
+            actor_blacklist = [3]
+        elif i == 0x146:
+            actor_blacklist = [3]
+        elif i == 0x147:
+            actor_blacklist = [3]
+        #No exceptions, no list
+        else:
+            actor_blacklist = []
         script = fevent_manager.parsed_script(i, 0)
         @subroutine(subs=script.subroutines, hdr=script.header)
         def rid_block(sub: Subroutine):
@@ -1461,9 +1497,12 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             set_actor_attribute(Variables[0x7007], 0x01, 0.0)
         for a in range(len(script.header.actors)):
             if (script.header.actors[a][5] // 0x1000) % 0x1000 == 0x748 and script.header.actors[a][5] % 0x100 == 0x43:
-                temp_list = list(script.header.actors[a])
-                temp_list[2] = (len(script.subroutines) - 1) * 0x10000 + temp_list[2] % 0x10000
-                script.header.actors[a] = tuple(temp_list)
+                try:
+                    actor_blacklist.index(a)
+                except ValueError:
+                    temp_list = list(script.header.actors[a])
+                    temp_list[2] = (len(script.subroutines) - 1) * 0x10000 + temp_list[2] % 0x10000
+                    script.header.actors[a] = tuple(temp_list)
 
     # An array of every block, bean spot, and dream world block in Dream Team
     spot_info = [[[0xf, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0x11, 0x13], [0x10, 0x12, 0x14, 0x15, 0x16, 0x17], []],
