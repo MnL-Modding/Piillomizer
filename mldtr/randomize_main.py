@@ -610,7 +610,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
             item_logic[4][78] = [0x82c]
             item_logic[4][79] = [0x82d, 2]
             item_logic[4][81] = [0x76, 2, 5]
-            item_logic[6][11] = [0x60d]
+            item_logic[6][13] = [0x60f]
             item_logic[6][15] = [0x611]
             item_logic[6][16] = [0x612]
             item_logic[6][22] = [0x20a, 0, 4, -1, 5]
@@ -1151,10 +1151,23 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                                             new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
                                                             new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                             new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                elif new_enemy_stats[-1][0] == 17:
+                                elif new_enemy_stats[-1][0] == 17 or new_enemy_stats[-1][0] == 128:
                                     new_enemy_stats[-1][1] //= 4
                                     new_enemy_stats[-1][5] //= 4
                                     new_enemy_stats[-1][6] //= 4
+                                    if new_enemy_stats[-1][0] == 128:
+                                        new_enemy_stats.append([129, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                                new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                                new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                                new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                        new_enemy_stats.append([130, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                                new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                                new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                                new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                        new_enemy_stats.append([131, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
+                                                                new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
+                                                                new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
+                                                                new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
                                 elif new_enemy_stats[-1][0] == 145:
                                     new_enemy_stats[-1][5] = 0
                                     new_enemy_stats[-1][6] = 0
