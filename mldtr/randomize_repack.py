@@ -417,6 +417,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC977] = 1.0 #
         Variables[0xC600] = 1.0 #Massif dream intro part 1
         Variables[0xC61E] = 1.0 #Massif dream intro part 2
+        Variables[0xC633] = 1.0 #Door to the main area is open
         Variables[0xC601] = 1.0 #Hooraws Bail
         Variables[0xCF80] = 1.0 #Timer tutorial
         Variables[0xC096] = 1.0 #Timer slow tutorial
