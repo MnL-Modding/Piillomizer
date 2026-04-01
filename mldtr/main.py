@@ -179,7 +179,7 @@ def randomize(window):
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
                                window.boss15.get(), window.boss16.get()],
-                              [window.hammer]]
+                              [window.hammer, window.warp_setting.get(), 0, window.disable_scale.get()]]
 
     # Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed)
@@ -269,17 +269,20 @@ def main():
     window.boss3 = tk.IntVar()
     window.boss4 = tk.IntVar()
     window.boss5 = tk.IntVar()
-    window.boss6 = tk.IntVar()
+    window.boss6 = tk.IntVar(value=1)
     window.boss7 = tk.IntVar()
     window.boss8 = tk.IntVar()
-    window.boss9 = tk.IntVar()
+    window.boss9 = tk.IntVar(value=1)
     window.boss10 = tk.IntVar()
     window.boss11 = tk.IntVar()
-    window.boss12 = tk.IntVar()
+    window.boss12 = tk.IntVar(value=1)
     window.boss13 = tk.IntVar()
-    window.boss14 = tk.IntVar()
-    window.boss15 = tk.IntVar()
+    window.boss14 = tk.IntVar(value=1)
+    window.boss15 = tk.IntVar(value=1)
     window.boss16 = tk.IntVar()
+
+    window.warp_setting = tk.IntVar()
+    window.disable_scale = tk.IntVar()
 
     window.seed = tk.StringVar()
 
@@ -289,12 +292,14 @@ def main():
     tabEnemy = ttk.Frame(window.menu)
     tabKey = ttk.Frame(window.menu)
     tabMusic = ttk.Frame(window.menu)
+    tabQOL = ttk.Frame(window.menu)
 
     #Names tabs
     window.menu.add(tabMain, text = "Main")
     window.menu.add(tabEnemy, text = "Enemy")
     window.menu.add(tabKey, text = "Key")
     window.menu.add(tabMusic, text = "Music")
+    window.menu.add(tabQOL, text = "QOL")
     window.menu.pack(expand = 1, fill = "both", pady=40)
 
     # Press button to open RomFS
@@ -850,6 +855,26 @@ def main():
         *window.hammer_options
     )
     window.hammer_to_start.place(x=275, y=250)
+
+    #Lets you decide whether the quick warp uses L+R+X or just X
+    window.warp_check = ttk.Checkbutton(
+        tabQOL,
+        text = "Use L+R+X to Quick Warp instead of X",
+        variable = window.warp_setting,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.warp_check.place(x=100, y=125)
+
+    #Lets you disable automatic enemy stat scaling
+    window.disable_scale_check = ttk.Checkbutton(
+        tabEnemy,
+        text = "Disable automatic stat scaling",
+        variable = window.disable_scale,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.disable_scale_check.place(x=120, y=250)
 
     #Run the application loop
     window.mainloop()

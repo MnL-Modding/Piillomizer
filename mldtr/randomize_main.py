@@ -167,7 +167,7 @@ def is_available(logic, key, settings):
     return available
 #46d8f468
 def randomize_data(input_folder, stat_mult, settings, seed):
-    with tqdm(total=962, desc="Initializing...") as pbar:
+    with tqdm(total=948, desc="Initializing...") as pbar:
         #Sets the seed to what it was in main
         random.seed(seed)
         pbar.update(1)
@@ -358,10 +358,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
        #                                      enemy_stats[enemy].item_chance, enemy_stats[enemy].item_type, enemy_stats[enemy].rare_item_chance, enemy_stats[enemy].rare_item_type, enemy_stats[enemy].level])
 
         #Logic for real world enemies
-        enemy_logic = [[[0xd]], [[0x13]], [[0x54]], [[0x12], [0x13, 6], [0x15, 6]], [[0x5d], [0x5c], [0x57], [0x55], [0x56], [0x1f], [0x21], [0x23]], [[0x1b], [0x19], [0x1d]],
-                       [[0x26], [0x27], [0x2d], [0x44, 5], [0x45, 5], [0x46, 5], [0x47, 5], [0x48, 0, 5], [0x49, 0, 5], [0x4d, 0, 5], [0x4e, 0, 5]], [[0x29], [0x2f, 6], [0x2e, 6]], [[0x5e, 5], [0x29], [0x2f, 6], [0x2e, 6]],
+        enemy_logic = [[[0xd]], [[0x13]], [[0x54]], [[0x12], [0x13, 6], [0x15, 6]], [[0x5d], [0x5c], [0x57], [0x55], [0x56], [0x1f, 6], [0x21, 6], [0x23, 6]], [[0x1b], [0x19], [0x1d]],
+                       [[0x26], [0x27], [0x2d], [0x44, 5], [0x45, 5], [0x47, 5], [0x46, 5], [0x48, 0, 5], [0x49, 0, 5], [0x4d, 0, 5], [0x4e, 0, 5]], [[0x29], [0x2f, 6], [0x2e, 6]], [[0x5e, 5], [0x29], [0x2f, 6], [0x2e, 6]],
                        [[0x30], [0x31, 0], [0x32, 1, 6, -1, 5, 6]], [[0x5b], [0x62], [0x63]], [], [[0x3a], [0x3b], [0x3c], [0x3d], [0x40]], [[0x41, 6], [0x42, 6], [0x57], [0x55], [0x56], [0x5a, 5]], [], [[0x43]],
-                       [[0x44], [0x45], [0x47], [0x46], [0x5b], [0x57], [0x55], [0x56], [0x48, 6], [0x49, 6], [0x4d, 6], [0x4e, 6], [0x4a, 6], [0x4b, 6], [0x4c, 6]], [],
+                       [[0x47], [0x46], [0x44], [0x45], [0x5b], [0x57], [0x55], [0x56], [0x48, 6], [0x49, 6], [0x4d, 6], [0x4e, 6], [0x4a, 6], [0x4b, 6], [0x4c, 6]], [],
                        [[0x65], [0x66, 3], [0x67, 3], [0x68, 3], [0x69, 3], [0x6e], [0x6f]], [[0x64], [0x6a], [0x70]], [], [[0x71], [0x74], [0x79, 6], [0x7c, 6], [0x7d, 6]], [[0x75], [0x76], [0x77], [0x78], [0x7b, 6], [0x7a]], [], []]
 
         #Logic for bosses
@@ -790,25 +790,25 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #  41: All Ultibed parts have been collected
         #  42: Required Pi'illo Folk have been saved
         #*If the condition requires key items that aren't in the pool, change the entrance
-        exit_blacklist = [[0x001, -1, [[4, 7], [4, 7], [4, 7], [4, 7], [0, 1, 2, 3, 5, 6], [4, 7], [4, 7], [0, 1, 2, 3, 5, 6]]],
-                          [0x004, -1, [[2, 3], [2, 3], [3], [0, 1, 2]]], [0x006, -3, [[2], [2], [0, 1, 3], [2]], 16],
-                          [0x007, -1, [[2], [2], [], [2], [2], [2], [2]]], [0x009, -1, [[3], [3], [3], [], [3]]],
-                          [0x00B, -3, [[1], [0]], 40], [0x011, -1, [[], [0]]], [0x012, -3, [[1], [0]], 17],
-                          [0x034, -1, [[1, 3, 4, 6, 7, 8], [0, 2, 5], [1, 3, 4, 6, 7, 8], [0, 2, 5], [0, 2, 5], [1, 3, 4, 6, 7, 8], [0, 2, 5], [0, 2, 5], [0, 2, 5]]],
-                          [0x035, -1, [[2, 3, 6], [2, 3, 6], [0, 1, 4, 5, 6, 7], [0, 1, 4, 5, 6, 7], [2, 3, 6], [2, 3, 6], [0, 1, 2, 3, 4, 5, 7], [2, 3, 6]]],
-                          [0x036, -1, [[1, 2, 3, 4, 5, 6], [0, 4], [0, 4], [0, 4], [1, 2, 3, 5, 6], [0, 4], [0, 4]]], [0x038, -1, [[1], [0, 2], [1]]],
-                          [0x03A, -1, [[2, 4], [2, 4], [0, 1, 3, 4], [2, 4], [0, 1, 2, 3]]], [0x03C, -1, [[1], [0]]], [0x03F, -1, [[1, 2], [0, 2], [0, 1]]],
-                          [0x047, -1, [[1, 2, 3], [0, 2, 3], [0, 1], [0, 1]]], [0x048, -1, [[1, 2, 3], [0, 2], [0, 1, 3], [0, 2]]],
-                          [0x04B, -1, [[1, 2], [0], [0]]], [0x04C, -1, [[1], [0]]], [0x04D, -1, [[1, 2, 3], [0, 2, 3, 4], [0, 1, 3, 4], [1, 2], [1, 2]]],
-                          [0x05A, -3, [[1], [0, 2], [1]], 15],
+        #exit_blacklist = [[0x001, -1, [[4, 7], [4, 7], [4, 7], [4, 7], [0, 1, 2, 3, 5, 6], [4, 7], [4, 7], [0, 1, 2, 3, 5, 6]]],
+        #                  [0x004, -1, [[2, 3], [2, 3], [3], [0, 1, 2]]], [0x006, -3, [[2], [2], [0, 1, 3], [2]], 16],
+        #                  [0x007, -1, [[2], [2], [], [2], [2], [2], [2]]], [0x009, -1, [[3], [3], [3], [], [3]]],
+        #                  [0x00B, -3, [[1], [0]], 40], [0x011, -1, [[], [0]]], [0x012, -3, [[1], [0]], 17],
+        #                  [0x034, -1, [[1, 3, 4, 6, 7, 8], [0, 2, 5], [1, 3, 4, 6, 7, 8], [0, 2, 5], [0, 2, 5], [1, 3, 4, 6, 7, 8], [0, 2, 5], [0, 2, 5], [0, 2, 5]]],
+        #                  [0x035, -1, [[2, 3, 6], [2, 3, 6], [0, 1, 4, 5, 6, 7], [0, 1, 4, 5, 6, 7], [2, 3, 6], [2, 3, 6], [0, 1, 2, 3, 4, 5, 7], [2, 3, 6]]],
+        #                  [0x036, -1, [[1, 2, 3, 4, 5, 6], [0, 4], [0, 4], [0, 4], [1, 2, 3, 5, 6], [0, 4], [0, 4]]], [0x038, -1, [[1], [0, 2], [1]]],
+        #                  [0x03A, -1, [[2, 4], [2, 4], [0, 1, 3, 4], [2, 4], [0, 1, 2, 3]]], [0x03C, -1, [[1], [0]]], [0x03F, -1, [[1, 2], [0, 2], [0, 1]]],
+        #                  [0x047, -1, [[1, 2, 3], [0, 2, 3], [0, 1], [0, 1]]], [0x048, -1, [[1, 2, 3], [0, 2], [0, 1, 3], [0, 2]]],
+        #                  [0x04B, -1, [[1, 2], [0], [0]]], [0x04C, -1, [[1], [0]]], [0x04D, -1, [[1, 2, 3], [0, 2, 3, 4], [0, 1, 3, 4], [1, 2], [1, 2]]],
+        #                  [0x05A, -3, [[1], [0, 2], [1]], 15],
 
-                          [0x06E, -1, [[2, 3], [2, 3], [0, 1, 4], [0, 1, 4], [2, 3]]], [0x06F, -1, [[3, 5], [3, 5], [3, 5], [], [3, 5], []]],
-                          [0x077, -1, [[1, 2, 3, 6, 7, 8], [0, 2, 3, 4, 5, 7, 8], [0, 1, 3, 4, 5, 6, 8], [0, 1, 2, 4, 5, 6, 7], [1, 2, 3, 6, 7, 8],
-                                       [1, 2, 3, 6, 7, 8], [0, 2, 3, 4, 5, 7, 8], [0, 1, 3, 4, 5, 6, 8], [0, 1, 2, 4, 5, 6, 7]]],
-                          [0x078, -1, [[1, 2, 3, 4], [0], [0], [0], [0]]], [0x079, -1, [[], [0]]], [0x07B, -1, [2], [2], [0, 1, 3, 4], [2], [2]], [0x07C, -1, [[], [0]]],
+        #                  [0x06E, -1, [[2, 3], [2, 3], [0, 1, 4], [0, 1, 4], [2, 3]]], [0x06F, -1, [[3, 5], [3, 5], [3, 5], [], [3, 5], []]],
+        #                  [0x077, -1, [[1, 2, 3, 6, 7, 8], [0, 2, 3, 4, 5, 7, 8], [0, 1, 3, 4, 5, 6, 8], [0, 1, 2, 4, 5, 6, 7], [1, 2, 3, 6, 7, 8],
+        #                               [1, 2, 3, 6, 7, 8], [0, 2, 3, 4, 5, 7, 8], [0, 1, 3, 4, 5, 6, 8], [0, 1, 2, 4, 5, 6, 7]]],
+        #                  [0x078, -1, [[1, 2, 3, 4], [0], [0], [0], [0]]], [0x079, -1, [[], [0]]], [0x07B, -1, [2], [2], [0, 1, 3, 4], [2], [2]], [0x07C, -1, [[], [0]]],
 
-                          [0x0A3, -1, [[2, 3], [2, 3], [0, 1], [0, 1]]], [0x0AF, -3, [[1], [0, 2, 3], [1], [1]], 18], [0x0B7, -1, [[1], [0, 2], [1]]],
-                          [0x0BC, -1, [[1, 3, 4, 5], [0, 2], [1, 3, 4, 5], [0, 2], [0, 2], [0, 2]]], [0x0BE, -1, [[1], [0, 2], [1]]]]
+        #                  [0x0A3, -1, [[2, 3], [2, 3], [0, 1], [0, 1]]], [0x0AF, -3, [[1], [0, 2, 3], [1], [1]], 18], [0x0B7, -1, [[1], [0, 2], [1]]],
+        #                  [0x0BC, -1, [[1, 3, 4, 5], [0, 2], [1, 3, 4, 5], [0, 2], [0, 2], [0, 2]]], [0x0BE, -1, [[1], [0, 2], [1]]]]
 
         #How I'm going to do entrance randomization:
         #1) Sort the entrances into 2 arrays: One for entrances that are accessible, and ones that aren't
@@ -1631,32 +1631,33 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         tracker_dat.write(b'\x00'*(16 * 20))
         tracker_dat.write(bytes(max_values))
 
-    with tqdm(total=len(new_enemy_stats), desc="Repacking Enemy Stats...") as ebar:
-        #Repackages randomized enemy stats
-        enemy_stats = load_enemy_stats(code_bin=code_bin_path)
-        for enemy in range(len(new_enemy_stats)):
-            #print(new_enemy_stats[enemy])
-            #print(new_enemy_stats[enemy][0])
-            enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
-            enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
-            enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
-            enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
-            enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
-            enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
-            if new_enemy_stats[enemy][9] > 1:
-                enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
-                enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
-                enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
-                enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
-            enemy_stats[new_enemy_stats[enemy][0]].level = new_enemy_stats[enemy][12]
-            if new_enemy_stats[enemy][0] == 113:
-                enemy_stats[114].power = new_enemy_stats[enemy][2]
-                enemy_stats[114].speed = new_enemy_stats[enemy][4]
-                enemy_stats[114].level = new_enemy_stats[enemy][12]
-            ebar.update(1)
-            #print(new_enemy_stats[enemy])
-        #Packs enemy stats
-        save_enemy_stats(enemy_stats, code_bin=code_bin_path)
+    if settings[3][3] == 0:
+        with tqdm(total=len(new_enemy_stats), desc="Repacking Enemy Stats...") as ebar:
+            #Repackages randomized enemy stats
+            enemy_stats = load_enemy_stats(code_bin=code_bin_path)
+            for enemy in range(len(new_enemy_stats)):
+                #print(new_enemy_stats[enemy])
+                #print(new_enemy_stats[enemy][0])
+                enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
+                enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
+                enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
+                enemy_stats[new_enemy_stats[enemy][0]].speed = new_enemy_stats[enemy][4]
+                enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5]
+                enemy_stats[new_enemy_stats[enemy][0]].coins = new_enemy_stats[enemy][6]
+                if new_enemy_stats[enemy][9] > 1:
+                    enemy_stats[new_enemy_stats[enemy][0]].item_chance = new_enemy_stats[enemy][8]
+                    enemy_stats[new_enemy_stats[enemy][0]].item_type = new_enemy_stats[enemy][9]
+                    enemy_stats[new_enemy_stats[enemy][0]].rare_item_chance = new_enemy_stats[enemy][10]
+                    enemy_stats[new_enemy_stats[enemy][0]].rare_item_type = new_enemy_stats[enemy][11]
+                enemy_stats[new_enemy_stats[enemy][0]].level = new_enemy_stats[enemy][12]
+                if new_enemy_stats[enemy][0] == 113:
+                    enemy_stats[114].power = new_enemy_stats[enemy][2]
+                    enemy_stats[114].speed = new_enemy_stats[enemy][4]
+                    enemy_stats[114].level = new_enemy_stats[enemy][12]
+                ebar.update(1)
+                #print(new_enemy_stats[enemy])
+            #Packs enemy stats
+            save_enemy_stats(enemy_stats, code_bin=code_bin_path)
 
     with tqdm(total=len(new_item_locals)+len(parsed_fmapdat), desc="Repacking FMap...") as fbar:
         newlen = 0
