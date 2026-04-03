@@ -179,7 +179,7 @@ def randomize(window):
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
                                window.boss15.get(), window.boss16.get()],
-                              [window.hammer, window.warp_setting.get(), 0, window.disable_scale.get()]]
+                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get()]]
 
     # Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed)
@@ -283,6 +283,7 @@ def main():
 
     window.warp_setting = tk.IntVar()
     window.disable_scale = tk.IntVar()
+    window.stat_setting = tk.IntVar()
 
     window.seed = tk.StringVar()
 
@@ -865,6 +866,16 @@ def main():
         offvalue = 0
     )
     window.warp_check.place(x=100, y=125)
+
+    #Lets you decide whether the stat display uses L+R+Y or just Y
+    window.stat_check = ttk.Checkbutton(
+        tabQOL,
+        text = "Use L+R+Y to Display Stats instead of Y",
+        variable = window.stat_setting,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.stat_check.place(x=100, y=175)
 
     #Lets you disable automatic enemy stat scaling
     window.disable_scale_check = ttk.Checkbutton(
