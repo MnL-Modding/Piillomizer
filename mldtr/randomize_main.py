@@ -1627,7 +1627,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     to_write += 0xA000
                 tracker_dat.write(to_write.to_bytes(2, 'big'))
         #print(len(new_item_locals) - (len(new_item_locals)//16)*16)
-        tracker_dat.write(b'\x00'*((len(new_item_locals) - (len(new_item_locals)//16)*16)*2))
+        tracker_dat.write(b'\x00'*(16 - (len(new_item_locals)*4) % 16))
         tracker_dat.write(b'\x00'*(16 * 20))
         tracker_dat.write(bytes(max_values))
 

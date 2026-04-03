@@ -1577,6 +1577,44 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                    0x8a2, 0x8a3, 0x934, 0x8a4, 0x8a7, 0x8a8, 0x8a9, 0x8aa, 0x935, 0x8ac, 0x8b6, 0x8b7, 0x8b8, 0x8bf, 0x8c5, 0x8c6, 0x8c7,
                    0x8e1, 0x8e2, 0x8e3, 0x8e4, 0x8e5, 0x94e, 0x8f5, 0x8f6, 0x8f7]]]
 
+    #The length of each item type within each array, and the resulting offset for the next room
+    room_lengths = [[[1, 0, 4, 0, 4, 0, 0, 1, 1, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+
+                    [[0, 0, 0, 0, 2, 0, 2, 1, 1, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 1, 2, 4, 4],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 5, 0, 0, 0, 0, 0, 1, 7, 0, 2, 25, 1, 4, 2, 0, 0, 1, 1, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0]],
+
+                    [[2, 6, 2, 2, 5, 8, 3, 4, 4, 2, 6, 5, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+                     [0, 4, 0, 0, 1, 0, 3, 4, 1, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 3, 2, 2, 1, 1, 0, 1, 4, 1, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]],
+
+                    [[0, 4, 3, 7, 6, 3, 0, 0, 6, 8, 2, 4, 1, 2, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 3, 2, 2, 0, 0, 0, 0, 5, 3],
+                     [1, 2, 2, 2, 2, 4, 0, 0, 0, 1, 0, 1, 1, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 6, 3],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 2, 2, 0, 0, 1, 0, 1, 0, 2, 4, 1, 1, 0, 0, 0, 3, 2, 1, 0, 4, 0, 0, 0, 3, 1, 0, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]],
+
+                    [[1, 2, 3, 6, 0, 7, 1, 2, 1, 1, 1, 0, 0, 0, 0, 0, 4, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+                     [2, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 1, 3, 3, 2, 5, 0, 2, 0, 2, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 1, 1, 2, 1, 2, 2, 1, 3, 3, 0, 2, 0, 1, 0, 0, 0, 0, 1, 0, 4, 0, 0, 3]],
+
+                    [[3, 0, 2, 2, 2, 1, 4, 5, 2, 1, 4, 0, 6, 0, 0, 2, 3, 1, 1, 4, 2, 2, 3, 0, 0, 0, 0, 2, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 2, 0, 2, 1, 1, 0, 1, 1, 0, 3, 0, 0, 0, 1, 0, 1, 2, 1, 0, 2, 0, 1, 2, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 5, 0, 1, 1, 2, 0, 0, 1, 7, 5, 5, 2, 4, 2, 1, 5, 1, 2, 2, 2, 0, 5, 3, 2, 0, 2, 1, 0, 2, 0, 1, 1, 3, 0, 0, 0, 0, 0, 2, 0, 0]],
+
+                    [[4, 6, 2, 0, 0, 4, 1, 0, 4, 3, 4, 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [1, 0, 0, 0, 0, 0, 0, 2, 0, 1, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 4, 2, 0, 0, 1, 3, 2, 4, 2, 0, 1, 1, 3, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 2, 1, 1, 0, 0, 1, 2, 4, 0, 1, 1, 1, 1]],
+
+                    [[0, 0, 0, 1, 2, 2, 2, 4, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 0, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 1, 1, 0, 1, 0, 2, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 3, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 4, 0, 1, 0, 2, 0, 1, 3, 0, 0, 0, 0, 1, 3, 0, 1, 9, 1, 3, 1, 4, 2, 4, 5, 3, 3, 1, 2, 1, 2]],
+
+                    [[0, 0, 0, 2, 3, 2, 2, 1, 4, 2, 1, 7, 4, 0, 4, 5, 4, 0, 0, 3, 0, 4, 2, 0, 1, 0, 2, 1, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 2, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 1, 2, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 0, 3, 3, 2, 1, 0, 1, 1, 1, 1, 2, 1, 1, 0, 1, 0, 0, 2, 0, 0, 1, 0, 3, 0, 0, 0, 1, 0, 2, 0, 2, 0, 0, 1, 0, 2, 1, 0, 0]]]
+
+    room_local_index = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    room_local_info_index = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
     area_names = ["Blimport", "Pi'illo Castle" ,"Mushrise Park", "Dozing Sands", "Wakeport", "Mount Pajamaja", "Driftwood Shore", "Somnom Woods", "Neo Bowser Castle"]
 
     # Adds the quick warp and tracker features to every room that needs it
@@ -1618,9 +1656,59 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     branch_if(Variables[0x1000], '==', 0.0, 'label_' + str(prev_area))
                     branch_if(Variables[0x1000], '==', 1.0, 'label_' + str(next_area))
                     branch_if(Variables[0x1000], '==', 2.0, 'label_9')
-                    branch_if(Variables[0x1000], '==', 3.0, 'label_9')
+                    branch_if(Variables[0x1000], '==', 3.0, 'label_10')
 
                 label('label_9', manager=fevent_manager)
+                text_to_print = "[DelayOff]Current Room Stats\n"
+                Variables[0x6000] = 0.0
+                Variables[0x6001] = 0.0
+                Variables[0x6002] = 0.0
+                Variables[0x6003] = 0.0
+                room_id = 0
+                if get_room(s) == "Blimport":
+                    room_id = 0
+                elif get_room(s) == "Pi'illo Castle" or get_room(s) == "Dreamy Pi'illo Castle":
+                    room_id = 1
+                elif get_room(s) == "Mushrise Park" or get_room(s) == "Dreamy Mushrise Park":
+                    room_id = 2
+                elif get_room(s) == "Dozing Sands" or get_room(s) == "Dreamy Dozing Sands":
+                    room_id = 3
+                elif get_room(s) == "Wakeport" or get_room(s) == "Dreamy Wakeport":
+                    room_id = 4
+                elif get_room(s) == "Mount Pajamaja" or get_room(s) == "Dreamy Mount Pajamaja":
+                    room_id = 5
+                elif get_room(s) == "Driftwood Shore" or get_room(s) == "Dreamy Driftwood Shore":
+                    room_id = 6
+                elif get_room(s) == "Somnom Woods" or get_room(s) == "Dreamy Somnom Woods":
+                    room_id = 7
+                elif get_room(s) == "Neo Bowser Castle" or get_room(s) == "Dreamy Neo Bowser Castle":
+                    room_id = 8
+                if get_room(s)[0:5] == "Dream":
+                    spot_type = 2
+                    #print("Is Dream")
+                else:
+                    spot_type = 0
+                rl = room_lengths[room_id][spot_type][room_local_info_index[room_id]]
+                if rl > 0:
+                    text_to_print += "Blocks:       [Color #2C65FF][Var 0000 digits=3] [Color #000000]/" + str(rl) + "\n"
+                    for l in range(rl):
+                        Variables[0x6000] += Variables[0xD000 + spot_info[room_id][spot_type][room_local_index[room_id][spot_type]]]
+                    room_local_index[room_id][spot_type] += rl
+                if spot_type == 0:
+                    spot_type = 1
+                    rl = room_lengths[room_id][spot_type][room_local_info_index[room_id]]
+                    if rl > 0:
+                        text_to_print += "Bean Spots:   [Color #2C65FF][Var 0001 digits=3] [Color #000000]/" + str(rl) + "\n"
+                        for l in range(rl):
+                            Variables[0x6001] += Variables[0xD000 + spot_info[room_id][spot_type][room_local_index[room_id][spot_type]]]
+                        room_local_index[room_id][spot_type] += rl
+                room_local_info_index[room_id] += 1
+                say(None, TextboxSoundsPreset.SILENT, text_to_print + "[Option]Overall Stats   [Option]Close")
+                emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
+                branch_if(Variables[0x1000], '==', 0.0, 'label_0')
+                branch_if(Variables[0x1000], '==', 1.0, 'label_10')
+
+                label('label_10', manager=fevent_manager)
 
             original_world = -1
             if get_dream_origin(s)[0] != -1:
