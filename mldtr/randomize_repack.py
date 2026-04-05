@@ -1692,7 +1692,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 if rl > 0:
                     text_to_print += "Blocks:       [Color #2C65FF][Var 0000 digits=3] [Color #000000]/" + str(rl) + "\n"
                     for l in range(rl):
-                        Variables[0x6000] += Variables[0xD000 + spot_info[room_id][spot_type][room_local_index[room_id][spot_type]]]
+                        Variables[0x6000] += Variables[0xD000 + spot_info[room_id][spot_type][room_local_index[room_id][spot_type]+l]]
                     room_local_index[room_id][spot_type] += rl
                 if spot_type == 0:
                     spot_type = 1
@@ -1700,7 +1700,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     if rl > 0:
                         text_to_print += "Bean Spots:   [Color #2C65FF][Var 0001 digits=3] [Color #000000]/" + str(rl) + "\n"
                         for l in range(rl):
-                            Variables[0x6001] += Variables[0xD000 + spot_info[room_id][spot_type][room_local_index[room_id][spot_type]]]
+                            Variables[0x6001] += Variables[0xD000 + spot_info[room_id][spot_type][room_local_index[room_id][spot_type]+l]]
                         room_local_index[room_id][spot_type] += rl
                 room_local_info_index[room_id] += 1
                 say(None, TextboxSoundsPreset.SILENT, text_to_print + "[Option]Overall Stats   [Option]Close")
@@ -2174,9 +2174,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 script.header.sprite_groups[script.header.sprite_groups.index(0x0003)] = 0x0000
             except ValueError:
                 pass
-        elif i[0] == 6:
-            block_sprite = 0x0010
-            block_sprite_hit = 0x0012
         else:
             block_sprite = 0x0011
             block_sprite_hit = 0x0012
@@ -2481,7 +2478,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 label('label_2', manager=fevent_manager)
                 Variables[i[7]] = 1.0
                 Variables[invi] = 1.0
-                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got [Color #2C65FF]" + invi_name[invi - 0xE001] + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + invi_name[invi - 0xE001] + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                 branch('label_0')
 
             label('label_0', manager=fevent_manager)
@@ -2505,10 +2502,18 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             #New initialization subroutine for blocks
             @subroutine(subs=script.subroutines, hdr=script.header)
             def set_block(sub: Subroutine):
-                if 2 <= i[0] <= 4:
-                    set_actor_attribute(Variables[0x7007], 0x5F, 1 + ((i[0] - 1) * 2))
+                if i[0] == 2:
+                    set_actor_attribute(Variables[0x7007], 0x5F, 3.0)
+                elif i[0] == 3:
+                    set_actor_attribute(Variables[0x7007], 0x5F, 5.0)
+                elif i[0] == 4:
+                    set_actor_attribute(Variables[0x7007], 0x5F, 1.0)
+                #elif i[0] == 6:
+                #    set_actor_attribute(Variables[0x7007], 0x5C, 1.0)
                 branch_if(Variables[i[5]], '==', 0.0, 'label_0')
                 set_actor_attribute(Variables[0x7007], 0x30, 0.0)
+                #if i[0] == 6:
+                #    set_actor_attribute(Variables[0x7007], 0x5C, 0.0)
                 try:
                     emit_command(0x008C, [Variables[0x7007], script.header.sprite_groups.index(block_sprite_hit), 0x0000, 0x01])
                 except ValueError:
