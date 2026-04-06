@@ -1623,6 +1623,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             script = fevent_manager.parsed_script(s, 0)
             script_index = s * 2
 
+            # Workaround for dynamic scope in Nuitka
+            if '__compiled__' in globals():
+                inspect.currentframe().f_locals['script_index'] = script_index
+
             @subroutine(subs=script.subroutines, hdr=script.header)
             def show_stats(sub: Subroutine):
                 for a in range(len(spot_info)):
@@ -1715,9 +1719,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 original_world = get_dream_origin(s)[0]
                 original_sub = get_dream_origin(s)[1]
 
-            # Workaround for dynamic scope in Nuitka
-            if '__compiled__' in globals():
-                inspect.currentframe().f_locals['script_index'] = script_index
             @subroutine(subs=script.subroutines, hdr=script.header)
             def quick_warp(sub: Subroutine):
                 set_actor_attribute(Variables[0x7007], 0x00, 0.0)
