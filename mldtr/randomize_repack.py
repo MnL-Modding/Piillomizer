@@ -627,10 +627,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         Variables[0xC648] = settings[2][8]
         Variables[0xC649] = settings[2][8]
         Variables[0xCB45] = settings[2][9]
-        Variables[0xC637] = settings[2][10]
-        Variables[0xC5AE] = settings[2][11]
-        Variables[0xC0BF] = settings[2][12]
-        Variables[0xC0B8] = settings[2][13]
+        Variables[0xC9E0] = settings[2][10]
+        Variables[0xC637] = settings[2][11]
+        Variables[0xC5AF] = settings[2][12]
+        Variables[0xC0BF] = settings[2][13]
         Variables[0xC0CA] = settings[2][14]
         Variables[0xC45C] = settings[2][15]
         change_room(0x001c, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
@@ -1743,7 +1743,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 branch('label_0')
 
                 label('label_1', manager=fevent_manager)
-                emit_command(0x00DF, [0x0000FFFF])
                 set_blocked_buttons(Screen.TOP, ButtonFlags.ALL)
                 set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL)
                 set_movement_multipliers(Screen.TOP, 0.0, 0.0)
@@ -1778,12 +1777,14 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     branch('label_0')
 
                     label('label_3', manager=fevent_manager)
+                    emit_command(0x00DF, [0x0000FFFF]) #Gets you out of Ball Hop and returns any other state to normal
+                    Variables[0xB138] = 0.0 #Resets the platform in Somnom Woods to prevent softlocks
                     change_room(0x0296, position=(0.0, 0.0, 0.0), init_sub=0x25, music=MusicFlag.FORCE_KEEP_CURRENT)
                 else:
                     change_room(original_world, position=(0.0, 0.0, 0.0), init_sub=original_sub)
 
                 label('label_4', manager=fevent_manager)
-                emit_command(0x00DF, [0x0000FFFF])
+                #emit_command(0x00DF, [0x0000FFFF])
                 set_blocked_buttons(Screen.TOP, ButtonFlags.ALL)
                 set_blocked_buttons(Screen.BOTTOM, ButtonFlags.ALL)
                 set_movement_multipliers(Screen.TOP, 0.0, 0.0)
