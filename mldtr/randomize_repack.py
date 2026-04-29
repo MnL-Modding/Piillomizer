@@ -629,6 +629,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xC647] = settings[2][8]
             Variables[0xC648] = settings[2][8]
             Variables[0xC649] = settings[2][8]
+            Variables[0xC64E] = settings[2][8]
             Variables[0xCB45] = settings[2][9]
             Variables[0xC9E0] = settings[2][10]
             Variables[0xC637] = settings[2][11]
@@ -1458,7 +1459,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         sbar.update(15)
 
     #Fixes attack piece blocks
-    with tqdm(total=1742, desc="Fixing blocks and softlocks......") as fbar:
+    with tqdm(total=1738, desc="Fixing blocks and softlocks......") as fbar:
         attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                       0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
                       0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
@@ -1569,7 +1570,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                        0x3de, 0x3df, 0x3e0, 0x41a, 0x41b]],
 
                      [[0x1cb, 0x60d, 0x60e, 0x60f, 0x610, 0x1e3, 0x1e4, 0x611, 0x612, 0x91b, 0x91c, 0x1e5, 0x61a, 0x61e, 0x61f, 0x620, 0x621, 0x622,
-                       0x607, 0x608, 0x609, 0x95e, 0x204, 0x60b, 0x95f, 0x205, 0x613, 0x614, 0x616, 0x206, 0x207, 0x617, 0x618, 0x208, 0x61b, 0x61c],
+                       0x607, 0x608, 0x609, 0x95e, 0x204, 0x60b, 0x95f, 0x205, 0x206, 0x613, 0x614, 0x616, 0x207, 0x617, 0x618, 0x208, 0x61b, 0x61c],
                       [0x610, 0x623, 0x624, 0x60c, 0x615, 0x960, 0x619, 0x961, 0x3dc, 0x61d], [0x90c, 0x4db, 0x4e2, 0x4e3, 0x4e4, 0x90d,
                        0x4eb, 0x979, 0x97a, 0x4f5, 0x4f6, 0x97b, 0x45e, 0x45f, 0x4fb, 0x4fc, 0x4fd, 0x97c, 0x97d, 0x97e, 0x49e, 0x501,
                        0x505, 0x97f, 0x980, 0x510, 0x511, 0x981, 0x53b, 0x53c, 0x53d, 0x982, 0x983, 0x568, 0x569,
@@ -2098,7 +2099,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                         [686, 37, 676, 44, -2, 0.0, 0.0, 0.0, 0, 0], [688, 92, 350, 92, -2, 0.0, 0.0, 0.0, 0, 0]]
 
         #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical, 2 = Up, 3 = Square), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
-        rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1140, 0, 1628, 3, [0, 1]], [0x018, 1, 640, 280, 324, 3, [0]],
+        rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1140, 0, 1628, 3, [0, 1 + settings[3][0]]], [0x018, 1, 640, 280, 324, 3, [0]],
                     [0x184, 0, 520, 0, 800, 3, [0]], [0x04F, 3, 1840, 30, 1150, 1, [0]], [0x01C, 0, 768, 132, 512, 3, [14]],
 
                     [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 9, 10, 11]], [0x288, 0, 552, 40, 510, 2, [6]],
@@ -2108,7 +2109,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     [0x13A, 0, 1585, 0, 1310, 1, [6]], [0x013, 0, 505, 75, 2080, 1, [6]], [0x019, 0, 980, 0, 2092, 1, [6]], [0x019, 0, 3005, 65, 2173, 1, [6]],
                     [0x28A, 0, 640, 0, 1230, 1, [6]], [0x101, 0, 530, 0, 910, 1, [6]], [0x061, 0, 1827, 155, 494, 1, [6, 7, 8, 12, 13]], [0x103, 0, 1469, 180, 616, 1, [6, 8, 9]],
                     [0x004, 0, 1122, 0, 1535, 1, [6, 10]], [0x008, 0, 219, 165, 367, 1, [6, 8]], [0x036, 0, 1550, 0, 832, 1, [6]], [0x035, 0, 962, 10, 360, 1, [6, 8, 9]],
-                    [0x109, 0, 264, 40, 747, 1, [6, 8]], [0x109, 0, 1820, 1, 1080, 1, [6]], [0x06E, 0, 832, 660, 242, 1, [6, 8, 10]], [0x072, 0, 675, 600, 790, 1, [6, 10]],
+                    [0x06E, 0, 832, 660, 242, 1, [6, 8, 10]], [0x072, 0, 675, 600, 790, 1, [6, 10]],
                     [0x076, 0, 775, 200, 1215, 1, [6, 10]], [0x038, 0, 2040, 165, 520, 1, [6]], [0x189, 0, 802, 180, 623, 1, [6]], [0x189, 0, 1945, 40, 1380, 1, [6]],
                     [0x18B, 0, 875, 40, 1975, 1, [6]], [0x190, 0, 1228, 220, 435, 1, [6]], [0x18d, 0, 728, 40, 758, 1, [6]], [0x191, 0, 398, 40, 253, 1, [6]],
                     [0x193, 0, 638, 0, 455, 1, [6]], [0x18f, 0, 795, 120, 195, 1, [6]], [0x18f, 0, 1123, 360, 118, 1, [6]], [0x141, 0, 762, 0, 815, 1, [6, 7, 8, 12, 13]],
@@ -2137,6 +2138,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             @subroutine(subs=script.subroutines, hdr=script.header)
             def abilities_needed(sub: Subroutine):
                 say(None, TextboxSoundsPreset.SILENT, t, offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+            sub_name = f'sub_0x{len(script.subroutines) - 1:x}'
+            cast(SubroutineExt, abilities_needed).name = sub_name
 
             try:
                 sprite_index = script.header.sprite_groups.index(0x5F)

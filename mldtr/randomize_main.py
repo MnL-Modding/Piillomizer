@@ -1208,6 +1208,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                                                 new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
                                                                 new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                                 new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
+                                    else:
+                                        new_enemy_stats[-1][5] = 0xFFFF
                                 elif new_enemy_stats[-1][0] == 145:
                                     new_enemy_stats[-1][5] = 0
                                     new_enemy_stats[-1][6] = 0
