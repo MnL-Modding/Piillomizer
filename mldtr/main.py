@@ -880,7 +880,7 @@ def main():
     #Lets you disable automatic enemy stat scaling
     window.disable_scale_check = ttk.Checkbutton(
         tabEnemy,
-        text = "Disable automatic stat scaling",
+        text = "Disable scaling stats to logic",
         variable = window.disable_scale,
         onvalue = 1,
         offvalue = 0

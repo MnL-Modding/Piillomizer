@@ -1,14 +1,14 @@
 from mnlscript.tools.decompiler.dt.command_matchers import join_thread
 from pymsbmnl import LMSDocument, msbt_from_file
 from mnllib.n3ds import fs_std_romfs_path
-from mnllib import Subroutine, RawDataCommand, CodeCommand
+from mnllib import Subroutine, RawDataCommand, CodeCommand, Variable
 from mnllib.dt import FEventScriptManager, FMES_NUMBER_OF_CHUNKS, MESSAGE_DIR_PATH, DTLMSAdapter, read_msbt_archive, write_msbt_archive
 from mnlscript import CodeCommandWithOffsets, emit_command, update_commands_with_offsets, Screen, label, \
     SubroutineExt
 from mnlscript.dt import PLACEHOLDER_OFFSET, Variables, change_room, MusicFlag, set_action_icons_shown, \
     set_actor_attribute, Actors, tint_screen, set_blocked_buttons, ButtonFlags, set_movement_multipliers, \
     set_touches_blocked, branch_if, TextboxSoundsPreset, say, wait, Globals, call, branch, TextboxAlignment, \
-    add_in_place, start_battle, WorldType, Transition, Sound, TextboxTailType, ActorAttribute
+    add_in_place, start_battle, WorldType, Transition, Sound, TextboxTailType, ActorAttribute, Variable
 from typing import cast
 from tqdm import tqdm
 import math
@@ -696,6 +696,12 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
         sbar.update(1)
 
+        #Fixes a glitch in the Massif lobby that gives you some abilities early
+        script = fevent_manager.parsed_script(0x010e, 0)
+        cast(SubroutineExt, script.subroutines[0xa]).name = 'pass_code'
+        script.subroutines[0xb0].commands[-2] = CodeCommandWithOffsets(0x0003, [0x01, PLACEHOLDER_OFFSET], offset_arguments={1: 'pass_code'})
+        update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
         #Stops Massifs pushing rock cutscene from appearing
         script = fevent_manager.parsed_script(0x0067, 0)
         if settings[1][1] == 1:
@@ -768,6 +774,11 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         script.subroutines[0x2d].commands[11] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xC438], 1.0, 0x01, PLACEHOLDER_OFFSET], offset_arguments={4: 'label_3'})
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
         sbar.update(1)
+
+        #Fixes a weird quirk with Dreamy Driftwood Shore giving you Luiginary Works
+        script = fevent_manager.parsed_script(0x00D3, 0)
+        script.subroutines[0xb8].commands[-17] = CodeCommandWithOffsets(0x000E, [1.0], Variable(0xC000))
+        update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
         #Blocks Dream World in the Summit until you have the needed abilities
         #script = fevent_manager.parsed_script(0x007F, 0)
@@ -1645,6 +1656,22 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
                 @subroutine(subs=script.subroutines, hdr=script.header)
                 def show_stats(sub: Subroutine):
+                    if get_room(s) == "Pi'illo Castle" or get_room(s) == "Dreamy Pi'illo Castle":
+                        branch('label_1')
+                    elif get_room(s) == "Mushrise Park" or get_room(s) == "Dreamy Mushrise Park":
+                        branch('label_2')
+                    elif get_room(s) == "Dozing Sands" or get_room(s) == "Dreamy Dozing Sands":
+                        branch('label_3')
+                    elif get_room(s) == "Wakeport" or get_room(s) == "Dreamy Wakeport":
+                        branch('label_4')
+                    elif get_room(s) == "Mount Pajamaja" or get_room(s) == "Dreamy Mount Pajamaja":
+                        branch('label_5')
+                    elif get_room(s) == "Driftwood Shore" or get_room(s) == "Dreamy Driftwood Shore":
+                        branch('label_6')
+                    elif get_room(s) == "Somnom Woods" or get_room(s) == "Dreamy Somnom Woods":
+                        branch('label_7')
+                    elif get_room(s) == "Neo Bowser Castle" or get_room(s) == "Dreamy Neo Bowser Castle":
+                        branch('label_8')
                     for a in range(len(spot_info)):
                         label('label_' + str(a), manager=fevent_manager)
                         Variables[0x6000] = 0.0
@@ -1725,7 +1752,24 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     room_local_info_index[room_id] += 1
                     say(None, TextboxSoundsPreset.SILENT, text_to_print + "[Option]Overall Stats   [Option]Close")
                     emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
-                    branch_if(Variables[0x1000], '==', 0.0, 'label_0')
+                    if get_room(s) == "Pi'illo Castle" or get_room(s) == "Dreamy Pi'illo Castle":
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_1')
+                    elif get_room(s) == "Mushrise Park" or get_room(s) == "Dreamy Mushrise Park":
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_2')
+                    elif get_room(s) == "Dozing Sands" or get_room(s) == "Dreamy Dozing Sands":
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_3')
+                    elif get_room(s) == "Wakeport" or get_room(s) == "Dreamy Wakeport":
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_4')
+                    elif get_room(s) == "Mount Pajamaja" or get_room(s) == "Dreamy Mount Pajamaja":
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_5')
+                    elif get_room(s) == "Driftwood Shore" or get_room(s) == "Dreamy Driftwood Shore":
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_6')
+                    elif get_room(s) == "Somnom Woods" or get_room(s) == "Dreamy Somnom Woods":
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_7')
+                    elif get_room(s) == "Neo Bowser Castle" or get_room(s) == "Dreamy Neo Bowser Castle":
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_8')
+                    else:
+                        branch_if(Variables[0x1000], '==', 0.0, 'label_0')
                     branch_if(Variables[0x1000], '==', 1.0, 'label_10')
 
                     label('label_10', manager=fevent_manager)
