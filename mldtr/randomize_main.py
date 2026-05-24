@@ -427,6 +427,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
         # Creates an item_locals array with all the blocks and bean spots
         item_locals = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+
         # Updates the collision for Nerfed Ball Hop
         if settings[1][1] == 1:
             spot = [[0x1BD4, 0x1BDC, 0x1BE4, 0x1BEC, 0x1C0C, 0x1C14, 0x1C1C, 0x1C24, 0x1F8C,
@@ -453,6 +454,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                          0x18B, 0x18F, 0x190, 0x192, 0x194, 0x1E7, 0x1F0, 0x1F1, 0x1F2, 0x1F4, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA, 0x204, 0x22A,
                          0x22B, 0x22C, 0x22D, 0x22E, 0x22F, 0x231, 0x232, 0x233, 0x295,]
         actor_blacklist = []
+
+        #Initializes the item pool
         for room in range(NUMBER_OF_ROOMS):
             try:
                 check_room = rooms_to_init.index(room)
@@ -667,170 +670,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         #        if item_logic[l][t][0] != item_locals[l][t][-1]:
         #            print(item_locals[l][t][-1])
         pbar.update(10)
-
-        #for l in range(len(item_logic)):
-        #    try:
-        #        if item_logic[l][0][0] == item_locals[l][-1]:
-        #            print(item_logic[l])
-        #    except TypeError:
-        #        if item_logic[l][0] == item_locals[l][-1]:
-        #            print(item_logic[l])
-        #        print(item_locals[l])
-        #print(len(item_logic))
-        #print(len(item_locals))
-
-        #To be utilized: loading zone types for entrance randomization
-        #Loading zone types:
-        # -1 - Inaccessible
-        # 0 - Entrance left
-        # 1 - Entrance right
-        # 2 - Entrance up
-        # 3 - Entrance down
-        # 4 - Launch platform entrance up
-        # 5 - Launch platform entrance down
-        # 6 - Pipe
-        # 7 - Dozing Track Entrance Left
-        # 8 - Dozing Track Entrance Right
-        # 9 - Dozing Track Entrance Up
-        # 10 - Dozing Track Entrance Down
-        # 11 - Going Up
-        # 12 - Going Down
-        # 13 - Diagonal Entrance
-        # 14 - Dream Entrance Dream Portal
-        # 15 - Dream Entrance Left
-        # 16 - Dream Entrance Right
-        # 17 - Dream Entrance Up
-        # 18 - Dream Entrance Down
-        # 19 - Dream Entrance Pipe
-        # 20 - Dream Entrance Door
-        # 21 - Dream Entrance Dream Egg Walkway Going Forward
-        # 22 - Dream Entrance Dream Egg Walkway Going Backward
-        #exit_types = [[1, 3, 2, 0], [1, 2, 3, 2, 2, 0, 0, 0], [1, 2, 0], [0], [3, 2, 4, 0], [3, 5, 0], [1, 3, 2, 0], [1, 6, 3, 3, 2, 3, 0], [1],
-        #              [1, 1, 1, 4, 2], [5, 3], [1, 2], [1, 0], [-1], [1, 3, 0], [3], [10, 7], [3, 2], [3, 0], [8, 10, 7, 7], [9, 7], [-1], [-1],
-        #              [0, 0], [6], [8, 8, 10], [1, 0], [1, 3, 0], [1, 3, 2, 0], [-1], [14, 18, 17, 15], [16, 15], [16, 15], [16, 15], [16, 16, 15, 15],
-        #              [15], [16, 16, 15], [16, 15, 15], [16, 16, 15, 15], [16, 19, 19, 13], [19, 19], [16, 16], [15, 15], [16], [14], [16, 15],
-        #              [16, 15], [17, 15], [15], [15], [15], [2, 0], [1, 1, 0, 3, 3, 11, 3, 2, 3], [3, 3, 3, 0, 3, 2, 0, 0], [1, 1, 3, 3, 2, 3, 3],
-        #              [-1], [1, 1, 3], [3, 3], [1, 1, 0, 0, 0], [3, 0, 0], [12, 2], [2], [1, 2], [2, 6, 1], [2], [2], [2], [2], [2], [3, 2], [2],
-        #              [1, 1, 1, 2], [1, 0, 0, 0], [0], [2, 0], [1, 3, 0], [1, 1], [1, 1, 3, 0, 0], [-1], [2, 0], [-1], [-1], [-1], [-1], [-1], [-1],
-        #              [3, 0], [-1], [1, 0], [1, 0], [6, 3, 2], [1, 3], [2, 3, 2], [1, 2, 0], [-1], [-1], [8, 10], [1, 0], [1, 0], [1, 2], [-1], [-1],
-
-        #              [3, 2], [3, 2, 6], [1, 1, 3, 2, 0, 0], [1, 1, 3, 0], [1, 3, 0], [1, 2], [3, 0], [1], [3, 3, 3, 0, 0], [1, 2, 3, 12, 2, 2],
-        #              [0], [-1], [3, 2, 11], [-1], [3, 2, 0], [2, 3], [3, 2, 2, 0], [1, 1, 1, 3, 2, 6, 0, 0, 0], [1, 1, 1, 0, 0], [1, 1], [1],
-        #              [1, 1, 0, 0, 0], [0, 0], [3, 2], [1, 2], [1, 0], [0], [2],
-
-        #              [1, 13, 3, 2, 13, 0], [-1], [2, 13], [3, 3], [1, 1, 2, 0, 0], [0], [1], [0, 13], [1, 13, 3, 2, 13, 0], [0], [13], [2], [13],
-        #              [1, 3], [-1], [1], [-1], [1, 0], [2, 0], [3, 0], [1, 2], [1], [0, 0], [3], [-1], [-1], [15], [-1], [-1], [-1], [-1],
-        #              [14, 20, 15], [16, 20, 20, 15], [20, 20], [16, 20, 15], [20], [16, 15], [16, 15], [16], [17, 20], [-1], [16, 14], [16, 15], [15],
-        #              [1, 3, 2, 0], [16, 16], [16, 14], [14, 15, 15], [16, 15], [16, 16], [14], [14], [14, 19, 15], [16, 16], [19, 15],
-        #              [19, 14, 15], [16, 15], [16, 16, 15, 15, 15, 15], [16, 15, 15], [16, 16, 15], [16, 15], [16, 19], [16, 19], [16, 15],
-        #              [16, 16, 19, 19], [16, 15], [16, 15], [15, 15], [16, 15], [-1], [-1], [-1], [-1], [-1], [-1], [-1], [-1], [-1], [-1],
-
-        #              [16, 14, 19], [20, 15], [19, 21], [19, 19], [19, 19, 19], [-1], [14, 15, 15]]
-
-        #To be utilized: array of what's required to access specific entrances
-        #room_access = [[[], [], [], []], [[], [], [], [], [], [0, 5], [0], []], [[0, -1, 5], [], [0]], [[0], [0], [0], []], [[0], [0], [0]],
-        #               [[], [], [], []], [[3, -1, 5], [], [0], [], [], [0], []], [[]], [[0], [0], [0], [0, 5], [0, 5]], [[0], []], [[], []],
-        #               [[0], [0]], [], [[], [], []], [[]], [[], []], [[1, -1, 2], []], [[], []], [[], [], [], []], [[], []], [], [],
-        #               [[], []], [[0]], [[], [], []], [[], []], [[], [], []], [[], [], [], []], [], [[], [], [], []], [[], []], [[], []], [[], []],
-        #               [[], [], [], []], [[]], [[], [], []], [[], [], []], [[], [], [], []], [[], [], [], []], [[], []], [[], []], [[], []], [[]],
-        #               [[]], [[], []], [[], []], [[], []], [[]], [[]], [[]], [[22], []], [[22], [22], [22], [22], [22], [22], [22], [22], [22]],
-        #               [[22], [22, 5], [22], [22], [22], [22], [22], [22]], [[22], [22], [22], [22], [22, 1], [22], [22]], [], [[], [], []],
-        #               [[22], [22]], [[5], [], [], [], []], [[], [], []], [[22], [22]], [[22]], [[22], [22]], [[22], [22, 41], [22, 41]],
-        #               [[22]], [[22]], [[22]], [[22]], [[22]], [[], []], [[]], [[], [1], [], []], [[], [], [], []], [[]], [[], []], [[], [], []],
-        #               [[], []], [[], [0], [0, 4], [5], []], [], [[], []], [], [], [], [], [], [], [[], []], [], [[], []], [[], []], [[], [], []],
-        #               [[], []], [[], [], []], [[], [], [5]], [], [], [[], []], [[5], []], [[], []], [[], []], [], [],
-
-        #               [[23, 0], [23, 1]], [[23, 0], [23, 0], [23, 0, 5]], [[23, 0, 5], [23, 0], [23, 42, 0], [23, 0], [23, 0, 3, -1, 0, 5], [23, 0]],
-        #               [[23, 0], [23, 0], [23, 0], [23, 0]], [[23, 0], [23, 0], [23, 0]], [[23, 0], [23, 0]], [[23, 0, 3], [23, 0, 3]], [[23, 0]],
-        #               [[23, 0, 5], [23, 0, 3], [23, 0], [23, 0], [23, 0, 3]], [[23, 0, 3], [23, 0, 3], [23, 0, 3], [23, 0, 3], [23, 0], [23, 0, 3]],
-        #               [[23, 0]], [], [[23, 0, 5], [23, 0], [23, 0, 3]], [], [[23, 0, 3], [23, 0, 4], [23, 0]],
-        #               [[23, 0], [23, 0, 4]], [[23, 0, 4], [23, 0, 4], [23, 0, 4, 5], [23, 0, 4, 5]],
-        #               [[23, 0], [23, 0, 3], [23, 0, 3], [23, 0, 42], [23, 0], [23, 0], [23, 0, 3], [23, 0, 3], [23, 0]],
-        #               [[23, 0], [23, 0, 3, -1, 23, 0, 5], [23, 0], [23, 0, 4, -1, 23, 0, 5], [23, 0, 4]], [[23, 0, 3], [23, 0]], [[23, 0, 4]],
-        #               [[23, 0, 5], [23, 0], [23, 0], [23, 0, 5], [23, 0]], [[23, 0, 3], [23, 0]], [[23, 0], [23, 0]], [[23, 0, 3], [23, 0]],
-        #               [[23, 0, 3], [23, 0, 3]], [[23, 0]], [[23, 0, 5]],
-
-        #               [[], [], [], [], [], []], [], [[], []], [[], []], [[15], [15], [], [15], [15]], [[]], [[]], [[], []], [[], [], [], [], [], []],
-        #               [[]], [[]], [[]], [[]], [[], [5]], [], [[14]], [], [[14], [14]], [[14], [14]], [[14], [14]], [[14], [14]], [[], []], [[]], [[], []], [[]],
-        #               [], [], [[]], [], [], [], [], [[], [6, 7, 8, 12, 13], []], [[], [], [], []], [[], []], [[], []], [[]], [[], []], [[], []], [[]],
-        #               [[6, 7, 8, 12, 13], [6, 7, 8, 12, 13]], [], [[], []], [[], []], [[]], [[], [], [], [5]], [[], []], [[], []], [[], [], []],
-        #               [[], []], [[], []], [[]], [[]], [[], [], []], [[], []], [[], []], [[0], [], []], [[], []], [[], [], [], [], [], []], [[], [], []],
-        #               [[], [], []], [[], []], [[], []], [[], []], [[], []], [[], [], [], []], [[], []], [[], []], [[], [9]], [[], [9]], [], [], [], [],
-        #               [], [], [], [], [], [], [[], [], []], [[], []], [[], []], [[], []], [[], [], []], [], [[], [], []]]
-
-        #To be utilized: dream world rooms attached to their overworld room, with info of what exits can access it. The first entry is always the entrance
-        #(if a room has multiple dream worlds, it's stored with the first byte being which dream world, and the last 3 being the room)
-        #dream_access = [[0x001, [0x02C], [[0], [1], [2], [3], [5], [6]]], [0x003, [0x030], [0]], [0x004, [0x19A, 0x09D], [3]], [0x008, [0x199, 0x032], [[0, 0, 4, 5]]],
-        #                [0x00B, [0x01E, 0x01F, 0x020, 0x021, 0x022, 0x023, 0x024, 0x025, 0x026, 0x027, 0x028, 0x029, 0x02A, 0x02B, 0x02D, 0x02E, 0x02F], [[0], [1, 40]]],
-        #                [0x012, [0x0B1, 0x13C, 0x13D, 0x13E], [[0], [1]]], [0x013, [0x0EE], [[0], [1], [2], [3]]], [0x0019, [0x0B5], [[1], [2]]], [0x1019, [0x0EC], [[1], [2]]],
-        #                [0x035, [0x12E, 0x12F], [[0, 2], [1, 2, 5], [4, 2], [5, 2], [7, 2]]], [0x036, [0x130], [[0], [1, 5], [2, 5], [3, 5], [4], [5, 5], [6, 5]]],
-        #                [0x038, [0x17E], [[0, 5], [2, 5]]], [0x039, [0x12D], [[0, 0], [1, 0]]],
-        #                [0x003A, [0x0D2, 0x0D3, 0x0D4, 0x0D5, 0x0D6, 0x161, 0x162, 0x163, 0x164, 0x165, 0x166, 0x167, 0x168, 0x169, 0x16A, 0x16B, 0x16C, 0x16D, 0x16E,
-        #                          0x16F, 0x170, 0x171, 0x172, 0x1C9, 0x1CA], [[0, 5], [1], [2, 0, 3], [3], [4, 0]]], [0x103A, [0x17F, 0x180, 0x181], [[4]]],
-        #                [0x03B, [0x173, 0x174, 0x175, 0x176, 0x177], [[0], [1], [2]]], [0x048, [0x182], [[0, 3, 5]]],
-        #                [0x04C, [0x17B, 0x17C, 0x17D], [[0, 0, 4], [1]]], [0x04F, [0x178, 0x179, 0x17A], [[0, 0, 4], [1]]],
-        #                [0x05D, [0x0EB], [[0, 5], [1, 5], [2]]], [0x060, [0x0ED], [[0], [1]]], [0x061, [0x292, 0x0EF], [[0, 5], [1]]],
-
-        #                [0x067, [0x208], [[0, 5], [1, 5], [2, 5]]], [0x0068, [0x13F, 0x1E7], [[0], [1, 5], [2, 5], [3, 5], [4, 5], [5, 5]]],
-        #                [0x1068, [0x1E8], [[0, 5], [1, 3, -1, 5], [2, 3, -1, 5], [3, 3, -1, 5], [4], [5, 3, -1, 5]]],
-        #                [0x006A, [0x208], [[0], [1], [2]]], [0x106A, [0x20E], [0], [1], [2]], [0x06D, [0x208], [[0, 3, -1, 5]]],
-        #                [0x06E, [0x209, 0x20A], [[0, 5], [1, 3, 5], [4, 3, 5]]], [0x070, [0x208], [[0]]], [0x072, [0x20C, 0x20D], [[0, 3, 5], [1, 3], [2, 3]]],
-        #                [0x076, [0x250, 0x290], [[0, 4], [1, 4], [2, 4, 5], [3, 4, 5]]], [0x0077, [0x1E9, 0x1EA, 0x1EB], [[0], [3], [5]]],
-        #                [0x1077, [0x1EC, 0x1ED], [[0], [3], [5]]], [0x07F, [0x1EE, 0x1EF, 0x1F0, 0x1F1, 0x1F2, 0x1F3, 0x1F4, 0x1F5, 0x1F6, 0x1F7, 0x1F8, 0x1F9, 0x1FA,
-        #                                                                    0x1FB, 0x1FC, 0x1FD, 0x1FE, 0x1FF, 0x200, 0x201, 0x202, 0x204], [[0, 3, -1, 5], [1, 3, -1, 5]]],
-
-        #                [0x097, [0x0A2, 0x0A3, 0x0A4, 0x0A5, 0x0A6, 0x0A7, 0x0A8, 0x0A9, 0x0AA, 0x0F4, 0x0F5, 0x0F6, 0x0F7, 0x0F8, 0x0F9, 0x0FA], [[0], [1]]]]
-
-        #To be utilized: a blacklist of what triggers can't be accessed if another is activated
-        # -1: "Don't go from this trigger if you're in this room, and it hasn't been activated"
-        # -2: "Only disable if glitches aren't enabled"
-        # -3: "Finish connecting until nothing can connect, then add the specified key item or make the condition possible*"
-        # Conditions:
-        #  40: Rocks have been cleared in Mushrise Park
-        #  41: All Ultibed parts have been collected
-        #  42: Required Pi'illo Folk have been saved
-        #*If the condition requires key items that aren't in the pool, change the entrance
-        #exit_blacklist = [[0x001, -1, [[4, 7], [4, 7], [4, 7], [4, 7], [0, 1, 2, 3, 5, 6], [4, 7], [4, 7], [0, 1, 2, 3, 5, 6]]],
-        #                  [0x004, -1, [[2, 3], [2, 3], [3], [0, 1, 2]]], [0x006, -3, [[2], [2], [0, 1, 3], [2]], 16],
-        #                  [0x007, -1, [[2], [2], [], [2], [2], [2], [2]]], [0x009, -1, [[3], [3], [3], [], [3]]],
-        #                  [0x00B, -3, [[1], [0]], 40], [0x011, -1, [[], [0]]], [0x012, -3, [[1], [0]], 17],
-        #                  [0x034, -1, [[1, 3, 4, 6, 7, 8], [0, 2, 5], [1, 3, 4, 6, 7, 8], [0, 2, 5], [0, 2, 5], [1, 3, 4, 6, 7, 8], [0, 2, 5], [0, 2, 5], [0, 2, 5]]],
-        #                  [0x035, -1, [[2, 3, 6], [2, 3, 6], [0, 1, 4, 5, 6, 7], [0, 1, 4, 5, 6, 7], [2, 3, 6], [2, 3, 6], [0, 1, 2, 3, 4, 5, 7], [2, 3, 6]]],
-        #                  [0x036, -1, [[1, 2, 3, 4, 5, 6], [0, 4], [0, 4], [0, 4], [1, 2, 3, 5, 6], [0, 4], [0, 4]]], [0x038, -1, [[1], [0, 2], [1]]],
-        #                  [0x03A, -1, [[2, 4], [2, 4], [0, 1, 3, 4], [2, 4], [0, 1, 2, 3]]], [0x03C, -1, [[1], [0]]], [0x03F, -1, [[1, 2], [0, 2], [0, 1]]],
-        #                  [0x047, -1, [[1, 2, 3], [0, 2, 3], [0, 1], [0, 1]]], [0x048, -1, [[1, 2, 3], [0, 2], [0, 1, 3], [0, 2]]],
-        #                  [0x04B, -1, [[1, 2], [0], [0]]], [0x04C, -1, [[1], [0]]], [0x04D, -1, [[1, 2, 3], [0, 2, 3, 4], [0, 1, 3, 4], [1, 2], [1, 2]]],
-        #                  [0x05A, -3, [[1], [0, 2], [1]], 15],
-
-        #                  [0x06E, -1, [[2, 3], [2, 3], [0, 1, 4], [0, 1, 4], [2, 3]]], [0x06F, -1, [[3, 5], [3, 5], [3, 5], [], [3, 5], []]],
-        #                  [0x077, -1, [[1, 2, 3, 6, 7, 8], [0, 2, 3, 4, 5, 7, 8], [0, 1, 3, 4, 5, 6, 8], [0, 1, 2, 4, 5, 6, 7], [1, 2, 3, 6, 7, 8],
-        #                               [1, 2, 3, 6, 7, 8], [0, 2, 3, 4, 5, 7, 8], [0, 1, 3, 4, 5, 6, 8], [0, 1, 2, 4, 5, 6, 7]]],
-        #                  [0x078, -1, [[1, 2, 3, 4], [0], [0], [0], [0]]], [0x079, -1, [[], [0]]], [0x07B, -1, [2], [2], [0, 1, 3, 4], [2], [2]], [0x07C, -1, [[], [0]]],
-
-        #                  [0x0A3, -1, [[2, 3], [2, 3], [0, 1], [0, 1]]], [0x0AF, -3, [[1], [0, 2, 3], [1], [1]], 18], [0x0B7, -1, [[1], [0, 2], [1]]],
-        #                  [0x0BC, -1, [[1, 3, 4, 5], [0, 2], [1, 3, 4, 5], [0, 2], [0, 2], [0, 2]]], [0x0BE, -1, [[1], [0, 2], [1]]]]
-
-        #How I'm going to do entrance randomization:
-        #1) Sort the entrances into 2 arrays: One for entrances that are accessible, and ones that aren't
-        #   - The arrays are 2D arrays, with the first axis being sorted by what type of exit it is
-        #   - The second array in the accessible array contains the entrance ID (Explained how it's stored below),
-        #   and the second an array containing both the entrance ID and the logic
-        #   - The entrance IDs are stored as a 4-digit hex number, with the first digit being the entrance ID and the last 3 being the room ID
-        #
-        #2) Connect every possible entrance until either a stop command is triggered or 20-30 entrances have been done
-        #   - Connections can only be made as follows: 0-1, 2-3/5, 3-2/4, 4-3/5, 5-2/4, 6-6, 7-8, 9-10, 11-12, 13-13
-        #   - If there are no entrances left, it replaces a random room it's connected with with the least entrances an exit it can connect to with a new one that has multiple exits
-        #
-        #3) Connect remaining entrances in their rooms to eachother until none remain if it's a "stop" command, or only 1 if it timed out
-        #   - If it can't reach either number, it calls in a new room based on the connections that are needed
-        #
-        #4) Either temporarily add the key item to the item pool if it's a "stop" command, or add a random key item if it timed out
-        #
-        #5) Add any room that's now available into the room pool
-        #
-        #6) Update the logic for every subsequent room to require the key items currently in the pool
-        #
-        #7) Repeat steps 2-6 until every entrance has been selected
 
         #for item in range(len(item_logic)):
         #    if item_locals[item][6] == item_logic[item][0][0]:
@@ -1627,6 +1466,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                 to_write = new_item_locals[l][3]
                 if new_item_locals[l][2] // 0x10 % 0x10 > 1:
                     to_write += 0xA000
+                to_write -= to_write % 2
                 tracker_dat.write(to_write.to_bytes(2, 'big'))
         #print(len(new_item_locals) - (len(new_item_locals)//16)*16)
         tracker_dat.write(b'\x00'*(16 - (len(new_item_locals)*4) % 16))
