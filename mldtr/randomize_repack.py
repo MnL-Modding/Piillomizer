@@ -425,7 +425,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xC096] = 1.0 #Timer slow tutorial
             Variables[0xC097] = 1.0 #Timer fast tutorial
             Variables[0xC098] = 1.0 #Timer Dreambert leaves
-            Variables[0xC0AD] = 1.0 #Fall slow to hit red coins
+            Variables[0xC09A] = 1.0 #Other part of timer tutorial
+            Variables[0xC0AC] = 1.0 #Fall slow to hit red coins
             Variables[0xC0AE] = 1.0 #Crunch to hit bombs
             wait(3)
             #Variables[0xC3B9] = 1.0 #Massifs pushed rock and opened Mount Pajamaja
@@ -444,7 +445,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xC41B] = 1.0 #Side Drill Tutorial
             Variables[0xC4B2] = 1.0 #Tunnel in Side Drill tutorial is broken
             Variables[0xC41C] = 1.0 #Side Drill Tutorial Part 2
-            Variables[0xC4B4] = 1.0 #Rock in second Side Drill tutorial is broken
+            Variables[0xC428] = 1.0 #Rock in second Side Drill tutorial is broken
             Variables[0xC4B8] = 1.0 #Drink fountain tutorial
             Variables[0xC4B6] = 1.0 #Drank from fountain the first time
             Variables[0xC3EB] = 1.0 #Change of scenery cutscene (currently broken)
@@ -489,11 +490,15 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xCB59] = 1.0 #Seabelle (who is a total supermodel) cutscene
             Variables[0xCC6A] = 1.0 #Another dreampoint is nearby
             Variables[0xCB58] = 1.0 #Seabury cutscene
+            Variables[0xCB6A] = 1.0 #First puzzle room tutorial
             Variables[0xCC53] = 1.0 #Talk to Broque Madame after Elite Trio's defeat
             Variables[0xCC82] = 1.0 #Doctor Snoozemore Appears
             Variables[0xCC83] = 1.0 #Doctor Snoozemore Cutscene Watched
             Variables[0xC0B4] = 1.0 #Pi'illo Castle dream's deep opens
+            Variables[0xC09B] = 1.0 #First entered Pi'illo Castle Dream's Deep
+            Variables[0xC0A7] = 1.0 #Same cutscene as above?
             Variables[0xC09F] = 1.0 #Luiginary Ball tutorial
+            Variables[0xC0A0] = 1.0 #Luiginary Ball tutorial part 2
             Variables[0xC0A3] = 1.0 #Learning Luiginary Ball Hookshot
             Variables[0xC0A4] = 1.0 #Learning Luiginary Ball Throw
             Variables[0xC5CC] = 1.0 #You must find the Ultibed parts cutscene
@@ -1590,8 +1595,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                        0x3c5, 0x3c6, 0x3c7, 0x3c8, 0x95d, 0x3ca, 0x3cb, 0x3cc, 0x3d0, 0x3d1, 0x3d8, 0x3d9, 0x77b, 0x398, 0x998, 0x3da, 0x3dd,
                        0x3de, 0x3df, 0x3e0, 0x41a, 0x41b]],
 
-                     [[0x1cb, 0x60d, 0x60e, 0x60f, 0x610, 0x1e3, 0x1e4, 0x611, 0x612, 0x91b, 0x91c, 0x1e5, 0x61a, 0x61e, 0x61f, 0x620, 0x621, 0x622,
-                       0x607, 0x608, 0x609, 0x95e, 0x204, 0x60b, 0x95f, 0x205, 0x206, 0x613, 0x614, 0x616, 0x207, 0x617, 0x618, 0x208, 0x61b, 0x61c],
+                     [[0x1cb, 0x60d, 0x60e, 0x60f, 0x1e3, 0x1e4, 0x611, 0x612, 0x91b, 0x91c, 0x1e5, 0x61a, 0x61e, 0x61f, 0x620, 0x621, 0x622,
+                       0x607, 0x608, 0x609, 0x95e, 0x204, 0x60b, 0x95f, 0x205, 0x613, 0x614, 0x616, 0x206, 0x207, 0x617, 0x618, 0x208, 0x61b, 0x61c],
                       [0x610, 0x623, 0x624, 0x60c, 0x615, 0x960, 0x619, 0x961, 0x3dc, 0x61d], [0x90c, 0x4db, 0x4e2, 0x4e3, 0x4e4, 0x90d,
                        0x4eb, 0x979, 0x97a, 0x4f5, 0x4f6, 0x97b, 0x45e, 0x45f, 0x4fb, 0x4fc, 0x4fd, 0x97c, 0x97d, 0x97e, 0x49e, 0x501,
                        0x505, 0x97f, 0x980, 0x510, 0x511, 0x981, 0x53b, 0x53c, 0x53d, 0x982, 0x983, 0x568, 0x569,
