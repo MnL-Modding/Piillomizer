@@ -29,6 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install --no-interaction
+          pip install jsonschema #Temporary workaround for the servers being down
       - name: Build executable
         uses: Nuitka/Nuitka-Action@main
         with:
