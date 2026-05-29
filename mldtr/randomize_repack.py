@@ -1485,7 +1485,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         sbar.update(15)
 
     #Fixes attack piece blocks
-    with tqdm(total=1738, desc="Fixing blocks and softlocks......") as fbar:
+    with tqdm(total=1744, desc="Fixing blocks and softlocks......") as fbar:
         attack_dat = [0x004, 0x005, 0x010, 0x011, 0x012, 0x013, 0x014, 0x017, 0x019, 0x01F, 0x020, 0x021, 0x022, 0x027, 0x028, 0x02A,
                       0x034, 0x035, 0x036, 0x038, 0x039, 0x03A, 0x03B, 0x03D, 0x040, 0x04B, 0x04C, 0x04D, 0x04F, 0x062, 0x069, 0x06A, 0x06C,
                       0x06D, 0x06F, 0x070, 0x072, 0x075, 0x076, 0x079, 0x07C, 0x0BB, 0x0BD, 0x0BE, 0x0C4, 0x0C5, 0x0C6, 0x0D2, 0x0D6, 0x0E4,
@@ -1888,8 +1888,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 fbar.update(3)
 
         #Adds rocks that prevent softlocks in overworld [Room ID, HOW_ROCKS_PLACED (0 = Horizontal, 1 = Vertical, 2 = Up, 3 = Square), START_X, START_Y, START_Z, ROCKS_TO_PLACE, ability logic]
-        rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1140, 0, 1628, 3, [0, 1 + settings[3][0]]], [0x018, 1, 640, 280, 324, 3, [0]],
-                    [0x184, 0, 520, 0, 800, 3, [0]], [0x04F, 3, 1840, 30, 1150, 1, [0]], [0x01C, 0, 768, 132, 512, 3, [14]],
+        rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x002, 1, 1402, 66, 200, 2, [0]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1000, 50, 660, 3, [18, 19, 20, 21]], [0x011, 0, 672, 0, 600, 4, [0, 1 + settings[3][0]]],
+                    [0x101, 1, 248, 0, 200, 3, [0, 1 + settings[3][0]]], [0x018, 1, 640, 280, 324, 3, [0]], [0x184, 0, 520, 0, 800, 3, [0]], [0x04F, 3, 1840, 30, 1150, 1, [0]], [0x01C, 0, 768, 132, 512, 3, [14]],
 
                     [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 9, 10, 11]], [0x288, 0, 552, 40, 510, 2, [6]],
                     [0x03A, 0, 936, 10, 800, 2, [6]], [0x03B, 0, 1205, 33, 1380, 1, [6]], [0x04C, 0, 975, 30, 920, 2, [6, 10]], [0x104, 0, 735, 180, 355, 1, [6]],
