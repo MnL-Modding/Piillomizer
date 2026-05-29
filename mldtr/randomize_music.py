@@ -79,12 +79,15 @@ def import_random(section, input_folder, filenames_all, mode):
         record_count, next_section_offset, data_start_offset = struct.unpack('<III', sound_data.read(12))
         sound_data.seek(0x10 + record_count * 16, os.SEEK_CUR)
         name_table = sound_data.read(data_start_offset - 0x20 - record_count * 16)
+        sound_data.seek(0x034A3E2C + 0x20)
         name_table_io = io.BytesIO(name_table)
         record_offsets_lengths = []
         for i in range(record_count):
             index, length, offset, padding = struct.unpack('<IIII', sound_data.read(16))
             if i == 25 or i == 26 or i == 27 or i == 28:
                 record_offsets_lengths.append((offset, length))
+                #print(offset)
+                #print(length)
         records = []
         for offset, length in record_offsets_lengths:
             sound_data.seek(0x034A3E2C + offset)
@@ -108,10 +111,11 @@ def import_random(section, input_folder, filenames_all, mode):
             else:
                 category = random.randint(0,4)
                 randi = random.randrange(0, len(filenames_all[category]))
-            while randi in has_done[category] or randi > len(filenames_all[category]):
+            while randi in has_done[category] or randi >= len(filenames_all[category]):
                 if not mode:
                     category = random.randint(0,4)
                 randi = random.randrange(0, len(filenames_all[category]))
+            #print(randi)
             filenames.append(filenames_all[category][randi])
             has_done[category].append(randi)
         sound_data.seek(section_offset + next_section_offset)
@@ -122,11 +126,13 @@ def import_random(section, input_folder, filenames_all, mode):
         for file in range(len(filenames)):
             if file == 25:
                 for i in range(4):
-                    section_data_len = len(record_offsets_lengths[i])
+                    section_data_len = len(new_section_data)
+                    #print(section_data_len)
                     offset = 0x20 + record_count * 16 + len(name_table) + section_data_len
+                    #print(offset)
                     new_section_data += records[i]
                     new_records_header += struct.pack('<III4x', 0, len(new_section_data) - section_data_len, offset)
-            print(f"Packing {filenames[file]}...")
+            #print(f"Packing {filenames[file]}...")
             section_data_len = len(new_section_data)
             offset = 0x20 + record_count * 16 + len(name_table) + section_data_len
             with (folder / f'{filenames[file]}').open('rb') as f:
