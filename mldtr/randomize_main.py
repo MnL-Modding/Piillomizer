@@ -254,13 +254,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         for a in area_replace:
             area_logic[a[0]] = a
 
+        if stat_mult[0] < 0:
+            stat_mult[0] = 0xFFFF
+
         #Sets base stats to be added on, creating a custom level curve
         #[Level, HP, POW, DEF, SPEED, EXP, COINS]
         init_enemy_stats = [2, 8, 27 * stat_mult[0], 12, 15, 3 * stat_mult[1], 1]
         init_boss_stats = [0, 0, 0 * stat_mult[0], 0, 0, 0 * stat_mult[1], 0]
-
-        if stat_mult[0] < 0:
-            stat_mult[0] = 0xFFFF
 
         # Opens code.bin for enemy stat randomization
         code_bin_path = fs_std_code_bin_path(data_dir=input_folder)
@@ -853,9 +853,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             except ValueError:
                                 #print(enemy_logic[i][j][0])
                                 enemy_added.append(enemy_logic[i][j][0])
+                                if stat_mult[0] < 0xFFFF:
+                                    new_lev = int(init_enemy_stats[0])
+                                else:
+                                    new_lev = 50
                                 new_enemy_stats.append([enemy_logic[i][j][0], int(init_enemy_stats[1]), int(init_enemy_stats[2]), int(init_enemy_stats[3]),
                                                         int(init_enemy_stats[4]), int(init_enemy_stats[5]), int(init_enemy_stats[6]), 0, 0, 0, 0, 0,
-                                                        int(init_enemy_stats[0])])
+                                                        new_lev])
                                 #Increase level by 1 every 3 enemies
                                 #Increase HP by 1.5 every enemy
                                 #Increase POW by 2 every enemy
@@ -877,8 +881,8 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                 for stat in range(len(new_enemy_stats[-1])):
                                     if new_enemy_stats[-1][stat] < 1:
                                         new_enemy_stats[-1][stat] = 1
-                                    elif new_enemy_stats[-1][stat] > 0xFFFF:
-                                        new_enemy_stats[-1][stat] = 0xFFFF
+                                    elif new_enemy_stats[-1][stat] > 0x7FFF:
+                                        new_enemy_stats[-1][stat] = 0x7FFF
                                 #print(init_enemy_stats)
                                 #print(new_enemy_stats[-1])
 
@@ -921,15 +925,19 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             except ValueError:
                                 #print(enemy_logic[i][j][0])
                                 enemy_added.append(boss_logic[i][j][0])
+                                if stat_mult[0] < 0xFFFF:
+                                    new_lev = int(init_boss_stats[0] + ((len(new_enemy_stats) // 2.5) + 1))
+                                else:
+                                    new_lev = 50
                                 new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + (len(new_enemy_stats) * 24)), int(init_boss_stats[2] + (len(new_enemy_stats) * 3 * stat_mult[0])),
                                                         int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int((init_boss_stats[5] + (len(new_enemy_stats) * 75 * stat_mult[1])) / 2),
-                                                        int(init_boss_stats[6] + (len(new_enemy_stats))), 0, 0, 0, 0, 0, int(init_boss_stats[0] + ((len(new_enemy_stats) // 2.5) + 1))])
+                                                        int(init_boss_stats[6] + (len(new_enemy_stats))), 0, 0, 0, 0, 0, new_lev])
 
                                 for stat in range(len(new_enemy_stats[-1])):
                                     if new_enemy_stats[-1][stat] < 1:
                                         new_enemy_stats[-1][stat] = 1
-                                    elif new_enemy_stats[-1][stat] > 0xFFFF:
-                                        new_enemy_stats[-1][stat] = 0xFFFF
+                                    elif new_enemy_stats[-1][stat] > 0x7FFF:
+                                        new_enemy_stats[-1][stat] = 0x7FFF
                                 #print(new_enemy_stats[-1])
 
                                 if new_enemy_stats[-1][0] == 107:
@@ -957,7 +965,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                                                                 new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                                 new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
                                     else:
-                                        new_enemy_stats[-1][4] = 0xFFFF
+                                        new_enemy_stats[-1][4] = 0x7FFF
                                 elif new_enemy_stats[-1][0] == 145:
                                     new_enemy_stats[-1][5] = 0
                                     new_enemy_stats[-1][6] = 0
@@ -1382,13 +1390,13 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         tracker_dat.write(b'\x00'*(16 * 20))
         tracker_dat.write(bytes(max_values))
 
-    if settings[3][3] == 0:
-        with tqdm(total=len(new_enemy_stats), desc="Repacking Enemy Stats...") as ebar:
-            #Repackages randomized enemy stats
-            enemy_stats = load_enemy_stats(code_bin=code_bin_path)
-            for enemy in range(len(new_enemy_stats)):
-                #print(new_enemy_stats[enemy])
-                #print(new_enemy_stats[enemy][0])
+    with tqdm(total=len(new_enemy_stats), desc="Repacking Enemy Stats...") as ebar:
+        #Repackages randomized enemy stats
+        enemy_stats = load_enemy_stats(code_bin=code_bin_path)
+        for enemy in range(len(new_enemy_stats)):
+            #print(new_enemy_stats[enemy])
+            #print(new_enemy_stats[enemy][0])
+            if(settings[3][2] == 0):
                 enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
                 enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
                 enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
@@ -1405,10 +1413,17 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     enemy_stats[114].power = new_enemy_stats[enemy][2]
                     enemy_stats[114].speed = new_enemy_stats[enemy][4]
                     enemy_stats[114].level = new_enemy_stats[enemy][12]
-                ebar.update(1)
-                #print(new_enemy_stats[enemy])
-            #Packs enemy stats
-            save_enemy_stats(enemy_stats, code_bin=code_bin_path)
+            else:
+                enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2] * stat_mult[0]
+                if enemy_stats[new_enemy_stats[enemy][0]].power > 0x7FFF:
+                    enemy_stats[new_enemy_stats[enemy][0]].power = 0x7FFF
+                enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5] * stat_mult[1]
+                if enemy_stats[new_enemy_stats[enemy][0]].exp > 0x7FFF:
+                    enemy_stats[new_enemy_stats[enemy][0]].exp = 0x7FFF
+            ebar.update(1)
+            #print(new_enemy_stats[enemy])
+        #Packs enemy stats
+        save_enemy_stats(enemy_stats, code_bin=code_bin_path)
 
     with tqdm(total=len(new_item_locals)+len(parsed_fmapdat), desc="Repacking FMap...") as fbar:
         newlen = 0
