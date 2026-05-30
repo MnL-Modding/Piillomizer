@@ -635,6 +635,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 Variables[0x90A5] = 1.0
             Variables[0xCC28] = settings[2][0]
             Variables[0xCB07] = settings[2][1]
+            Variables[0xC0B5] = settings[2][1]
             Variables[0xC92F] = settings[2][2]
             Variables[0xC04C] = settings[2][3]
             Variables[0xC367] = settings[2][4]
@@ -647,6 +648,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             #Variables[0xC64E] = settings[2][8]
             Variables[0xCB45] = settings[2][9]
             Variables[0xC9E0] = settings[2][10]
+            Variables[0xC621] = settings[2][11]
+            Variables[0xC622] = settings[2][11]
+            Variables[0xC623] = settings[2][11]
             Variables[0xC637] = settings[2][11]
             Variables[0xC5AF] = settings[2][12]
             Variables[0xC0BF] = settings[2][13]
