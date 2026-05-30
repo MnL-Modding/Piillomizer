@@ -776,10 +776,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                             old_spot = random.randint(offset, len(new_item_locals) - 1)
                         #print(old_spot)
 
-                        item_locals.append([new_item_locals[old_spot][0],
-                                            new_item_locals[old_spot][1], new_item_locals[old_spot][2], new_item_locals[old_spot][4],
+                        item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
+                                            new_item_locals[old_spot][2] + 0x10000 * (new_item_locals[old_spot][3] % 2), new_item_locals[old_spot][4],
                                             new_item_locals[old_spot][5], new_item_locals[old_spot][6], new_item_locals[old_spot][7]])
-                        item_pool.append([new_item_locals[old_spot][2], new_item_locals[old_spot][3]])
+                        item_pool.append([new_item_locals[old_spot][2], new_item_locals[old_spot][3] - (new_item_locals[old_spot][3] % 2)])
                         repack_index = find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000)
                         if repack_index is not None:
                             if repack_data[repack_index[0]][6] // 0x1000 == 0xB:
@@ -808,8 +808,6 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                         #print(nitem)
                         #print(len(key_item_pool))
                         #print(key_item_check)
-                        item_locals[i][2] += 0x10000 * (item_locals[i][3] % 2)
-                        item_locals[i][3] -= item_locals[i][3] % 2
                         spottype = get_spot_type(item_locals[i])
                         if (key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004) and key_item_pool[nitem][0] != 0xB0F7:
                             key_data.append(
