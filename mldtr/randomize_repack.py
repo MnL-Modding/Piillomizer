@@ -269,8 +269,8 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xCC48] = 1.0 #Peach is in danger... again!
             Variables[0xCC27] = 1.0 #Got badges and watched tutorial
             Variables[0xE01D] = 1.0 #Gives access to badges and expert challenges
-            Variables[0xCCCC] = 1.0 #Smoldergeist badge tutorial
-            #Variables[0xE075] = 1.0 #Fixes bridge in Deep Pi'illo Castle
+            Variables[0xCCCC] = 1.0 #Smoldergeist expert challenge tutorial
+            #Variables[0x9015] = 1.0 #Fixes bridge in Deep Pi'illo Castle
             Variables[0xC5CA] = 1.0 #How did you come OUT of the hidden area!?
             Variables[0xCC29] = 1.0 #First entered collection room
             Variables[0xCC2A] = 1.0 #Swim to Dream World
@@ -281,7 +281,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xCB00] = 1.0 #Mario and Dreamy Luigi meet
             Variables[0xCB06] = 1.0 #Bros chase after Peach again
             Variables[0xCB05] = 1.0 #Dromba battled
-            Variables[0xE070] = 1.0 #Dromba bridge is up
+            Variables[0x9010] = 1.0 #Dromba bridge is up
             #Variables[0xCB07] = 1.0 #Final Dreamy Castle cutscene
             Variables[0xCB08] = 1.0 #Dreambert is revived
             Variables[0xCC2B] = 1.0 #Dreambert awakes
@@ -340,7 +340,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             #Variables[0xE01B] = 1.0 #Unlock Dream World Attacks
             Variables[0xC045] = 1.0 #Bunny hops away in flower room
             Variables[0xC024] = 1.0 #Cornered bunny and got nightmare chunk
-            Variables[0xE076] = 1.0 #Bridge under Nightmare Chunk room breaks
+            Variables[0x9016] = 1.0 #Bridge under Nightmare Chunk room breaks
             Variables[0xC956] = 1.0 #Eldream's nightmare chunk is shattered
             Variables[0xC04D] = 1.0 #Saved Eldream, Dream's Deep portal is open
             Variables[0xC06D] = 1.0 #Skipped opening cutscene for Dream's Deep
@@ -369,7 +369,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xC334] = 1.0 #Cutscene for getting first Dozite
             wait(3)
             Variables[0xC342] = 1.0 #Got first Dozite
-            #Variables[0xE0A0] = 1.0 #Bridge is up
+            #Variables[0x9040] = 1.0 #Bridge is up
             Variables[0xC33D] = 1.0 #Britta appears
             Variables[0xC33E] = 1.0 #Another talk with Britta
             Variables[0xC340] = 1.0 #First drilldigger tutorial
@@ -470,7 +470,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xCC81] = 1.0 #Allows you to talk to the guys that let you into Driftwood Shores
             Variables[0xCC4E] = 1.0 #Broque is faking liking you
             Variables[0xCC4F] = 1.0 #Can access Driftwood Shore
-            Variables[0xE0C1] = 1.0 #Removes invisible wall blocking Driftwood Shore
+            Variables[0x9061] = 1.0 #Removes invisible wall blocking Driftwood Shore
             wait(3)
             Variables[0xCC50] = 1.0 #Intro to the Rose Broquet
             Variables[0xCC51] = 1.0 #Broque Madame intro
@@ -532,9 +532,9 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             #Variables[0xC9E0] = 1.0 #Wiggler is defeated
             Variables[0xC9EA] = 1.0 #Bedsmith appears
             Variables[0xC59F] = 1.0 #Cog to enter Somnom Woods is available
-            Variables[0xE0F9] = 1.0 #Stairs to switch in Somnom Woods are up
+            Variables[0x9099] = 1.0 #Stairs to switch in Somnom Woods are up
             Variables[0xC5A0] = 1.0 #Cog has been turned
-            Variables[0xE0FA] = 1.0 #Switch in Somnom Woods has been turned
+            Variables[0x90A0] = 1.0 #Switch in Somnom Woods has been turned
             Variables[0xC5A1] = 1.0 #Bedsmith builds the Ultibed
             Variables[0xC5C6] = 1.0 #Camera pans to show the rest of the area
             Variables[0xC5C5] = 1.0 #The first Pi'illo Master is ahead
@@ -614,25 +614,25 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xE011] = int(settings[0][11])
             Variables[0xE012] = int(settings[0][12])
             Variables[0xE013] = int(settings[0][13])
-            Variables[0xE075] = int(settings[0][14])
+            Variables[0x9015] = int(settings[0][14])
             Variables[0xC369] = int(settings[0][15])
             Variables[0xCABF] = int(settings[0][16])
-            Variables[0xE0A0] = int(settings[0][17])
+            Variables[0x9040] = int(settings[0][17])
             Variables[0xC343] = int(settings[0][18])
             Variables[0xC344] = int(settings[0][19])
             Variables[0xC345] = int(settings[0][20])
             Variables[0xC346] = int(settings[0][21])
             if settings[0][18] == 1.0 and settings[0][19] == 1.0 and settings[0][20] == 1.0 and settings[0][21] == 1.0:
-                Variables[0xE09F] = 1.0
+                Variables[0x903F] = 1.0
             Variables[0xC960] = int(settings[0][22])
             Variables[0xC3B9] = int(settings[0][23])
             add_in_place(settings[0][24] + settings[0][25] + settings[0][26], Variables[0xB0F7])
             add_in_place(settings[0][24] + settings[0][25] + settings[0][26], Variables[0xB02D])
             Variables[0xC47E] = int(settings[0][27])
             if settings[1][0] == 1:
-                Variables[0xE0AA] = 1.0
-                Variables[0xE0BC] = 1.0
-                Variables[0xE105] = 1.0
+                Variables[0x904A] = 1.0
+                Variables[0x905C] = 1.0
+                Variables[0x90A5] = 1.0
             Variables[0xCC28] = settings[2][0]
             Variables[0xCB07] = settings[2][1]
             Variables[0xC92F] = settings[2][2]
@@ -674,7 +674,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         script.header.init_subroutine = None
         @subroutine(subs=script.subroutines, hdr=script.header, init=True)
         def access_torkscrew(sub: Subroutine):
-            branch_if(Variables[0xE09F], "==", 0.0, 'label_0')
+            branch_if(Variables[0x903F], "==", 0.0, 'label_0')
             branch_if(Variables[0xC367], "==", 1.0, 'label_0')
             change_room(0x02AB, position=(1000.0, 0.0, 2000.0), init_sub=-0x01)
 
@@ -1905,11 +1905,15 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
                     [0x0AA, 2, 400, 70, 0, 1, [6, 7, 12, 13]], [0x0D8, 2, 400, 0, 0, 1, [6]], [0x0AD, 2, 600, 0, 0, 1, [6]], [0x1E7, 2, 475, 1200, 0, 1, [6, 8]]]
 
+        #Deletes the softlock preventing rocks in Britta's Meeting Room if Ball Hop Prevention is off
+        if settings[1][1] == 0:
+            del rock_add[4]
+
         ability_names = ["Hammers", "Mini Mario", "Mole Mario", "Spin Jump", "Side Drill", "Ball Hop", "Luiginary Works", "Luiginary Ball Ability", "Luiginary Stack Spring Jump",
                           "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
                           "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
         ability_ids = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005, 0xE00A, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
-                       0xE075, 0xC369, 0xCABF, 0xE0A0, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xB0F7, 0xB0F7, 0xC47E]
+                       0x9015, 0xC369, 0xCABF, 0x9040, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xB0F7, 0xB0F7, 0xC47E]
 
         for r in rock_add:
             #print(r[0])
