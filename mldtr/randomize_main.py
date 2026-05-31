@@ -547,7 +547,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
 
                       [[0x65e, 3], [0x65f, 3], [0x96e, 3], [0x660], [0x661], [0x96f], [0x662], [0x970], [0x663, 3],
                        [0x971], [0x972, 1], [0x664, 1], [0x665, 1], [0x666, 1], [0x667, 2], [0x118], [0x142], [0x668, 2], [0x669, 2], [0x66a],
-                       [0x973], [0x974], [0x93b], [0x93c], [0x93d], [0x93e], [0x93f], [0x85a, 0, 3, 6], [0x85b, 0, 3, 6], [0x85c, 0, 3, 6],
+                       [0x973], [0x974, 0], [0x93b], [0x93c], [0x93d, 0], [0x93e], [0x93f], [0x85a, 0, 3, 6], [0x85b, 0, 3, 6], [0x85c, 0, 3, 6],
                        [0x85d, 0, 3, 6], [0x85e, 0, 3, 6], [0x85f, 0, 3, 6], [0x860, 0, 3, 6], [0x861, 0, 3, 6], [0x862, 0, 3, 6], [0x863, 0, 3, 6], [0x89b, 0, 3, 6], [0x89c, 0, 3, 6], [0x89d, 0, 3, 6],
                        [0x89e, 0, 3, 6], [0x89f, 0, 3, 6], [0x8a0, 0, 3, 6], [0x8a1, 0, 3, 6], [0x8a2, 0, 3, 6], [0x8a3, 0, 3, 6]],
                       [[0x975], [0x976], [0x66e], [0x66f], [0x670, 2], [0x671, 2], [0x977], [0x965], [0x966], [0x967], [0x978], [0x673], [0x674], [0x8f9], [0x8fa],
@@ -1396,7 +1396,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         for enemy in range(len(new_enemy_stats)):
             #print(new_enemy_stats[enemy])
             #print(new_enemy_stats[enemy][0])
-            if(settings[3][2] == 0):
+            if settings[3][2] == 0:
                 enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
                 enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
                 enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
