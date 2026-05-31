@@ -233,7 +233,12 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 )
 
         #Import the msbt for the item names
-        item_msgs = msbt_from_file(lambda: DTLMSAdapter('US_English'), fs_std_romfs_path('Message/US_English/Item.msbt', data_dir=input_folder))
+        try:
+            item_name_path = next(fs_std_romfs_path(MESSAGE_DIR_PATH, data_dir=input_folder).glob('*_English'))
+        except StopIteration:
+            item_name_path = next(fs_std_romfs_path(MESSAGE_DIR_PATH, data_dir=input_folder).iterdir())
+        item_name_path /= 'Item.msbt'
+        item_msgs = msbt_from_file(lambda: DTLMSAdapter(MESSAGE_DIR_PATH), fs_std_romfs_path(item_name_path, data_dir=input_folder))
         sbar.update(10)
 
         #Initializes the first room using the subroutine below

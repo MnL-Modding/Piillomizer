@@ -1396,7 +1396,7 @@ def randomize_data(input_folder, stat_mult, settings, seed):
         for enemy in range(len(new_enemy_stats)):
             #print(new_enemy_stats[enemy])
             #print(new_enemy_stats[enemy][0])
-            if settings[3][2] == 0:
+            if settings[3][3] == 0:
                 enemy_stats[new_enemy_stats[enemy][0]].hp = new_enemy_stats[enemy][1]
                 enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2]
                 enemy_stats[new_enemy_stats[enemy][0]].defense = new_enemy_stats[enemy][3]
@@ -1414,10 +1414,10 @@ def randomize_data(input_folder, stat_mult, settings, seed):
                     enemy_stats[114].speed = new_enemy_stats[enemy][4]
                     enemy_stats[114].level = new_enemy_stats[enemy][12]
             else:
-                enemy_stats[new_enemy_stats[enemy][0]].power = new_enemy_stats[enemy][2] * stat_mult[0]
+                enemy_stats[new_enemy_stats[enemy][0]].power = enemy_stats[new_enemy_stats[enemy][0]].power * stat_mult[0]
                 if enemy_stats[new_enemy_stats[enemy][0]].power > 0x7FFF:
                     enemy_stats[new_enemy_stats[enemy][0]].power = 0x7FFF
-                enemy_stats[new_enemy_stats[enemy][0]].exp = new_enemy_stats[enemy][5] * stat_mult[1]
+                enemy_stats[new_enemy_stats[enemy][0]].exp = enemy_stats[new_enemy_stats[enemy][0]].exp * stat_mult[1]
                 if enemy_stats[new_enemy_stats[enemy][0]].exp > 0x7FFF:
                     enemy_stats[new_enemy_stats[enemy][0]].exp = 0x7FFF
             ebar.update(1)
