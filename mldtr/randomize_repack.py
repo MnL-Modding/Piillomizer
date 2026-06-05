@@ -539,7 +539,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
             Variables[0xC59F] = 1.0 #Cog to enter Somnom Woods is available
             Variables[0x9099] = 1.0 #Stairs to switch in Somnom Woods are up
             Variables[0xC5A0] = 1.0 #Cog has been turned
-            Variables[0x90A0] = 1.0 #Switch in Somnom Woods has been turned
+            Variables[0x909A] = 1.0 #Switch in Somnom Woods has been turned
             Variables[0xC5A1] = 1.0 #Bedsmith builds the Ultibed
             Variables[0xC5C6] = 1.0 #Camera pans to show the rest of the area
             Variables[0xC5C5] = 1.0 #The first Pi'illo Master is ahead
