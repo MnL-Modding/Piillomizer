@@ -5,6 +5,7 @@ if '__compiled__' in globals():
 # Imports the necessary modules
 import sys
 import os
+import struct
 import shutil
 import functools
 from mldtr import randomize_music, randomize_main
@@ -28,6 +29,7 @@ def get_folder(window):
         window.option_2.config(state="normal")
         window.songdir_button.config(state="normal")
         window.generate.config(state="normal")
+        window.generate_ap.config(state="normal")
     else:
         showinfo(
             "Whoops!",
@@ -182,7 +184,7 @@ def randomize(window):
                               [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get()]]
 
     # Begins randomization
-    randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed)
+    randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed, [])
     if window.option.get() == 2:
         print("Randomizing custom music...")
         randomize_music.import_random(5, window.romfs, window.all_songs, window.categorize.get())
@@ -195,6 +197,176 @@ def randomize(window):
     print("Done!")
     showinfo("Yay!", "Success!")
 
+def repack_ap(window):
+    #Moves the data to a copy of the folder
+    region = determine_version_from_code_bin(window.romfs + "/exefs/code.bin")
+    if region[0] == "E":
+        title_id = "00040000000D5A00"
+    elif region[0] == "P":
+        title_id = "00040000000D9000"
+    elif region[0] == "J":
+        title_id = "0004000000060600"
+    elif region[0] == "K":
+        title_id = "00040000000FCD00"
+    else:
+        title_id = ""
+    parent_folder = os.path.dirname(window.romfs) + "/"
+
+    seed = 0
+    if os.path.exists(parent_folder + title_id):
+        while os.path.exists(parent_folder + title_id + "-ap" + hex(seed)):
+            seed += 1
+        seed_folder = parent_folder + title_id + "-ap" + hex(seed)
+    else:
+        seed_folder = parent_folder + title_id
+    shutil.copytree(window.romfs, seed_folder)
+    old_romfs = window.romfs
+    window.romfs = seed_folder
+
+    # Sets enemy stats to what you selected
+    window.enemy_stats[0] = 1
+    if window.attack_mode.get() == "0.5x - Easy":
+        window.enemy_stats[0] = 0.5
+    elif window.attack_mode.get() == "1x - Normal":
+        window.enemy_stats[0] = 1
+    elif window.attack_mode.get() == "2x - Hard":
+        window.enemy_stats[0] = 2
+    elif window.attack_mode.get() == "3x - Very Hard":
+        window.enemy_stats[0] = 3
+    elif window.attack_mode.get() == "5x - Good Luck":
+        window.enemy_stats[0] = 5
+    elif window.attack_mode.get() == "Maxed Out - The Perfect Run":
+        window.enemy_stats[0] = -1
+
+    window.enemy_stats[1] = 2
+    if window.exp_mode.get() == "0.5x - Grinder's Delight":
+        window.enemy_stats[1] = 0.5
+    elif window.exp_mode.get() == "1x - Normal":
+        window.enemy_stats[1] = 1
+    elif window.exp_mode.get() == "2x - Quick Level":
+        window.enemy_stats[1] = 2
+    elif window.exp_mode.get() == "3x - Quicker Level":
+        window.enemy_stats[1] = 3
+    elif window.exp_mode.get() == "5x - Rapid Level":
+        window.enemy_stats[1] = 5
+    elif window.exp_mode.get() == "10x - Enemies are Overrated":
+        window.enemy_stats[1] = 10
+
+    window.hammer = -1
+    if window.hammer_start.get() == "Mini Mario":
+        window.hammer = 0
+    elif window.hammer_start.get() == "Mole Mario":
+        window.hammer = 1
+
+    #Appends settings to an array
+    window.random_settings = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                              [window.mini_nerf.get(), window.ball_nerf.get(), 0],
+                              [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
+                               window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
+                               window.boss15.get(), window.boss16.get()],
+                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get()]]
+
+    #Reads the dat file
+    ap_file = fd.askopenfilename(
+        title = 'Open Settings from Generation',
+        initialdir = '/',
+        filetypes = [("Bin Files", "*.bin"), ("All Files", "*.*")]
+    )
+
+    with open(ap_file, 'rb') as data_reader:
+        #Reads in the mini mario and ball hop data
+        current_byte = int.from_bytes(data_reader.read(1))
+        window.random_settings[1][0] = current_byte // 0x10 % 2
+        window.random_settings[1][1] = current_byte % 2
+
+        #Reads in the progressive hammer setting
+        current_byte = int.from_bytes(data_reader.read(1))
+        window.random_settings[3][0] = current_byte // 4 % 2
+
+        #Seeks past the next 6 bytes (they're currently unused)
+        data_reader.seek(8)
+
+        #Iterates through the next 929 entries to get the location info
+        ap_data = [[[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []], [], [], [], []]
+        for l in range(929):
+            current_byte = int.from_bytes(data_reader.read(1))
+            block_item_region = current_byte
+            current_byte = int.from_bytes(data_reader.read(1))
+            block_item_location = current_byte
+            current_item = int.from_bytes(data_reader.read(2))
+            ap_data[0][block_item_region].append(current_item)
+            if current_item // 0x1000 == 1:
+                ap_data[1].append([block_item_region, block_item_location, current_item % 0x1000])
+
+        #Puts in the item name data for the other player's items
+        for o in ap_data[1]:
+            name_id = int.from_bytes(data_reader.read(1))
+            new_name = list(data_reader.read(o[2]))
+            ap_data[0][o[0]][o[1]] = ["", name_id]
+            for n in new_name:
+                ap_data[0][o[0]][o[1]][0] += chr(n)
+
+        #Gets the player names
+        current_byte = int.from_bytes(data_reader.read(1))
+        for p in range(current_byte):
+            player_name_len = int.from_bytes(data_reader.read(1))
+            player_name_list = list(data_reader.read(player_name_len))
+            ap_data[2].append("")
+            for pc in player_name_list:
+                ap_data[2][-1] += chr(pc)
+
+        #Gets the order of the key items for scaling the enemy stats
+        next_key = int.from_bytes(data_reader.read(1))
+        while next_key != 0xFF:
+            ap_data[3].append(next_key)
+            if next_key == 0:
+                if window.random_settings[0][2 - window.random_settings[3][0]] == 1:
+                    window.random_settings[0][2 - window.random_settings[3][0]] -= 1
+                elif window.random_settings[0][1 + window.random_settings[3][0]] == 1:
+                    window.random_settings[0][1 + window.random_settings[3][0]] -= 1
+                else:
+                    window.random_settings[0][0] -= 1
+            elif next_key == 1:
+                if window.random_settings[0][4] == 1:
+                    window.random_settings[0][4] -= 1
+                else:
+                    window.random_settings[0][3] -= 1
+            elif next_key < 21:
+                window.random_settings[0][next_key + 3] -= 1
+            elif next_key == 21:
+                if window.random_settings[0][26] == 1:
+                    window.random_settings[0][26] -= 1
+                elif window.random_settings[0][25] == 1:
+                    window.random_settings[0][25] -= 1
+                else:
+                    window.random_settings[0][24] -= 1
+            else:
+                window.random_settings[0][next_key + 5] -= 1
+            next_key = int.from_bytes(data_reader.read(1))
+
+        #Gets the order the attacks should be put in the pool
+        for a in range(8):
+            next_attacks = int.from_bytes(data_reader.read(1))
+            ap_data[4].append(next_attacks // 0x10)
+            if len(ap_data[4]) < 15:
+                ap_data[4].append(next_attacks % 0x10)
+
+        print(window.random_settings)
+        print(ap_data)
+
+    # Begins generation
+    randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed, ap_data)
+    if window.option.get() == 2:
+        print("Randomizing custom music...")
+        randomize_music.import_random(5, window.romfs, window.all_songs, window.categorize.get())
+    if window.option.get() == 1:
+        print("Randomizing music...")
+        randomize_music.shuffle(window.romfs, window.categorize.get())
+
+    #When it's complete, sets romfs back to the base folder and gives a success message
+    window.romfs = old_romfs
+    print("Done!")
+    showinfo("Yay!", "Success!")
 
 # Shows credits
 def credit():
@@ -319,6 +491,15 @@ def main():
         state = "disabled"
     )
     window.generate.place(x=185, y=410)
+
+    # Generates the file
+    window.generate_ap = ttk.Button(
+        window,
+        text = 'Generate AP',
+        command = functools.partial(repack_ap, window),
+        state = "disabled"
+    )
+    window.generate_ap.place(x=185, y=10)
 
     #Shows credits if clicked on
     window.show_credits = ttk.Button(

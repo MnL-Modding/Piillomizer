@@ -215,7 +215,7 @@ def find_every_index_in_2d_list(arr, target_value, index):
             indexes.append(row)
     return indexes
 
-def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, key_item_pool_checked):
+def pack(input_folder, repack_data, settings, new_item_locals, ap_array):
     with tqdm(total=65, desc="Setting up FEvent...") as sbar:
         #Sets up the FEvent to be read
         fevent_manager = FEventScriptManager(input_folder)
@@ -803,6 +803,10 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
         script = fevent_manager.parsed_script(0x00D3, 0)
         script.subroutines[0xb8].commands[-17] = CodeCommandWithOffsets(0x000E, [1.0], Variable(0xC000))
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+        #Clears the enemies in some Wakeport rooms to prevent crashes
+        fevent_manager.fevent_scripts[0x109] = (fevent_manager.fevent_scripts[0x109][0], None)
+        fevent_manager.fevent_scripts[0x039] = (fevent_manager.fevent_scripts[0x039][0], None)
 
         #Blocks Dream World in the Summit until you have the needed abilities
         #script = fevent_manager.parsed_script(0x007F, 0)
@@ -1668,6 +1672,18 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
         area_names = ["Blimport", "Pi'illo Castle" ,"Mushrise Park", "Dozing Sands", "Wakeport", "Mount Pajamaja", "Driftwood Shore", "Somnom Woods", "Neo Bowser Castle"]
 
+        coins = [1, 5, 10, 50, 100, 10, 50, 100, 500, 1000]
+
+        ability_ids = [0xE002, 0xE004, 0xE005, 0xE00A, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
+                       0x9015, 0xC369, 0xCABF, 0x9040, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xC47E]
+
+        attacks = [[0xE01E, 0xB030], [0xE024, 0xB03B], [0xE022, 0xB041], [0xE023, 0xB049], [0xE01F, 0xB059],
+                   [0xE021, 0xB037], [0xE020, 0xB03D], [0xE025, 0xB045], [0xE026, 0xB05B], [0xE028, 0xB032],
+                   [0xE029, 0xB039], [0xE02A, 0xB03F], [0xE02B, 0xB043], [0xE02C, 0xB047], [0xE02D, 0xB04B]]
+        attack_names = ["3D Red Shell", "Bye-Bye Cannon", "Bomb Derby", "Jet Board Bash", "3D Green Shell",
+                        "Fire Flower", "Dropchopper", "Slingsniper", "Star Rocket", "Luiginary Ball Attack",
+                        "Luiginary Stack Attack", "Luiginary Hammer", "Luiginary Flame", "Luiginary Wall", "Luiginary Typhoon"]
+
         # Adds the quick warp and tracker features to every room that needs it
         for s in range(0x2B0):
             if get_room(s) != "Unknown":
@@ -1677,6 +1693,205 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 # Workaround for dynamic scope in Nuitka
                 if '__compiled__' in globals():
                     inspect.currentframe().f_locals['script_index'] = script_index
+
+                if len(ap_array) > 0:
+                    #Adds the receiver actors
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_coin(sub: Subroutine):
+                        for c in range(10):
+                            branch_if(Variables[0xB051], '!=', c+1, 'label_' + str(c))
+                            emit_command(0x0031, [coins[c]], Variables[0x300B])
+                            branch('label_9')
+
+                            label('label_' + str(c), manager=fevent_manager)
+                        label('label_9', manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received [Color #2C65FF]coins[Color #000000]![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_item(sub: Subroutine):
+                        for i in range(35):
+                            branch_if(Variables[0xB051], '!=', i + 11, 'label_' + str(i))
+                            emit_command(0x0033, [0x1000 + i, 0x01], Variables[0x300B])
+                            branch('label_34')
+
+                            label('label_' + str(i), manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received an [Color #2C65FF]item[Color #000000]![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_boots(sub: Subroutine):
+                        for b in range(35):
+                            branch_if(Variables[0xB051], '!=', b + 46, 'label_' + str(b))
+                            emit_command(0x0033, [0x1000 + b+0x28, 0x01], Variables[0x300B])
+                            branch('label_34')
+
+                            label('label_' + str(b), manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received some [Color #2C65FF]boots[Color #000000]![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_hammer_gear(sub: Subroutine):
+                        for h in range(35):
+                            branch_if(Variables[0xB051], '!=', h + 46+35, 'label_' + str(h))
+                            emit_command(0x0033, [0x1000 + h+0x28+35, 0x01], Variables[0x300B])
+                            branch('label_34')
+
+                            label('label_' + str(h), manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received some [Color #2C65FF]hammers[Color #000000] as gear![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_key_item(sub: Subroutine):
+                        branch_if(Variables[0xB051], '!=', 206.0, 'label_2')
+                        branch_if(Variables[0xE001 + settings[3][0]], '!=', 1.0, 'label_0')
+                        Variables[0xE002 - settings[3][0]] = 1.0
+                        branch('label_25')
+
+                        label('label_0', manager=fevent_manager)
+                        branch_if(Variables[0xE000], '!=', 1.0, 'label_1')
+                        Variables[0xE001 + settings[3][0]] = 1.0
+                        branch('label_25')
+
+                        label('label_1', manager=fevent_manager)
+                        Variables[0xE000] = 1.0
+                        branch('label_25')
+
+                        label('label_2', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '!=', 207.0, 'label_4')
+                        branch_if(Variables[0xE003], '!=', 1.0, 'label_3')
+                        Variables[0xE004] = 1.0
+                        branch('label_25')
+
+                        label('label_3', manager=fevent_manager)
+                        Variables[0xE003] = 1.0
+                        branch('label_25')
+
+                        label('label_4', manager=fevent_manager)
+                        for k in range(19):
+                            branch_if(Variables[0xB051], '!=', k+208, 'label_' + str(k+5))
+                            Variables[ability_ids[k+2]] = 1.0
+                            if 13 <= k <= 16:
+                                branch_if(Variables[0xC343], '!=', 1.0, 'label_25')
+                                branch_if(Variables[0xC344], '!=', 1.0, 'label_25')
+                                branch_if(Variables[0xC345], '!=', 1.0, 'label_25')
+                                branch_if(Variables[0xC346], '!=', 1.0, 'label_25')
+                                Variables[0x903F] = 1.0
+                            branch('label_25')
+
+                            label('label_' + str(k+5), manager=fevent_manager)
+                        label('label_23', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '!=', 227.0, 'label_24')
+                        add_in_place(1.0, Variables[0xB0F7])
+                        add_in_place(1.0, Variables[0xB02D])
+                        branch('label_25')
+
+                        label('label_24', manager=fevent_manager)
+                        Variables[ability_ids[-1]] = 1.0
+                        branch('label_25')
+
+                        label('label_25', manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received a [Color #2C65FF]key item[Color #000000]![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_attack(sub: Subroutine):
+                        for a in range(len(ap_array[4])):
+                            curr_attack = ap_array[4][a]
+                            branch_if(Variables[attacks[curr_attack][0]], '==', 1.0, 'label_' + str(((a+1)*11)-1))
+                            for b in range(5):
+                                branch_if(Variables[attacks[curr_attack][1]], '>', (2 ** b) - 1, 'label_' + str(b + (a*11)))
+                                Variables[attacks[curr_attack][1]] |= 2 ** b
+                                branch('label_' + str(((a+1)*11)-2))
+
+                                label('label_' + str(b + (a*11)), manager=fevent_manager)
+
+                            for b in range(5):
+                                branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'label_' + str(b + 5 + (a*11)))
+                                Variables[attacks[curr_attack][1]+1] |= 2 ** b
+                                if b == 4:
+                                    Variables[attacks[curr_attack][0]] = 1.0
+                                    if curr_attack > 8:
+                                        Variables[0xE01B] = 1.0
+                                branch('label_' + str(((a+1)*11)-2))
+
+                                label('label_' + str(b + 5 + (a * 11)), manager=fevent_manager)
+                            label('label_' + str(((a+1)*11)-2), manager=fevent_manager)
+                            Variables[0xB051] = 0.0
+                            Variables[0x6003] = 0.0
+                            for p in range(10):
+                                Variables[0x1000] = Variables[attacks[curr_attack][1] + (p // 5)] & (2 ** (p % 5))
+                                if p % 5 > 0:
+                                    Variables[0x1000] >>= (p % 5)
+                                Variables[0x6003] += Variables[0x1000]
+                            say(None, TextboxSoundsPreset.SILENT,
+                                "[DelayOff]You received Attack Piece number [Color #2C65FF][Var 0003 digits=2][Color #000000]\n" +
+                                " for the [Color #2C65FF]" + attack_names[curr_attack] +"[Color #000000]![Pause 45]",
+                                offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                            branch('label_last')
+
+                            label('label_' + str(((a+1)*11)-1), manager=fevent_manager)
+                        label('label_last', manager=fevent_manager)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_receive_handler(sub: Subroutine):
+                        set_actor_attribute(Variables[0x7007], 0x00, 0.0)
+                        set_actor_attribute(Variables[0x7007], 0x01, 0.0)
+                        label('label_0', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '!=', 0.0, 'label_1')
+                        wait(1)
+                        branch('label_0')
+
+                        label('label_1', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '>', 10.0, 'label_2')
+                        call('ap_get_coin')
+                        branch('label_0')
+
+                        label('label_2', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '>', 45.0, 'label_3')
+                        call('ap_get_item')
+                        branch('label_0')
+
+                        label('label_3', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '>', 80.0, 'label_4')
+                        call('ap_get_boots')
+                        branch('label_0')
+
+                        label('label_4', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '>', 115.0, 'label_5')
+                        call('ap_get_hammer_gear')
+                        branch('label_0')
+
+                        label('label_5', manager=fevent_manager)
+                        branch('label_9')
+                        branch('label_0')
+
+                        label('label_9', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '==', 255.0, 'label_10')
+                        call('ap_get_key_item')
+                        branch('label_0')
+
+                        label('label_10', manager=fevent_manager)
+                        call('ap_get_attack')
+                        branch('label_0')
+
+                    try:
+                        sprite_index = script.header.sprite_groups.index(0x0001)
+                    except ValueError:
+                        script.header.sprite_groups.append(0x0001)
+                        sprite_index = len(script.header.sprite_groups)-1
+                    script.header.actors.append((0x00000000, 0x00000000, (len(script.subroutines)-1)*0x10000 + sprite_index,
+                                                 0xFFFFFFFF, len(script.subroutines)-1, 0x00748143))
 
                 @subroutine(subs=script.subroutines, hdr=script.header)
                 def show_stats(sub: Subroutine):
@@ -1906,7 +2121,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
                     [0x13A, 0, 1585, 0, 1310, 1, [6]], [0x013, 0, 505, 75, 2080, 1, [6]], [0x019, 0, 980, 0, 2092, 1, [6]], [0x019, 0, 3005, 65, 2173, 1, [6]],
                     [0x28A, 0, 640, 0, 1230, 1, [6]], [0x101, 0, 530, 0, 910, 1, [6]], [0x061, 0, 1827, 155, 494, 1, [6, 7, 8, 12, 13]], [0x103, 0, 1469, 180, 616, 1, [6, 8, 9]],
-                    [0x004, 0, 1122, 0, 1535, 1, [6, 10]], [0x008, 0, 219, 165, 367, 1, [6, 8]], [0x036, 0, 1550, 0, 832, 1, [6]], [0x035, 0, 962, 10, 360, 1, [6, 8, 9]],
+                    [0x004, 0, 1122, 0, 1535, 1, [6, 10]], [0x008, 0, 219, 165, 367, 1, [6, 8]], [0x036, 0, 1550, 0, 832, 1, [6]],
                     [0x06E, 0, 832, 660, 242, 1, [6, 8, 10]], [0x072, 0, 675, 600, 790, 1, [6, 10]],
                     [0x076, 0, 775, 200, 1215, 1, [6, 10]], [0x038, 0, 2040, 165, 520, 1, [6]], [0x189, 0, 802, 180, 623, 1, [6]], [0x189, 0, 1945, 40, 1380, 1, [6]],
                     [0x18B, 0, 875, 40, 1975, 1, [6]], [0x190, 0, 1228, 220, 435, 1, [6]], [0x18d, 0, 728, 40, 758, 1, [6]], [0x191, 0, 398, 40, 253, 1, [6]],
@@ -1978,6 +2193,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
     with tqdm(total=len(repack_data), desc="Repacking randomized data...") as rbar:
         #Repacks all the randomized data
+        bean_35 = 0x22
         blockcount = 0
         block_fix = []
         spotnum = 0
@@ -2013,188 +2229,193 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
 
             #Labels which item the subroutine gives
             addon = ""
-            if i[6] < 0x6000:
-                if 0x2000 <= i[6] <= 0x2006:
-                    addon = item_msgs.messages[2 + (i[6] >> 1 & 0x0FFF) * 4].text
-                elif 0x2008 <= i[6] <= 0x200E:
-                    addon = item_msgs.messages[0x1E + (i[6] >> 1 & 0x0FFF) * 4].text
-                elif 0x2010 <= i[6] <= 0x2016:
-                    addon = item_msgs.messages[-6 + (i[6] >> 1 & 0x0FFF) * 4].text
-                elif 0x2018 <= i[6] <= 0x201E:
-                    addon = item_msgs.messages[-2 + (i[6] >> 1 & 0x0FFF) * 4].text
-                elif 0x2020 <= i[6] <= 0x2022:
-                    addon = item_msgs.messages[-46 + (i[6] >> 1 & 0x0FFF) * 4].text
-                elif i[6] == 0x2024:
-                    addon = item_msgs.messages[-30 + (i[6] >> 1 & 0x0FFF) * 4].text
-                elif 0x2026 <= i[6] <= 0x2030:
-                    addon = item_msgs.messages[2 + (i[6] >> 1 & 0x0FFF) * 4].text
-                elif 0x2032 <= i[6] <= 0x2038:
-                    addon = item_msgs.messages[0x1A + (i[6] >> 1 & 0x0FFF) * 4].text
-                elif 0x203A <= i[6] <= 0x2044:
-                    addon = item_msgs.messages[-14 + (i[6] >> 1 & 0x0FFF) * 4].text
-            elif i[6] < 0xB000:
-                addon = item_msgs.messages[0x152 + (i[6] >> 1 & 0x0FFF) * 4].text
-            if i[6] == 0xB030 or i[6] == 0xB031:
-                addon = "3D Red Shell"
-                check_1 = 0xB030
-                check_2 = 0xB031
-                attack_id = 0xE01E
-                attack_name = "3D Red Shell"
-            if i[6] == 0xB032 or i[6] == 0xB033:
-                addon = "Luiginary Ball Attack"
-                check_1 = 0xB032
-                check_2 = 0xB033
-                attack_id = 0xE028
-                attack_name = "Luiginary Ball Attack"
-            if i[6] == 0xB037 or i[6] == 0xB038:
-                addon = "Fire Flower"
-                check_1 = 0xB037
-                check_2 = 0xB038
-                attack_id = 0xE021
-                attack_name = "Fire Flower"
-            if i[6] == 0xB039 or i[6] == 0xB03A:
-                addon = "Luiginary Stack Attack"
-                check_1 = 0xB039
-                check_2 = 0xB03A
-                attack_id = 0xE029
-                attack_name = "Luiginary Stack Attack"
-            if i[6] == 0xB03B or i[6] == 0xB03C:
-                addon = "Bye-Bye Cannon"
-                check_1 = 0xB03B
-                check_2 = 0xB03C
-                attack_id = 0xE024
-                attack_name = "Bye-Bye Cannon"
-            if i[6] == 0xB03D or i[6] == 0xB03E:
-                addon = "Dropchopper"
-                check_1 = 0xB03D
-                check_2 = 0xB03E
-                attack_id = 0xE020
-                attack_name = "Dropchopper"
-            if i[6] == 0xB03F or i[6] == 0xB040:
-                addon = "Luiginary Hammer"
-                check_1 = 0xB03F
-                check_2 = 0xB040
-                attack_id = 0xE02A
-                attack_name = "Luiginary Hammer"
-            if i[6] == 0xB041 or i[6] == 0xB042:
-                addon = "Bomb Derby"
-                check_1 = 0xB041
-                check_2 = 0xB042
-                attack_id = 0xE022
-                attack_name = "Bomb Derby"
-            if i[6] == 0xB043 or i[6] == 0xB044:
-                addon = "Luiginary Flame"
-                check_1 = 0xB043
-                check_2 = 0xB044
-                attack_id = 0xE02B
-                attack_name = "Luiginary Flame"
-            if i[6] == 0xB045 or i[6] == 0xB046:
-                addon = "Slingsniper"
-                check_1 = 0xB045
-                check_2 = 0xB046
-                attack_id = 0xE025
-                attack_name = "Slingsniper"
-            if i[6] == 0xB047 or i[6] == 0xB048:
-                addon = "Luiginary Wall"
-                check_1 = 0xB047
-                check_2 = 0xB048
-                attack_id = 0xE02C
-                attack_name = "Luiginary Wall"
-            if i[6] == 0xB049 or i[6] == 0xB04A:
-                addon = "Jet-Board Bash"
-                check_1 = 0xB049
-                check_2 = 0xB04A
-                attack_id = 0xE023
-                attack_name = "Jet-Board Bash"
-            if i[6] == 0xB04B or i[6] == 0xB04C:
-                addon = "Luiginary Typhoon"
-                check_1 = 0xB04B
-                check_2 = 0xB04C
-                attack_id = 0xE02D
-                attack_name = "Luiginary Typhoon"
-            if i[6] == 0xB059 or i[6] == 0xB05A:
-                addon = "3D Green Shell"
-                check_1 = 0xB059
-                check_2 = 0xB05A
-                attack_id = 0xE01F
-                attack_name = "3D Green Shell"
-            if i[6] == 0xB05B or i[6] == 0xB05C:
-                addon = "Star Rocket"
-                check_1 = 0xB05B
-                check_2 = 0xB05C
-                attack_id = 0xE026
-                attack_name = "Star Rocket"
-            coin_amount = 1
-            if i[6] == 0x0002:
-                coin_amount = 5
-            if i[6] == 0x0004:
-                coin_amount = 10
-            if i[6] == 0x0006:
-                coin_amount = 50
-            if i[6] == 0x0008:
-                coin_amount = 100
-            #Sets up the subroutine to add a new ability
-            if i[6] == 0xE001:
-                addon = "Mini Mario"
-            if i[6] == 0xE002:
-                addon = "Mole Mario"
-            if i[6] == 0xE004:
-                addon = "Side Drill"
-            if i[6] == 0xE005:
-                addon = "Ball Hop"
-            if i[6] == 0xE00A:
-                addon = "Luiginary Works"
-            if i[6] == 0xE00D:
-                addon = "Luiginary Ball Ability"
-            if i[6] == 0xE00E:
-                addon = "Luiginary Stack Ground Pound"
-            if i[6] == 0xE00F:
-                addon = "Luiginary Stack Spring Jump"
-            if i[6] == 0xE010:
-                addon = "Luiginary Cone Jump"
-            if i[6] == 0xE011:
-                addon = "Luiginary Cone Tornado"
-            if i[6] == 0xE012:
-                addon = "Luiginary Ball Hookshot"
-            if i[6] == 0xE013:
-                addon = "Luiginary Ball Hammer"
-            if i[6] == 0xE075:
-                addon = "Pi'illo Castle Key"
-            if i[6] == 0xC369:
-                addon = "Blimport Bridge"
-            if i[6] == 0xCABF:
-                addon = "Mushrise Park Gate"
-            if i[6] == 0xC343 or i[6] == 0xC344 or i[6] == 0xC345 or i[6] == 0xC346 or i[6] == 0xE0A0:
-                addon = "Dozite"
-            if i[6] == 0xC960:
-                addon = "Wakeport"
-            if i[6] == 0xC3B9:
-                addon = "Mount Pajamaja"
-            if i[6] == 0xC47E:
-                addon = "Neo Bowser Castle"
-            if i[6] == 0xE001 or i[6] == 0xE002:
-                invi = (0xE001 - i[6]) + 0xE002
-                invi_name = ["[Color #2C65FF]Mini Mario", "[Color #2C65FF]Mole Mario"]
-            if i[6] == 0xB0F7:
-                addon = "Dream Egg"
-            if i[6] == 0xE0A0:
-                item = "the first [Color #2C65FF]" + addon
-            elif i[6] == 0xC960 or i[6] == 0xC3B9 or i[6] == 0xC47E:
-                item = "access to [Color #2C65FF]" + addon
-            elif (i[6] == 0xCABF or i[6] == 0xC369 or i[6] == 0xE004 or i[6] == 0xE005 or (0xE00D <= i[6] <= 0xE013) or i[6] == 0xE075):
-                item = "the [Color #2C65FF]" + addon
-            elif 0xB030 <= i[6] <= 0xB05C:
-                item = "an Attack Piece\nfor the [Color #2C65FF]" + addon
-            elif i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE00A:
-                item = "[Color #2C65FF]" + addon
-            elif addon[0:1] == 'A' or addon[0:1] == 'E' or addon[0:1] == 'I' or addon[0:1] == 'O' or addon[0:1] == 'U' or addon[0:2] == 'HP':
-                item = "an [Color #2C65FF]" + addon
-            else:
-                item = "a [Color #2C65FF]" + addon
-            if i[0] == 7:
-                actor = 0
-                while script.header.actors[actor][2] != 0xF70016:
-                    actor += 1
+            try:
+                if i[6] < 0x6000:
+                    if 0x2000 <= i[6] <= 0x2006:
+                        addon = item_msgs.messages[2 + (i[6] >> 1 & 0x0FFF) * 4].text
+                    elif 0x2008 <= i[6] <= 0x200E:
+                        addon = item_msgs.messages[0x1E + (i[6] >> 1 & 0x0FFF) * 4].text
+                    elif 0x2010 <= i[6] <= 0x2016:
+                        addon = item_msgs.messages[-6 + (i[6] >> 1 & 0x0FFF) * 4].text
+                    elif 0x2018 <= i[6] <= 0x201E:
+                        addon = item_msgs.messages[-2 + (i[6] >> 1 & 0x0FFF) * 4].text
+                    elif 0x2020 <= i[6] <= 0x2022:
+                        addon = item_msgs.messages[-46 + (i[6] >> 1 & 0x0FFF) * 4].text
+                    elif i[6] == 0x2024:
+                        addon = item_msgs.messages[-30 + (i[6] >> 1 & 0x0FFF) * 4].text
+                    elif 0x2026 <= i[6] <= 0x2030:
+                        addon = item_msgs.messages[2 + (i[6] >> 1 & 0x0FFF) * 4].text
+                    elif 0x2032 <= i[6] <= 0x2038:
+                        addon = item_msgs.messages[0x1A + (i[6] >> 1 & 0x0FFF) * 4].text
+                    elif 0x203A <= i[6] <= 0x2044:
+                        addon = item_msgs.messages[-14 + (i[6] >> 1 & 0x0FFF) * 4].text
+                elif i[6] < 0xB000:
+                    addon = item_msgs.messages[0x152 + (i[6] >> 1 & 0x0FFF) * 4].text
+                if i[6] == 0xB030 or i[6] == 0xB031:
+                    addon = "3D Red Shell"
+                    check_1 = 0xB030
+                    check_2 = 0xB031
+                    attack_id = 0xE01E
+                    attack_name = "3D Red Shell"
+                if i[6] == 0xB032 or i[6] == 0xB033:
+                    addon = "Luiginary Ball Attack"
+                    check_1 = 0xB032
+                    check_2 = 0xB033
+                    attack_id = 0xE028
+                    attack_name = "Luiginary Ball Attack"
+                if i[6] == 0xB037 or i[6] == 0xB038:
+                    addon = "Fire Flower"
+                    check_1 = 0xB037
+                    check_2 = 0xB038
+                    attack_id = 0xE021
+                    attack_name = "Fire Flower"
+                if i[6] == 0xB039 or i[6] == 0xB03A:
+                    addon = "Luiginary Stack Attack"
+                    check_1 = 0xB039
+                    check_2 = 0xB03A
+                    attack_id = 0xE029
+                    attack_name = "Luiginary Stack Attack"
+                if i[6] == 0xB03B or i[6] == 0xB03C:
+                    addon = "Bye-Bye Cannon"
+                    check_1 = 0xB03B
+                    check_2 = 0xB03C
+                    attack_id = 0xE024
+                    attack_name = "Bye-Bye Cannon"
+                if i[6] == 0xB03D or i[6] == 0xB03E:
+                    addon = "Dropchopper"
+                    check_1 = 0xB03D
+                    check_2 = 0xB03E
+                    attack_id = 0xE020
+                    attack_name = "Dropchopper"
+                if i[6] == 0xB03F or i[6] == 0xB040:
+                    addon = "Luiginary Hammer"
+                    check_1 = 0xB03F
+                    check_2 = 0xB040
+                    attack_id = 0xE02A
+                    attack_name = "Luiginary Hammer"
+                if i[6] == 0xB041 or i[6] == 0xB042:
+                    addon = "Bomb Derby"
+                    check_1 = 0xB041
+                    check_2 = 0xB042
+                    attack_id = 0xE022
+                    attack_name = "Bomb Derby"
+                if i[6] == 0xB043 or i[6] == 0xB044:
+                    addon = "Luiginary Flame"
+                    check_1 = 0xB043
+                    check_2 = 0xB044
+                    attack_id = 0xE02B
+                    attack_name = "Luiginary Flame"
+                if i[6] == 0xB045 or i[6] == 0xB046:
+                    addon = "Slingsniper"
+                    check_1 = 0xB045
+                    check_2 = 0xB046
+                    attack_id = 0xE025
+                    attack_name = "Slingsniper"
+                if i[6] == 0xB047 or i[6] == 0xB048:
+                    addon = "Luiginary Wall"
+                    check_1 = 0xB047
+                    check_2 = 0xB048
+                    attack_id = 0xE02C
+                    attack_name = "Luiginary Wall"
+                if i[6] == 0xB049 or i[6] == 0xB04A:
+                    addon = "Jet-Board Bash"
+                    check_1 = 0xB049
+                    check_2 = 0xB04A
+                    attack_id = 0xE023
+                    attack_name = "Jet-Board Bash"
+                if i[6] == 0xB04B or i[6] == 0xB04C:
+                    addon = "Luiginary Typhoon"
+                    check_1 = 0xB04B
+                    check_2 = 0xB04C
+                    attack_id = 0xE02D
+                    attack_name = "Luiginary Typhoon"
+                if i[6] == 0xB059 or i[6] == 0xB05A:
+                    addon = "3D Green Shell"
+                    check_1 = 0xB059
+                    check_2 = 0xB05A
+                    attack_id = 0xE01F
+                    attack_name = "3D Green Shell"
+                if i[6] == 0xB05B or i[6] == 0xB05C:
+                    addon = "Star Rocket"
+                    check_1 = 0xB05B
+                    check_2 = 0xB05C
+                    attack_id = 0xE026
+                    attack_name = "Star Rocket"
+                coin_amount = 1
+                if i[6] == 0x0002:
+                    coin_amount = 5
+                if i[6] == 0x0004:
+                    coin_amount = 10
+                if i[6] == 0x0006:
+                    coin_amount = 50
+                if i[6] == 0x0008:
+                    coin_amount = 100
+                #Sets up the subroutine to add a new ability
+                if i[6] == 0xE001:
+                    addon = "Mini Mario"
+                if i[6] == 0xE002:
+                    addon = "Mole Mario"
+                if i[6] == 0xE004:
+                    addon = "Side Drill"
+                if i[6] == 0xE005:
+                    addon = "Ball Hop"
+                if i[6] == 0xE00A:
+                    addon = "Luiginary Works"
+                if i[6] == 0xE00D:
+                    addon = "Luiginary Ball Ability"
+                if i[6] == 0xE00E:
+                    addon = "Luiginary Stack Ground Pound"
+                if i[6] == 0xE00F:
+                    addon = "Luiginary Stack Spring Jump"
+                if i[6] == 0xE010:
+                    addon = "Luiginary Cone Jump"
+                if i[6] == 0xE011:
+                    addon = "Luiginary Cone Tornado"
+                if i[6] == 0xE012:
+                    addon = "Luiginary Ball Hookshot"
+                if i[6] == 0xE013:
+                    addon = "Luiginary Ball Hammer"
+                if i[6] == 0xE075:
+                    addon = "Pi'illo Castle Key"
+                if i[6] == 0xC369:
+                    addon = "Blimport Bridge"
+                if i[6] == 0xCABF:
+                    addon = "Mushrise Park Gate"
+                if i[6] == 0xC343 or i[6] == 0xC344 or i[6] == 0xC345 or i[6] == 0xC346 or i[6] == 0xE0A0:
+                    addon = "Dozite"
+                if i[6] == 0xC960:
+                    addon = "Wakeport"
+                if i[6] == 0xC3B9:
+                    addon = "Mount Pajamaja"
+                if i[6] == 0xC47E:
+                    addon = "Neo Bowser Castle"
+                if i[6] == 0xE001 or i[6] == 0xE002:
+                    invi = (0xE001 - i[6]) + 0xE002
+                    invi_name = ["[Color #2C65FF]Mini Mario", "[Color #2C65FF]Mole Mario"]
+                if i[6] == 0xB0F7:
+                    addon = "Dream Egg"
+                if i[6] == 0xA000:
+                    item = "an [Color #2C65FF]Attack Piece"
+                elif i[6] == 0xE0A0:
+                    item = "the first [Color #2C65FF]" + addon
+                elif i[6] == 0xC960 or i[6] == 0xC3B9 or i[6] == 0xC47E:
+                    item = "access to [Color #2C65FF]" + addon
+                elif (i[6] == 0xCABF or i[6] == 0xC369 or i[6] == 0xE004 or i[6] == 0xE005 or (0xE00D <= i[6] <= 0xE013) or i[6] == 0xE075):
+                    item = "the [Color #2C65FF]" + addon
+                elif 0xB030 <= i[6] <= 0xB05C:
+                    item = "an Attack Piece\nfor the [Color #2C65FF]" + addon
+                elif i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE00A:
+                    item = "[Color #2C65FF]" + addon
+                elif addon[0:1] == 'A' or addon[0:1] == 'E' or addon[0:1] == 'I' or addon[0:1] == 'O' or addon[0:1] == 'U' or addon[0:2] == 'HP':
+                    item = "an [Color #2C65FF]" + addon
+                else:
+                    item = "a [Color #2C65FF]" + addon
+                if i[0] == 7:
+                    actor = 0
+                    while script.header.actors[actor][2] != 0xF70016:
+                        actor += 1
+            except TypeError:
+                item = "[Color #2C65FF]" + ap_array[2][i[7]] + "[Color #000000]'s\n[Color #2C65FF]" + i[6]
             @subroutine(subs=script.subroutines, hdr=script.header)
             def get_item(sub: Subroutine):
                 if i[0] != 5:
@@ -2206,107 +2427,139 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                     branch_if(Variables[i[5]], '==', 1.0, 'label_0')
                     Variables[i[5]] = 1.0
                 else:
-                    if (i[5] < 0xC000 or i[5] > 0xCFFF) and i[0] != 0 and i[0] != 1:
-                        branch_if(Variables[i[5]], '==', 0.0, 'label_0')
+                    set_actor_attribute(Variables[0x7007], 0x00, 0.0)
+                    set_actor_attribute(Variables[0x7007], 0x01, 0.0)
+                    branch_if(Variables[i[5]], '==', 1.0, 'label_0')
+                    label('label_loop', manager=fevent_manager)
+                    branch_if(Variables[i[5]], '==', 1.0, 'item_check')
+                    wait(1)
+                    branch('label_loop')
+
+                    label('item_check', manager=fevent_manager)
+                try:
+                    if i[6] == 0xE001 or i[6] == 0xE002:
+                        branch_if(Variables[0xE000], '==', 0.0, 'label_1')
+                        branch_if(Variables[invi], '==', 0.0, 'label_2')
+                    elif i[6] == 0xE004:
+                        branch_if(Variables[0xE003], '==', 0.0, 'label_1')
+                    elif 0xC343 <= i[6] <= 0xC346:
+                        Variables[i[6]] = 1.0
+                        branch_if(Variables[0xC343], '==', 0.0, 'label_1')
+                        branch_if(Variables[0xC344], '==', 0.0, 'label_1')
+                        branch_if(Variables[0xC345], '==', 0.0, 'label_1')
+                        branch_if(Variables[0xC346], '==', 0.0, 'label_1')
+                        Variables[0xE09F] = 1.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You got the final [Color #2C65FF]" + addon + "[Color #000000]![Pause 60]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        branch('label_0')
                     if i[6] > 0xC000:
-                        branch_if(Variables[i[6]], '==', 1.0, 'label_0')
-                    elif i[6] > 0xB0E0 or i[6] < 0xB000:
+                        Variables[i[6]] = 1.0
+                        if i[5] < 0xD000:
+                            Variables[i[5]] = 1.0
+                    elif i[6] > 0xB0E0:
+                        add_in_place(1.0, Variables[0xB0F7])
+                        add_in_place(1.0, Variables[0xB02D])
+                        Variables[i[len(i) - 1]] = 1.0
+                    elif i[6] > 0xB000:
+                        Variables[i[6]] |= i[7]
+                        branch_if(Variables[check_1], '!=', 0x1F, 'label_1')
+                        branch_if(Variables[check_2], '!=', 0x1F, 'label_1')
+                        Variables[attack_id] = 1.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 60]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        if (attack_name == "Luiginary Typhoon" or attack_name == "Luiginary Wall" or attack_name == "Luiginary Flame"
+                            or attack_name == "Luiginary Hammer" or attack_name == "Luiginary Stack Attack" or attack_name == "Luiginary Ball Attack"):
+                            Variables[0xE01B] = 1.0 #Unlocks the luiginary attack block
+                        branch('label_0')
+                    elif i[6] == 0xA000:
+                        for a in range(len(ap_array[4])):
+                            curr_attack = ap_array[4][a]
+                            branch_if(Variables[attacks[curr_attack][0]], '==', 1.0, 'attack_' + str(((a + 1) * 11) - 1))
+                            for b in range(5):
+                                branch_if(Variables[attacks[curr_attack][1]], '>', (2 ** b) - 1,
+                                          'attack_' + str(b + (a * 11)))
+                                Variables[attacks[curr_attack][1]] |= 2 ** b
+                                branch('attack_' + str(((a + 1) * 11) - 2))
+
+                                label('attack_' + str(b + (a * 11)), manager=fevent_manager)
+
+                            for b in range(5):
+                                branch_if(Variables[attacks[curr_attack][1] + 1], '>', (2 ** b) - 1,
+                                          'attack_' + str(b + 5 + (a * 11)))
+                                Variables[attacks[curr_attack][1] + 1] |= 2 ** b
+                                if b == 4:
+                                    Variables[attacks[curr_attack][0]] = 1.0
+                                    if curr_attack > 8:
+                                        Variables[0xE01B] = 1.0
+                                branch('attack_' + str(((a + 1) * 11) - 2))
+
+                                label('attack_' + str(b + 5 + (a * 11)), manager=fevent_manager)
+                            label('attack_' + str(((a + 1) * 11) - 2), manager=fevent_manager)
+                            Variables[0xB051] = 0.0
+                            Variables[0x6003] = 0.0
+                            for p in range(10):
+                                Variables[0x1000] = Variables[attacks[curr_attack][1] + (p // 5)] & (2 ** (p % 5))
+                                if p % 5 > 0:
+                                    Variables[0x1000] >>= (p % 5)
+                                Variables[0x6003] += Variables[0x1000]
+                            say(None, TextboxSoundsPreset.SILENT,
+                                "[DelayOff]You received Attack Piece number [Color #2C65FF][Var 0003 digits=2][Color #000000]\n" +
+                                " for the [Color #2C65FF]" + attack_names[curr_attack] + "[Color #000000]![Pause 45]",
+                                offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                            branch('label_last')
+
+                            label('attack_' + str(((a+1)*11)-1), manager=fevent_manager)
+                        label('label_last', manager=fevent_manager)
+                    elif i[6] >= 0x6000:
+                        emit_command(0x0033, [int(math.floor((i[6] - 0x4000) / 2)) + 0x28, 0x01], Variables[0x300B])
                         if i[-1] > 10:
-                            branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
-                        else:
-                            branch_if(Variables[i[-2]], '==', 1.0, 'label_0')
-                    else:
-                        if i[-1] > 10:
-                            branch_if(Variables[i[-1]], '==', 1.0, 'label_0')
                             Variables[i[-1]] = 1.0
                         else:
-                            branch_if(Variables[i[-2]], '==', 1.0, 'label_0')
                             Variables[i[-2]] = 1.0
-                if i[6] == 0xE001 or i[6] == 0xE002:
-                    branch_if(Variables[i[7]], '==', 1.0, 'label_0')
-                    branch_if(Variables[0xE000], '==', 0.0, 'label_1')
-                    branch_if(Variables[invi], '==', 0.0, 'label_2')
-                elif i[6] == 0xE004:
-                    branch_if(Variables[0xE003], '==', 0.0, 'label_1')
-                    branch_if(Variables[i[7]], '==', 1.0, 'label_0')
-                elif 0xC343 <= i[6] <= 0xC346:
-                    Variables[i[6]] = 1.0
-                    branch_if(Variables[0xC343], '==', 0.0, 'label_1')
-                    branch_if(Variables[0xC344], '==', 0.0, 'label_1')
-                    branch_if(Variables[0xC345], '==', 0.0, 'label_1')
-                    branch_if(Variables[0xC346], '==', 0.0, 'label_1')
-                    Variables[0xE09F] = 1.0
-                    say(None, TextboxSoundsPreset.SILENT,
-                        "[DelayOff]You got the final [Color #2C65FF]" + addon + "[Color #000000]![Pause 60]",
-                        offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                    branch('label_0')
-                if i[6] > 0xC000:
-                    Variables[i[6]] = 1.0
-                    if i[5] < 0xD000:
-                        Variables[i[5]] = 1.0
-                elif i[6] > 0xB0E0:
-                    add_in_place(1.0, Variables[0xB0F7])
-                    add_in_place(1.0, Variables[0xB02D])
-                    Variables[i[len(i) - 1]] = 1.0
-                elif i[6] > 0xB000:
-                    Variables[i[6]] |= i[7]
-                    branch_if(Variables[check_1], '!=', 0x1F, 'label_1')
-                    branch_if(Variables[check_2], '!=', 0x1F, 'label_1')
-                    Variables[attack_id] = 1.0
-                    say(None, TextboxSoundsPreset.SILENT,
-                        "[DelayOff]You've unlocked the [Color #2C65FF]" + attack_name + "[Color #000000]![Pause 60]",
-                        offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                    if (attack_name == "Luiginary Typhoon" or attack_name == "Luiginary Wall" or attack_name == "Luiginary Flame"
-                        or attack_name == "Luiginary Hammer" or attack_name == "Luiginary Stack Attack" or attack_name == "Luiginary Ball Attack"):
-                        Variables[0xE01B] = 1.0 #Unlocks the luiginary attack block
-                    branch('label_0')
-                elif i[6] >= 0x6000:
-                    emit_command(0x0033, [int(math.floor((i[6] - 0x4000) / 2)) + 0x28, 0x01], Variables[0x300B])
-                    if i[-1] > 10:
-                        Variables[i[-1]] = 1.0
-                    else:
-                        Variables[i[-2]] = 1.0
-                elif i[6] >= 0x2000:
-                    emit_command(0x0033, [int(math.floor(i[6]/2)), 0x01], Variables[0x300B])
-                    if i[-1] > 10:
-                        Variables[i[-1]] = 1.0
-                    else:
-                        Variables[i[-2]] = 1.0
-                else:
-                    emit_command(0x0031, [coin_amount * i[7]], Variables[0x300B])
-                    if i[-1] > 10:
-                        Variables[i[-1]] = 1.0
-                    else:
-                        Variables[i[-2]] = 1.0
-                if i[6] < 0x1000:
-                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                    branch('label_0')
-                elif (i[-1] < 0xC020 or i[-1] >= 0xC0A0) and i[-1] > 10:
-                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                    branch('label_0')
-                #elif i[-2] < 0xC020 or i[-2] >= 0xC0A0:
-                #    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                #    branch('label_0')
-
-                if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xB000 < i[6] < 0xB0E0) or (0xC343 <= i[6] <= 0xC346):
-                    label('label_1', manager=fevent_manager)
-                    if 0xE001 <= i[6] <= 0xE004:
-                        Variables[i[7]] = 1.0
-                        if i[6] == 0xE004:
-                            Variables[0xE003] = 1.0
-                            say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    elif i[6] >= 0x2000:
+                        emit_command(0x0033, [int(math.floor(i[6]/2)), 0x01], Variables[0x300B])
+                        if i[-1] > 10:
+                            Variables[i[-1]] = 1.0
                         else:
-                            Variables[0xE000] = 1.0
-                            say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got [Color #2C65FF]Hammers[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                            Variables[i[-2]] = 1.0
                     else:
+                        emit_command(0x0031, [coin_amount * i[7]], Variables[0x300B])
+                        if i[-1] > 10:
+                            Variables[i[-1]] = 1.0
+                        else:
+                            Variables[i[-2]] = 1.0
+                    if i[6] < 0x1000:
+                        say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got [Color #2C65FF]" + str(coin_amount) + "[Color #000000]coin(s)![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        branch('label_0')
+                    elif i[6] != 0xA000:
                         say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
-                    branch('label_0')
+                        branch('label_0')
+                    #elif i[-2] < 0xC020 or i[-2] >= 0xC0A0:
+                    #    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    #    branch('label_0')
 
-                if i[6] == 0xE001 or i[6] == 0xE002:
-                    label('label_2', manager=fevent_manager)
-                    Variables[i[7]] = 1.0
-                    Variables[invi] = 1.0
-                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + invi_name[invi - 0xE001] + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                    if i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE004 or (0xB000 < i[6] < 0xB0E0) or (0xC343 <= i[6] <= 0xC346):
+                        label('label_1', manager=fevent_manager)
+                        if 0xE001 <= i[6] <= 0xE004:
+                            if i[6] == 0xE004:
+                                Variables[0xE003] = 1.0
+                                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got the [Color #2C65FF]Spin Jump[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                            else:
+                                Variables[0xE000] = 1.0
+                                say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got [Color #2C65FF]Hammers[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        else:
+                            say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        branch('label_0')
+
+                    if i[6] == 0xE001 or i[6] == 0xE002:
+                        label('label_2', manager=fevent_manager)
+                        Variables[invi] = 1.0
+                        say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + invi_name[invi - 0xE001] + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                        branch('label_0')
+                except TypeError:
+                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]You got " + item + "[Color #000000]![Pause 60]", offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                     branch('label_0')
 
                 label('label_0', manager=fevent_manager)
@@ -2359,13 +2612,17 @@ def pack(input_folder, repack_data, settings, new_item_locals, new_item_logic, k
                 blockcount += 1
                 block_fix.append(i[5])
             else:
-                #Updates triggers if it's a bean spot
-                if i[3] > 0:
-                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] + 0x15) * 0x10000) + (i[3] - 1), len(script.subroutines) - 1, 0x00078022))
+                #If it's a bean spot, it appends an actor block that checks it
+                try:
+                    sprite_index = script.header.sprite_groups.index(block_sprite)
+                except ValueError:
+                    script.header.sprite_groups.append(block_sprite)
+                    sprite_index = len(script.header.sprite_groups) - 1
+                if i[1] != 0x35 or bean_35 > 0x23:
+                    script.header.actors.append((i[3]*0x10000 + i[2], i[4], (len(script.subroutines)-1)*0x10000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
                 else:
-                    script.header.triggers.append((((i[4]-0x10)*0x10000 + (i[2])-0x10), ((i[4]+0x10)*0x10000 + (i[2])+0x10), 0x00000000, 0x00000000,
-                                                   ((i[3] + 0x15) * 0x10000), len(script.subroutines) - 1, 0x00078022))
+                    script.header.actors[bean_35] = (i[3]*0x10000 + i[2], i[4], (len(script.subroutines)-1)*0x10000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143)
+                    bean_35 += 1
 
             #Recompiles things
             update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
