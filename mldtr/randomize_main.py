@@ -557,6 +557,8 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
             new_enemy_stats = []
             enemy_added = []
             add_level = 0
+            i = 0
+            j = 0
             for k in ap_array[3]:
                 if k == 0:
                     if key_item_check[0] == 0:
@@ -752,6 +754,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                     i += 1
                 i = 0
             #print(key_item_check)
+            print(new_enemy_stats)
         else:
            #item_amounts_from_pool = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             #                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -858,9 +861,9 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                           [[0x8e1], [0x8e2], [0x8e3], [0x8e4], [0x8e5], [0x94e], [0x8f5], [0x8f6], [0x8f7]]]
 
             if settings[1][0] == 1:
-                item_logic[4][78] = [0x82c]
-                item_logic[4][79] = [0x82d, 2]
-                item_logic[4][81] = [0x76, 2, 5]
+                item_logic[4][77] = [0x82c]
+                item_logic[4][78] = [0x82d, 2]
+                item_logic[4][80] = [0x76, 2, 5]
                 item_logic[6][13] = [0x60f]
                 item_logic[6][15] = [0x611]
                 item_logic[6][16] = [0x612]
