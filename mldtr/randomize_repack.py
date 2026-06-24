@@ -1750,6 +1750,45 @@ def pack(input_folder, repack_data, settings, new_item_locals, ap_array):
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_wear(sub: Subroutine):
+                        for w in range(30):
+                            branch_if(Variables[0xB051], '!=', w + 46+70, 'label_' + str(w))
+                            emit_command(0x0033, [0x1000 + w+0x28+70, 0x01], Variables[0x300B])
+                            branch('label_29')
+
+                            label('label_' + str(w), manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received some [Color #2C65FF]wear[Color #000000]![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_gloves(sub: Subroutine):
+                        for g in range(30):
+                            branch_if(Variables[0xB051], '!=', g + 46+100, 'label_' + str(g))
+                            emit_command(0x0033, [0x1000 + g+0x28+100, 0x01], Variables[0x300B])
+                            branch('label_29')
+
+                            label('label_' + str(g), manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received some [Color #2C65FF]gloves[Color #000000]![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_accessories(sub: Subroutine):
+                        for ac in range(30):
+                            branch_if(Variables[0xB051], '!=', ac + 46+130, 'label_' + str(ac))
+                            emit_command(0x0033, [0x1000 + ac+0x28+130, 0x01], Variables[0x300B])
+                            branch('label_29')
+
+                            label('label_' + str(ac), manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received some [Color #2C65FF]accessories[Color #000000]![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
                     def ap_get_key_item(sub: Subroutine):
                         branch_if(Variables[0xB051], '!=', 206.0, 'label_2')
                         branch_if(Variables[0xE001 + settings[3][0]], '!=', 1.0, 'label_0')
@@ -1873,7 +1912,18 @@ def pack(input_folder, repack_data, settings, new_item_locals, ap_array):
                         branch('label_0')
 
                         label('label_5', manager=fevent_manager)
-                        branch('label_9')
+                        branch_if(Variables[0xB051], '>', 145.0, 'label_6')
+                        call('ap_get_wear')
+                        branch('label_0')
+
+                        label('label_6', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '>', 175.0, 'label_7')
+                        call('ap_get_gloves')
+                        branch('label_0')
+
+                        label('label_7', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '>', 205.0, 'label_9')
+                        call('ap_get_accessories')
                         branch('label_0')
 
                         label('label_9', manager=fevent_manager)
