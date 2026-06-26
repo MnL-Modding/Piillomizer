@@ -408,7 +408,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                     if room == 0x0F6 or room == 0x0C6 or room == 0x1E7:
                         new_block[3] += 0x20
                         if room == 0x0C6:
-                            new_block[2] += 0x60
+                            new_block[2] += 0x1A0
                     elif room == 0x10C:
                         new_block[3] += 0x75
                     elif room == 0x06C:
