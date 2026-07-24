@@ -1987,12 +1987,13 @@ def pack(input_folder, repack_data, settings, new_item_locals, ap_array):
                             "\nBean Spots:   [Color #2C65FF][Var 0001 digits=3] [Color #000000]/" + str(total_check[1]) +
                             "\nDream Blocks: [Color #2C65FF][Var 0002 digits=3] [Color #000000]/" + str(total_check[2]) +
                             "\nTotal:        [Color #2C65FF][Var 0003 digits=3] [Color #000000]/" + str(total_check[0] + total_check[1] + total_check[2]) +
-                            "\n[Option]" + area_names[prev_area] + "   [Option]" + area_names[next_area] + "\n[Option]Room Totals            [Option]Close")
+                            "\n[Option]" + area_names[prev_area] + "   [Option]" + area_names[next_area] + "\n[Option]Room Totals            [Option]Key Items\n[Option]Close")
                         emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
                         branch_if(Variables[0x1000], '==', 0.0, 'label_' + str(prev_area))
                         branch_if(Variables[0x1000], '==', 1.0, 'label_' + str(next_area))
                         branch_if(Variables[0x1000], '==', 2.0, 'label_9')
-                        branch_if(Variables[0x1000], '==', 3.0, 'label_10')
+                        branch_if(Variables[0x1000], '==', 4.0, 'label_10')
+                        branch_if(Variables[0x1000], '==', 3.0, 'label_key_1')
 
                     label('label_9', manager=fevent_manager)
                     text_to_print = "[DelayOff]Current Room Stats\n"
@@ -2039,7 +2040,7 @@ def pack(input_folder, repack_data, settings, new_item_locals, ap_array):
                                 Variables[0x6001] += Variables[0xD000 + spot_info[room_id][spot_type][room_local_index[room_id][spot_type]+l]]
                             room_local_index[room_id][spot_type] += rl
                     room_local_info_index[room_id] += 1
-                    say(None, TextboxSoundsPreset.SILENT, text_to_print + "[Option]Overall Stats   [Option]Close")
+                    say(None, TextboxSoundsPreset.SILENT, text_to_print + "[Option]Overall Stats   [Option]Key Items\n[Option]Close")
                     emit_command(0x0008, [Variables[0x6004]], Variables[0x1000])
                     if get_room(s) == "Pi'illo Castle" or get_room(s) == "Dreamy Pi'illo Castle":
                         branch_if(Variables[0x1000], '==', 0.0, 'label_1')
@@ -2059,7 +2060,115 @@ def pack(input_folder, repack_data, settings, new_item_locals, ap_array):
                         branch_if(Variables[0x1000], '==', 0.0, 'label_8')
                     else:
                         branch_if(Variables[0x1000], '==', 0.0, 'label_0')
-                    branch_if(Variables[0x1000], '==', 1.0, 'label_10')
+                    branch_if(Variables[0x1000], '==', 1.0, 'label_key_1')
+                    branch_if(Variables[0x1000], '==', 2.0, 'label_10')
+
+                    label('label_key_1', manager=fevent_manager)
+                    say(None, TextboxSoundsPreset.SILENT, "Key items obtained:")
+                    branch_if(Variables[0xE002-settings[3][0]], '!=', 1.0, 'label_key_2')
+                    say(None, TextboxSoundsPreset.SILENT, "All 3 Progressive Hammers...")
+                    branch('label_key_4')
+
+                    label('label_key_2', manager=fevent_manager)
+                    branch_if(Variables[0xE001+settings[3][0]], '!=', 1.0, 'label_key_3')
+                    say(None, TextboxSoundsPreset.SILENT, "2 Progressive Hammers...")
+                    branch('label_key_4')
+
+                    label('label_key_3', manager=fevent_manager)
+                    branch_if(Variables[0xE000], '!=', 1.0, 'label_key_4')
+                    say(None, TextboxSoundsPreset.SILENT, "A Progressive Hammer...")
+
+                    label('label_key_4', manager=fevent_manager)
+                    branch_if(Variables[0xE004], '!=', 1.0, 'label_key_5')
+                    say(None, TextboxSoundsPreset.SILENT, "Both Progressive Spins...")
+                    branch('label_key_6')
+
+                    label('label_key_5', manager=fevent_manager)
+                    branch_if(Variables[0xE003], '!=', 1.0, 'label_key_6')
+                    say(None, TextboxSoundsPreset.SILENT, "A Progressive Spin...")
+
+                    label('label_key_6', manager=fevent_manager)
+                    branch_if(Variables[0xE005], '!=', 1.0, 'label_key_7')
+                    say(None, TextboxSoundsPreset.SILENT, "Ball Hop...")
+
+                    label('label_key_7', manager=fevent_manager)
+                    branch_if(Variables[0xE00A], '!=', 1.0, 'label_key_8')
+                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Works...")
+
+                    label('label_key_8', manager=fevent_manager)
+                    branch_if(Variables[0xE00D], '!=', 1.0, 'label_key_9')
+                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Ball Ability...")
+
+                    label('label_key_9', manager=fevent_manager)
+                    branch_if(Variables[0xE00F], '!=', 1.0, 'label_key_10')
+                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Stack Spring Jump...")
+
+                    label('label_key_10', manager=fevent_manager)
+                    branch_if(Variables[0xE00E], '!=', 1.0, 'label_key_11')
+                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Stack Ground Pound...")
+
+                    label('label_key_11', manager=fevent_manager)
+                    branch_if(Variables[0xE010], '!=', 1.0, 'label_key_12')
+                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Cone Jump...")
+
+                    label('label_key_12', manager=fevent_manager)
+                    branch_if(Variables[0xE011], '!=', 1.0, 'label_key_13')
+                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Cone Storm...")
+
+                    label('label_key_13', manager=fevent_manager)
+                    branch_if(Variables[0xE012], '!=', 1.0, 'label_key_14')
+                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Ball Throw...")
+
+                    label('label_key_14', manager=fevent_manager)
+                    branch_if(Variables[0xE013], '!=', 1.0, 'label_key_15')
+                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Ball Hookshot...")
+
+                    label('label_key_15', manager=fevent_manager)
+                    branch_if(Variables[0x9015], '!=', 1.0, 'label_key_16')
+                    say(None, TextboxSoundsPreset.SILENT, "Pi'illo Castle Key...")
+
+                    label('label_key_16', manager=fevent_manager)
+                    branch_if(Variables[0xC369], '!=', 1.0, 'label_key_17')
+                    say(None, TextboxSoundsPreset.SILENT, "Blimport Bridge...")
+
+                    label('label_key_17', manager=fevent_manager)
+                    branch_if(Variables[0xCABF], '!=', 1.0, 'label_key_18')
+                    say(None, TextboxSoundsPreset.SILENT, "Mushrise Park Gate...")
+
+                    label('label_key_18', manager=fevent_manager)
+                    branch_if(Variables[0x9040], '!=', 1.0, 'label_key_19')
+                    say(None, TextboxSoundsPreset.SILENT, "First Dozite...")
+
+                    label('label_key_19', manager=fevent_manager)
+                    branch_if(Variables[0xC343], '!=', 1.0, 'label_key_20')
+                    say(None, TextboxSoundsPreset.SILENT, "Dozite 1...")
+
+                    label('label_key_20', manager=fevent_manager)
+                    branch_if(Variables[0xC344], '!=', 1.0, 'label_key_21')
+                    say(None, TextboxSoundsPreset.SILENT, "Dozite 2...")
+
+                    label('label_key_21', manager=fevent_manager)
+                    branch_if(Variables[0xC345], '!=', 1.0, 'label_key_22')
+                    say(None, TextboxSoundsPreset.SILENT, "Dozite 3...")
+
+                    label('label_key_22', manager=fevent_manager)
+                    branch_if(Variables[0xC346], '!=', 1.0, 'label_key_23')
+                    say(None, TextboxSoundsPreset.SILENT, "Dozite 4...")
+
+                    label('label_key_23', manager=fevent_manager)
+                    branch_if(Variables[0xC960], '!=', 1.0, 'label_key_24')
+                    say(None, TextboxSoundsPreset.SILENT, "Access to Wakeport...")
+
+                    label('label_key_24', manager=fevent_manager)
+                    branch_if(Variables[0xC3B9], '!=', 1.0, 'label_key_25')
+                    say(None, TextboxSoundsPreset.SILENT, "Access to Mount Pajamaja...")
+
+                    label('label_key_25', manager=fevent_manager)
+                    branch_if(Variables[0xC47E], '!=', 1.0, 'label_key_26')
+                    say(None, TextboxSoundsPreset.SILENT, "Access to Neo Bowser Castle...")
+
+                    label('label_key_26', manager=fevent_manager)
+                    branch('label_0')
 
                     label('label_10', manager=fevent_manager)
 
@@ -2510,7 +2619,6 @@ def pack(input_folder, repack_data, settings, new_item_locals, ap_array):
                     elif i[6] > 0xB0E0:
                         add_in_place(1.0, Variables[0xB0F7])
                         add_in_place(1.0, Variables[0xB02D])
-                        Variables[i[len(i) - 1]] = 1.0
                     elif i[6] > 0xB000:
                         Variables[i[6]] |= i[7]
                         branch_if(Variables[check_1], '!=', 0x1F, 'label_1')
