@@ -754,7 +754,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                     i += 1
                 i = 0
             #print(key_item_check)
-            print(new_enemy_stats)
+            #print(new_enemy_stats)
         else:
            #item_amounts_from_pool = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             #                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

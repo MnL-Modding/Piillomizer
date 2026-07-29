@@ -351,8 +351,8 @@ def repack_ap(window):
             if len(ap_data[4]) < 15:
                 ap_data[4].append(next_attacks % 0x10)
 
-        print(window.random_settings)
-        print(ap_data)
+        #print(window.random_settings)
+        #print(ap_data)
 
     # Begins generation
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed, ap_data)
