@@ -504,6 +504,51 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
             for r in range(len(item_locals_bean)):
                 for b in item_locals_bean[r]:
                     item_locals[r].append(b)
+        else:
+            #Adds items for Shopsanity
+            #Badges: The 10 that are normally in the badge shop
+            #Boots: Picnic, Steady, Super, Heart, Elite, Bros., Singular, Glass, Celebrity, Star, Crystal, Discount, Master, Run-Down
+            #Hammers: Discount, Picnic, Steady, Fighter, Super, Elite, Spin, Singular, Glass, Celebrity, Star, Crystal, Master, Run-Down
+            #Wear: Picnic, Cozy, So-So, Singular, Super, Fighter, Celebrity, Fancy, Hero, Metal, Star, Ironclad, King
+            #Gloves: Shell, HP, HP DX, BP, BP DX, Speed, Stache, Lucky, Gift, Charge, Coin Bro, EXP Bro, Bottomless, Thick
+            #Accessories: HP Scarf, HP Scarf DX, BP Scarf, BP Scarf DX, Speed Scarf, Stache Scarf, HP Bangle, HP Bangle DX,
+            #             BP Bangle, BP Bangle DX, HP Knockout Bangle, Guard Shell, Guard Shell DX, Healthy Ring, Angel Bangle
+            #Items: All Mushroom Types, All Nut Types, All Syrup Types, All 1-Up Types, Refreshing Herb, Taunt Ball, Shock Bomb, Boo Biscuit
+            # Note: There's 2 of everything, except for Ultra Mushroom, Ultra Nut, Ultrasyrup Jar, Super Mushroom, Super Nut, and Supersyrup Jar
+            #Coins: 10 of each coin, seperated into 5 of regular and multi-coin
+            if settings[3][4] == 1:
+                shop_item_pool = [[0x0010, 0x4002], [0x0010, 0x4004], [0x0010, 0x4006], [0x0010, 0x4008], [0x0010, 0x400A],
+                                  [0x0010, 0x4012], [0x0010, 0x4014], [0x0010, 0x4016], [0x0010, 0x4018], [0x0010, 0x401A],
+                                  [0x0010, 0x6006], [0x0010, 0x600C], [0x0010, 0x6012], [0x0010, 0x6018], [0x0010, 0x601A], [0x0010, 0x6020],
+                                  [0x0010, 0x6022], [0x0010, 0x6024], [0x0010, 0x602A], [0x0010, 0x6032], [0x0010, 0x6036], [0x0010, 0x6002],
+                                  [0x0010, 0x6048], [0x0010, 0x604C], [0x0010, 0x6052], [0x0010, 0x6054], [0x0010, 0x6058], [0x0010, 0x6060],
+                                  [0x0010, 0x6066], [0x0010, 0x6068], [0x0010, 0x606A], [0x0010, 0x6070], [0x0010, 0x6078], [0x0010, 0x607C],
+                                  [0x0010, 0x608E], [0x0010, 0x6090], [0x0010, 0x6092], [0x0010, 0x6096], [0x0010, 0x609C], [0x0010, 0x609E],
+                                  [0x0010, 0x60A2], [0x0010, 0x60A8], [0x0010, 0x60AA], [0x0010, 0x60AE], [0x0010, 0x60B6], [0x0010, 0x60B8],
+                                  [0x0010, 0x60CA], [0x0010, 0x60CE], [0x0010, 0x60D0], [0x0010, 0x60D2], [0x0010, 0x60D4], [0x0010, 0x60DA],
+                                  [0x0010, 0x60DC], [0x0010, 0x60DE], [0x0010, 0x60E2], [0x0010, 0x60E6], [0x0010, 0x60F8], [0x0010, 0x60FC],
+                                  [0x0010, 0x6104], [0x0010, 0x6106], [0x0010, 0x6108], [0x0010, 0x610A], [0x0010, 0x6110], [0x0010, 0x6112],
+                                  [0x0010, 0x6116], [0x0010, 0x6118], [0x0010, 0x611A], [0x0010, 0x611C], [0x0010, 0x6120], [0x0010, 0x6126],
+                                  [0x0010, 0x603A], [0x0010, 0x6000], [0x0010, 0x6080], [0x0010, 0x6046], [0x0010, 0x60BA],
+                                  [0x0010, 0x60C8], [0x0010, 0x6100], [0x0010, 0x6128], [0x0010, 0x6124], [0x0010, 0x611E],
+                                  [0x0010, 0x2000], [0x0010, 0x2002], [0x0010, 0x2004], [0x0010, 0x2006], [0x0010, 0x2008],
+                                  [0x0010, 0x200A], [0x0010, 0x200C], [0x0010, 0x200E], [0x0010, 0x2010], [0x0010, 0x2012],
+                                  [0x0010, 0x2014], [0x0010, 0x2016], [0x0010, 0x2020], [0x0010, 0x2022], [0x0010, 0x2024],
+                                  [0x0010, 0x2032], [0x0010, 0x2034], [0x0010, 0x2036], [0x0010, 0x2000], [0x0010, 0x2006],
+                                  [0x0010, 0x2008], [0x0010, 0x200E], [0x0010, 0x2010], [0x0010, 0x2016], [0x0010, 0x2020],
+                                  [0x0010, 0x2022], [0x0010, 0x2024], [0x0010, 0x2032], [0x0010, 0x2034], [0x0010, 0x2036],
+                                  [0x0010, 0x0000], [0x0010, 0x0000], [0x0010, 0x0000], [0x0010, 0x0000], [0x0010, 0x0000],
+                                  [0x0010, 0x0002], [0x0010, 0x0002], [0x0010, 0x0002], [0x0010, 0x0002], [0x0010, 0x0002],
+                                  [0x0010, 0x0004], [0x0010, 0x0004], [0x0010, 0x0004], [0x0010, 0x0004], [0x0010, 0x0004],
+                                  [0x0010, 0x0006], [0x0010, 0x0006], [0x0010, 0x0006], [0x0010, 0x0006], [0x0010, 0x0006],
+                                  [0x0010, 0x0008], [0x0010, 0x0008], [0x0010, 0x0008], [0x0010, 0x0008], [0x0010, 0x0008],
+                                  [0x00A0, 0x0000], [0x00A0, 0x0000], [0x00A0, 0x0000], [0x00A0, 0x0000], [0x00A0, 0x0000],
+                                  [0x00A0, 0x0002], [0x00A0, 0x0002], [0x00A0, 0x0002], [0x00A0, 0x0002], [0x00A0, 0x0002],
+                                  [0x00A0, 0x0004], [0x00A0, 0x0004], [0x00A0, 0x0004], [0x00A0, 0x0004], [0x00A0, 0x0004],
+                                  [0x00A0, 0x0006], [0x00A0, 0x0006], [0x00A0, 0x0006], [0x00A0, 0x0006], [0x00A0, 0x0006],
+                                  [0x00A0, 0x0008], [0x00A0, 0x0008], [0x00A0, 0x0008], [0x00A0, 0x0008], [0x00A0, 0x0008]]
+                for i in shop_item_pool:
+                    item_pool.append(i)
 
         if len(ap_array) > 0:
             #Repacks the ap data if it's an ap world
@@ -947,6 +992,20 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                 logic_logic[24] = [24, 15, 16, 0, 3, 6]
                 logic_logic[27] = [27, 15]
 
+            shop_logic = [[0, 14], [1, 14], [2, 14], [3, 14], [4, 15], [5, 15, 6], [6, 15, 16], [7, 15, 16], [8, 15, 16, 17, 18, 19, 20, 21, 6, -1, 15, 16, 5, 6],
+                          [9, 15, 22], [10, 15, 22], [11, 15, 22], [12, 15, 22, 6], [13, 23, 1, -1, 1, 5], [14, 23, 1, 4, 6, 8, 10, 11, -1, 1, 3, 5, 6, 8, 10, 11],
+                          [15, 15, 16], [16, 15, 16], [17, 15, 16, 1, 3, 6], [18, 15, 27, 1], [19, 15, 27, 1, 4, 5, 6, 7, 8, 10, 12, 13]]
+            if settings[1][1] == 1:
+                shop_logic[8] = [8, 15, 16, 17, 18, 19, 20, 21, 6]
+                shop_logic[14] = [14, 23, 1, 4, 6, 8, 10, 11]
+                if settings[1][0] == 1:
+                    shop_logic[14] = [14, 23, 0, 4, 6, 8, 10, 11]
+            elif settings[1][0] == 1:
+                shop_logic[13] = [13, 23, 0]
+                shop_logic[14] = [14, 23, 0, 4, 6, 8, 10, 11, -1, 0, 3, 5, 6, 8, 10, 11]
+                shop_logic[17] = [17, 15, 16, 0, 3, 6]
+                shop_logic[18] = [18, 15, 27]
+                shop_logic[19] = [19, 15, 27, 0, 4, 5, 6, 7, 8, 10, 12, 13]
             pbar.update(2)
 
             #Removes items from the key item pool depending on the settings
@@ -970,6 +1029,9 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                 #[Trigger type, Room ID, X Pos, Y Pos, Z Pos, Collectible/Cutscene ID, Ability/Item/Key Item/Attack(, Attack Piece ID/Coin Amount/Item Cutscene/Hammer or Spin Cutscene, Coin Cutscene)]
                 repack_data = []
                 key_data = []
+
+                #[Shop ID, item, item price]
+                shop_data = []
                 i = 0
                 j = 0
                 itemcut = 0
@@ -983,6 +1045,8 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                 prevattack = attack
                 offset = 0
                 prev_offset = 0
+                shopset = 0
+                prev_shopset = 0
                 key_order = []
                 add_level = 0
 
@@ -1065,6 +1129,60 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                 j += 1
                             j = 0
                         i += 1
+                    i = 0
+                    shop_price = len(new_item_locals)
+                    if settings[3][4] == 1:
+                        #Stuff for Shopsanity
+                        while i < len(shop_logic):
+                            if is_available(shop_logic[i], key_item_check, settings):
+                                #print(key_item_check)
+                                #print(i)
+                                s = 0
+                                while s < 8:
+                                    rand_array = random.randint(0, 3)
+                                    if rand_array < 3 and len(item_pool) > 0:
+                                        #Code for putting items into the shop
+                                            nitem = random.randint(0, len(item_pool) - 1)
+                                            if item_pool[nitem][1] // 0x1000 != 4 and item_pool[nitem][1] // 0x1000 > 0:
+                                                item_price = random.randint(25 * (shop_price // 160 + 1), 75 * (shop_price // 160 + 1))
+                                            elif item_pool[nitem][1] // 0x1000 == 4:
+                                                item_price = random.randint(75 * (shop_price // 160 + 1), 125 * (shop_price // 160 + 1))
+                                            else:
+                                                item_price = random.randint(0 * (shop_price // 160 + 1), 10 * (shop_price // 160 + 1))
+                                            shop_data.append([shop_logic[i][0], item_pool[nitem][1], item_price])
+                                            del item_pool[nitem]
+                                    elif len(attack_piece_pool) > 0:
+                                        #Code for putting attacks in the shop
+                                        if len(attack_piece_pool) > 0:
+                                            nitem = 0
+                                            if len(attack_piece_pool[attack]) > 1:
+                                                nitem = random.randint(0, len(attack_piece_pool[attack]) - 1)
+                                            item_price = random.randint(75 * (shop_price // 160 + 1), 125 * (shop_price // 160 + 1))
+                                            shop_data.append([shop_logic[i][0], attack_piece_pool[attack][nitem][0] * 0x10000 + attack_piece_pool[attack][nitem][1], item_price])
+                                            del attack_piece_pool[attack][nitem]
+                                            #print(i)
+                                            #print(len(item_logic[i]) == 0)
+                                        if len(attack_piece_pool[attack]) == 0:
+                                            del attack_piece_pool[attack]
+                                            if attack == -1 and len(attack_piece_pool) > 0:
+                                                if len(attack_piece_pool) > 1:
+                                                    if len(attack_piece_pool[-2]) == 1:
+                                                        attack = -1
+                                                    elif prevattack < len(attack_piece_pool):
+                                                        attack = prevattack
+                                                    else:
+                                                        attack = random.randint(0, len(attack_piece_pool) - 1)
+                                                else:
+                                                    attack = 0
+                                            elif len(attack_piece_pool) > 0:
+                                                attack = random.randint(0, len(attack_piece_pool) - 1)
+                                    else:
+                                        s -= 1
+                                    s += 1
+                                del shop_logic[i]
+                                i -= 1
+                            i += 1
+                    i = 0
                     #Checks if more items can be randomized
                     if prevlen <= len(item_pool) + len(key_item_pool) + len(attack_piece_pool) and len(key_item_pool) > 0 and len(new_item_locals) > 0:
                         if len(key_item_pool) > 0:
@@ -1072,78 +1190,113 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                 #print(offset)
                                 offset = prev_offset
                                 #print(offset)
+                            can_shop = True
+                            if shopset == len(shop_data):
+                                shopset = prev_shopset
+                                can_shop = False
                             can_key = False
                             for i in range(len(new_item_locals) - offset):
                                 if find_index_in_2d_list(key_data, new_item_locals[i+offset][7] + 0xD000) is None:
                                     can_key = True
                             if can_key:
                                 #Replaces an item with a key item
+                                #print(offset)
                                 #print(len(new_item_locals))
-                                old_spot = random.randint(offset, len(new_item_locals) - 1)
-                                while find_index_in_2d_list(key_data, new_item_locals[old_spot][7] + 0xD000) is not None:
-                                    old_spot = random.randint(offset, len(new_item_locals) - 1)
-                                #print(old_spot)
+                                old_spot = random.randint(offset, len(new_item_locals) - 1 + len(shop_data) - shopset)
+                                if old_spot < len(new_item_locals):
+                                    while find_index_in_2d_list(key_data, new_item_locals[old_spot][7] + 0xD000) is not None:
+                                        old_spot = random.randint(offset, len(new_item_locals) - 1)
+                                    #print(old_spot)
 
-                                item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
-                                                    new_item_locals[old_spot][2] + 0x10000 * (new_item_locals[old_spot][3] % 2), new_item_locals[old_spot][4],
-                                                    new_item_locals[old_spot][5], new_item_locals[old_spot][6], new_item_locals[old_spot][7]])
-                                item_pool.append([new_item_locals[old_spot][2], new_item_locals[old_spot][3] - (new_item_locals[old_spot][3] % 2)])
-                                repack_index = find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000)
-                                if repack_index is not None:
-                                    if repack_data[repack_index[0]][6] // 0x1000 == 0xB:
-                                        attack_piece_pool.append([[repack_data[repack_index[0]][7], repack_data[repack_index[0]][6]]])
-                                        if attack != -1:
-                                            prevattack = attack
-                                        attack = -1
-                                        #print(attack_piece_pool[attack])
-                                        del repack_data[repack_index[0]]
-                                else:
-                                    if new_item_locals[old_spot][3] // 0x1000 == 0:
-                                        if new_item_locals[old_spot][2] // 0x10 % 0x10 <= 0x1:
-                                            max_values[new_item_locals[old_spot][3] % 0x1000 // 2] -= 1
-                                        else:
-                                            max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 5] -= 1
-                                    elif new_item_locals[old_spot][3] // 0x1000 == 2:
-                                        max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 10] -= 1
-                                    elif new_item_locals[old_spot][3] // 0x1000 == 6:
-                                        max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 45] -= 1
-                                i = -1
+                                    item_locals.append([new_item_locals[old_spot][0], new_item_locals[old_spot][1],
+                                                        new_item_locals[old_spot][2] + 0x10000 * (new_item_locals[old_spot][3] % 2), new_item_locals[old_spot][4],
+                                                        new_item_locals[old_spot][5], new_item_locals[old_spot][6], new_item_locals[old_spot][7]])
+                                    item_pool.append([new_item_locals[old_spot][2], new_item_locals[old_spot][3] - (new_item_locals[old_spot][3] % 2)])
+                                    repack_index = find_index_in_2d_list(repack_data, new_item_locals[old_spot][7] + 0xD000)
+                                    if repack_index is not None:
+                                        if repack_data[repack_index[0]][6] // 0x1000 == 0xB:
+                                            attack_piece_pool.append([[repack_data[repack_index[0]][7], repack_data[repack_index[0]][6]]])
+                                            if attack != -1:
+                                                prevattack = attack
+                                            attack = -1
+                                            #print(attack_piece_pool[attack])
+                                            del repack_data[repack_index[0]]
+                                    else:
+                                        if new_item_locals[old_spot][3] // 0x1000 == 0:
+                                            if new_item_locals[old_spot][2] // 0x10 % 0x10 <= 0x1:
+                                                max_values[new_item_locals[old_spot][3] % 0x1000 // 2] -= 1
+                                            else:
+                                                max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 5] -= 1
+                                        elif new_item_locals[old_spot][3] // 0x1000 == 2:
+                                            max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 10] -= 1
+                                        elif new_item_locals[old_spot][3] // 0x1000 == 6:
+                                            max_values[(new_item_locals[old_spot][3] % 0x1000 // 2) + 45] -= 1
+                                    i = -1
 
-                                # Code for putting key items in blocks and bean spots
-                                nitem = random.randint(0, len(key_item_pool) - 1)
-                                while not is_available(logic_logic[nitem], key_item_check, settings):
+                                    # Code for putting key items in blocks and bean spots
                                     nitem = random.randint(0, len(key_item_pool) - 1)
-                                #print(nitem)
-                                #print(len(key_item_pool))
-                                #print(key_item_check)
-                                spottype = get_spot_type(item_locals[i])
-                                if (key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004) and key_item_pool[nitem][0] != 0xB0F7:
-                                    key_data.append(
-                                        [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
-                                         item_locals[i][6] + 0xD000, key_item_pool[nitem][0]])
-                                elif key_item_pool[nitem][0] != 0xE000:
-                                    key_data.append(
-                                        [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
-                                         item_locals[i][6] + 0xD000, key_item_pool[nitem][0], 0xCDC0 + itemcut])
-                                    itemcut += 1
+                                    while not is_available(logic_logic[nitem], key_item_check, settings):
+                                        nitem = random.randint(0, len(key_item_pool) - 1)
+                                    #print(nitem)
+                                    #print(len(key_item_pool))
+                                    #print(key_item_check)
+                                    spottype = get_spot_type(item_locals[i])
+                                    if (key_item_pool[nitem][0] < 0xE000 or key_item_pool[nitem][0] > 0xE004) and key_item_pool[nitem][0] != 0xB0F7:
+                                        key_data.append(
+                                            [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
+                                             item_locals[i][6] + 0xD000, key_item_pool[nitem][0]])
+                                    elif key_item_pool[nitem][0] != 0xE000:
+                                        key_data.append(
+                                            [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
+                                             item_locals[i][6] + 0xD000, key_item_pool[nitem][0], 0xCDC0 + itemcut])
+                                        itemcut += 1
+                                    else:
+                                        key_data.append(
+                                            [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
+                                             item_locals[i][6] + 0xD000, key_item_pool[nitem][0] + key_item_pool[nitem][1],
+                                             0xCDC0 + itemcut])
+                                        itemcut += 1
+                                    key_item_check[key_item_pool[nitem][1]] += 1
+                                    key_item_pool_checked.append(key_item_pool[nitem])
+                                    key_order.append(key_item_pool[nitem][1])
+                                    del key_item_pool[nitem]
+                                    del logic_logic[nitem]
+                                    del item_locals[i]
+                                    #del item_logic[i]
+                                    #del new_item_locals[old_spot]
+                                    prev_offset = offset
+                                    offset = len(new_item_locals)
+                                    prev_shopset = shopset
+                                    shopset = len(shop_data)
+                                    #print("Previous offset:" + str(prev_offset))
+                                    #print("Current offset: " + str(offset))
                                 else:
-                                    key_data.append(
-                                        [spottype, item_locals[i][0], item_locals[i][3], item_locals[i][4], item_locals[i][5],
-                                         item_locals[i][6] + 0xD000, key_item_pool[nitem][0] + key_item_pool[nitem][1],
-                                         0xCDC0 + itemcut])
-                                    itemcut += 1
-                                key_item_check[key_item_pool[nitem][1]] += 1
-                                key_item_pool_checked.append(key_item_pool[nitem])
-                                key_order.append(key_item_pool[nitem][1])
-                                del key_item_pool[nitem]
-                                del logic_logic[nitem]
-                                del item_locals[i]
-                                #del item_logic[i]
-                                #del new_item_locals[old_spot]
-                                prev_offset = offset
-                                offset = len(new_item_locals)
-                                #print("Previous offset:" + str(prev_offset))
-                                #print("Current offset: " + str(offset))
+                                    #Key item code for shopsanity
+                                    old_spot = random.randint(shopset, len(shop_data) - 1)
+                                    if shop_data[old_spot][1] < 0xB080 or shop_data[old_spot][1] > 0x10000 and can_shop:
+                                        if shop_data[old_spot][1] // 0x10000 > 0:
+                                            attack_piece_pool.append([[shop_data[old_spot][1] // 0x10000, shop_data[old_spot][1] % 0x10000]])
+                                        else:
+                                            item_pool.append([0x0010, shop_data[old_spot][1]])
+                                        new_key = random.randint(0, len(key_item_pool) - 1)
+                                        #print(logic_logic)
+                                        while not is_available(logic_logic[new_key], key_item_check, settings):
+                                            new_key = random.randint(0, len(key_item_pool) - 1)
+                                            #if logic_logic[new_key][0] == 0 or logic_logic[new_key][0] == 3 or logic_logic[new_key][0] == 5 or logic_logic[new_key][0] == 6:
+                                            #    print("This should work")
+                                            #print(logic_logic[new_key])
+                                        shop_data[old_spot][1] = key_item_pool[new_key][0]
+                                        shop_data[old_spot][2] = random.randint(125 * (offset // 160 + 1), 175 * (offset // 160 + 1))
+                                        key_item_check[key_item_pool[new_key][1]] += 1
+                                        #print(key_item_check)
+                                        key_item_pool_checked.append(key_item_pool[new_key])
+                                        key_order.append(key_item_pool[new_key][1])
+                                        del key_item_pool[new_key]
+                                        del logic_logic[new_key]
+                                        prev_offset = offset
+                                        offset = len(new_item_locals)
+                                        prev_shopset = shopset
+                                        shopset = len(shop_data)
                             else:
                                 #If it can't find an item to turn into a key item, it searches a bit farther back
                                 prev_offset -= 10
@@ -1409,7 +1562,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                     "Bottom Left of Final Puzzle Room", "Bottom Right of Final Puzzle Room", "Front Balcony", "Bowser's Dream Room", "Antasma Battle Arena", "Spiral to Final Boss", "Finall Bowser Arena",
                                     "Dream Egg Dream First Egg Room 3", "Dream Egg Dream First Egg Puzzle Room", "Dream Egg Dream Second Egg Lobby", "Dream Egg Dream Second Egg Room 1", "Dream Egg Dream Second Egg Room 2 Side Room",
                                     "Dream Egg Dream Second Egg Room 4", "Dream Egg Dream Second Egg Room 5", "Dream Egg Dream Second Egg Puzzle Room", "Dream Egg Dream Third Egg Lobby", "Dream Egg Dream Third Egg Room 1",
-                                    "Dream Egg Dream Third Egg Room 3", "Dream Egg Dream First Egg Room 2 Side Room", "Dream Egg Dream Third Egg Puzzle Room", "Dream Egg Dream Third Egg Room 2", "Dream Egg Dream Shop Area",
+                                    "Dream Egg Dream Third Egg Room 3", "Dream Egg Dream First Egg Room 2 Side Room", "Dream Egg Dream Third Egg Puzzle Room", "Dream Egg Dream Shop Area", "Dream Egg Dream Third Egg Room 2",
                                     "Dream Egg Dream Second Egg Entrance", "Dream Egg Dream Third Egg Entrance", "Dream Egg Dream Elite Trio Arena", "Seatoon Entrance", "Seatoon Inner Tube Intro",
                                     "Seatoon Room 3", "Seatoon Room 4", "Seatoon Cutscene", "Seabury Entrance", "Seabury Puzzle", "Seabury Cutscene", "Seabelle Entrance", "Seabelle Puzzle", "Seabelle Cutscene",
                                     "Rose Broquet Pi'illo", "Under Dream Egg Dream Pi'illo Path Room", "Under Dream Egg Dream Pi'illo Left Room", "Under Dream Egg Dream Pi'illo Right Room", "Ultibed Path Pi'illo",
@@ -1458,7 +1611,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                "Candy", "Super Candy", "Ultra Candy", "Max Candy", "1-Up Mushroom", "1-Up Deluxe", "Refreshing Herb", "Heart Bean", "Bros. Bean", "Power Bean", "Defense Bean", "Speed Bean",
                                "Stache Bean", "Taunt Ball", "Shock Bomb", "Boo Biscuit", "Secret Box", "Heart Bean DX", "Bros Bean DX", "Power Bean DX", "Defense Bean DX", "Speed Bean DX", "Stache Bean DX"],
 
-                              ["Starter Badge", "Master Badge", "Expert Badge", "Bronze Badge", "Silver Badge", "Gold Badge", "Mush Badge", "Strike Badge", "Guard Badge", "Virus Badge", "Risk Badge", "Miracle Badge"],
+                              ["Starter Badge", "Master Badge", "Expert Badge", "Bronze Badge", "Silver Badge", "Gold Badge", "N/A", "N/A", "Mush Badge", "Strike Badge", "Guard Badge", "Virus Badge", "Risk Badge", "Miracle Badge"],
 
                               ["Run-Down Boots", "Discount Boots", "So-So Boots", "Sandwich Boots", "Bare Boots", "Iron-Ball Boots", "Trusty Boots", "Snare Boots", "Coin Boots", "Super Boots", "EXP Boots",
                                "Knockout Boots", "Heart Boots", "Elite Boots", "Anti-air Boots", "Action Boots", "Bros. Boots", "Singular Boots", "Glass Boots", "Coin Boots DX", "Iron-Ball Boots DX", "VIP Boots",
@@ -1649,6 +1802,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                     room_check[new_item_locals[s][0]][get_spot_type(new_item_locals[s])] += 1
                     k = find_index_in_2d_list(repack_data, new_item_locals[s][7] + 0xD000)
                     if k is None:
+                        #print(hex(new_item_locals[s][3]))
                         item = item_names[new_item_locals[s][3] // 0x2000][int(new_item_locals[s][3] / 2) % 0x100]
                         check_type = check_names[get_spot_type(new_item_locals[s])]
                     else:
@@ -1673,6 +1827,76 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                         room_name = hex(new_item_locals[s][0])
                     spoiler_log.write(room_name + " " + check_type + " " + hex(new_item_locals[s][7]) + " - " + item + "\n")
                     sbar.update(1)
+                if settings[3][4] == 1:
+                    spoiler_log.write("\n--Shop Contents--\n\n")
+                    prev_shop = 0
+                    item_count = 0
+                    for s in range(len(shop_data)):
+                        #print(shop_data[s])
+                        if shop_data[s][0] != prev_shop:
+                            item_count = 0
+                        item_count += 1
+
+                        if shop_data[s][0] == 0:
+                            room_name = "Pi'illo Castle " + item_local_names[0x88] + " Item"
+                        if shop_data[s][0] == 1:
+                            room_name = "Pi'illo Castle " + item_local_names[0x88] + " Gear"
+                        if shop_data[s][0] == 2:
+                            room_name = "Pi'illo Castle " + item_local_names[0x88] + " Badge"
+                        if shop_data[s][0] == 3:
+                            room_name = "Dreamy Pi'illo Castle " + item_local_names[0xA6]
+                        if shop_data[s][0] == 4:
+                            room_name = "Mushrise Park " + item_local_names[0x00]
+                        if shop_data[s][0] == 5:
+                            room_name = "Dreamy Mushrise Park " + item_local_names[0x1E]
+                        if shop_data[s][0] == 6:
+                            room_name = "Dozing Sands " + item_local_names[0x0E]
+                        if shop_data[s][0] == 7:
+                            room_name = "Dozing Sands " + item_local_names[0x5D]
+                        if shop_data[s][0] == 8:
+                            room_name = "Dreamy Dozing Sands " + item_local_names[0xC3]
+                        if shop_data[s][0] == 9:
+                            room_name = "Wakeport " + item_local_names[0x42]
+                        if shop_data[s][0] == 10:
+                            room_name = "Wakeport " + item_local_names[0x43]
+                        if shop_data[s][0] == 11:
+                            room_name = "Wakeport " + item_local_names[0x44]
+                        if shop_data[s][0] == 12:
+                            room_name = "Dreamy Wakeport " + item_local_names[0x10E]
+                        if shop_data[s][0] == 13:
+                            room_name = "Mount Pajamaja " + item_local_names[0x67]
+                        if shop_data[s][0] == 14:
+                            room_name = "Dreamy Mount Pajamaja " + item_local_names[0x1EF]
+                        if shop_data[s][0] == 15:
+                            room_name = "Driftwood Shore " + item_local_names[0x45] + " Silver"
+                        if shop_data[s][0] == 16:
+                            room_name = "Driftwood Shore " + item_local_names[0x45] + " Gold"
+                        if shop_data[s][0] == 17:
+                            room_name = "Driftwood Shore " + item_local_names[0x16E]
+                        if shop_data[s][0] == 18:
+                            room_name = "Neo Bowser Castle " + item_local_names[0x141]
+                        if shop_data[s][0] == 19:
+                            room_name = "Dreamy Neo Bowser Castle " + item_local_names[0x277]
+
+                        if shop_data[s][1] > 0x10000:
+                            if shop_data[s][1] % 0x10000 < 0xB037:
+                                item = attack_piece_names[int((shop_data[s][1] % 0x10000 - 0xB030) / 2)]
+                                offset = 0
+                            elif shop_data[s][1] % 0x10000 < 0xB059:
+                                item = attack_piece_names[int((shop_data[s][1] % 0x10000 - 0xB037) / 2) + 2]
+                                offset = 1
+                            else:
+                                item = attack_piece_names[int((shop_data[s][1] % 0x10000 - 0xB059) / 2) + 13]
+                                offset = 1
+                            item += " Attack Piece " + str(int(math.log2(shop_data[s][1] // 0x10000) + 1) + (((shop_data[s][1] % 0x10000 + offset) % 2) * 5))
+                        elif shop_data[s][1] > 0xB080:
+                            ab = find_index_in_2d_list(key_item_pool_checked, shop_data[s][1])
+                            item = key_item_names[key_item_pool_checked[ab[0]][1]]
+                        else:
+                            item = item_names[shop_data[s][1] // 0x2000][int(shop_data[s][1] / 2) % 0x100]
+                        spoiler_log.write(room_name + " Shop Item " + str(item_count) + " - " + item + "\n")
+                        prev_shop = shop_data[s][0]
+
                 spoiler_log.write("\nKey Item Order:")
                 for k in key_order:
                     spoiler_log.write("\n" + key_item_names[k])
@@ -1846,6 +2070,6 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
             code_bin.seek(FMAPDAT_DREAM_WORLD_OFFSET_TABLE_LENGTH_ADDRESS[version_pair] + 16)
             code_bin.write(fmapdat_offset_table)
 
-    randomize_repack.pack(input_folder, repack_data, settings, new_item_locals, ap_array)
+    randomize_repack.pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_array)
 
 #randomize_data(input_folder, stat_mult)

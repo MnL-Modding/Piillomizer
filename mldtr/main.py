@@ -181,7 +181,7 @@ def randomize(window):
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
                                window.boss15.get(), window.boss16.get()],
-                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get()]]
+                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), window.shop_toggle.get()]]
 
     # Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed, [])
@@ -264,7 +264,7 @@ def repack_ap(window):
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
                                window.boss15.get(), window.boss16.get()],
-                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get()]]
+                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), 0]]
 
     #Reads the dat file
     ap_file = fd.askopenfilename(
@@ -457,6 +457,8 @@ def main():
     window.disable_scale = tk.IntVar()
     window.stat_setting = tk.IntVar()
 
+    window.shop_toggle = tk.IntVar()
+
     window.seed = tk.StringVar()
 
     #Creates tabs
@@ -466,6 +468,7 @@ def main():
     tabKey = ttk.Frame(window.menu)
     tabMusic = ttk.Frame(window.menu)
     tabQOL = ttk.Frame(window.menu)
+    tabOther = ttk.Frame(window.menu)
 
     #Names tabs
     window.menu.add(tabMain, text = "Main")
@@ -473,6 +476,7 @@ def main():
     window.menu.add(tabKey, text = "Key")
     window.menu.add(tabMusic, text = "Music")
     window.menu.add(tabQOL, text = "QOL")
+    window.menu.add(tabOther, text = "Other")
     window.menu.pack(expand = 1, fill = "both", pady=40)
 
     # Press button to open RomFS
@@ -1067,6 +1071,16 @@ def main():
         offvalue = 0
     )
     window.disable_scale_check.place(x=120, y=250)
+
+    #Allows you to use Shopsanity
+    window.shopsanity = ttk.Checkbutton(
+        tabOther,
+        text = "Enable Shopsanity",
+        variable = window.shop_toggle,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.shopsanity.place(x=160, y=150)
 
     #Run the application loop
     window.mainloop()
