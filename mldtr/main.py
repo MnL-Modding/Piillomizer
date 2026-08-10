@@ -283,11 +283,16 @@ def repack_ap(window):
         current_byte = int.from_bytes(data_reader.read(1))
         window.random_settings[3][0] = current_byte // 4 % 2
 
+        #Reads in the Shopsanity setting
+        current_byte = int.from_bytes(data_reader.read(1))
+        window.random_settings[3][4] = current_byte % 2
+        #print(window.random_settings[3])
+
         #Seeks past the next 6 bytes (they're currently unused)
         data_reader.seek(8)
 
         #Iterates through the next 929 entries to get the location info
-        ap_data = [[[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []], [], [], [], []]
+        ap_data = [[[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []], [], [], [], [], [], []]
         for l in range(929):
             current_byte = int.from_bytes(data_reader.read(1))
             block_item_region = current_byte
@@ -298,13 +303,47 @@ def repack_ap(window):
             if current_item // 0x1000 == 1:
                 ap_data[1].append([block_item_region, block_item_location, current_item % 0x1000])
 
+        if window.random_settings[3][4] == 1:
+            #If Shopsanity is enabled, it then checks through the 160 shop entries and adds their data accordingly
+            for s in range(160):
+                current_byte = int.from_bytes(data_reader.read(1))
+                shop_entry = current_byte
+                current_byte = int.from_bytes(data_reader.read(1))
+                shop_entry_item = current_byte
+                shop_item = int.from_bytes(data_reader.read(2))
+                if shop_item // 0x1000 == 0 and shop_item >= 10:
+                    shop_item -= 10
+                ap_data[5].append([(shop_entry_item % 0x1000 - 1) // 8, shop_item])
+                if shop_item // 0x1000 == 1:
+                    ap_data[6].append([s, shop_item % 0x1000])
+
         #Puts in the item name data for the other player's items
         for o in ap_data[1]:
             name_id = int.from_bytes(data_reader.read(1))
             new_name = list(data_reader.read(o[2]))
             ap_data[0][o[0]][o[1]] = ["", name_id]
             for n in new_name:
-                ap_data[0][o[0]][o[1]][0] += chr(n)
+                cn = chr(n)
+                if cn == "[":
+                    cn = "("
+                elif cn == "]":
+                    cn = ")"
+                ap_data[0][o[0]][o[1]][0] += cn
+            #print(ap_data[0][o[0]][o[1]][0])
+
+        #Puts in the item name data for the other player's shop items
+        for o in ap_data[6]:
+            name_id = int.from_bytes(data_reader.read(1))
+            new_name = list(data_reader.read(o[1]))
+            ap_data[5][o[0]][1] = ["", name_id]
+            for n in new_name:
+                cn = chr(n)
+                if cn == "[":
+                    cn = "("
+                elif cn == "]":
+                    cn = ")"
+                ap_data[5][o[0]][1][0] += cn
+            #print(ap_data[5][o[0]][1][0])
 
         #Gets the player names
         current_byte = int.from_bytes(data_reader.read(1))
@@ -341,6 +380,7 @@ def repack_ap(window):
                 else:
                     window.random_settings[0][24] -= 1
             else:
+                #print(next_key)
                 window.random_settings[0][next_key + 5] -= 1
             next_key = int.from_bytes(data_reader.read(1))
 
@@ -350,6 +390,17 @@ def repack_ap(window):
             ap_data[4].append(next_attacks // 0x10)
             if len(ap_data[4]) < 15:
                 ap_data[4].append(next_attacks % 0x10)
+
+        current_byte = int.from_bytes(data_reader.read(1))
+
+        if window.random_settings[3][4] == 1:
+            #If Shopsanity is enabled, it ends with getting the shop prices for every item and putting them into the pool
+            for p in range(160):
+                item_price = int.from_bytes(data_reader.read(2))
+                if item_price > 0x8000:
+                    item_price = item_price - 0x10000
+                ap_data[5][p].append(item_price)
+                #print(ap_data[5][p])
 
         #print(window.random_settings)
         #print(ap_data)

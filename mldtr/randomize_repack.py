@@ -570,6 +570,8 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             Variables[0xC455] = 1.0 #Flame pipe introduction
             Variables[0xE00B] = 1.0 #Gives Luiginary stack
             Variables[0xE00C] = 1.0 #Gives Luiginary tornado (but none of its abilities)
+            if len(ap_array) > 0 and settings[3][4] == 1:
+                Variables[0xCDF0] = 1.0 #Sets a control variable for Shopsanity
             change_room(0x0298, position=(0.0, 0.0, 0.0), init_sub=-0x1, music=MusicFlag.FORCE_KEEP_CURRENT)
             emit_command(0x0056, [0x01, 0x028D0026])  # Execute the command that was replaced with a call to this subroutine.
 
@@ -1545,12 +1547,29 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             #Attack ids
             attack_piece_ids = [0xE01E, 0xE028, 0xE021, 0xE029, 0xE024, 0xE020, 0xE02A, 0xE022, 0xE02B, 0xE025, 0xE02C, 0xE023, 0xE02D, 0xE01F, 0xE026]
 
+            #Attack info for the Attack Piece item in AP worlds
+            attacks = [[0xE01E, 0xB030], [0xE024, 0xB03B], [0xE022, 0xB041], [0xE023, 0xB049], [0xE01F, 0xB059],
+                       [0xE021, 0xB037], [0xE020, 0xB03D], [0xE025, 0xB045], [0xE026, 0xB05B], [0xE028, 0xB032],
+                       [0xE029, 0xB039], [0xE02A, 0xB03F], [0xE02B, 0xB043], [0xE02C, 0xB047], [0xE02D, 0xB04B]]
+            attack_names = ["3D Red Shell", "Bye-Bye Cannon", "Bomb Derby", "Jet Board Bash", "3D Green Shell",
+                            "Fire Flower", "Dropchopper", "Slingsniper", "Star Rocket", "Luiginary Ball Attack",
+                            "Luiginary Stack Attack", "Luiginary Hammer", "Luiginary Flame", "Luiginary Wall", "Luiginary Typhoon"]
+
             #A blank array that'll be used to store the shop's inventory
             shop_inv = []
             next_room = shop_data[1][0]
 
             for s in range(len(shop_data)):
-                shop_inv.append([shop_data[s][1], shop_data[s][2]])
+                if len(ap_array) > 0:
+                    try:
+                        if len(shop_data[s][1][0]) < 25:
+                            shop_inv.append([ap_array[2][shop_data[s][1][1] - 1] + "'s " + shop_data[s][1][0], shop_data[s][2]])
+                        else:
+                            shop_inv.append([ap_array[2][shop_data[s][1][1] - 1] + "'s\n" + shop_data[s][1][0], shop_data[s][2]])
+                    except TypeError:
+                        shop_inv.append([shop_data[s][1], shop_data[s][2]])
+                else:
+                    shop_inv.append([shop_data[s][1], shop_data[s][2]])
                 #print(len(shop_inv))
                 if s + 1 < len(shop_data) - 1:
                     next_room = shop_data[s+1][0]
@@ -1579,21 +1598,28 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                         #Creates the first text entry for the shop
                         say_text = "[DelayOff]What would you like?\n"
                         for p in range(len(shop_inv) // 2):
-                            if shop_inv[p][0] > 0x10000:
-                                if shop_inv[p][0] % 0x10000 < 0xB037:
-                                    say_text += "[Option]" + attack_piece_names[int((shop_inv[p][0] % 0x10000 - 0xB030) / 2)]
-                                    offset = 0
-                                elif shop_inv[p][0] % 0x10000 < 0xB059:
-                                    say_text += "[Option]" + attack_piece_names[int((shop_inv[p][0] % 0x10000 - 0xB037) / 2) + 2]
-                                    offset = 1
+                            try:
+                                if shop_inv[p][0] > 0x10000:
+                                    if shop_inv[p][0] % 0x10000 < 0xB037:
+                                        say_text += "[Option]" + attack_piece_names[int((shop_inv[p][0] % 0x10000 - 0xB030) / 2)]
+                                        offset = 0
+                                    elif shop_inv[p][0] % 0x10000 < 0xB059:
+                                        say_text += "[Option]" + attack_piece_names[int((shop_inv[p][0] % 0x10000 - 0xB037) / 2) + 2]
+                                        offset = 1
+                                    else:
+                                        say_text += "[Option]" + attack_piece_names[int((shop_inv[p][0] % 0x10000 - 0xB059) / 2) + 13]
+                                        offset = 1
+                                    say_text += " Attack Piece " + str(int(math.log2(shop_inv[p][0] // 0x10000) + 1) + (((shop_inv[p][0] % 0x10000 + offset) % 2) * 5))
+                                elif shop_inv[p][0] > 0xB080:
+                                    say_text += "[Option]" + key_item_names[key_item_reference.index(shop_inv[p][0])]
+                                elif shop_inv[p][0] == 0xA000:
+                                    say_text += "[Option]Attack Piece"
                                 else:
-                                    say_text += "[Option]" + attack_piece_names[int((shop_inv[p][0] % 0x10000 - 0xB059) / 2) + 13]
-                                    offset = 1
-                                say_text += " Attack Piece " + str(int(math.log2(shop_inv[p][0] // 0x10000) + 1) + (((shop_inv[p][0] % 0x10000 + offset) % 2) * 5))
-                            elif shop_inv[p][0] > 0xB080:
-                                say_text += "[Option]" + key_item_names[key_item_reference.index(shop_inv[p][0])]
-                            else:
-                                say_text += "[Option]" + item_names[(shop_inv[p][0] // 0x2000) % 0x1000][int(shop_inv[p][0] / 2) % 0x100]
+                                    #print(hex(shop_inv[p][0]))
+                                    say_text += "[Option]" + item_names[(shop_inv[p][0] // 0x2000) % 0x1000][int(shop_inv[p][0] / 2) % 0x100]
+                            except TypeError:
+                                #print(shop_inv[p][0])
+                                say_text += "[Option]" + shop_inv[p][0]
                             say_text += " - " + str(shop_inv[p][1]) + " coins\n"
                         say_text += "[Option]Next Page\n[Option]Close"
                         label('label_0', manager=fevent_manager)
@@ -1608,22 +1634,28 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                         #Same deal as above, but for the second page
                         say_text = "[DelayOff]What would you like?\n"
                         for p in range(len(shop_inv) // 2):
-                            if shop_inv[p+4][0] > 0x10000:
-                                if shop_inv[p+4][0] % 0x10000 < 0xB037:
-                                    say_text += "[Option]" + attack_piece_names[int((shop_inv[p+4][0] % 0x10000 - 0xB030) / 2)]
-                                    offset = 0
-                                elif shop_inv[p+4][0] % 0x10000 < 0xB059:
-                                    say_text += "[Option]" + attack_piece_names[int((shop_inv[p+4][0] % 0x10000 - 0xB037) / 2) + 2]
-                                    offset = 1
+                            try:
+                                if shop_inv[p+4][0] > 0x10000:
+                                    if shop_inv[p+4][0] % 0x10000 < 0xB037:
+                                        say_text += "[Option]" + attack_piece_names[int((shop_inv[p+4][0] % 0x10000 - 0xB030) / 2)]
+                                        offset = 0
+                                    elif shop_inv[p+4][0] % 0x10000 < 0xB059:
+                                        say_text += "[Option]" + attack_piece_names[int((shop_inv[p+4][0] % 0x10000 - 0xB037) / 2) + 2]
+                                        offset = 1
+                                    else:
+                                        say_text += "[Option]" + attack_piece_names[int((shop_inv[p+4][0] % 0x10000 - 0xB059) / 2) + 13]
+                                        offset = 1
+                                    say_text += " Attack Piece " + str(int(math.log2(shop_inv[p+4][0] // 0x10000) + 1) + (((shop_inv[p+4][0] % 0x10000 + offset) % 2) * 5))
+                                elif shop_inv[p+4][0] > 0xB080:
+                                    say_text += "[Option]" + key_item_names[key_item_reference.index(shop_inv[p+4][0])]
+                                elif shop_inv[p+4][0] == 0xA000:
+                                    say_text += "[Option]Attack Piece"
                                 else:
-                                    say_text += "[Option]" + attack_piece_names[int((shop_inv[p+4][0] % 0x10000 - 0xB059) / 2) + 13]
-                                    offset = 1
-                                say_text += " Attack Piece " + str(int(math.log2(shop_inv[p+4][0] // 0x10000) + 1) + (((shop_inv[p+4][0] % 0x10000 + offset) % 2) * 5))
-                            elif shop_inv[p+4][0] > 0xB080:
-                                say_text += "[Option]" + key_item_names[key_item_reference.index(shop_inv[p+4][0])]
-                            else:
-                                #print(hex(shop_inv[p+4][0]))
-                                say_text += "[Option]" + item_names[(shop_inv[p+4][0] // 0x2000) % 0x1000][int(shop_inv[p+4][0] / 2) % 0x100]
+                                    #print(hex(shop_inv[p+4][0]))
+                                    say_text += "[Option]" + item_names[(shop_inv[p+4][0] // 0x2000) % 0x1000][int(shop_inv[p+4][0] / 2) % 0x100]
+                            except TypeError:
+                                #print(shop_inv[p+4][0])
+                                say_text += "[Option]" + shop_inv[p+4][0]
                             say_text += " - " + str(shop_inv[p+4][1]) + " coins\n"
                         say_text += "[Option]Previous Page\n[Option]Close"
                         label('label_1', manager=fevent_manager)
@@ -1649,90 +1681,132 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             label('label_' + str(p+10), manager=fevent_manager)
                             emit_command(0x0030, [], Variables[0x1002])
                             branch_if(Variables[0x1002], '<', shop_inv[p][1], 'label_3')
-                            if shop_inv[p][0] > 0xB080 or shop_inv[p][0] // 0x1000 == 4 or shop_inv[p][0] // 0x1000 == 0:
+                            try:
+                                if shop_inv[p][0] > 0xB080 or shop_inv[p][0] // 0x1000 == 4 or shop_inv[p][0] // 0x1000 == 0:
+                                    branch_if(Variables[0xCD20 + ((s // 8)*8) + p], '==', 1.0, 'label_0')
+                                if shop_inv[p][0] > 0x10000:
+                                    #Code for Attack Pieces
+                                    Variables[shop_inv[p][0] % 0x10000] |= shop_inv[p][0] // 0x10000
+                                    branch_if(Variables[shop_inv[p][0] % 0x10000], '!=', 0x1F, 'label_attack' + str(p))
+                                    if shop_inv[p][0] % 0x10000 < 0xB037:
+                                        if shop_inv[p][0] % 2 == 0:
+                                            other_attack = shop_inv[p][0] % 0x10000 + 1
+                                        else:
+                                            other_attack = shop_inv[p][0] % 0x10000 - 1
+                                    else:
+                                        if shop_inv[p][0] % 2 == 0:
+                                            other_attack = shop_inv[p][0] % 0x10000 - 1
+                                        else:
+                                            other_attack = shop_inv[p][0] % 0x10000 + 1
+                                    branch_if(Variables[other_attack], '!=', 0x1F, 'label_attack' + str(p))
+                                    if shop_inv[p][0] % 0x10000 < 0xB037:
+                                        attack_id = attack_piece_ids[int((shop_inv[p][0] % 0x10000 - 0xB030) / 2)]
+                                    elif shop_inv[p][0] % 0x10000 < 0xB059:
+                                        attack_id = attack_piece_ids[int((shop_inv[p][0] % 0x10000 - 0xB037) / 2) + 2]
+                                    else:
+                                        attack_id = attack_piece_ids[int((shop_inv[p][0] % 0x10000 - 0xB059) / 2) + 13]
+                                    Variables[attack_id] = 1.0
+                                    if 0xE028 <= attack_id <= 0xE02D:
+                                        Variables[0xE01B] = 1.0 #Unlocks the luiginary attack block
+                                    label('label_attack' + str(p), manager=fevent_manager)
+                                elif shop_inv[p][0] > 0xB0F7:
+                                    if shop_inv[p][0] > 0xE004 or shop_inv[p][0] < 0xE000:
+                                        Variables[shop_inv[p][0]] = 1.0
+                                    elif shop_inv[p][0] == 0xE001:
+                                        branch_if(Variables[0xE002], '==', 0.0, 'second_hammer' + str(p))
+                                        Variables[shop_inv[p][0]] = 1.0
+                                        branch('hammer_done' + str(p))
+
+                                        label('second_hammer' + str(p), manager=fevent_manager)
+                                        branch_if(Variables[0xE000], '==', 0.0, 'first_hammer' + str(p))
+                                        Variables[0xE002] = 1.0
+                                        branch('hammer_done' + str(p))
+
+                                        label('first_hammer' + str(p), manager=fevent_manager)
+                                        Variables[0xE000] = 1.0
+
+                                        label('hammer_done' + str(p), manager=fevent_manager)
+                                    elif shop_inv[p][0] == 0xE002:
+                                        branch_if(Variables[0xE001], '==', 0.0, 'second_hammer' + str(p))
+                                        Variables[shop_inv[p][0]] = 1.0
+                                        branch('hammer_done' + str(p))
+
+                                        label('second_hammer' + str(p), manager=fevent_manager)
+                                        branch_if(Variables[0xE000], '==', 0.0, 'first_hammer' + str(p))
+                                        Variables[0xE001] = 1.0
+                                        branch('hammer_done' + str(p))
+
+                                        label('first_hammer' + str(p), manager=fevent_manager)
+                                        Variables[0xE000] = 1.0
+
+                                        label('hammer_done' + str(p), manager=fevent_manager)
+                                    else:
+                                        branch_if(Variables[0xE003], '==', 0.0, 'first_spin' + str(p))
+                                        Variables[shop_inv[p][0]] = 1.0
+                                        branch('spin_done' + str(p))
+
+                                        label('first_spin' + str(p), manager=fevent_manager)
+                                        Variables[0xE003] = 1.0
+
+                                        label('spin_done' + str(p), manager=fevent_manager)
+                                elif shop_inv[p][0] == 0xB0F7:
+                                    add_in_place(1.0, Variables[0xB0F7])
+                                    add_in_place(1.0, Variables[0xB02D])
+                                elif shop_inv[p][0] == 0xA000:
+                                    for a in range(len(ap_array[4])):
+                                        curr_attack = ap_array[4][a]
+                                        branch_if(Variables[attacks[curr_attack][0]], '==', 1.0, 'attack_' + str(((a+1)*11)-1))
+                                        for b in range(5):
+                                            branch_if(Variables[attacks[curr_attack][1]], '>', (2 ** b) - 1, 'attack_' + str(b + (a*11)))
+                                            Variables[attacks[curr_attack][1]] |= 2 ** b
+                                            branch('attack_' + str(((a+1)*11)-2))
+
+                                            label('attack_' + str(b + (a*11)), manager=fevent_manager)
+
+                                        for b in range(5):
+                                            if b < 4 or a < len(ap_array[4])-1:
+                                                branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'attack_' + str(b + 5 + (a*11)))
+                                            else:
+                                                branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'attack_last')
+                                            Variables[attacks[curr_attack][1]+1] |= 2 ** b
+                                            if b == 4:
+                                                Variables[attacks[curr_attack][0]] = 1.0
+                                                if curr_attack > 8:
+                                                    Variables[0xE01B] = 1.0
+                                            branch('attack_' + str(((a+1)*11)-2))
+
+                                            label('attack_' + str(b + 5 + (a * 11)), manager=fevent_manager)
+                                        label('attack_' + str(((a+1)*11)-2), manager=fevent_manager)
+                                        Variables[0xB051] = 0.0
+                                        Variables[0x6003] = 0.0
+                                        for pe in range(10):
+                                            Variables[0x1000] = Variables[attacks[curr_attack][1] + (pe // 5)] & (2 ** (pe % 5))
+                                            if pe % 5 > 0:
+                                                Variables[0x1000] >>= (pe % 5)
+                                            Variables[0x6003] += Variables[0x1000]
+                                        branch('attack_last')
+
+                                        label('attack_' + str(((a+1)*11)-1), manager=fevent_manager)
+                                    label('attack_last', manager=fevent_manager)
+                                elif shop_inv[p][0] > 0x1000:
+                                    emit_command(0x0033, [shop_inv[p][0] // 2, 0x01], Variables[0x3000])
+                                else:
+                                    if shop_inv[p][0] == 0x0000:
+                                        emit_command(0x0031, [1], Variables[0x1002])
+                                    elif shop_inv[p][0] == 0x0002:
+                                        emit_command(0x0031, [5], Variables[0x1002])
+                                    elif shop_inv[p][0] == 0x0004:
+                                        emit_command(0x0031, [10], Variables[0x1002])
+                                    elif shop_inv[p][0] == 0x0006:
+                                        emit_command(0x0031, [50], Variables[0x1002])
+                                    elif shop_inv[p][0] == 0x0008:
+                                        emit_command(0x0031, [100], Variables[0x1002])
+                            except TypeError:
                                 branch_if(Variables[0xCD20 + ((s // 8)*8) + p], '==', 1.0, 'label_0')
+
                             emit_command(0x0031, [-shop_inv[p][1]], Variables[0x1002])
                             Variables[0xCD20 + ((s // 8)*8) + p] = 1.0
-                            if shop_inv[p][0] > 0x10000:
-                                #Code for Attack Pieces
-                                Variables[shop_inv[p][0] % 0x10000] |= shop_inv[p][0] // 0x10000
-                                branch_if(Variables[shop_inv[p][0] % 0x10000], '!=', 0x1F, 'label_4')
-                                if shop_inv[p][0] % 0x10000 < 0xB037:
-                                    if shop_inv[p][0] % 2 == 0:
-                                        other_attack = shop_inv[p][0] % 0x10000 + 1
-                                    else:
-                                        other_attack = shop_inv[p][0] % 0x10000 - 1
-                                else:
-                                    if shop_inv[p][0] % 2 == 0:
-                                        other_attack = shop_inv[p][0] % 0x10000 - 1
-                                    else:
-                                        other_attack = shop_inv[p][0] % 0x10000 + 1
-                                branch_if(Variables[other_attack], '!=', 0x1F, 'label_4')
-                                if shop_inv[p][0] % 0x10000 < 0xB037:
-                                    attack_id = attack_piece_ids[int((shop_inv[p][0] % 0x10000 - 0xB030) / 2)]
-                                elif shop_inv[p][0] % 0x10000 < 0xB059:
-                                    attack_id = attack_piece_ids[int((shop_inv[p][0] % 0x10000 - 0xB037) / 2) + 2]
-                                else:
-                                    attack_id = attack_piece_ids[int((shop_inv[p][0] % 0x10000 - 0xB059) / 2) + 13]
-                                Variables[attack_id] = 1.0
-                                if 0xE028 <= attack_id <= 0xE02D:
-                                    Variables[0xE01B] = 1.0 #Unlocks the luiginary attack block
-                            elif shop_inv[p][0] > 0xB0F7:
-                                if shop_inv[p][0] > 0xE004 or shop_inv[p][0] < 0xE000:
-                                    Variables[shop_inv[p][0]] = 1.0
-                                elif shop_inv[p][0] == 0xE001:
-                                    branch_if(Variables[0xE002], '==', 0.0, 'second_hammer' + str(p))
-                                    Variables[shop_inv[p][0]] = 1.0
-                                    branch('hammer_done' + str(p))
-
-                                    label('second_hammer' + str(p), manager=fevent_manager)
-                                    branch_if(Variables[0xE000], '==', 0.0, 'first_hammer' + str(p))
-                                    Variables[0xE002] = 1.0
-                                    branch('hammer_done' + str(p))
-
-                                    label('first_hammer' + str(p), manager=fevent_manager)
-                                    Variables[0xE000] = 1.0
-
-                                    label('hammer_done' + str(p), manager=fevent_manager)
-                                elif shop_inv[p][0] == 0xE002:
-                                    branch_if(Variables[0xE001], '==', 0.0, 'second_hammer' + str(p))
-                                    Variables[shop_inv[p][0]] = 1.0
-                                    branch('hammer_done' + str(p))
-
-                                    label('second_hammer' + str(p), manager=fevent_manager)
-                                    branch_if(Variables[0xE000], '==', 0.0, 'first_hammer' + str(p))
-                                    Variables[0xE001] = 1.0
-                                    branch('hammer_done' + str(p))
-
-                                    label('first_hammer' + str(p), manager=fevent_manager)
-                                    Variables[0xE000] = 1.0
-
-                                    label('hammer_done' + str(p), manager=fevent_manager)
-                                else:
-                                    branch_if(Variables[0xE003], '==', 0.0, 'first_spin' + str(p))
-                                    Variables[shop_inv[p][0]] = 1.0
-                                    branch('spin_done' + str(p))
-
-                                    label('first_spin' + str(p), manager=fevent_manager)
-                                    Variables[0xE003] = 1.0
-
-                                    label('spin_done' + str(p), manager=fevent_manager)
-                            elif shop_inv[p][0] == 0xB0F7:
-                                add_in_place(1.0, Variables[0xB0F7])
-                                add_in_place(1.0, Variables[0xB02D])
-                            elif shop_inv[p][0] > 0x1000:
-                                emit_command(0x0033, [shop_inv[p][0] // 2, 0x01], Variables[0x3000])
-                            else:
-                                if shop_inv[p][0] == 0x0000:
-                                    emit_command(0x0031, [1], Variables[0x1002])
-                                elif shop_inv[p][0] == 0x0002:
-                                    emit_command(0x0031, [5], Variables[0x1002])
-                                elif shop_inv[p][0] == 0x0004:
-                                    emit_command(0x0031, [10], Variables[0x1002])
-                                elif shop_inv[p][0] == 0x0006:
-                                    emit_command(0x0031, [50], Variables[0x1002])
-                                elif shop_inv[p][0] == 0x0008:
-                                    emit_command(0x0031, [100], Variables[0x1002])
+                            print(hex(0xCD20 + ((s // 8) * 8) + p))
                             branch('label_4')
 
                         #Says you don't have enough coins, then brings you back
@@ -2059,8 +2133,21 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
+                    def ap_get_badges(sub: Subroutine):
+                        for bd in range(10):
+                            branch_if(Variables[0xB051], '!=', bd + 46+160, 'label_' + str(bd))
+                            emit_command(0x0033, [0x2000 + bd+1+(3*(bd // 5)), 0x01], Variables[0x300B])
+                            branch('label_9')
+
+                            label('label_' + str(bd), manager=fevent_manager)
+                        Variables[0xB051] = 0.0
+                        say(None, TextboxSoundsPreset.SILENT,
+                            "[DelayOff]You received a [Color #2C65FF]badge[Color #000000]![Pause 45]",
+                            offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+
+                    @subroutine(subs=script.subroutines, hdr=script.header)
                     def ap_get_key_item(sub: Subroutine):
-                        branch_if(Variables[0xB051], '!=', 206.0, 'label_2')
+                        branch_if(Variables[0xB051], '!=', 216.0, 'label_2')
                         branch_if(Variables[0xE001 + settings[3][0]], '!=', 1.0, 'label_0')
                         Variables[0xE002 - settings[3][0]] = 1.0
                         branch('label_25')
@@ -2075,7 +2162,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                         branch('label_25')
 
                         label('label_2', manager=fevent_manager)
-                        branch_if(Variables[0xB051], '!=', 207.0, 'label_4')
+                        branch_if(Variables[0xB051], '!=', 217.0, 'label_4')
                         branch_if(Variables[0xE003], '!=', 1.0, 'label_3')
                         Variables[0xE004] = 1.0
                         branch('label_25')
@@ -2086,7 +2173,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
 
                         label('label_4', manager=fevent_manager)
                         for k in range(19):
-                            branch_if(Variables[0xB051], '!=', k+208, 'label_' + str(k+5))
+                            branch_if(Variables[0xB051], '!=', k+218, 'label_' + str(k+5))
                             Variables[ability_ids[k+2]] = 1.0
                             if 13 <= k <= 16:
                                 branch_if(Variables[0xC343], '!=', 1.0, 'label_25')
@@ -2098,7 +2185,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
 
                             label('label_' + str(k+5), manager=fevent_manager)
                         label('label_23', manager=fevent_manager)
-                        branch_if(Variables[0xB051], '!=', 227.0, 'label_24')
+                        branch_if(Variables[0xB051], '!=', 237.0, 'label_24')
                         add_in_place(1.0, Variables[0xB0F7])
                         add_in_place(1.0, Variables[0xB02D])
                         branch('label_25')
@@ -2195,8 +2282,13 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                         branch('label_0')
 
                         label('label_7', manager=fevent_manager)
-                        branch_if(Variables[0xB051], '>', 205.0, 'label_9')
+                        branch_if(Variables[0xB051], '>', 205.0, 'label_8')
                         call('ap_get_accessories')
+                        branch('label_0')
+
+                        label('label_8', manager=fevent_manager)
+                        branch_if(Variables[0xB051], '>', 215.0, 'label_9')
+                        call('ap_get_badges')
                         branch('label_0')
 
                         label('label_9', manager=fevent_manager)

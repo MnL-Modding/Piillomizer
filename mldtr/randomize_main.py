@@ -597,6 +597,13 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                 repack_data.append(k)
 
             new_item_locals = sorted(new_item_locals, key=lambda x: x[0])
+            shop_data = []
+
+            #Repacks shop data if Shopsanity is enabled
+            if settings[3][4] == 1:
+                shop_item_data = ap_array[5]
+                for s in range(len(shop_item_data)):
+                    shop_data.append(shop_item_data[s])
 
             key_item_check = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             new_enemy_stats = []
@@ -660,7 +667,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                     init_enemy_stats[2] += 2.5 * stat_mult[0]
                                     init_enemy_stats[3] += 3
                                     init_enemy_stats[4] += 1.5
-                                    init_enemy_stats[5] += 2.5 * stat_mult[1]
+                                    init_enemy_stats[5] += 4 * stat_mult[1]
                                     init_enemy_stats[6] += 0.5
 
                                     for stat in range(len(new_enemy_stats[-1])):
@@ -1295,8 +1302,8 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                         del logic_logic[new_key]
                                         prev_offset = offset
                                         offset = len(new_item_locals)
-                                        prev_shopset = shopset
-                                        shopset = len(shop_data)
+                                    prev_shopset = shopset
+                                    shopset = len(shop_data)
                             else:
                                 #If it can't find an item to turn into a key item, it searches a bit farther back
                                 prev_offset -= 10
@@ -1336,7 +1343,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                         init_enemy_stats[2] += 2.5 * stat_mult[0]
                                         init_enemy_stats[3] += 3
                                         init_enemy_stats[4] += 1.5
-                                        init_enemy_stats[5] += 2.5 * stat_mult[1]
+                                        init_enemy_stats[5] += 4 * stat_mult[1]
                                         init_enemy_stats[6] += 0.5
 
                                         for stat in range(len(new_enemy_stats[-1])):
