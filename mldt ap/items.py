@@ -241,6 +241,16 @@ ITEM_NAME_TO_ID = {
     "Mini Ring (UNUSED)": 226,
     "Silver Statue": 227,
     "Gold Statue": 228,
+    "Master Badge": 229,
+    "Expert Badge": 230,
+    "Bronze Badge": 231,
+    "Silver Badge": 232,
+    "Gold Badge": 233,
+    "Strike Badge": 234,
+    "Guard Badge": 235,
+    "Virus Badge": 236,
+    "Risk Badge": 237,
+    "Miracle Badge": 238,
     "Attack Piece": 255
 }
 
@@ -476,6 +486,16 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     "Mini Ring (UNUSED)": ItemClassification.filler,
     "Silver Statue": ItemClassification.filler,
     "Gold Statue": ItemClassification.filler,
+    "Master Badge": ItemClassification.useful,
+    "Expert Badge": ItemClassification.useful,
+    "Bronze Badge": ItemClassification.useful,
+    "Silver Badge": ItemClassification.useful,
+    "Gold Badge": ItemClassification.useful,
+    "Strike Badge": ItemClassification.useful,
+    "Guard Badge": ItemClassification.useful,
+    "Virus Badge": ItemClassification.useful,
+    "Risk Badge": ItemClassification.useful,
+    "Miracle Badge": ItemClassification.useful,
     "Attack Piece": ItemClassification.useful
 }
 
@@ -596,6 +616,9 @@ def create_all_items(world: MLDTWorld) -> None:
                   "BP Knockout Bangle", "Healthy Ring", "Guard Shell", "Guard Shell DX", "Rally Belt", "Counter Belt", "POW Mush Jam",
                   "DEF Mush Jam", "Duplex Crown", "UNUSED", "Mushroom Amulet", "Birthday Ring", "Mini Ring (UNUSED)", "Silver Statue",
                   "Gold Statue",
+
+                  "Master Badge", "Expert Badge", "Bronze Badge", "Silver Badge", "Gold Badge",
+                  "Strike Badge", "Guard Badge", "Virus Badge", "Risk Badge", "Miracle Badge",
                   
                   "Attack Piece"]
     
@@ -607,13 +630,35 @@ def create_all_items(world: MLDTWorld) -> None:
                     0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 4, 2,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     150]
-    
-    #Custom item amounts
-    #item_amounts = [189, 63, 61, 53, 26, 19, 29, 20, 23, 3,
-    #                10, 11, 20, 9, 11, 14, 13, 11, 10, 16, 21, 11, 10, 15, 21, 15, 12, 13, 22, 24, 24, 24, 24, 23, 24, 7, 7, 5, 10, 3, 3, 3, 3, 3, 3,
-    #                0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 
-    #                0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0]
+
+    #Adds items for Shopsanity
+    if world.options.shopsanity:
+        for i in range(10):
+            item_amounts[i] += 5
+        for i in range(12):
+            if i % 4 != 1 and i % 4 != 2:
+                item_amounts[i+10] += 2
+            else:
+                item_amounts[i+10] += 1
+        for i in range(3):
+            item_amounts[i+25] += 2
+            #print(item_names[i+25])
+        for i in range(3):
+            item_amounts[i+34] += 2
+            #print(item_names[i+34])
+        gear_to_add = [0, 1, 3, 6, 9, 12, 13, 16, 17, 18, 21, 25, 27, 29,
+                       35, 36, 38, 41, 42, 44, 48, 51, 52, 53, 56, 60, 62, 64,
+                       71, 72, 73, 75, 78, 79, 81, 84, 85, 87, 91, 92, 93,
+                       100, 101, 103, 104, 105, 106, 109, 110, 111, 113, 115, 124, 126,
+                       130, 131, 132, 133, 136, 137, 139, 140, 141, 142, 143, 144, 146, 147, 148]
+        for g in gear_to_add:
+            item_amounts[g+44] += 1
+            #print(item_names[g+44])
+        for b in range(10):
+            item_amounts[b+204] += 1
+            #print(item_names[b+204])
 
     for item in range(len(item_amounts)):
         for a in range(item_amounts[item]):
