@@ -64,7 +64,7 @@ class ShopsanityEnable(Choice):
     Enables Shopsanity, making the game's 20 shops have 8 new locations in the pool for purchase
     """
 
-    display_name = "Reduce Ball Hop Skips"
+    display_name = "Enable Shopsanity"
 
     option_on = True
     option_off = False
