@@ -86,7 +86,7 @@ class MLDTWorld(World):
     def fill_slot_data(self) -> Mapping[str, Any]:
         # If you need access to the player's chosen options on the client side, there is a helper for that.
         return self.options.as_dict(
-            "second_hammer", "reduce_mini", "reduce_ball_skips"
+            "second_hammer", "reduce_mini", "reduce_ball_skips", "shopsanity"
         )
 
     def generate_output(self, output_directory: str) -> None:
@@ -111,7 +111,7 @@ class MLDTWorld(World):
                         "Neo Bowser Castle After First Porgressive Spin", "Neo Bowser Castle Flame Pipe Area", "Neo Bowser Castle Bowser's Dream"]
         item_names = [["Progressive Hammers", "Progressive Spin", "Ball Hop", "Luiginary Works", "Luiginary Ball",
                        "Luiginary Stack Spring Jump", "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm",
-                        "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge",
+                       "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge",
                        "Mushrise Park Gate", "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport",
                        "Access to Mount Pajamaja", "Dream Egg", "Access to Neo Bowser Castle"],
                       ["Mushroom", "Super Mushroom", "Ultra Mushroom", "Max Mushroom", "Nut", "Super Nut", "Ultra Nut", "Max Nut",
@@ -148,11 +148,16 @@ class MLDTWorld(World):
                         "Bros. Ring", "HP Bangle", "HP Bangle DX", "BP Bangle", "BP Bangle DX", "Angel Bangle", "HP Knockout Bangle",
                         "BP Knockout Bangle", "Healthy Ring", "Guard Shell", "Guard Shell DX", "Rally Belt", "Counter Belt", "POW Mush Jam",
                         "DEF Mush Jam", "Duplex Crown", "UNUSED", "Mushroom Amulet", "Birthday Ring", "Mini Ring (UNUSED)", "Silver Statue",
-                        "Gold Statue"]]
+                        "Gold Statue"],
+                      ["Master Badge", "Expert Badge", "Bronze Badge", "Silver Badge", "Gold Badge",
+                        "Strike Badge", "Guard Badge", "Virus Badge", "Risk Badge", "Miracle Badge"]]
         key_ids = [0xE002 - self.options.second_hammer, 0xE004, 0xE005, 0xE00A, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
                    0xE075, 0xC369, 0xCABF, 0xE0A0, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xC47E]
         recomp_data = []
         name_data = []
+        shop_data = []
+        shop_name_data = []
+        shop_prices = []
 
         #Appends the settings
         first_byte = 0
@@ -162,7 +167,10 @@ class MLDTWorld(World):
             first_byte += 0x1
         recomp_data.append(first_byte)
         recomp_data.append(self.options.second_hammer * 4)
-        recomp_data.append(0x00)
+        if self.options.shopsanity:
+            recomp_data.append(0x01)
+        else:
+            recomp_data.append(0x00)
         recomp_data.append(0x00)
         recomp_data.append(0x00)
         recomp_data.append(0x00)
@@ -174,7 +182,7 @@ class MLDTWorld(World):
         pr = 0
         l = 0
         for location in self.multiworld.get_locations(self.player):
-            if location.item.name != "Victory":
+            if location.item.name != "Victory" and location.address <= 3000:
                 pr = r
                 r = region_names.index(location.parent_region.name)
                 recomp_data.append(r)
@@ -191,21 +199,73 @@ class MLDTWorld(World):
                             to_write = (item_names[1].index(location.item.name) * 2) + 0x2000
                         except ValueError:
                             try:
-                                to_write = (item_names[3].index(location.item.name) * 2) + 0x6000
+                                to_write = (item_names[4].index(location.item.name) * 2) + 0x4002 + 6 * ((item_names[4].index(location.item.name) // 5) % 2)
                             except ValueError:
                                 try:
-                                    to_write = (item_names[2].index(location.item.name) * 2)
+                                    to_write = (item_names[3].index(location.item.name) * 2) + 0x6000
                                 except ValueError:
-                                    if location.item.name == "Attack Piece":
-                                        to_write = 0xA000
-                                    else:
-                                        to_write = 0xFFFF
+                                    try:
+                                        to_write = (item_names[2].index(location.item.name) * 2)
+                                    except ValueError:
+                                        if location.item.name == "Attack Piece":
+                                            to_write = 0xA000
+                                        else:
+                                            to_write = 0xFFFF
                     recomp_data.append(to_write // 0x100)
                     recomp_data.append(to_write % 0x100)
                 else:
                     recomp_data.append(0x10 + (len(location.item.name) // 0x100))
                     recomp_data.append(len(location.item.name) % 0x100)
                     name_data.append([location.item.name, location.item.player])
+            elif location.item.name != "Victory" and self.options.shopsanity:
+                shop_data.append(0x20)
+                shop_data.append(location.address % 0x100)
+                if location.item.player == self.player:
+                    try:
+                        to_write = key_ids[item_names[0].index(location.item.name)]
+                        shop_prices.append(self.random.randint(225, 300))
+                    except ValueError:
+                        try:
+                            to_write = (item_names[1].index(location.item.name) * 2) + 0x2000
+                            shop_prices.append(self.random.randint(100, 150))
+                        except ValueError:
+                            try:
+                                to_write = (item_names[4].index(location.item.name) * 2) + 0x4002 + 6 * ((item_names[4].index(location.item.name) // 5) % 2)
+                                shop_prices.append(self.random.randint(100, 150))
+                            except ValueError:
+                                try:
+                                    to_write = (item_names[3].index(location.item.name) * 2) + 0x6000
+                                    shop_prices.append(self.random.randint(100, 150))
+                                except ValueError:
+                                    try:
+                                        to_write = (item_names[2].index(location.item.name) * 2)
+                                        shop_prices.append(self.random.randint(0, 25))
+                                    except ValueError:
+                                        if location.item.name == "Attack Piece":
+                                            to_write = 0xA000
+                                            shop_prices.append(self.random.randint(150, 225))
+                                        else:
+                                            to_write = 0xFFFF
+                    shop_data.append(to_write // 0x100)
+                    shop_data.append(to_write % 0x100)
+                else:
+                    shop_data.append(0x10 + (len(location.item.name) // 0x100))
+                    shop_data.append(len(location.item.name) % 0x100)
+                    shop_name_data.append([location.item.name, location.item.player])
+                    if location.item.advancement:
+                        shop_prices.append(self.random.randint(225, 300))
+                    elif location.item.trap:
+                        shop_prices.append(self.random.randint(0x10000-100, 0x10000-50))
+                    elif location.item.useful:
+                        shop_prices.append(self.random.randint(150, 225))
+                    else:
+                        shop_prices.append(self.random.randint(100, 150))
+
+        for shop in shop_data:
+            recomp_data.append(shop)
+
+        for name in shop_name_data:
+            name_data.append(name)
 
         for name in name_data:
             recomp_data.append(name[1])
@@ -250,6 +310,12 @@ class MLDTWorld(World):
                 recomp_data.append(0)
                 recomp_data[-1] += next_attack * 0x10
             attack_used.append(next_attack)
+        recomp_data.append(0xFF)
+
+        #Throws in the prices for every item in the shop
+        for price in shop_prices:
+            recomp_data.append(price // 0x100)
+            recomp_data.append(price % 0x100)
 
         # add needed option results to the dictionary
         #data.update(self.options.as_dict("final_boss_hp", "difficulty", "fix_xyz_glitch"))

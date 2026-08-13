@@ -21,6 +21,8 @@ class MLDTClient(BizHawkClient):
     patch_suffix = ".apworld"
     ram_offset = 0
     prev_data = 0
+    prev_shop = 0
+    shop_on = False
     location_names = []
     logger = 0
     receive_buffer = 0
@@ -91,7 +93,7 @@ class MLDTClient(BizHawkClient):
                                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1552, -1, -1, -1, -1, -1, -1, -1,
                                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1919, 1920, 1921, 1922, 1923, 1924, 1925, -1, -1, -1, -1, -1, -1, -1, -1,
                                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1926, 1927, 1928, -1, -1, -1, -1, -1, 1929, 1930, 1931, 1932, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2021,
-                                -1, -1, -1, 2022, 2025, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2026, 2027, 2028, 2030, -1, -1, -1, 2032, 2033, 2036, 2037, 2038, 2039, -1, -1, 2041, 2042, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2002, -1, -1,
+                                -1, -1, -1, 2022, 2025, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2026, 2027, 2028, 2030, -1, -1, -1, 2032, 2033, 2036, 2037, 2038, 2039, -1, -1, 2041, 2042, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2001, -1, -1,
                                 -1, 1815, 1816, 1817, 1818, 1933, 1934, 1935, 459, 480, 1801, 1802, 1821, 1803, 1804, 1805, 1806, 1822, 1807, 1808, 1809, 1811, 1823, 1824, 1813, 1901, 1903, 1904, 1936, 1905, 1906, 1907, 1908, 1937, 1938,
                                 1909, 1911, 1913, 1914, 1939, 1940, 1916, 1917, 1941, 2003, 2004, 2005, 2006, 2044, 2045, 2046, 2047, 2048, 2049, 2125, 2126, 2127, 2128, 2129, 2130, 2131, 2132, 2133, 2134, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2135, 2136, 2137, 2138, 2139, 2140, 2141, 2142, 2143, 2231, -1,
@@ -100,7 +102,7 @@ class MLDTClient(BizHawkClient):
                                 1705, 823, 824, 201, 202, 205, 1322, 1008, 1009, 1010, 1011, 1012, 1013, 842, 1603, 1604, 1229, 1255, 1819, 1820, 1032, 1033, 1034, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2316, 2031, 2230, 2236, -1,
                                 1327, 1328, 1331, 1407, 2118, 2119, 2120, 2121, 2122, 2227, 2228, -1, -1, -1, 716, 730, 1310, 2229, 2219, 2220, 2244, 2223, 2224, 2406, 349, 126, 127, 128, 129, 464, 525, 423, 424, 437, 444, 450, 451, 834,
                                 1544, 617, 620, 1632, 1634, 1248, 1218, 1318, 2205, 2206, 2207, 2319, 2320, 1942, 1943, 1019, 634, 2105, 2107, 2109, 2110, 2114, 2123, 2124, 2203, 2204, 2208, 2213, 1707, 1708, 1711, 1717, 1718, 1719,
-                                1723, 1724, 1621, 638, 1622, 1810, 1812, 1814, 1902, 2001, 1910, 1912, 1915, 1918, 1234, 1508, 1512, 1513, 1518, 1524, 1527, 1532, 1533, 1535, 1537, 1554, 2011, 2019, 2020, 2023, 2024, 2029, 2034, 2035,
+                                1723, 1724, 1621, 638, 1622, 1810, 1812, 1814, 1902, 2002, 1910, 1912, 1915, 1918, 1234, 1508, 1512, 1513, 1518, 1524, 1527, 1532, 1533, 1535, 1537, 1554, 2011, 2019, 2020, 2023, 2024, 2029, 2034, 2035,
                                 2040, 2043, 1030, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, ]
 
@@ -115,9 +117,11 @@ class MLDTClient(BizHawkClient):
                             ctx.bizhawk_ctx,
                             [(self.ram_offset + 0x1, 1, "FCRAM")]
                         ))[0], byteorder = 'little') >> 3) % 2
+            shop_check = []
             if file_has_loaded > 0:
                 # Sets prev_data only if it hasn't been set before
                 if self.prev_data == 0:
+                    self.logger.info("Entered Loop")
                     self.prev_data = (await bizhawk.read(
                     ctx.bizhawk_ctx,
                     [(self.ram_offset + 0xB8, 0xA00/8, "FCRAM")]
@@ -138,14 +142,33 @@ class MLDTClient(BizHawkClient):
                                     self.location_names[location_id] = -1
                     await ctx.check_locations(locations_to_check)
 
+                    #Gets the info on whether Shopsanity is enabled or not
+                    shop_enabled = (int.from_bytes((await bizhawk.read(
+                    ctx.bizhawk_ctx,
+                    [(self.ram_offset + 0x278 + 0x1BE, 1, "FCRAM")]
+                    ))[0], byteorder = 'little')) % 2
+                    
+                    if shop_enabled == 1:
+                        self.shop_on = True
+                        shop_check = []
+                        
+                        #Updates the list of shop locations to reflect what shops have been checked
+                        self.prev_shop = (await bizhawk.read(
+                        ctx.bizhawk_ctx,
+                        [(self.ram_offset + 0x278 + 0x1A4, 20, "FCRAM")]
+                        ))[0]
+
                     #Updates the current items to match up with the amount of items that have been received
                     self.current_items_received = int.from_bytes((await bizhawk.read(
                         ctx.bizhawk_ctx,
-                        [(self.ram_offset + 0x43C + 0x4D, 2, "FCRAM")]
-                    ))[0], byteorder = 'little')
+                        [(self.ram_offset + 0x43C + 0x4D, 1, "FCRAM")]
+                    ))[0], byteorder = 'little') + (int.from_bytes((await bizhawk.read(
+                        ctx.bizhawk_ctx,
+                        [(self.ram_offset + 0x43C + 0x4E, 1, "FCRAM")]
+                    ))[0], byteorder = 'little') * 0x100)
 
                     self.prev_check_len = len(ctx.checked_locations)
-
+                        
                 # Read the block data to check for changes
                 block_data = (await bizhawk.read(
                     ctx.bizhawk_ctx,
@@ -170,6 +193,25 @@ class MLDTClient(BizHawkClient):
                                     await ctx.check_locations([self.location_names[location_id]])
                                     self.prev_check_len = len(ctx.checked_locations)
                                     self.location_names[location_id] = -1
+
+                if self.shop_on:
+                    #If Shopsanity is on, first we parse the shop data for the previous frame and current frame
+                    parsed_prev_shop = list(self.prev_shop)
+                    shop_data = (await bizhawk.read(
+                    ctx.bizhawk_ctx,
+                    [(self.ram_offset + 0x278 + 0x1A4, 20, "FCRAM")]
+                    ))[0]
+                    parsed_shop_data = list(shop_data)
+
+                    #We then once again check bit by bit for any changes
+                    for s in range(len(parsed_shop_data)):
+                        if parsed_shop_data[s] != parsed_prev_data[s]:
+                            #If there's a difference, we iterate through the byte to find the change, like before
+                            for bit in range(8):
+                                bit_to_update = (parsed_shop_data[s] >> bit) % 2
+                                if bit_to_update != (parsed_prev_shop[s] >> bit) % 2:
+                                    #Sends the check for this shop item
+                                    await ctx.check_locations([3000 + s*8 + bit + 1])
                 
                 #if self.prev_check_len != len(ctx.checked_locations):
                 #    #Handles giving an item if it was sent through the client
@@ -199,10 +241,10 @@ class MLDTClient(BizHawkClient):
                         if self.receive_buffer == 0:
                             #self.logger.info("Checking item")
                             to_write = 0
-                            if new_items[rn].item > 23 and new_items[rn].item < 229:
+                            if new_items[rn].item > 23 and new_items[rn].item < 239:
                                 to_write = new_items[rn].item - 23
-                            elif new_items[rn].item < 229:
-                                to_write = new_items[rn].item + 205
+                            elif new_items[rn].item < 239:
+                                to_write = new_items[rn].item + 215
                             else:
                                 to_write = new_items[rn].item
                             await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x51, bytes([to_write]), "FCRAM")])
@@ -211,7 +253,7 @@ class MLDTClient(BizHawkClient):
                                                                 bytes([self.current_items_received % 0x100]), "FCRAM")])
                             await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x4E, 
                                                                 bytes([self.current_items_received // 0x100]), "FCRAM")])
-                            self.receive_buffer = 5
+                            self.receive_buffer = 2
                 
                 # Handles the cooldown between receiving items
                 if self.receive_buffer > 0:
@@ -236,6 +278,10 @@ class MLDTClient(BizHawkClient):
                     
                 # Updates prev_data to have the data from this frame (which will be the previous next frame)
                 self.prev_data = block_data
+
+                # Does the same for prev_shop if Shopsanity is enabled
+                if self.shop_on:
+                    self.prev_shop = shop_data
 
         except bizhawk.RequestFailedError:
             # The connector didn't respond. Exit handler and return to main loop to reconnect

@@ -58,6 +58,19 @@ class ReduceBall(Choice):
 
     # Choice options must define an explicit default value.
     default = option_on
+    
+class ShopsanityEnable(Choice):
+    """
+    Enables Shopsanity, making the game's 20 shops have 8 new locations in the pool for purchase
+    """
+
+    display_name = "Reduce Ball Hop Skips"
+
+    option_on = True
+    option_off = False
+
+    # Choice options must define an explicit default value.
+    default = option_off
 
 # We must now define a dataclass inheriting from PerGameCommonOptions that we put all our options in.
 # This is in the format "option_name_in_snake_case: OptionClassName".
@@ -66,13 +79,14 @@ class MLDTOptions(PerGameCommonOptions):
     second_hammer: Hammer
     reduce_mini: ReduceMini
     reduce_ball_skips: ReduceBall
+    shopsanity: ShopsanityEnable
 
 
 # If we want to group our options by similar type, we can do so as well. This looks nice on the website.
 option_groups = [
     OptionGroup(
         "Gameplay Options",
-        [Hammer, ReduceMini, ReduceBall],
+        [Hammer, ReduceMini, ReduceBall, ShopsanityEnable],
     ),
 ]
 
@@ -81,11 +95,13 @@ option_presets = {
     "normal": {
         "second_hammer": -1,
         "reduce_mini": False,
-        "reduce_ball_skips": True
+        "reduce_ball_skips": True,
+        "shopsanity": False
     },
     "creator's preset": {
         "second_hammer": 1,
         "reduce_mini": True,
-        "reduce_ball_skips": True
+        "reduce_ball_skips": True,
+        "shopsanity": True
     },
 }

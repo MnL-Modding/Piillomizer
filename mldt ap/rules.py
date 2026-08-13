@@ -258,7 +258,7 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             [37, luigi_works], [38, luigi_works], [39, luigi_works], [40, luigi_works], [41, luigi_works], [42, luigi_works]],
                             
                            [[1, ball_hop], [2, ball_hop], [4, hammers | spin_jump | ball_hop], [5, hammers], [6, hammers],
-                            [7, hammers], [10, has_gate & mini_mario], [11, hammers], [18, side_drill], [19, side_drill],
+                            [7, hammers], [11, has_gate & mini_mario], [12, hammers], [16, side_drill], [19, side_drill],
                             [22, hammers], [23, hammers], [24, luigi_works], [25, luigi_works], [26, luigi_works], [27, luigi_works],
                             [28, luigi_works], [29, luigi_works], [30, luigi_works], [31, luigi_works], [32, luigi_works], [33, luigi_works],
                             [34, luigi_works], [35, luigi_works], [36, luigi_works], [37, luigi_works], [38, luigi_works],
@@ -397,6 +397,8 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             [23, mole_mario], [24, mole_mario]],
                             
                            []]
+
+    shop_logic_info = [[5, luigi_works], [8, luigi_works & luigi_stack_spring & luigi_stack_pound], [12, luigi_works & mole_mario], [17, luigi_works]]
     
     #Updates certain indexes in the location info if reduce mini mario requirements is turned on
     if world.options.reduce_mini:
@@ -422,6 +424,13 @@ def set_all_location_rules(world: MLDTWorld) -> None:
             location_name = list(world.location_name_to_id.keys())[list(world.location_name_to_id.values()).index(e[0] + (r*100))] #Gets the location name from the ID
             current_location = world.get_location(location_name)
             world.set_rule(current_location, e[1])
+
+    if world.options.shopsanity:
+        for s in shop_logic_info:
+            for i in range(8):
+                location_name = list(world.location_name_to_id.keys())[list(world.location_name_to_id.values()).index(3000 + s[0]*8 + i)] #Gets the location name from the ID
+                current_location = world.get_location(location_name)
+                world.set_rule(current_location, s[1])
 
     # In "set_all_entrance_rules", we had a rule for a location that doesn't always exist.
     # In this case, we had to check for its existence (by checking the player's chosen options) before setting the rule.
