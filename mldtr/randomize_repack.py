@@ -45,7 +45,7 @@ def get_room(id):
         return "Driftwood Shore"
     elif 0x066 <= id <= 0x081 or id == 0x100 or id == 0x10B or id == 0x10C:
         return "Mount Pajamaja"
-    elif id == 0x082 or 0x084 <= id <= 0x09B or 0x136 <= id <= 0x13B or id == 0x1D8:
+    elif id == 0x082 or 0x084 <= id <= 0x08F or 0x091 <= id <= 0x09B or 0x136 <= id <= 0x13B or id == 0x1D8:
         return "Pi'illo Castle"
     elif 0x0A1 <= id <= 0x0AE or 0x0D8 <= id <= 0x0DE or 0x0F4 <= id <= 0x0FA:
         return "Dreamy Pi'illo Castle"
@@ -63,7 +63,7 @@ def get_room(id):
         return "Neo Bowser Castle"
     elif 0x183 <= id <= 0x196:
         return "Somnom Woods"
-    elif 0x252 <= id <= 0x27B:
+    elif 0x252 <= id <= 0x27B or id == 0x031:
         return "Dreamy Neo Bowser Castle"
     else:
         return "Unknown"
@@ -1504,7 +1504,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
         else:
             #Repacks the shop data for Shopsanity
             #Shop room info: [ROOM ID, Interacting Actor, NPC Actor]
-            shop_room_info = [[0x88, 5, 4], [0x88, 7, 6], [0x88, 3, 2], [0xA6, 3, 2], [0x00, 11, 10], [0x1E, 6, 6],
+            shop_room_info = [[0x88, 5, 4], [0x88, 3, 2], [0x88, 7, 6], [0xA6, 3, 2], [0x00, 11, 10], [0x1E, 6, 6],
                               [0x0E, 10, 9], [0x5D, 3, 2], [0xC3, 3, 2], [0x42, 3, 2], [0x43, 3, 2], [0x44, 3, 2], [0x10E, 8, 7],
                               [0x67, 21, 20], [0x1EF, 6, 4], [0x45, 28, 27], [0x45, -1, 3], [0x16E, 2, 2], [0x141, 12, 11], [0x277, 4, 3]]
             #Names for items
@@ -1682,8 +1682,8 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             emit_command(0x0030, [], Variables[0x1002])
                             branch_if(Variables[0x1002], '<', shop_inv[p][1], 'label_3')
                             try:
-                                if shop_inv[p][0] > 0xB080 or shop_inv[p][0] // 0x1000 == 4 or shop_inv[p][0] // 0x1000 == 0:
-                                    branch_if(Variables[0xCD20 + ((s // 8)*8) + p], '==', 1.0, 'label_0')
+                                if shop_inv[p][0] > 0xB080 or shop_inv[p][0] // 0x1000 == 4 or shop_inv[p][0] // 0x1000 == 0 or shop_inv[p][0] // 0x1000 == 0xA:
+                                    branch_if(Variables[0xCD20 + (shop_data[s][0]*8) + p], '==', 1.0, 'label_0')
                                 if shop_inv[p][0] > 0x10000:
                                     #Code for Attack Pieces
                                     Variables[shop_inv[p][0] % 0x10000] |= shop_inv[p][0] // 0x10000
@@ -1802,11 +1802,11 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                     elif shop_inv[p][0] == 0x0008:
                                         emit_command(0x0031, [100], Variables[0x1002])
                             except TypeError:
-                                branch_if(Variables[0xCD20 + ((s // 8)*8) + p], '==', 1.0, 'label_0')
+                                branch_if(Variables[0xCD20 + (shop_data[s][0]*8) + p], '==', 1.0, 'label_0')
 
                             emit_command(0x0031, [-shop_inv[p][1]], Variables[0x1002])
-                            Variables[0xCD20 + ((s // 8)*8) + p] = 1.0
-                            print(hex(0xCD20 + ((s // 8) * 8) + p))
+                            Variables[0xCD20 + (shop_data[s][0]*8) + p] = 1.0
+                            #print(hex(0xCD20 + ((s // 8) * 8) + p))
                             branch('label_4')
 
                         #Says you don't have enough coins, then brings you back
@@ -1979,9 +1979,9 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
         #The length of each item type within each array, and the resulting offset for the next room
         room_lengths = [[[1, 0, 4, 0, 4, 0, 0, 1, 1, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
 
-                        [[0, 0, 0, 0, 2, 0, 2, 1, 1, 0, 0, 1, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 1, 2, 4, 4],
-                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 5, 0, 0, 0, 0, 0, 1, 7, 0, 2, 25, 1, 4, 2, 0, 0, 1, 1, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0]],
+                        [[0, 0, 0, 0, 2, 0, 2, 1, 1, 0, 0, 1, 2, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 1, 2, 4, 4],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 5, 0, 0, 0, 0, 0, 1, 7, 0, 2, 25, 1, 4, 2, 0, 0, 1, 1, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0]],
 
                         [[2, 6, 2, 2, 5, 8, 3, 4, 4, 2, 6, 5, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
                          [0, 4, 0, 0, 1, 0, 3, 4, 1, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -2007,14 +2007,14 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                          [0, 0, 0, 1, 1, 0, 1, 0, 2, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 3, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                          [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 4, 0, 1, 0, 2, 0, 1, 3, 0, 0, 0, 0, 1, 3, 0, 1, 9, 1, 3, 1, 4, 2, 4, 5, 3, 3, 1, 2, 1, 2]],
 
-                        [[0, 0, 0, 2, 3, 2, 2, 1, 4, 2, 1, 7, 4, 0, 4, 5, 4, 0, 0, 3, 0, 4, 2, 0, 1, 0, 2, 1, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                         [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 2, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 1, 2, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 0, 3, 3, 2, 1, 0, 1, 1, 1, 1, 2, 1, 1, 0, 1, 0, 0, 2, 0, 0, 1, 0, 3, 0, 0, 0, 1, 0, 2, 0, 2, 0, 0, 1, 0, 2, 1, 0, 0]]]
+                        [[0, 0, 0, 0, 2, 3, 2, 2, 1, 4, 2, 1, 7, 4, 0, 4, 5, 4, 0, 0, 3, 0, 4, 2, 0, 1, 0, 2, 1, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 2, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 1, 2, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 0, 3, 3, 2, 1, 0, 1, 1, 1, 1, 2, 1, 1, 0, 1, 0, 0, 2, 0, 0, 1, 0, 3, 0, 0, 0, 1, 0, 2, 0, 2, 0, 0, 1, 0, 2, 1, 0, 0]]]
 
         room_local_index = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
         room_local_info_index = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        area_names = ["Blimport", "Pi'illo Castle" ,"Mushrise Park", "Dozing Sands", "Wakeport", "Mount Pajamaja", "Driftwood Shore", "Somnom Woods", "Neo Bowser Castle"]
+        area_names = ["Blimport", "Pi'illo Castle", "Mushrise Park", "Dozing Sands", "Wakeport", "Mount Pajamaja", "Driftwood Shore", "Somnom Woods", "Neo Bowser Castle"]
 
         coins = [1, 5, 10, 50, 100, 10, 50, 100, 500, 1000]
 
@@ -2027,6 +2027,17 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
         attack_names = ["3D Red Shell", "Bye-Bye Cannon", "Bomb Derby", "Jet Board Bash", "3D Green Shell",
                         "Fire Flower", "Dropchopper", "Slingsniper", "Star Rocket", "Luiginary Ball Attack",
                         "Luiginary Stack Attack", "Luiginary Hammer", "Luiginary Flame", "Luiginary Wall", "Luiginary Typhoon"]
+
+        #Info for the Luiginary Works each room uses (CDC0 = Constellation, CDC1 = Stache, CDC2 = Sneeze, CDC3 = Cylinder,
+        #                                             CDC4 = Timer, CDC5 = Ice, CDC6 = Antigravity, CDC7 = Propeller, E015 = Swim)
+        luigi_work_info = [[0x01F, 0xCDC1], [0x020, 0xCDC2], [0x021, 0xCDC2], [0x022, 0xCDC2], [0x024, 0xCDC1], [0x026, 0xCDC1], [0x027, 0xCDC1],
+                           [0x028, 0xCDC2], [0x029, 0xCDC1], [0x02A, 0xCDC2], [0x02B, 0xCDC2], [0x031, 0xCDC0], [0x032, 0xCDC0],
+                           [0x0AD, 0xCDC2], [0x0AE, 0xCDC2], [0x0B2, 0xCDC3], [0x0B3, 0xCDC3], [0x0B5, 0xCDC2], [0x0B7, 0xCDC3], [0x0B8, 0xCDC3],
+                           [0x0BB, 0xCDC3], [0x0BC, 0xCDC0], [0x0BD, 0xCDC3], [0x0BF, 0xCDC0], [0x0C0, 0xCDC0], [0x0C1, 0xCDC0], [0x0C2, 0xCDC0],
+                           [0x0C5, 0xCDC3], [0x0C6, 0xCDC0], [0x0C7, 0xCDC0], [0x0D5, 0xCDC6], [0x0D6, 0xCDC6],
+                           [0x0D8, 0xCDC2], [0x0DA, 0xCDC2], [0x0DB, 0xCDC1], [0x0DC, 0xCDC1], [0x0DD, 0xCDC1], [0x0DE, 0xCDC1],
+                           [0x0E5, 0xCDC0], [0x0E6, 0xCDC0], [0x0E8, 0xCDC6], [0x0E9, 0xCDC6], [0x0EA, 0xCDC6], [0x0EC, 0xCDC1], [0x0EE, 0xCDC2],
+                           [0x0EF, 0xCDC0], [0x0F0, 0xCDC0], []]
 
         # Adds the quick warp and tracker features to every room that needs it
         for s in range(0x2B0):
@@ -2051,7 +2062,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                         label('label_9', manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received [Color #2C65FF]coins[Color #000000]![Pause 45]",
+                            "[DelayOff]You received [Color #2C65FF]coins[Color #000000]![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2064,7 +2075,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             label('label_' + str(i), manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received an [Color #2C65FF]item[Color #000000]![Pause 45]",
+                            "[DelayOff]You received an [Color #2C65FF]item[Color #000000]![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2077,7 +2088,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             label('label_' + str(b), manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received some [Color #2C65FF]boots[Color #000000]![Pause 45]",
+                            "[DelayOff]You received some [Color #2C65FF]boots[Color #000000]![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2090,7 +2101,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             label('label_' + str(h), manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received some [Color #2C65FF]hammers[Color #000000] as gear![Pause 45]",
+                            "[DelayOff]You received some [Color #2C65FF]hammers[Color #000000] as gear![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2103,7 +2114,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             label('label_' + str(w), manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received some [Color #2C65FF]wear[Color #000000]![Pause 45]",
+                            "[DelayOff]You received some [Color #2C65FF]wear[Color #000000]![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2116,7 +2127,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             label('label_' + str(g), manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received some [Color #2C65FF]gloves[Color #000000]![Pause 45]",
+                            "[DelayOff]You received some [Color #2C65FF]gloves[Color #000000]![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2129,7 +2140,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             label('label_' + str(ac), manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received some [Color #2C65FF]accessories[Color #000000]![Pause 45]",
+                            "[DelayOff]You received some [Color #2C65FF]accessories[Color #000000]![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2142,7 +2153,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                             label('label_' + str(bd), manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received a [Color #2C65FF]badge[Color #000000]![Pause 45]",
+                            "[DelayOff]You received a [Color #2C65FF]badge[Color #000000]![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2197,7 +2208,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                         label('label_25', manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
-                            "[DelayOff]You received a [Color #2C65FF]key item[Color #000000]![Pause 45]",
+                            "[DelayOff]You received a [Color #2C65FF]key item[Color #000000]![Pause 20]",
                             offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
 
                     @subroutine(subs=script.subroutines, hdr=script.header)
@@ -2235,7 +2246,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                 Variables[0x6003] += Variables[0x1000]
                             say(None, TextboxSoundsPreset.SILENT,
                                 "[DelayOff]You received Attack Piece number [Color #2C65FF][Var 0003 digits=2][Color #000000]\n" +
-                                " for the [Color #2C65FF]" + attack_names[curr_attack] +"[Color #000000]![Pause 45]",
+                                " for the [Color #2C65FF]" + attack_names[curr_attack] +"[Color #000000]![Pause 20]",
                                 offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                             branch('label_last')
 
@@ -2548,6 +2559,12 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                     set_actor_attribute(Variables[0x7007], 0x01, 0.0)
                     if s == 0x01C or s == 0x039 or s == 0x13A:
                         emit_command(0x0126, [0x00, 0x01])
+                    #if s == 0:
+                    #    current_work = 0
+                    #if current_work < len(luigi_work_info):
+                    #    if luigi_work_info[current_work][0] == s:
+                    #        Variables[0xE006] = Variables[luigi_work_info[current_work][1]]
+                    #        current_work += 1
                     label('label_0', manager=fevent_manager)
                     if s != 0x208:
                         if settings[3][1] == 1:
