@@ -219,7 +219,7 @@ class MLDTWorld(World):
                     name_data.append([location.item.name, location.item.player])
             elif location.item.name != "Victory" and self.options.shopsanity:
                 shop_data.append(0x20)
-                shop_data.append(location.address % 0x100)
+                shop_data.append((location.address - 3000) % 0x100)
                 if location.item.player == self.player:
                     try:
                         to_write = key_ids[item_names[0].index(location.item.name)]
