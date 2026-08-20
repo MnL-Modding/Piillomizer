@@ -615,7 +615,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             Variables[0xE003] = int(settings[0][3])
             Variables[0xE004] = int(settings[0][4])
             Variables[0xE005] = int(settings[0][5])
-            Variables[0xE00A] = int(settings[0][6])
+            Variables[0xCDC0] = int(settings[0][6])
             Variables[0xE00D] = int(settings[0][7])
             Variables[0xE00E] = int(settings[0][8])
             Variables[0xE00F] = int(settings[0][9])
@@ -638,6 +638,14 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             add_in_place(settings[0][24] + settings[0][25] + settings[0][26], Variables[0xB0F7])
             add_in_place(settings[0][24] + settings[0][25] + settings[0][26], Variables[0xB02D])
             Variables[0xC47E] = int(settings[0][27])
+            Variables[0xCDC1] = int(settings[0][28])
+            Variables[0xCDC2] = int(settings[0][29])
+            Variables[0xCDC3] = int(settings[0][30])
+            Variables[0xCDC4] = int(settings[0][31])
+            Variables[0xCDC5] = int(settings[0][32])
+            Variables[0xCDC6] = int(settings[0][33])
+            Variables[0xCDC7] = int(settings[0][34])
+            Variables[0xE015] = int(settings[0][35])
             if settings[1][0] == 1:
                 Variables[0x904A] = 1.0
                 Variables[0x905C] = 1.0
@@ -665,7 +673,12 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             Variables[0xC0BF] = settings[2][13]
             Variables[0xC0CA] = settings[2][14]
             Variables[0xC45C] = settings[2][15]
-            change_room(0x001c, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
+            if settings[3][5] == 0:
+                change_room(0x001c, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
+            elif settings[3][5] == 1:
+                change_room(0x0000, position=(648.0, 0.0, 696.0), init_sub=-0x01, facing=8)
+            elif settings[3][5] == 2:
+                change_room(0x000e, position=(500.0, 80.0, 500.0), init_sub=-0x01, facing=8)
 
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
         sbar.update(1)
@@ -1534,11 +1547,13 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             #Names for key items
             key_item_names = ["Progressive Hammers", "Progressive Hammers", "Progressive Hammers", "Progressive Spin", "Progressive Spin", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack Spring Jump",
                               "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
-                              "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
+                              "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle",
+                                  "Luiginary Stache Tree", "Luiginary Sneeze Wind", "Luiginary Cylinder", "Luiginary Speedometer", "Luiginary Ice", "Luiginary Gravity", "Luiginary Propeller", "Luiginary Antigravity"]
 
             #Reference table for which key item gives which name
-            key_item_reference = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005, 0xE00A, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
-                                0xE075, 0xC369, 0xCABF, 0xE0A0, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xB0F7, 0xB0F7, 0xC47E]
+            key_item_reference = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005, 0xCDC0, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
+                                0xE075, 0xC369, 0xCABF, 0xE0A0, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xB0F7, 0xB0F7, 0xC47E,
+                                  0xCDC1, 0xCDC2, 0xCDC3, 0xCDC4, 0xCDC5, 0xCDC6, 0xCDC7, 0xE015]
 
             #Names for attack pieces
             attack_piece_names = ["3D Red Shell", "Luiginary Ball", "Fire Flower", "Luiginary Stack", "Bye-Bye Cannon", "Dropchopper", "Luiginary Hammer",
@@ -2018,8 +2033,9 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
 
         coins = [1, 5, 10, 50, 100, 10, 50, 100, 500, 1000]
 
-        ability_ids = [0xE002, 0xE004, 0xE005, 0xE00A, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
-                       0x9015, 0xC369, 0xCABF, 0x9040, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xC47E]
+        ability_ids = [0xE002, 0xE004, 0xE005, 0xCDC0, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
+                       0x9015, 0xC369, 0xCABF, 0x9040, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xC47E,
+                       0xCDC1, 0xCDC2, 0xCDC3, 0xCDC4, 0xCDC5, 0xCDC6, 0xCDC7, 0xE015]
 
         attacks = [[0xE01E, 0xB030], [0xE024, 0xB03B], [0xE022, 0xB041], [0xE023, 0xB049], [0xE01F, 0xB059],
                    [0xE021, 0xB037], [0xE020, 0xB03D], [0xE025, 0xB045], [0xE026, 0xB05B], [0xE028, 0xB032],
@@ -2031,13 +2047,29 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
         #Info for the Luiginary Works each room uses (CDC0 = Constellation, CDC1 = Stache, CDC2 = Sneeze, CDC3 = Cylinder,
         #                                             CDC4 = Timer, CDC5 = Ice, CDC6 = Antigravity, CDC7 = Propeller, E015 = Swim)
         luigi_work_info = [[0x01F, 0xCDC1], [0x020, 0xCDC2], [0x021, 0xCDC2], [0x022, 0xCDC2], [0x024, 0xCDC1], [0x026, 0xCDC1], [0x027, 0xCDC1],
-                           [0x028, 0xCDC2], [0x029, 0xCDC1], [0x02A, 0xCDC2], [0x02B, 0xCDC2], [0x031, 0xCDC0], [0x032, 0xCDC0],
+                           [0x028, 0xCDC2], [0x029, 0xCDC1], [0x02A, 0xCDC2], [0x02B, 0xCDC2], [0x031, 0xCDC0], [0x032, 0xCDC0], [0x09D, 0xCDC0],
                            [0x0AD, 0xCDC2], [0x0AE, 0xCDC2], [0x0B2, 0xCDC3], [0x0B3, 0xCDC3], [0x0B5, 0xCDC2], [0x0B7, 0xCDC3], [0x0B8, 0xCDC3],
                            [0x0BB, 0xCDC3], [0x0BC, 0xCDC0], [0x0BD, 0xCDC3], [0x0BF, 0xCDC0], [0x0C0, 0xCDC0], [0x0C1, 0xCDC0], [0x0C2, 0xCDC0],
                            [0x0C5, 0xCDC3], [0x0C6, 0xCDC0], [0x0C7, 0xCDC0], [0x0D5, 0xCDC6], [0x0D6, 0xCDC6],
                            [0x0D8, 0xCDC2], [0x0DA, 0xCDC2], [0x0DB, 0xCDC1], [0x0DC, 0xCDC1], [0x0DD, 0xCDC1], [0x0DE, 0xCDC1],
                            [0x0E5, 0xCDC0], [0x0E6, 0xCDC0], [0x0E8, 0xCDC6], [0x0E9, 0xCDC6], [0x0EA, 0xCDC6], [0x0EC, 0xCDC1], [0x0EE, 0xCDC2],
-                           [0x0EF, 0xCDC0], [0x0F0, 0xCDC0], []]
+                           [0x0EF, 0xCDC0], [0x0F0, 0xCDC0], [0x0F5, 0xCDC0], [0x0F6, 0xCDC0], [0x0F7, 0xCDC0], [0x0F8, 0xCDC0], [0x0F9, 0xCDC0], [0x0FA, 0xCDC0],
+                           [0x0FB, 0xCDC7], [0x0FC, 0xCDC7], [0x110, 0xCDC4], [0x111, 0xCDC4], [0x112, 0xCDC4], [0x114, 0xCDC4],
+                           [0x116, 0xCDC4], [0x117, 0xCDC4], [0x118, 0xCDC4], [0x11A, 0xCDC0], [0x11B, 0xCDC0], [0x11C, 0xCDC0], [0x11D, 0xCDC0], [0x120, 0xCDC0],
+                           [0x124, 0xCDC2], [0x125, 0xCDC2], [0x127, 0xCDC2], [0x129, 0xCDC2], [0x12F, 0xCDC0], [0x130, 0xCDC2], [0x132, 0xCDC0], [0x134, 0xCDC6],
+                           [0x13C, 0xCDC0], [0x13D, 0xCDC0], [0x13E, 0xCDC0], [0x162, 0xCDC6], [0x164, 0xCDC6], [0x166, 0xCDC0], [0x167, 0xCDC6], [0x168, 0xCDC6],
+                           [0x16A, 0xCDC0], [0x16B, 0xCDC6], [0x16C, 0xCDC6], [0x16D, 0xCDC6], [0x16F, 0xCDC0],
+                           [0x174, 0xCDC6], [0x175, 0xCDC6], [0x176, 0xCDC6], [0x17C, 0xCDC0], [0x17E, 0xCDC3], [0x1C9, 0xCDC6], [0x1CA, 0xCDC6],
+                           [0x1D6, 0xCDC3], [0x1E1, 0xCDC2], [0x1E7, 0xCDC0], [0x1EA, 0xCDC0], [0x1EB, 0xCDC0],
+                           [0x1F0, 0xCDC5], [0x1F1, 0xCDC5], [0x1F3, 0xCDC0], [0x1F6, 0xCDC5], [0x1F8, 0xCDC0], [0x1FC, 0xCDC0], [0x1FF, 0xCDC5],
+                           [0x200, 0xCDC0], [0x202, 0xCDC0], [0x206, 0xCDC0], [0x20A, 0xCDC0], [0x20D, 0xCDC0],
+                           [0x219, 0xCDC7], [0x21A, 0xCDC1], [0x21B, 0xCDC1], [0x21C, 0xCDC1], [0x21E, 0xCDC7], [0x220, 0xCDC7], [0x222, 0xCDC2], [0x223, 0xCDC4],
+                           [0x22C, 0xCDC7], [0x22D, 0xCDC7], [0x22E, 0xCDC0], [0x22F, 0xCDC2], [0x230, 0xCDC0], [0x232, 0xCDC1], [0x233, 0xCDC7], [0x234, 0xCDC4],
+                           [0x253, 0xE015], [0x254, 0xE015], [0x255, 0xE015], [0x256, 0xE015], [0x258, 0xE015], [0x25C, 0xCDC1], [0x261, 0xCDC7], [0x262, 0xCDC7],
+                           [0x265, 0xE015], [0x267, 0xCDC0], [0x269, 0xCDC4], [0x26A, 0xCDC0], [0x26C, 0xCDC3], [0x26D, 0xCDC0],
+                           [0x270, 0xCDC0], [0x272, 0xCDC0], [0x274, 0xCDC0], [0x275, 0xCDC0], [0x276, 0xCDC0], [0x279, 0xCDC0],
+                           [0x28F, 0xCDC0], [0x290, 0xCDC0], [0x294, 0xCDC0]]
+        current_work = 0
 
         # Adds the quick warp and tracker features to every room that needs it
         for s in range(0x2B0):
@@ -2559,12 +2591,12 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                     set_actor_attribute(Variables[0x7007], 0x01, 0.0)
                     if s == 0x01C or s == 0x039 or s == 0x13A:
                         emit_command(0x0126, [0x00, 0x01])
-                    #if s == 0:
-                    #    current_work = 0
-                    #if current_work < len(luigi_work_info):
-                    #    if luigi_work_info[current_work][0] == s:
-                    #        Variables[0xE006] = Variables[luigi_work_info[current_work][1]]
-                    #        current_work += 1
+                    try:
+                        if luigi_work_info[0][0] == s:
+                                Variables[0xE00A] = Variables[luigi_work_info[0][1]]
+                                del luigi_work_info[0]
+                    except IndexError:
+                        pass
                     label('label_0', manager=fevent_manager)
                     if s != 0x208:
                         if settings[3][1] == 1:
@@ -2656,29 +2688,31 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
         rock_add = [[0x077, 0, 640, 600, 964, 6, [4]], [0x002, 1, 1402, 66, 200, 2, [0]], [0x006, 1, 160, 0, 608, 2, [0]], [0x007, 1, 1378, 75, 496, 2, [0]], [0x0AF, 0, 1000, 50, 660, 3, [18, 19, 20, 21]], [0x011, 0, 672, 0, 600, 4, [0, 1 + settings[3][0]]],
                     [0x101, 1, 248, 0, 200, 3, [0, 1 + settings[3][0]]], [0x018, 1, 640, 280, 324, 3, [0]], [0x184, 0, 520, 0, 800, 3, [0]], [0x04F, 3, 1840, 30, 1150, 1, [0]], [0x01C, 0, 768, 132, 512, 3, [14]],
 
-                    [0x102, 3, 1000, 64, 480, 3, [6]], [0x00B, 0, 1408, 80, 448, 5, [6]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 10, 11]], [0x288, 0, 552, 40, 510, 2, [6]],
-                    [0x03A, 0, 936, 10, 800, 2, [6]], [0x03B, 0, 1205, 33, 1380, 1, [6]], [0x04C, 0, 975, 30, 920, 2, [6, 10]], [0x104, 0, 735, 180, 355, 1, [6]],
-                    [0x144, 0, 1000, 100, 620, 4, [6]], [0x14D, 0, 1000, 100, 650, 4, [6]], [0x151, 0, 778, 30, 506, 4, [6]],
+                    [0x102, 3, 1000, 64, 480, 3, [30]], [0x00B, 0, 1408, 80, 448, 5, [29]], [0x07F, 3, 1006, 0, 400, 1, [6, 8, 10, 11, 32]],
+                    [0x03B, 0, 1205, 33, 1380, 1, [33]], [0x04C, 0, 975, 30, 920, 2, [6, 10]], [0x104, 0, 735, 180, 355, 1, [33]],
+                    [0x144, 0, 1000, 100, 620, 4, [35]], [0x14D, 0, 1000, 100, 650, 4, [28]], [0x151, 0, 778, 30, 506, 4, [34]],
 
-                    [0x13A, 0, 1585, 0, 1310, 1, [6]], [0x013, 0, 505, 75, 2080, 1, [6]], [0x019, 0, 980, 0, 2092, 1, [6]], [0x019, 0, 3005, 65, 2173, 1, [6]],
-                    [0x28A, 0, 640, 0, 1230, 1, [6]], [0x101, 0, 530, 0, 910, 1, [6]], [0x061, 0, 1827, 155, 494, 1, [6, 7, 8, 12, 13]], [0x103, 0, 1469, 180, 616, 1, [6, 8, 9]],
-                    [0x004, 0, 1122, 0, 1535, 1, [6, 10]], [0x008, 0, 219, 165, 367, 1, [6, 8]], [0x036, 0, 1550, 0, 832, 1, [6]],
+                    [0x13A, 0, 1585, 0, 1310, 1, [28]], [0x013, 0, 505, 75, 2080, 1, [29]], [0x019, 0, 980, 0, 2092, 1, [29]], [0x019, 0, 3005, 65, 2173, 1, [28]],
+                    [0x28A, 0, 640, 0, 1230, 1, [30]], [0x101, 0, 530, 0, 910, 1, [30]], [0x061, 0, 1827, 155, 494, 1, [6, 7, 8, 12, 13]], [0x103, 0, 1469, 180, 616, 1, [6, 8, 9]],
+                    [0x004, 0, 1122, 0, 1535, 1, [6, 10]], [0x008, 0, 219, 165, 367, 1, [6, 8]], [0x036, 0, 1550, 0, 832, 1, [29]],
                     [0x06E, 0, 832, 660, 242, 1, [6, 8, 10]], [0x072, 0, 675, 600, 790, 1, [6, 10]],
-                    [0x076, 0, 775, 200, 1215, 1, [6, 10]], [0x038, 0, 2040, 165, 520, 1, [6]], [0x189, 0, 802, 180, 623, 1, [6]], [0x189, 0, 1945, 40, 1380, 1, [6]],
-                    [0x18B, 0, 875, 40, 1975, 1, [6]], [0x190, 0, 1228, 220, 435, 1, [6]], [0x18d, 0, 728, 40, 758, 1, [6]], [0x191, 0, 398, 40, 253, 1, [6]],
-                    [0x193, 0, 638, 0, 455, 1, [6]], [0x18f, 0, 795, 120, 195, 1, [6]], [0x18f, 0, 1123, 360, 118, 1, [6]], [0x141, 0, 762, 0, 815, 1, [6, 7, 8, 12, 13]],
+                    [0x076, 0, 775, 200, 1215, 1, [6, 10]], [0x038, 0, 2040, 165, 520, 1, [30]], [0x189, 0, 802, 180, 623, 1, [34]], [0x189, 0, 1945, 40, 1380, 1, [31]],
+                    [0x18B, 0, 875, 40, 1975, 1, [28]], [0x190, 0, 1228, 220, 435, 1, [34]], [0x18D, 0, 728, 40, 758, 1, [34]], [0x191, 0, 398, 40, 253, 1, [29]],
+                    [0x193, 0, 638, 0, 455, 1, [31]], [0x141, 0, 762, 0, 815, 1, [6, 7, 8, 12, 13]],
 
-                    [0x0AA, 2, 400, 70, 0, 1, [6, 7, 12, 13]], [0x0D8, 2, 400, 0, 0, 1, [6]], [0x0AD, 2, 600, 0, 0, 1, [6]], [0x1E7, 2, 475, 1200, 0, 1, [6, 8]]]
+                    [0x0AA, 2, 400, 70, 0, 1, [6, 7, 12, 13]], [0x0D8, 2, 400, 0, 0, 1, [29]], [0x0AD, 2, 600, 0, 0, 1, [29]], [0x1E7, 2, 475, 1200, 0, 1, [6, 8]]]
 
         #Deletes the softlock preventing rocks in Britta's Meeting Room if Ball Hop Prevention is off
         if settings[1][1] == 0:
             del rock_add[4]
 
-        ability_names = ["Hammers", "Mini Mario", "Mole Mario", "Spin Jump", "Side Drill", "Ball Hop", "Luiginary Works", "Luiginary Ball Ability", "Luiginary Stack Spring Jump",
+        ability_names = ["Hammers", "Mini Mario", "Mole Mario", "Spin Jump", "Side Drill", "Ball Hop", "Luiginary Constellation", "Luiginary Ball Ability", "Luiginary Stack Spring Jump",
                           "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
-                          "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle"]
-        ability_ids = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005, 0xE00A, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
-                       0x9015, 0xC369, 0xCABF, 0x9040, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xB0F7, 0xB0F7, 0xC47E]
+                          "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle",
+                          "Luiginary Stache Tree", "Luiginary Sneeze Wind", "Luiginary Drill", "Luiginary Speedometer", "Luiginary Heater", "Luiginary Innertube", "Luiginary Propeller", "Luiginary Swim"]
+        ability_ids = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005, 0xCDC0, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
+                       0x9015, 0xC369, 0xCABF, 0x9040, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xB0F7, 0xB0F7, 0xC47E,
+                       0xCDC1, 0xCDC2, 0xCDC3, 0xCDC4, 0xCDC5, 0xCDC6, 0xCDC7, 0xE015]
 
         for r in rock_add:
             #print(r[0])
@@ -2899,8 +2933,8 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                     addon = "Side Drill"
                 if i[6] == 0xE005:
                     addon = "Ball Hop"
-                if i[6] == 0xE00A:
-                    addon = "Luiginary Works"
+                if i[6] == 0xCDC0:
+                    addon = "Luiginary Constellation"
                 if i[6] == 0xE00D:
                     addon = "Luiginary Ball Ability"
                 if i[6] == 0xE00E:
@@ -2934,6 +2968,22 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                     invi_name = ["[Color #2C65FF]Mini Mario", "[Color #2C65FF]Mole Mario"]
                 if i[6] == 0xB0F7:
                     addon = "Dream Egg"
+                elif i[6] == 0xCDC1:
+                    addon = "Luiginary Stache Tree"
+                elif i[6] == 0xCDC2:
+                    addon = "Luiginary Sneeze Wind"
+                elif i[6] == 0xCDC3:
+                    addon = "Luiginary Drill"
+                elif i[6] == 0xCDC4:
+                    addon = "Luiginary Speedometer"
+                elif i[6] == 0xCDC5:
+                    addon = "Luiginary Heater"
+                elif i[6] == 0xCDC6:
+                    addon = "Luiginary Innertube"
+                elif i[6] == 0xCDC7:
+                    addon = "Luiginary Propeller"
+                elif i[6] == 0xE015:
+                    addon = "Luiginary Swim"
                 if i[6] == 0xA000:
                     item = "an [Color #2C65FF]Attack Piece"
                 elif i[6] == 0xE0A0:
@@ -2944,7 +2994,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                     item = "the [Color #2C65FF]" + addon
                 elif 0xB030 <= i[6] <= 0xB05C:
                     item = "an Attack Piece\nfor the [Color #2C65FF]" + addon
-                elif i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE00A:
+                elif i[6] == 0xE001 or i[6] == 0xE002 or i[6] == 0xE00A or 0xCDC0 <= i[6] <= 0xCDC7 or i[6] == 0xE015:
                     item = "[Color #2C65FF]" + addon
                 elif addon[0:1] == 'A' or addon[0:1] == 'E' or addon[0:1] == 'I' or addon[0:1] == 'O' or addon[0:1] == 'U' or addon[0:2] == 'HP':
                     item = "an [Color #2C65FF]" + addon

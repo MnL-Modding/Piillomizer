@@ -172,16 +172,24 @@ def randomize(window):
     elif window.hammer_start.get() == "Mole Mario":
         window.hammer = 1
 
+    window.start_pos = 0
+    if window.start_setting.get() == "Mushrise Park":
+        window.start_pos = 1
+    elif window.start_setting.get() == "Dozing Sands":
+        window.start_pos = 2
+
     #Appends settings to an array
     window.random_settings = [[window.key1.get(), window.key2.get(), window.key3.get(), window.key4.get(), window.key5.get(), window.key6.get(), window.key7.get(),
                                window.key8.get(), window.key9.get(), window.key10.get(), window.key11.get(), window.key12.get(), window.key13.get(), window.key14.get(),
                                window.key15.get(), window.key16.get(), window.key17.get(), window.key18.get(), window.key19.get(), window.key20.get(), window.key21.get(),
-                               window.key22.get(), window.key23.get(), window.key24.get(), window.key25.get(), window.key26.get(), window.key27.get(), window.key28.get()],
+                               window.key22.get(), window.key23.get(), window.key24.get(), window.key25.get(), window.key26.get(), window.key27.get(), window.key28.get(),
+                               window.key29.get(), window.key30.get(), window.key31.get(), window.key32.get(), window.key33.get(), window.key34.get(), window.key35.get(),
+                               window.key36.get()],
                               [window.mini_nerf.get(), window.ball_nerf.get(), 0],
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
                                window.boss15.get(), window.boss16.get()],
-                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), window.shop_toggle.get()]]
+                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), window.shop_toggle.get(), window.start_pos]]
 
     # Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed, [])
@@ -259,7 +267,7 @@ def repack_ap(window):
         window.hammer = 1
 
     #Appends settings to an array
-    window.random_settings = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    window.random_settings = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                               [window.mini_nerf.get(), window.ball_nerf.get(), 0],
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
@@ -427,7 +435,7 @@ def credit():
              "UI design and general coding: Dimitri Bee\n" +
              "FMap data and some cutscene flags: Pixiuchu\n" +
              "Mnlscript and some pointers: DimiDimit\n" +
-             "Also Mnlscript: Merc")
+             "Also Mnlscript: ThePurpleAnon")
 
 def main():
     # Create the window
@@ -481,6 +489,14 @@ def main():
     window.key26 = tk.DoubleVar()
     window.key27 = tk.DoubleVar()
     window.key28 = tk.DoubleVar()
+    window.key29 = tk.DoubleVar()
+    window.key30 = tk.DoubleVar()
+    window.key31 = tk.DoubleVar()
+    window.key32 = tk.DoubleVar()
+    window.key33 = tk.DoubleVar()
+    window.key34 = tk.DoubleVar()
+    window.key35 = tk.DoubleVar()
+    window.key36 = tk.DoubleVar()
     window.mini_nerf = tk.IntVar()
     window.ball_nerf = tk.IntVar(value=1)
     window.hammer_start = tk.StringVar()
@@ -507,8 +523,10 @@ def main():
     window.warp_setting = tk.IntVar()
     window.disable_scale = tk.IntVar()
     window.stat_setting = tk.IntVar()
-
     window.shop_toggle = tk.IntVar()
+    window.start_setting = tk.StringVar()
+    window.start_setting.set("Blimport")
+    window.start_options = ["Blimport", "Mushrise Park", "Dozing Sands"]
 
     window.seed = tk.StringVar()
 
@@ -645,7 +663,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.hammer_check.place(x=12, y=50)
+    window.hammer_check.place(x=12, y=40)
 
     window.mini_check = ttk.Checkbutton(
         tabKey,
@@ -654,7 +672,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.mini_check.place(x=129, y=50)
+    window.mini_check.place(x=129, y=40)
 
     window.mole_check = ttk.Checkbutton(
         tabKey,
@@ -663,7 +681,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.mole_check.place(x=246, y=50)
+    window.mole_check.place(x=246, y=40)
 
     window.spin_check = ttk.Checkbutton(
         tabKey,
@@ -672,7 +690,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.spin_check.place(x=359, y=50)
+    window.spin_check.place(x=359, y=40)
 
     window.drill_check = ttk.Checkbutton(
         tabKey,
@@ -681,7 +699,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.drill_check.place(x=12, y=75)
+    window.drill_check.place(x=12, y=60)
 
     window.ball_hop_check = ttk.Checkbutton(
         tabKey,
@@ -690,16 +708,16 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.ball_hop_check.place(x=129, y=75)
+    window.ball_hop_check.place(x=129, y=60)
 
     window.works_check = ttk.Checkbutton(
         tabKey,
-        text = "Luigi Works",
+        text = "Constellation",
         variable = window.key7,
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.works_check.place(x=246, y=75)
+    window.works_check.place(x=246, y=60)
 
     window.ball_check = ttk.Checkbutton(
         tabKey,
@@ -708,7 +726,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.ball_check.place(x=359, y=75)
+    window.ball_check.place(x=359, y=60)
 
     window.stack_jump_check = ttk.Checkbutton(
         tabKey,
@@ -717,7 +735,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.stack_jump_check.place(x=12, y=100)
+    window.stack_jump_check.place(x=12, y=80)
 
     window.stack_pound_check = ttk.Checkbutton(
         tabKey,
@@ -726,7 +744,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.stack_pound_check.place(x=129, y=100)
+    window.stack_pound_check.place(x=129, y=80)
 
     window.cone_jump_check = ttk.Checkbutton(
         tabKey,
@@ -735,7 +753,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.cone_jump_check.place(x=246, y=100)
+    window.cone_jump_check.place(x=246, y=80)
 
     window.cone_storm_check = ttk.Checkbutton(
         tabKey,
@@ -744,7 +762,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.cone_storm_check.place(x=359, y=100)
+    window.cone_storm_check.place(x=359, y=80)
 
     window.ball_hookshot_check = ttk.Checkbutton(
         tabKey,
@@ -753,7 +771,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.ball_hookshot_check.place(x=12, y=125)
+    window.ball_hookshot_check.place(x=12, y=100)
 
     window.ball_throw_check = ttk.Checkbutton(
         tabKey,
@@ -762,7 +780,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.ball_throw_check.place(x=129, y=125)
+    window.ball_throw_check.place(x=129, y=100)
 
     window.deep_castle_check = ttk.Checkbutton(
         tabKey,
@@ -771,7 +789,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.deep_castle_check.place(x=246, y=125)
+    window.deep_castle_check.place(x=246, y=100)
 
     window.blimp_check = ttk.Checkbutton(
         tabKey,
@@ -780,7 +798,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.blimp_check.place(x=359, y=125)
+    window.blimp_check.place(x=359, y=100)
 
     window.gate_check = ttk.Checkbutton(
         tabKey,
@@ -789,7 +807,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.gate_check.place(x=12, y=150)
+    window.gate_check.place(x=12, y=120)
 
     window.dozite0_check = ttk.Checkbutton(
         tabKey,
@@ -798,7 +816,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.dozite0_check.place(x=129, y=150)
+    window.dozite0_check.place(x=129, y=120)
 
     window.dozite1_check = ttk.Checkbutton(
         tabKey,
@@ -807,7 +825,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.dozite1_check.place(x=246, y=150)
+    window.dozite1_check.place(x=246, y=120)
 
     window.dozite2_check = ttk.Checkbutton(
         tabKey,
@@ -816,7 +834,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.dozite2_check.place(x=359, y=150)
+    window.dozite2_check.place(x=359, y=120)
 
     window.dozite3 = ttk.Checkbutton(
         tabKey,
@@ -825,7 +843,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.dozite3.place(x=12, y=175)
+    window.dozite3.place(x=12, y=140)
 
     window.dozite4 = ttk.Checkbutton(
         tabKey,
@@ -834,7 +852,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.dozite4.place(x=129, y=175)
+    window.dozite4.place(x=129, y=140)
 
     window.wakeport_check = ttk.Checkbutton(
         tabKey,
@@ -843,7 +861,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.wakeport_check.place(x=246, y=175)
+    window.wakeport_check.place(x=246, y=140)
 
     window.pajamaja_check = ttk.Checkbutton(
         tabKey,
@@ -852,7 +870,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.pajamaja_check.place(x=359, y=175)
+    window.pajamaja_check.place(x=359, y=140)
 
     window.egg1_check = ttk.Checkbutton(
         tabKey,
@@ -861,7 +879,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.egg1_check.place(x=12, y=200)
+    window.egg1_check.place(x=12, y=160)
 
     window.egg2_check = ttk.Checkbutton(
         tabKey,
@@ -870,7 +888,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.egg2_check.place(x=129, y=200)
+    window.egg2_check.place(x=129, y=160)
 
     window.egg3_check = ttk.Checkbutton(
         tabKey,
@@ -879,7 +897,7 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.egg3_check.place(x=246, y=200)
+    window.egg3_check.place(x=246, y=160)
 
     window.neo_castle_check = ttk.Checkbutton(
         tabKey,
@@ -888,7 +906,79 @@ def main():
         onvalue = 1.0,
         offvalue = 0.0,
     )
-    window.neo_castle_check.place(x=359, y=200)
+    window.neo_castle_check.place(x=359, y=160)
+
+    window.luigi_stache = ttk.Checkbutton(
+        tabKey,
+        text = "Luigi Stache",
+        variable = window.key29,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.luigi_stache.place(x=12, y=180)
+
+    window.luigi_sneeze = ttk.Checkbutton(
+        tabKey,
+        text = "Luigi Sneeze",
+        variable = window.key30,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.luigi_sneeze.place(x=129, y=180)
+
+    window.luigi_cylinder = ttk.Checkbutton(
+        tabKey,
+        text = "Luigi Drill",
+        variable = window.key31,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.luigi_cylinder.place(x=246, y=180)
+
+    window.luigi_time = ttk.Checkbutton(
+        tabKey,
+        text = "Luigi Speed",
+        variable = window.key32,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.luigi_time.place(x=359, y=180)
+
+    window.luigi_heat = ttk.Checkbutton(
+        tabKey,
+        text = "Luigi Heater",
+        variable = window.key33,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.luigi_heat.place(x=12, y=200)
+
+    window.luigi_gravity = ttk.Checkbutton(
+        tabKey,
+        text = "Luigi Innertube",
+        variable = window.key34,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.luigi_gravity.place(x=129, y=200)
+
+    window.luigi_propeller = ttk.Checkbutton(
+        tabKey,
+        text = "Luigi Propeller",
+        variable = window.key35,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.luigi_propeller.place(x=246, y=200)
+
+    window.luigi_antigravity = ttk.Checkbutton(
+        tabKey,
+        text = "Luigi Swim",
+        variable = window.key36,
+        onvalue = 1.0,
+        offvalue = 0.0,
+    )
+    window.luigi_antigravity.place(x=359, y=200)
 
     #Text to welcome the user to the Pi'illomizer
     window.welcome = ttk.Label(tabMain, text="Welcome to the Mario and Luigi Dream Team randomizer, Pi'illomizer!\n\n" +
@@ -1132,6 +1222,17 @@ def main():
         offvalue = 0
     )
     window.shopsanity.place(x=160, y=150)
+
+    #Lets you choose where you start
+    window.start_label = ttk.Label(tabOther, text = "Starting Location:")
+    window.start_label.place(x=125, y=252)
+    window.start_chooser = ttk.OptionMenu(
+        tabOther,
+        window.start_setting,
+        window.start_options[0],
+        *window.start_options
+    )
+    window.start_chooser.place(x=228, y=250)
 
     #Run the application loop
     window.mainloop()
