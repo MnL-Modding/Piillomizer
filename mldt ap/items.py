@@ -16,7 +16,7 @@ ITEM_NAME_TO_ID = {
     "Progressive Hammers": 1,
     "Progressive Spin": 2,
     "Ball Hop": 3,
-    "Luiginary Works": 4,
+    "Luiginary Constellation": 4,
     "Luiginary Ball": 5,
     "Luiginary Stack Spring Jump": 6,
     "Luiginary Stack Ground Pound": 7,
@@ -251,6 +251,14 @@ ITEM_NAME_TO_ID = {
     "Virus Badge": 236,
     "Risk Badge": 237,
     "Miracle Badge": 238,
+    "Luiginary Stache Tree": 239,
+    "Luiginary Sneeze Wind": 240,
+    "Luiginary Drill": 241,
+    "Luiginary Speedometer": 242,
+    "Luiginary Heater": 243,
+    "Luiginary Innertube": 244,
+    "Luiginary Propeller": 245,
+    "Luiginary Swim": 246,
     "Attack Piece": 255
 }
 
@@ -261,7 +269,7 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     "Progressive Spin": ItemClassification.progression,
     #"Sword": ItemClassification.progression | ItemClassification.useful,  # Items can have multiple classifications.
     "Ball Hop": ItemClassification.progression,
-    "Luiginary Works": ItemClassification.progression,
+    "Luiginary Constellation": ItemClassification.progression,
     "Luiginary Ball": ItemClassification.progression,
     "Luiginary Stack Spring Jump": ItemClassification.progression,
     "Luiginary Stack Ground Pound": ItemClassification.progression,
@@ -496,6 +504,14 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     "Virus Badge": ItemClassification.useful,
     "Risk Badge": ItemClassification.useful,
     "Miracle Badge": ItemClassification.useful,
+    "Luiginary Stache Tree": ItemClassification.progression,
+    "Luiginary Sneeze Wind": ItemClassification.progression,
+    "Luiginary Drill": ItemClassification.progression,
+    "Luiginary Speedometer": ItemClassification.progression,
+    "Luiginary Heater": ItemClassification.progression,
+    "Luiginary Innertube": ItemClassification.progression,
+    "Luiginary Propeller": ItemClassification.progression,
+    "Luiginary Swim": ItemClassification.progression,
     "Attack Piece": ItemClassification.useful
 }
 
@@ -555,7 +571,7 @@ def create_all_items(world: MLDTWorld) -> None:
         world.create_item("Progressive Spin"),
         world.create_item("Progressive Spin"),
         world.create_item("Ball Hop"),
-        world.create_item("Luiginary Works"),
+        world.create_item("Luiginary Constellation"),
         world.create_item("Luiginary Ball"),
         world.create_item("Luiginary Stack Spring Jump"),
         world.create_item("Luiginary Stack Ground Pound"),
@@ -577,6 +593,14 @@ def create_all_items(world: MLDTWorld) -> None:
         world.create_item("Dream Egg"),
         world.create_item("Dream Egg"),
         world.create_item("Access to Neo Bowser Castle"),
+        world.create_item("Luiginary Stache Tree"),
+        world.create_item("Luiginary Sneeze Wind"),
+        world.create_item("Luiginary Drill"),
+        world.create_item("Luiginary Speedometer"),
+        world.create_item("Luiginary Heater"),
+        world.create_item("Luiginary Innertube"),
+        world.create_item("Luiginary Propeller"),
+        world.create_item("Luiginary Swim"),
     ]
 
     item_names = ["5 Coin", "10 Coin", "50 Coin", "100 Coin", "10x1 Coin", "10x5 Coin", "10x10 Coin", "10x50 Coin", "10x100 Coin",

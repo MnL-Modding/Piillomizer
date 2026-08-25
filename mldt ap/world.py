@@ -56,6 +56,10 @@ class MLDTWorld(World):
     # The main ones are: create_regions, set_rules, create_items.
     # For better structure and readability, we put each of these in their own file.
     def create_regions(self) -> None:
+        if self.options.start_pos.value == "Dozing Sands":
+            self.origin_region_name = "Dozing Sands/Driftwood Shore Outskirts"
+        elif self.options.start_pos.value == "Mushrise Park":
+            self.origin_region_name = "Mushrise Park Main Area"
         regions.create_and_connect_regions(self)
         locations.create_all_locations(self)
         #self.location_name_to_id = locations.LOCATION_NAME_TO_ID
@@ -86,7 +90,7 @@ class MLDTWorld(World):
     def fill_slot_data(self) -> Mapping[str, Any]:
         # If you need access to the player's chosen options on the client side, there is a helper for that.
         return self.options.as_dict(
-            "second_hammer", "reduce_mini", "reduce_ball_skips", "shopsanity"
+            "second_hammer", "reduce_mini", "reduce_ball_skips", "shopsanity", "start_pos"
         )
 
     def generate_output(self, output_directory: str) -> None:
@@ -109,11 +113,12 @@ class MLDTWorld(World):
                         "Driftwood Shore Dreampoint Area", "Driftwood Shore Dream Egg Dream", "Somnom Woods Before Tracks",
                         "Somnom Woods Track Area", "Somnom Woods After Tracks", "Neo Bowser Castle Before First Progressive Spin",
                         "Neo Bowser Castle After First Porgressive Spin", "Neo Bowser Castle Flame Pipe Area", "Neo Bowser Castle Bowser's Dream"]
-        item_names = [["Progressive Hammers", "Progressive Spin", "Ball Hop", "Luiginary Works", "Luiginary Ball",
+        item_names = [["Progressive Hammers", "Progressive Spin", "Ball Hop", "Luiginary Constellation", "Luiginary Ball",
                        "Luiginary Stack Spring Jump", "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm",
                        "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge",
                        "Mushrise Park Gate", "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport",
-                       "Access to Mount Pajamaja", "Dream Egg", "Access to Neo Bowser Castle"],
+                       "Access to Mount Pajamaja", "Dream Egg", "Access to Neo Bowser Castle", "Luiginary Stache Tree", "Luiginary Sneeze Wind",
+                       "Luiginary Drill", "Luiginary Speedometer", "Luiginary Heater", "Luiginary Innertube", "Luiginary Propeller", "Luiginary Swim"],
                       ["Mushroom", "Super Mushroom", "Ultra Mushroom", "Max Mushroom", "Nut", "Super Nut", "Ultra Nut", "Max Nut",
                        "Syrup Jar", "Supersyrup Jar", "Ultrasyrup Jar", "Max Syrup Jar", "Candy", "Super Candy", "Ultra Candy", "Max Candy",
                        "1-Up Mushroom", "1-Up Deluxe", "Refreshing Herb", "Heart Bean", "Bros Bean", "Power Bean", "Defense Bean",
@@ -151,8 +156,9 @@ class MLDTWorld(World):
                         "Gold Statue"],
                       ["Master Badge", "Expert Badge", "Bronze Badge", "Silver Badge", "Gold Badge",
                         "Strike Badge", "Guard Badge", "Virus Badge", "Risk Badge", "Miracle Badge"]]
-        key_ids = [0xE002 - self.options.second_hammer, 0xE004, 0xE005, 0xE00A, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
-                   0xE075, 0xC369, 0xCABF, 0xE0A0, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xC47E]
+        key_ids = [0xE002 - self.options.second_hammer, 0xE004, 0xE005, 0xCDC0, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
+                   0xE075, 0xC369, 0xCABF, 0xE0A0, 0xC343, 0xC344, 0xC345, 0xC346, 0xC960, 0xC3B9, 0xB0F7, 0xC47E, 0xCDC1, 0xCDC2, 0xCDC3, 0xCDC4,
+                   0xCDC5, 0xCDC6, 0xCDC7, 0xE015]
         recomp_data = []
         name_data = []
         shop_data = []
@@ -167,10 +173,14 @@ class MLDTWorld(World):
             first_byte += 0x1
         recomp_data.append(first_byte)
         recomp_data.append(self.options.second_hammer * 4)
+        third_byte = 0
         if self.options.shopsanity:
-            recomp_data.append(0x01)
-        else:
-            recomp_data.append(0x00)
+            third_byte += 1
+        if self.options.start_pos.value == "Mushrise Park":
+            third_byte += 0x10
+        elif self.options.start_pos.value == "Dozing Sands":
+            third_byte += 0x20
+        recomp_data.append(third_byte)
         recomp_data.append(0x00)
         recomp_data.append(0x00)
         recomp_data.append(0x00)
