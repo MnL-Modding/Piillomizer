@@ -655,7 +655,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                 for s in range(len(shop_item_data)):
                     shop_data.append(shop_item_data[s])
 
-            key_item_check = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            key_item_check = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             new_enemy_stats = []
             enemy_added = []
             add_level = 0
@@ -717,7 +717,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                     init_enemy_stats[2] += 2.5 * stat_mult[0]
                                     init_enemy_stats[3] += 3
                                     init_enemy_stats[4] += 1.5
-                                    init_enemy_stats[5] += 4 * stat_mult[1]
+                                    init_enemy_stats[5] += 6 * stat_mult[1]
                                     init_enemy_stats[6] += 0.5
 
                                     for stat in range(len(new_enemy_stats[-1])):
@@ -770,9 +770,9 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                     if stat_mult[0] < 0xFFFF:
                                         new_lev = int(init_boss_stats[0] + ((len(new_enemy_stats) // 2.5) + 1))
                                     else:
-                                        new_lev = 50
+                                        new_lev = 60
                                     new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + (len(new_enemy_stats) * 24)), int(init_boss_stats[2] + (len(new_enemy_stats) * 3 * stat_mult[0])),
-                                                            int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int((init_boss_stats[5] + (len(new_enemy_stats) * 75 * stat_mult[1])) / 2),
+                                                            int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int((init_boss_stats[5] + (len(new_enemy_stats) * 150 * stat_mult[1])) / 2),
                                                             int(init_boss_stats[6] + (len(new_enemy_stats))), 0, 0, 0, 0, 0, new_lev])
 
                                     for stat in range(len(new_enemy_stats[-1])):
@@ -1512,7 +1512,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                         init_enemy_stats[2] += 2.5 * stat_mult[0]
                                         init_enemy_stats[3] += 3
                                         init_enemy_stats[4] += 1.5
-                                        init_enemy_stats[5] += 4 * stat_mult[1]
+                                        init_enemy_stats[5] += 6 * stat_mult[1]
                                         init_enemy_stats[6] += 0.5
 
                                         for stat in range(len(new_enemy_stats[-1])):
@@ -1565,9 +1565,9 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                         if stat_mult[0] < 0xFFFF:
                                             new_lev = int(init_boss_stats[0] + ((len(new_enemy_stats) // 2.5) + 1))
                                         else:
-                                            new_lev = 50
+                                            new_lev = 60
                                         new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + (len(new_enemy_stats) * 24)), int(init_boss_stats[2] + (len(new_enemy_stats) * 3 * stat_mult[0])),
-                                                                int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int((init_boss_stats[5] + (len(new_enemy_stats) * 75 * stat_mult[1])) / 2),
+                                                                int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int((init_boss_stats[5] + (len(new_enemy_stats) * 150 * stat_mult[1])) / 2),
                                                                 int(init_boss_stats[6] + (len(new_enemy_stats))), 0, 0, 0, 0, 0, new_lev])
 
                                         for stat in range(len(new_enemy_stats[-1])):

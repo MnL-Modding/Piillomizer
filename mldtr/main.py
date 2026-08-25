@@ -272,7 +272,7 @@ def repack_ap(window):
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
                                window.boss15.get(), window.boss16.get()],
-                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), 0]]
+                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), 0, 0]]
 
     #Reads the dat file
     ap_file = fd.askopenfilename(
@@ -294,6 +294,8 @@ def repack_ap(window):
         #Reads in the Shopsanity setting
         current_byte = int.from_bytes(data_reader.read(1))
         window.random_settings[3][4] = current_byte % 2
+        #Reads in the starting room setting
+        window.random_settings[3][5] = current_byte // 0x10 % 8
         #print(window.random_settings[3])
 
         #Seeks past the next 6 bytes (they're currently unused)

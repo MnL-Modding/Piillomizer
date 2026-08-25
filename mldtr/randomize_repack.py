@@ -1548,7 +1548,7 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             key_item_names = ["Progressive Hammers", "Progressive Hammers", "Progressive Hammers", "Progressive Spin", "Progressive Spin", "Ball Hop", "Luiginary Works", "Luiginary Ball", "Luiginary Stack Spring Jump",
                               "Luiginary Stack Ground Pound", "Luiginary Cone Jump", "Luiginary Cone Storm", "Luiginary Ball Hookshot", "Luiginary Ball Throw", "Pi'illo Castle Key", "Blimport Bridge", "Mushrise Park Gate",
                               "First Dozite", "Dozite 1", "Dozite 2", "Dozite 3", "Dozite 4", "Access to Wakeport", "Access to Mount Pajamaja", "Dream Egg 1", "Dream Egg 2", "Dream Egg 3", "Access to Neo Bowser Castle",
-                                  "Luiginary Stache Tree", "Luiginary Sneeze Wind", "Luiginary Cylinder", "Luiginary Speedometer", "Luiginary Ice", "Luiginary Gravity", "Luiginary Propeller", "Luiginary Antigravity"]
+                                  "Luiginary Stache Tree", "Luiginary Sneeze Wind", "Luiginary Drill", "Luiginary Speedometer", "Luiginary Heater", "Luiginary Floatie", "Luiginary Propeller", "Luiginary Swim"]
 
             #Reference table for which key item gives which name
             key_item_reference = [0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005, 0xCDC0, 0xE00D, 0xE00F, 0xE00E, 0xE010, 0xE011, 0xE012, 0xE013,
@@ -1770,28 +1770,28 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                 elif shop_inv[p][0] == 0xA000:
                                     for a in range(len(ap_array[4])):
                                         curr_attack = ap_array[4][a]
-                                        branch_if(Variables[attacks[curr_attack][0]], '==', 1.0, 'attack_' + str(((a+1)*11)-1))
+                                        branch_if(Variables[attacks[curr_attack][0]], '==', 1.0, 'attack_' + str(((a+1)*11)-1) + '_' + str(p))
                                         for b in range(5):
-                                            branch_if(Variables[attacks[curr_attack][1]], '>', (2 ** b) - 1, 'attack_' + str(b + (a*11)))
+                                            branch_if(Variables[attacks[curr_attack][1]], '>', (2 ** b) - 1, 'attack_' + str(b + (a*11)) + '_' + str(p))
                                             Variables[attacks[curr_attack][1]] |= 2 ** b
-                                            branch('attack_' + str(((a+1)*11)-2))
+                                            branch('attack_' + str(((a+1)*11)-2) + '_' + str(p))
 
-                                            label('attack_' + str(b + (a*11)), manager=fevent_manager)
+                                            label('attack_' + str(b + (a*11)) + '_' + str(p), manager=fevent_manager)
 
                                         for b in range(5):
                                             if b < 4 or a < len(ap_array[4])-1:
-                                                branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'attack_' + str(b + 5 + (a*11)))
+                                                branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'attack_' + str(b + 5 + (a*11)) + '_' + str(p))
                                             else:
-                                                branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'attack_last')
+                                                branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'attack_last_' + str(p))
                                             Variables[attacks[curr_attack][1]+1] |= 2 ** b
                                             if b == 4:
                                                 Variables[attacks[curr_attack][0]] = 1.0
                                                 if curr_attack > 8:
                                                     Variables[0xE01B] = 1.0
-                                            branch('attack_' + str(((a+1)*11)-2))
+                                            branch('attack_' + str(((a+1)*11)-2) + '_' + str(p))
 
-                                            label('attack_' + str(b + 5 + (a * 11)), manager=fevent_manager)
-                                        label('attack_' + str(((a+1)*11)-2), manager=fevent_manager)
+                                            label('attack_' + str(b + 5 + (a * 11)) + '_' + str(p), manager=fevent_manager)
+                                        label('attack_' + str(((a+1)*11)-2) + '_' + str(p), manager=fevent_manager)
                                         Variables[0xB051] = 0.0
                                         Variables[0x6003] = 0.0
                                         for pe in range(10):
@@ -1799,10 +1799,10 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                             if pe % 5 > 0:
                                                 Variables[0x1000] >>= (pe % 5)
                                             Variables[0x6003] += Variables[0x1000]
-                                        branch('attack_last')
+                                        branch('attack_last_' + str(p))
 
-                                        label('attack_' + str(((a+1)*11)-1), manager=fevent_manager)
-                                    label('attack_last', manager=fevent_manager)
+                                        label('attack_' + str(((a+1)*11)-1) + '_' + str(p), manager=fevent_manager)
+                                    label('attack_last_' + str(p), manager=fevent_manager)
                                 elif shop_inv[p][0] > 0x1000:
                                     emit_command(0x0033, [shop_inv[p][0] // 2, 0x01], Variables[0x3000])
                                 else:
@@ -2193,26 +2193,26 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                         branch_if(Variables[0xB051], '!=', 216.0, 'label_2')
                         branch_if(Variables[0xE001 + settings[3][0]], '!=', 1.0, 'label_0')
                         Variables[0xE002 - settings[3][0]] = 1.0
-                        branch('label_25')
+                        branch('label_40')
 
                         label('label_0', manager=fevent_manager)
                         branch_if(Variables[0xE000], '!=', 1.0, 'label_1')
                         Variables[0xE001 + settings[3][0]] = 1.0
-                        branch('label_25')
+                        branch('label_40')
 
                         label('label_1', manager=fevent_manager)
                         Variables[0xE000] = 1.0
-                        branch('label_25')
+                        branch('label_40')
 
                         label('label_2', manager=fevent_manager)
                         branch_if(Variables[0xB051], '!=', 217.0, 'label_4')
                         branch_if(Variables[0xE003], '!=', 1.0, 'label_3')
                         Variables[0xE004] = 1.0
-                        branch('label_25')
+                        branch('label_40')
 
                         label('label_3', manager=fevent_manager)
                         Variables[0xE003] = 1.0
-                        branch('label_25')
+                        branch('label_40')
 
                         label('label_4', manager=fevent_manager)
                         for k in range(19):
@@ -2224,20 +2224,23 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                 branch_if(Variables[0xC345], '!=', 1.0, 'label_25')
                                 branch_if(Variables[0xC346], '!=', 1.0, 'label_25')
                                 Variables[0x903F] = 1.0
-                            branch('label_25')
+                            branch('label_40')
 
                             label('label_' + str(k+5), manager=fevent_manager)
                         label('label_23', manager=fevent_manager)
                         branch_if(Variables[0xB051], '!=', 237.0, 'label_24')
                         add_in_place(1.0, Variables[0xB0F7])
                         add_in_place(1.0, Variables[0xB02D])
-                        branch('label_25')
+                        branch('label_40')
 
-                        label('label_24', manager=fevent_manager)
-                        Variables[ability_ids[-1]] = 1.0
-                        branch('label_25')
+                        for k in range(9):
+                            label('label_' + str(k+24), manager=fevent_manager)
+                            if k < 8:
+                                branch_if(Variables[0xB051], '!=', 238.0+k, 'label_' + str(k+25))
+                            Variables[ability_ids[k+22]] = 1.0
+                            branch('label_40')
 
-                        label('label_25', manager=fevent_manager)
+                        label('label_40', manager=fevent_manager)
                         Variables[0xB051] = 0.0
                         say(None, TextboxSoundsPreset.SILENT,
                             "[DelayOff]You received a [Color #2C65FF]key item[Color #000000]![Pause 20]",
@@ -2472,111 +2475,98 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                     branch_if(Variables[0x1000], '==', 2.0, 'label_10')
 
                     label('label_key_1', manager=fevent_manager)
-                    say(None, TextboxSoundsPreset.SILENT, "Key items obtained:[Wait]")
-                    branch_if(Variables[0xE002-settings[3][0]], '!=', 1.0, 'label_key_2')
-                    say(None, TextboxSoundsPreset.SILENT, "All 3 Progressive Hammers...[Wait]")
-                    branch('label_key_4')
+                    Variables[0x6000] = 0.0
+                    Variables[0x6001] = 0.0
+                    Variables[0x6002] = Variables[0xE005]
+                    Variables[0x6000] += Variables[0xE000]
+                    Variables[0x6000] += Variables[0xE001]
+                    Variables[0x6000] += Variables[0xE002]
+                    Variables[0x6001] += Variables[0xE003]
+                    Variables[0x6001] += Variables[0xE004]
+                    say(None, TextboxSoundsPreset.SILENT, "[DelayOff]Key items obtained:\nProgressive Hammers: [Color #2C65FF][Var 0000 digits=1][Color #000000]\n" +
+                                                          "Progressive Spins: [Color #2C65FF][Var 0001 digits=1][Color #000000]\nBall Hop: [Color #2C65FF][Var 0002 digits=1][Color #000000][Wait]")
 
-                    label('label_key_2', manager=fevent_manager)
-                    branch_if(Variables[0xE001+settings[3][0]], '!=', 1.0, 'label_key_3')
-                    say(None, TextboxSoundsPreset.SILENT, "2 Progressive Hammers...[Wait]")
-                    branch('label_key_4')
+                    Variables[0x6000] = Variables[0xCDC0]
+                    Variables[0x6001] = Variables[0xE00D]
+                    Variables[0x6002] = Variables[0xE00F]
+                    Variables[0x6003] = Variables[0xE00E]
+                    say(None, TextboxSoundsPreset.SILENT,
+                        "[DelayOff]Key items obtained:\nLuiginary Constellation: [Color #2C65FF][Var 0000 digits=1][Color #000000]\n" +
+                    "Luiginary Ball Ability: [Color #2C65FF][Var 0001 digits=1][Color #000000]\nLuiginary Stack Spring Jump: [Color #2C65FF][Var 0002 digits=1][Color #000000]" +
+                    "\nLuiginary Stack Ground Pound: [Color #2C65FF][Var 0003 digits=1][Color #000000][Wait]")
 
-                    label('label_key_3', manager=fevent_manager)
-                    branch_if(Variables[0xE000], '!=', 1.0, 'label_key_4')
-                    say(None, TextboxSoundsPreset.SILENT, "A Progressive Hammer...[Wait]")
+                    Variables[0x6000] = Variables[0xE010]
+                    Variables[0x6001] = Variables[0xE011]
+                    Variables[0x6002] = Variables[0xE012]
+                    Variables[0x6003] = Variables[0xE013]
+                    say(None, TextboxSoundsPreset.SILENT,
+                        "[DelayOff]Key items obtained:\nLuiginary Cone Jump: [Color #2C65FF][Var 0000 digits=1][Color #000000]\n" +
+                    "Luiginary Cone Tornado: [Color #2C65FF][Var 0001 digits=1][Color #000000]\nLuiginary Ball Hammer: [Color #2C65FF][Var 0002 digits=1][Color #000000]" +
+                    "\nLuiginary Ball Hookshot: [Color #2C65FF][Var 0003 digits=1][Color #000000][Wait]")
 
-                    label('label_key_4', manager=fevent_manager)
-                    branch_if(Variables[0xE004], '!=', 1.0, 'label_key_5')
-                    say(None, TextboxSoundsPreset.SILENT, "Both Progressive Spins...[Wait]")
-                    branch('label_key_6')
+                    Variables[0x6000] = Variables[0xCDC1]
+                    Variables[0x6001] = Variables[0xCDC2]
+                    Variables[0x6002] = Variables[0xCDC3]
+                    Variables[0x6003] = Variables[0xCDC4]
+                    say(None, TextboxSoundsPreset.SILENT,
+                        "[DelayOff]Key items obtained:\nLuiginary Stache Tree: [Color #2C65FF][Var 0000 digits=1][Color #000000]\n" +
+                    "Luiginary Sneeze Wind: [Color #2C65FF][Var 0001 digits=1][Color #000000]\nLuiginary Drill: [Color #2C65FF][Var 0002 digits=1][Color #000000]" +
+                    "\nLuiginary Speedometer: [Color #2C65FF][Var 0003 digits=1][Color #000000][Wait]")
 
-                    label('label_key_5', manager=fevent_manager)
-                    branch_if(Variables[0xE003], '!=', 1.0, 'label_key_6')
-                    say(None, TextboxSoundsPreset.SILENT, "A Progressive Spin...[Wait]")
+                    Variables[0x6000] = Variables[0xCDC5]
+                    Variables[0x6001] = Variables[0xCDC6]
+                    Variables[0x6002] = Variables[0xCDC7]
+                    Variables[0x6003] = Variables[0xE015]
+                    say(None, TextboxSoundsPreset.SILENT,
+                        "[DelayOff]Key items obtained:\nLuiginary Heater: [Color #2C65FF][Var 0000 digits=1][Color #000000]\n" +
+                    "Luiginary Floatie: [Color #2C65FF][Var 0001 digits=1][Color #000000]\nLuiginary Propeller: [Color #2C65FF][Var 0002 digits=1][Color #000000]" +
+                    "\nLuiginary Swim: [Color #2C65FF][Var 0003 digits=1][Color #000000][Wait]")
 
-                    label('label_key_6', manager=fevent_manager)
-                    branch_if(Variables[0xE005], '!=', 1.0, 'label_key_7')
-                    say(None, TextboxSoundsPreset.SILENT, "Ball Hop...[Wait]")
+                    Variables[0x6000] = Variables[0xE075]
+                    Variables[0x6001] = Variables[0xC369]
+                    Variables[0x6002] = Variables[0xCABF]
+                    Variables[0x6003] = Variables[0xE0A0]
+                    say(None, TextboxSoundsPreset.SILENT,
+                        "[DelayOff]Key items obtained:\nPi'illo Castle Key: [Color #2C65FF][Var 0000 digits=1][Color #000000]\n" +
+                    "Blimport Bridge: [Color #2C65FF][Var 0001 digits=1][Color #000000]\nMushrise Park Gate: [Color #2C65FF][Var 0002 digits=1][Color #000000]\n" +
+                    "First Dozite: [Color #2C65FF][Var 0003 digits=1][Color #000000][Wait]")
 
-                    label('label_key_7', manager=fevent_manager)
-                    branch_if(Variables[0xE00A], '!=', 1.0, 'label_key_8')
-                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Works...[Wait]")
+                    Variables[0x6000] = Variables[0xC343]
+                    Variables[0x6001] = Variables[0xC344]
+                    Variables[0x6002] = Variables[0xC345]
+                    Variables[0x6003] = Variables[0xC346]
+                    say(None, TextboxSoundsPreset.SILENT,
+                        "[DelayOff]Key items obtained:\nDozite 1: [Color #2C65FF][Var 0000 digits=1][Color #000000]\n" +
+                    "Dozite 2: [Color #2C65FF][Var 0001 digits=1][Color #000000]\nDozite 3: [Color #2C65FF][Var 0002 digits=1][Color #000000]" +
+                    "\nDozite 4: [Color #2C65FF][Var 0003 digits=1][Color #000000][Wait]")
 
-                    label('label_key_8', manager=fevent_manager)
-                    branch_if(Variables[0xE00D], '!=', 1.0, 'label_key_9')
-                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Ball Ability...[Wait]")
+                    Variables[0x6000] = Variables[0xC960]
+                    Variables[0x6001] = Variables[0xC3B9]
+                    Variables[0x6002] = Variables[0xB0F7]
+                    Variables[0x6003] = Variables[0xC47E]
+                    say(None, TextboxSoundsPreset.SILENT,
+                        "[DelayOff]Key items obtained:\nAccess to Wakeport: [Color #2C65FF][Var 0000 digits=1][Color #000000]\n" +
+                    "Access to Mount Pajamaja: [Color #2C65FF][Var 0001 digits=1][Color #000000]\nDream Eggs: [Color #2C65FF][Var 0002 digits=1][Color #000000]" +
+                    "\nAccess to Neo Bowser Castle: [Color #2C65FF][Var 0003 digits=1][Color #000000][Wait]")
 
-                    label('label_key_9', manager=fevent_manager)
-                    branch_if(Variables[0xE00F], '!=', 1.0, 'label_key_10')
-                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Stack Spring Jump...[Wait]")
-
-                    label('label_key_10', manager=fevent_manager)
-                    branch_if(Variables[0xE00E], '!=', 1.0, 'label_key_11')
-                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Stack Ground Pound...[Wait]")
-
-                    label('label_key_11', manager=fevent_manager)
-                    branch_if(Variables[0xE010], '!=', 1.0, 'label_key_12')
-                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Cone Jump...[Wait]")
-
-                    label('label_key_12', manager=fevent_manager)
-                    branch_if(Variables[0xE011], '!=', 1.0, 'label_key_13')
-                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Cone Storm...[Wait]")
-
-                    label('label_key_13', manager=fevent_manager)
-                    branch_if(Variables[0xE012], '!=', 1.0, 'label_key_14')
-                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Ball Throw...[Wait]")
-
-                    label('label_key_14', manager=fevent_manager)
-                    branch_if(Variables[0xE013], '!=', 1.0, 'label_key_15')
-                    say(None, TextboxSoundsPreset.SILENT, "Luiginary Ball Hookshot...[Wait]")
-
-                    label('label_key_15', manager=fevent_manager)
-                    branch_if(Variables[0x9015], '!=', 1.0, 'label_key_16')
-                    say(None, TextboxSoundsPreset.SILENT, "Pi'illo Castle Key...[Wait]")
-
-                    label('label_key_16', manager=fevent_manager)
-                    branch_if(Variables[0xC369], '!=', 1.0, 'label_key_17')
-                    say(None, TextboxSoundsPreset.SILENT, "Blimport Bridge...[Wait]")
-
-                    label('label_key_17', manager=fevent_manager)
-                    branch_if(Variables[0xCABF], '!=', 1.0, 'label_key_18')
-                    say(None, TextboxSoundsPreset.SILENT, "Mushrise Park Gate...[Wait]")
-
-                    label('label_key_18', manager=fevent_manager)
-                    branch_if(Variables[0x9040], '!=', 1.0, 'label_key_19')
-                    say(None, TextboxSoundsPreset.SILENT, "First Dozite...[Wait]")
-
-                    label('label_key_19', manager=fevent_manager)
-                    branch_if(Variables[0xC343], '!=', 1.0, 'label_key_20')
-                    say(None, TextboxSoundsPreset.SILENT, "Dozite 1...[Wait]")
-
-                    label('label_key_20', manager=fevent_manager)
-                    branch_if(Variables[0xC344], '!=', 1.0, 'label_key_21')
-                    say(None, TextboxSoundsPreset.SILENT, "Dozite 2...[Wait]")
-
-                    label('label_key_21', manager=fevent_manager)
-                    branch_if(Variables[0xC345], '!=', 1.0, 'label_key_22')
-                    say(None, TextboxSoundsPreset.SILENT, "Dozite 3...[Wait]")
-
-                    label('label_key_22', manager=fevent_manager)
-                    branch_if(Variables[0xC346], '!=', 1.0, 'label_key_23')
-                    say(None, TextboxSoundsPreset.SILENT, "Dozite 4...[Wait]")
-
-                    label('label_key_23', manager=fevent_manager)
-                    branch_if(Variables[0xC960], '!=', 1.0, 'label_key_24')
-                    say(None, TextboxSoundsPreset.SILENT, "Access to Wakeport...[Wait]")
-
-                    label('label_key_24', manager=fevent_manager)
-                    branch_if(Variables[0xC3B9], '!=', 1.0, 'label_key_25')
-                    say(None, TextboxSoundsPreset.SILENT, "Access to Mount Pajamaja...[Wait]")
-
-                    label('label_key_25', manager=fevent_manager)
-                    branch_if(Variables[0xC47E], '!=', 1.0, 'label_key_26')
-                    say(None, TextboxSoundsPreset.SILENT, "Access to Neo Bowser Castle...[Wait]")
-
-                    label('label_key_26', manager=fevent_manager)
-                    branch('label_0')
+                    if get_room(s) == "Pi'illo Castle" or get_room(s) == "Dreamy Pi'illo Castle":
+                        branch('label_1')
+                    elif get_room(s) == "Mushrise Park" or get_room(s) == "Dreamy Mushrise Park":
+                        branch('label_2')
+                    elif get_room(s) == "Dozing Sands" or get_room(s) == "Dreamy Dozing Sands":
+                        branch('label_3')
+                    elif get_room(s) == "Wakeport" or get_room(s) == "Dreamy Wakeport":
+                        branch('label_4')
+                    elif get_room(s) == "Mount Pajamaja" or get_room(s) == "Dreamy Mount Pajamaja":
+                        branch('label_5')
+                    elif get_room(s) == "Driftwood Shore" or get_room(s) == "Dreamy Driftwood Shore":
+                        branch('label_6')
+                    elif get_room(s) == "Somnom Woods" or get_room(s) == "Dreamy Somnom Woods":
+                        branch('label_7')
+                    elif get_room(s) == "Neo Bowser Castle" or get_room(s) == "Dreamy Neo Bowser Castle":
+                        branch('label_8')
+                    else:
+                        branch('label_0')
 
                     label('label_10', manager=fevent_manager)
 
