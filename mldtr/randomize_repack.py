@@ -236,11 +236,10 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
 
         #Import the msbt for the item names
         try:
-            item_name_path = next(fs_std_romfs_path(MESSAGE_DIR_PATH, data_dir=input_folder).glob('*_English'))
+            default_language_message_path = next(fs_std_romfs_path(MESSAGE_DIR_PATH, data_dir=input_folder).glob('*_English'))
         except StopIteration:
-            item_name_path = next(fs_std_romfs_path(MESSAGE_DIR_PATH, data_dir=input_folder).iterdir())
-        item_name_path /= 'Item.msbt'
-        item_msgs = msbt_from_file(lambda: DTLMSAdapter(MESSAGE_DIR_PATH), fs_std_romfs_path(item_name_path, data_dir=input_folder))
+            default_language_message_path = next(p for p in fs_std_romfs_path(MESSAGE_DIR_PATH, data_dir=input_folder).iterdir() if p.is_dir())
+        item_msgs = msbt_from_file(lambda: DTLMSAdapter(default_language_message_path.name), fs_std_romfs_path(default_language_message_path / 'Item.msbt', data_dir=input_folder))
         sbar.update(10)
 
         #Initializes the first room using the subroutine below
