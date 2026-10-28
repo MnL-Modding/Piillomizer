@@ -28,7 +28,7 @@ def set_all_rules(world: MLDTWorld) -> None:
 def set_all_entrance_rules(world: MLDTWorld) -> None:
     # First, we need to actually grab our entrances. Luckily, there is a helper method for this.
     blimport_to_piillo_castle = world.get_entrance("Blimport to Pi'illo Castle")
-    blimport_to_underground = world.get_entrance("Blimport to Blimport Underground")
+    mushrise_to_underground = world.get_entrance("Mushrise Park to Blimport Underground")
     blimport_to_mushrise_park = world.get_entrance("Blimport to Mushrise Park")
     blimport_to_mount_pajamaja = world.get_entrance("Blimport to Mount Pajamaja")
     piillo_castle_to_deep = world.get_entrance("Pi'illo Castle to Pi'illo Castle Dream's Deep")
@@ -59,7 +59,7 @@ def set_all_entrance_rules(world: MLDTWorld) -> None:
     spin_jump = Has("Progressive Spin")
     side_drill = Has("Progressive Spin", count=2)
     ball_hop = Has("Ball Hop")
-    luigi_works = Has("Luiginary Works")
+    luigi_works = Has("Luiginary Constellation")
     luigi_ball = Has("Luiginary Ball")
     luigi_stack_spring = Has("Luiginary Stack Spring Jump")
     luigi_stack_pound = Has("Luiginary Stack Ground Pound")
@@ -76,58 +76,66 @@ def set_all_entrance_rules(world: MLDTWorld) -> None:
     has_pajamaja_access = Has("Access to Mount Pajamaja")
     has_egg = Has("Dream Egg")
     has_neo_bowser_access = Has("Access to Neo Bowser Castle")
+    luigi_stache = Has("Luiginary Stache Tree")
+    luigi_sneeze = Has("Luiginary Sneeze Wind")
+    luigi_drill = Has("Luiginary Drill")
+    luigi_speed = Has("Luiginary Speedometer")
+    luigi_heater = Has("Luiginary Heater")
+    luigi_tube = Has("Luiginary Innertube")
+    luigi_propeller = Has("Luiginary Propeller")
+    luigi_swim = Has("Luiginary Swim")
 
     blimport_to_piillo_castle_logic = has_piillo_key
-    blimport_to_underground_logic = has_bridge
+    mushrise_to_underground_logic = None
     blimport_to_mushrise_park_logic = has_bridge
     blimport_to_mount_pajamaja_logic = mini_mario
     piillo_castle_to_deep_logic = has_piillo_key & luigi_works & luigi_ball & luigi_stack_spring & luigi_ball_hammer & luigi_ball_hookshot
-    mushrise_park_to_hammer_logic = has_bridge & hammers
-    mushrise_park_to_gate_logic = has_bridge & has_gate
-    mushrise_park_to_wakeport_logic = has_bridge & has_wakeport_access
-    mushrise_park_to_somnom_logic = has_bridge & ball_hop & mini_mario
-    mushrise_park_to_neo_castle_logic = has_bridge & ball_hop & mini_mario & has_neo_bowser_access
-    past_gate_to_tracks_logic = has_bridge & has_gate & has_first_dozite & (mini_mario | mole_mario)
-    past_gate_to_dreamstone_logic = has_bridge & has_gate & has_first_dozite & has_dozites
-    past_gate_to_driftwood_logic = has_bridge & has_gate & mini_mario & spin_jump
-    wakeport_to_ultibed_logic = has_piillo_key & has_bridge & has_wakeport_access & has_gate & has_first_dozite & has_dozites & has_pajamaja_access & mini_mario & mole_mario & side_drill & ball_hop & luigi_works & luigi_ball & luigi_ball_hammer & luigi_stack_spring & luigi_cone_jump
+    mushrise_park_to_hammer_logic = hammers
+    mushrise_park_to_gate_logic = has_gate
+    mushrise_park_to_wakeport_logic = has_wakeport_access
+    mushrise_park_to_somnom_logic = ball_hop & mini_mario
+    mushrise_park_to_neo_castle_logic = ball_hop & mini_mario & has_neo_bowser_access
+    past_gate_to_tracks_logic = has_first_dozite & (mini_mario | mole_mario)
+    past_gate_to_dreamstone_logic = has_first_dozite & has_dozites
+    past_gate_to_driftwood_logic = mini_mario & spin_jump
+    wakeport_to_ultibed_logic = has_piillo_key & has_wakeport_access & has_bridge & has_gate & has_first_dozite & has_dozites & has_pajamaja_access & mini_mario & mole_mario & side_drill & ball_hop & luigi_works & luigi_tube & luigi_ball & luigi_ball_hammer & luigi_stack_spring & luigi_cone_jump
     pajamaja_entrance_to_base_logic = has_pajamaja_access & mini_mario
     pajamaja_entrance_to_peak_logic = has_pajamaja_access & mini_mario & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump
     pajamaja_base_to_middle_logic = has_pajamaja_access & mini_mario & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump
     pajamaja_middle_to_peak_logic = has_pajamaja_access & mini_mario & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump
-    pajamaja_peak_to_dreampoint_logic = has_pajamaja_access & mini_mario & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump & luigi_cone_storm
-    driftwood_to_egg_logic = has_bridge & has_gate & mini_mario & spin_jump & luigi_works & has_egg
-    somnom_to_tracks_logic = has_bridge & mini_mario & side_drill & luigi_works
-    somnom_tracks_to_past_tracks_logic = has_bridge & mini_mario & mole_mario & side_drill & luigi_works
-    neo_bowser_entrance_to_spin_logic = has_bridge & mini_mario & has_neo_bowser_access & spin_jump
-    neo_bowser_spin_to_flame_logic = has_bridge & mini_mario & has_neo_bowser_access & spin_jump & luigi_works
-    neo_bowser_flame_to_dream_logic = has_bridge & mini_mario & has_neo_bowser_access & spin_jump & luigi_works & luigi_ball & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump & luigi_ball_hammer & luigi_ball_hookshot
+    pajamaja_peak_to_dreampoint_logic = has_pajamaja_access & mini_mario & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump & luigi_cone_storm & luigi_heater
+    driftwood_to_egg_logic = mini_mario & spin_jump & luigi_tube & has_egg
+    somnom_to_tracks_logic = mini_mario & side_drill & luigi_propeller
+    somnom_tracks_to_past_tracks_logic = mini_mario & mole_mario & side_drill & luigi_propeller & luigi_stache & luigi_sneeze & luigi_speed
+    neo_bowser_entrance_to_spin_logic = mini_mario & has_neo_bowser_access & spin_jump
+    neo_bowser_spin_to_flame_logic = mini_mario & has_neo_bowser_access & spin_jump & luigi_propeller
+    neo_bowser_flame_to_dream_logic = mini_mario & has_neo_bowser_access & spin_jump & luigi_works & luigi_ball & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump & luigi_ball_hammer & luigi_ball_hookshot & luigi_drill & luigi_speed & luigi_propeller & luigi_swim
     
     if world.options.reduce_mini:
         blimport_to_mount_pajamaja_logic = None
-        mushrise_park_to_somnom_logic = has_bridge & ball_hop & hammers
-        mushrise_park_to_neo_castle_logic = has_bridge & ball_hop & has_neo_bowser_access
-        past_gate_to_driftwood_logic = has_bridge & has_gate & hammers & spin_jump
+        mushrise_park_to_somnom_logic = ball_hop & hammers
+        mushrise_park_to_neo_castle_logic = ball_hop & has_neo_bowser_access
+        past_gate_to_driftwood_logic = hammers & spin_jump
         pajamaja_entrance_to_base_logic = has_pajamaja_access & hammers
         pajamaja_entrance_to_peak_logic = has_pajamaja_access & hammers & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump
         pajamaja_base_to_middle_logic = has_pajamaja_access & hammers & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump
         pajamaja_middle_to_peak_logic = has_pajamaja_access & hammers & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump
-        pajamaja_peak_to_dreampoint_logic = has_pajamaja_access & hammers & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump & luigi_cone_storm
-        driftwood_to_egg_logic = has_bridge & has_gate & hammers & spin_jump & luigi_works & has_egg
-        somnom_to_tracks_logic = has_bridge & hammers & side_drill & luigi_works
-        somnom_tracks_to_past_tracks_logic = has_bridge & mole_mario & side_drill & luigi_works
-        neo_bowser_entrance_to_spin_logic = has_bridge & hammers & has_neo_bowser_access & spin_jump
-        neo_bowser_spin_to_flame_logic = has_bridge & hammers & has_neo_bowser_access & spin_jump & luigi_works
-        neo_bowser_flame_to_dream_logic = has_bridge & hammers & has_neo_bowser_access & spin_jump & luigi_works & luigi_ball & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump & luigi_ball_hammer & luigi_ball_hookshot
+        pajamaja_peak_to_dreampoint_logic = has_pajamaja_access & hammers & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump & luigi_cone_storm & luigi_heater
+        driftwood_to_egg_logic = hammers & spin_jump & luigi_tube & has_egg
+        somnom_to_tracks_logic = hammers & side_drill & luigi_propeller
+        somnom_tracks_to_past_tracks_logic = mole_mario & side_drill & luigi_propeller & luigi_stache & luigi_sneeze & luigi_speed
+        neo_bowser_entrance_to_spin_logic = hammers & has_neo_bowser_access & spin_jump
+        neo_bowser_spin_to_flame_logic = hammers & has_neo_bowser_access & spin_jump & luigi_propeller
+        neo_bowser_flame_to_dream_logic = hammers & has_neo_bowser_access & spin_jump & luigi_works & luigi_ball & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump & luigi_ball_hammer & luigi_ball_hookshot & luigi_drill & luigi_speed & luigi_propeller & luigi_swim
     
     if not world.options.reduce_ball_skips:
-        past_gate_to_tracks_logic = has_bridge & has_gate & (ball_hop | has_first_dozite) & (mini_mario | mole_mario)
-        past_gate_to_dreamstone_logic = has_bridge & has_gate & ((has_first_dozite & has_dozites) | ball_hop)
+        past_gate_to_tracks_logic = (ball_hop | has_first_dozite) & (mini_mario | mole_mario)
+        past_gate_to_dreamstone_logic = ((has_first_dozite & has_dozites) | ball_hop)
         pajamaja_entrance_to_base_logic = (has_pajamaja_access | ball_hop) & mini_mario
         pajamaja_entrance_to_peak_logic = ((has_pajamaja_access & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump) | ball_hop) & mini_mario
         pajamaja_base_to_middle_logic = ((has_pajamaja_access & luigi_works & luigi_stack_spring & luigi_cone_jump) | ball_hop) & side_drill & mini_mario
         pajamaja_middle_to_peak_logic = ((has_pajamaja_access & luigi_works & luigi_stack_spring & luigi_cone_jump) | ball_hop) & side_drill & mini_mario
-        pajamaja_peak_to_dreampoint_logic = ((has_pajamaja_access & side_drill) | (ball_hop & spin_jump)) & mini_mario & luigi_works & luigi_stack_spring & luigi_cone_jump & luigi_cone_storm
+        pajamaja_peak_to_dreampoint_logic = ((has_pajamaja_access & side_drill) | (ball_hop & spin_jump)) & mini_mario & luigi_works & luigi_stack_spring & luigi_cone_jump & luigi_cone_storm & luigi_heater
 
     if world.options.reduce_mini and not world.options.reduce_ball_skips:
         blimport_to_mount_pajamaja_logic = None
@@ -135,10 +143,11 @@ def set_all_entrance_rules(world: MLDTWorld) -> None:
         pajamaja_entrance_to_peak_logic = ((has_pajamaja_access & side_drill & luigi_works & luigi_stack_spring & luigi_cone_jump) | ball_hop) & hammers
         pajamaja_base_to_middle_logic = ((has_pajamaja_access & luigi_works & luigi_stack_spring & luigi_cone_jump) | ball_hop) & side_drill & hammers
         pajamaja_middle_to_peak_logic = ((has_pajamaja_access & luigi_works & luigi_stack_spring & luigi_cone_jump) | ball_hop) & side_drill & hammers
-        pajamaja_peak_to_dreampoint_logic = ((has_pajamaja_access & side_drill) | (ball_hop & spin_jump)) & hammers & luigi_works & luigi_stack_spring & luigi_cone_jump & luigi_cone_storm
+        pajamaja_peak_to_dreampoint_logic = ((has_pajamaja_access & side_drill) | (ball_hop & spin_jump)) & hammers & luigi_works & luigi_stack_spring & luigi_cone_jump & luigi_cone_storm & luigi_heater
+        
 
     world.set_rule(blimport_to_piillo_castle, blimport_to_piillo_castle_logic)
-    world.set_rule(blimport_to_underground, blimport_to_underground_logic)
+    #world.set_rule(mushrise_to_underground, mushrise_to_underground_logic)
     world.set_rule(blimport_to_mushrise_park, blimport_to_mushrise_park_logic)
     if not world.options.reduce_mini:
         world.set_rule(blimport_to_mount_pajamaja, blimport_to_mount_pajamaja_logic)
@@ -221,7 +230,7 @@ def set_all_location_rules(world: MLDTWorld) -> None:
     spin_jump = Has("Progressive Spin")
     side_drill = Has("Progressive Spin", count=2)
     ball_hop = Has("Ball Hop")
-    luigi_works = Has("Luiginary Works")
+    luigi_works = Has("Luiginary Constellation")
     luigi_ball = Has("Luiginary Ball")
     luigi_stack_spring = Has("Luiginary Stack Spring Jump")
     luigi_stack_pound = Has("Luiginary Stack Ground Pound")
@@ -239,6 +248,14 @@ def set_all_location_rules(world: MLDTWorld) -> None:
     has_two_eggs = Has("Dream Egg", count=2)
     has_all_eggs = Has("Dream Egg", count=3)
     has_neo_bowser_access = Has("Access to Neo Bowser Castle")
+    luigi_stache = Has("Luiginary Stache Tree")
+    luigi_sneeze = Has("Luiginary Sneeze Wind")
+    luigi_drill = Has("Luiginary Drill")
+    luigi_speed = Has("Luiginary Speedometer")
+    luigi_heater = Has("Luiginary Heater")
+    luigi_tube = Has("Luiginary Innertube")
+    luigi_propeller = Has("Luiginary Propeller")
+    luigi_swim = Has("Luiginary Swim")
     
     #The logic info for each location
     # [Location ID within region, logic]
@@ -249,23 +266,25 @@ def set_all_location_rules(world: MLDTWorld) -> None:
 
                            [], #Just because a region doesn't have any extra logic needed, doesn't mean we should leave it out
                            
-                           [[1, luigi_works], [2, luigi_works], [3, luigi_works], [4, luigi_works], [5, luigi_works], [6, luigi_works],
-                            [7, luigi_works], [8, luigi_works], [9, luigi_works], [10, luigi_works], [11, luigi_works], [12, luigi_works],
-                            [13, luigi_works], [14, luigi_works], [15, luigi_works], [16, luigi_works], [17, luigi_works], [18, luigi_works],
-                            [19, luigi_works], [20, luigi_works], [21, luigi_works], [22, luigi_works], [23, luigi_works], [24, luigi_works],
-                            [25, luigi_works], [26, luigi_works], [27, luigi_works], [28, luigi_works], [29, luigi_works], [30, luigi_works],
-                            [31, luigi_works], [32, luigi_works], [33, luigi_works], [34, luigi_works], [35, luigi_works], [36, luigi_works],
-                            [37, luigi_works], [38, luigi_works], [39, luigi_works], [40, luigi_works], [41, luigi_works], [42, luigi_works]],
+                           [[1, luigi_sneeze], [2, luigi_sneeze], [3, luigi_sneeze], [4, luigi_sneeze], [5, luigi_sneeze], [6, luigi_sneeze],
+                            [7, luigi_sneeze], [8, luigi_sneeze], [9, luigi_sneeze], [10, luigi_sneeze], [11, luigi_sneeze], [12, luigi_sneeze],
+                            [13, luigi_sneeze], [14, luigi_sneeze], [15, luigi_sneeze], [16, luigi_sneeze], [17, luigi_sneeze], [18, luigi_sneeze],
+                            [19, luigi_sneeze], [20, luigi_sneeze], [21, luigi_sneeze], [22, luigi_sneeze], [23, luigi_sneeze], [24, luigi_sneeze],
+                            [25, luigi_sneeze], [26, luigi_sneeze], [27, luigi_sneeze], [28, luigi_sneeze], [29, luigi_sneeze], [30, luigi_sneeze],
+                            [31, luigi_sneeze], [32, luigi_sneeze], [33, luigi_sneeze], [34, luigi_sneeze], [35, luigi_sneeze], [36, luigi_stache],
+                            [37, luigi_stache], [38, luigi_stache], [39, luigi_stache], [40, luigi_stache], [41, luigi_stache], [42, luigi_stache]],
                             
                            [[1, ball_hop], [2, ball_hop], [4, hammers | spin_jump | ball_hop], [5, hammers], [6, hammers],
                             [7, hammers], [11, has_gate & mini_mario], [12, hammers], [16, side_drill], [19, side_drill],
-                            [22, hammers], [23, hammers], [24, luigi_works], [25, luigi_works], [26, luigi_works], [27, luigi_works],
-                            [28, luigi_works], [29, luigi_works], [30, luigi_works], [31, luigi_works], [32, luigi_works], [33, luigi_works],
-                            [34, luigi_works], [35, luigi_works], [36, luigi_works], [37, luigi_works], [38, luigi_works],
-                            [39, luigi_works], [40, luigi_works], [41, luigi_works], [42, luigi_works], [43, luigi_works],
-                            [44, luigi_works], [45, luigi_works], [46, luigi_works], [47, luigi_works], [48, luigi_works],
-                            [50, luigi_works], [51, luigi_works], [52, luigi_works], [53, spin_jump], [54, luigi_works], [55, mini_mario], 
-                            [56, spin_jump | ball_hop], [57, spin_jump & ball_hop], [58, ball_hop], [59, mini_mario], [60, mini_mario],
+                            [22, hammers], [23, hammers], [25, luigi_sneeze], [26, luigi_sneeze], [27, luigi_sneeze], [28, luigi_sneeze],
+                            [29, luigi_sneeze], [30, luigi_sneeze], [31, luigi_sneeze], [32, luigi_sneeze], [33, luigi_sneeze], [34, luigi_sneeze],
+                            [35, luigi_sneeze & luigi_stache], [36, luigi_sneeze & luigi_stache], [37, luigi_sneeze & luigi_stache],
+                            [38, luigi_sneeze & luigi_stache], [39, luigi_sneeze & luigi_stache],
+                            [40, luigi_sneeze], [41, luigi_sneeze], [42, luigi_sneeze], [43, luigi_sneeze], [44, luigi_sneeze],
+                            [45, luigi_sneeze], [46, luigi_sneeze & luigi_stache], [47, luigi_sneeze & luigi_stache], [48, luigi_sneeze & luigi_stache],
+                            [50, luigi_sneeze & luigi_stache], [51, luigi_sneeze & luigi_stache], [52, luigi_sneeze & luigi_stache], [53, spin_jump], 
+                            [54, luigi_sneeze & luigi_stache], [55, mini_mario], [56, spin_jump | ball_hop], [57, spin_jump & ball_hop], [58, ball_hop], 
+                            [59, mini_mario], [60, mini_mario],
                             [61, mole_mario], [62, mole_mario], [63, mole_mario], [64, mole_mario], [65, mole_mario & has_gate], 
                             [66, mole_mario], [67, mole_mario], [68, mole_mario], [69, mole_mario], [70, mole_mario], 
                             [71, (spin_jump | ball_hop) & mole_mario], [72, mole_mario], [73, mole_mario], [74, mole_mario],
@@ -283,44 +302,49 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             [22, (mini_mario & side_drill) | (hammers & ball_hop)], [23, (mini_mario & side_drill) | (hammers & ball_hop)],
                             [30, has_first_dozite & ball_hop], [31, has_first_dozite], [34, luigi_works], [35, (mini_mario & side_drill) | (hammers & ball_hop)],
                             [36, (mini_mario & side_drill) | (hammers & ball_hop)], [37, (mini_mario & side_drill) | (hammers & ball_hop)],
-                            [38, (mini_mario & side_drill) | (hammers & ball_hop)], [39, ball_hop & luigi_works], [40, ball_hop & luigi_works],
+                            [38, (mini_mario & side_drill) | (hammers & ball_hop)], [39, ball_hop & luigi_drill], [40, ball_hop & luigi_drill],
                             [41, mole_mario], [42, mole_mario], [43, mole_mario], [44, mole_mario], [45, mole_mario], [46, mole_mario & side_drill],
                             [47, mole_mario & (side_drill | ball_hop)], [48, mole_mario], [49, mole_mario], [50, has_first_dozite & mole_mario & ball_hop]],
                             
                            [[1, mole_mario], [2, mole_mario], [3, mole_mario], [4, mole_mario], [17, mini_mario], [18, mini_mario],
                             [19, mini_mario], [20, mini_mario], [21, mini_mario], [22, mini_mario], [24, mini_mario], [25, ball_hop],
-                            [26, mole_mario], [29, mini_mario], [30, ball_hop], [32, luigi_works], [33, luigi_works], [34, luigi_works],
-                            [35, luigi_works], [38, luigi_works], [39, luigi_works], [44, mole_mario], [45, mole_mario], [46, mole_mario],
+                            [26, mole_mario], [29, mini_mario], [30, ball_hop], [32, luigi_drill], [33, luigi_drill], [34, luigi_sneeze],
+                            [35, luigi_sneeze], [38, luigi_drill], [39, luigi_stache], [44, mole_mario], [45, mole_mario], [46, mole_mario],
                             [47, mole_mario], [48, mole_mario], [51, mini_mario],
                             [52, mole_mario], [53, mole_mario], [54, mole_mario], [55, mole_mario], [56, mole_mario], [57, mole_mario],
                             [58, mole_mario], [59, mole_mario], [60, mole_mario], [61, mole_mario], [62, mole_mario], [63, mole_mario],
                             [64, mole_mario], [65, mole_mario], [66, mole_mario], [67, mole_mario], [68, mole_mario], [69, mole_mario],
                             [70, mole_mario], [71, mole_mario], [72, mole_mario]],
                             
-                           [[1, spin_jump & ball_hop], [2, spin_jump & ball_hop], [4, ball_hop], [5, ball_hop], [6, luigi_works], [7, luigi_works],
-                            [8, luigi_works], [9, luigi_works], [10, luigi_works], [11, luigi_works], [12, luigi_works], [13, luigi_works],
-                            [14, luigi_works], [15, luigi_works], [16, luigi_works], [17, luigi_works], [18, luigi_works], [19, luigi_works],
-                            [20, luigi_works], [21, luigi_works & luigi_stack_pound], [22, luigi_works & luigi_stack_pound],
-                            [23, luigi_works & luigi_stack_pound], [24, luigi_works & luigi_stack_pound], [25, side_drill & ball_hop & luigi_works],
-                            [26, side_drill & ball_hop & luigi_works], [27, side_drill & ball_hop & luigi_works], [28, side_drill & ball_hop & luigi_works],
+                           [[1, spin_jump & ball_hop], [2, spin_jump & ball_hop], [4, ball_hop], [5, ball_hop], [6, luigi_drill], [7, luigi_drill],
+                            [8, luigi_drill], [9, luigi_drill], [10, luigi_drill], [11, luigi_drill], [12, luigi_drill], [13, luigi_drill],
+                            [14, luigi_drill & luigi_works], [15, luigi_drill & luigi_works], [16, luigi_drill & luigi_works], 
+                            [17, luigi_drill & luigi_works], [18, luigi_drill & luigi_works], [19, luigi_drill & luigi_works],
+                            [20, luigi_drill & luigi_works], [21, luigi_drill & luigi_works & luigi_stack_pound], [22, luigi_drill & luigi_works & luigi_stack_pound],
+                            [23, luigi_drill & luigi_works & luigi_stack_pound], [24, luigi_drill & luigi_works & luigi_stack_pound], 
+                            [25, side_drill & ball_hop & luigi_tube], [26, side_drill & ball_hop & luigi_tube], 
+                            [27, side_drill & ball_hop & luigi_tube], [28, side_drill & ball_hop & luigi_tube],
                             [31, ball_hop], [32, side_drill & ball_hop], [33, side_drill & ball_hop], [34, side_drill & ball_hop],
                             [35, side_drill & ball_hop], [36, side_drill & ball_hop], [37, ball_hop], [38, ball_hop],
                             [39, mole_mario & ball_hop], [40, mole_mario & ball_hop], [41, mole_mario], [42, mole_mario & side_drill & ball_hop],
                             [43, mole_mario & ball_hop]],
                             
                            [[6, mini_mario], [7, mini_mario], [8, mini_mario], [10, mini_mario], [12, hammers], [13, hammers], [19, spin_jump],
-                            [25, mole_mario & luigi_works], [26, mole_mario & luigi_works], [27, mole_mario & luigi_works], [28, mole_mario & luigi_works],
-                            [29, mole_mario & luigi_works], [30, mole_mario & luigi_works], [31, mole_mario & luigi_works], [32, mole_mario & luigi_works],
-                            [33, mole_mario & luigi_works], [34, mole_mario & luigi_works], [35, mole_mario & luigi_works], [36, mole_mario & luigi_works],
-                            [37, mole_mario & luigi_works], [38, mole_mario & luigi_works], [39, mole_mario & luigi_works], [40, mole_mario & luigi_works],
-                            [41, mole_mario & luigi_works], [42, mole_mario & luigi_works], [43, mole_mario & luigi_works], [44, mole_mario & luigi_works],
-                            [45, mole_mario & luigi_works], [46, mole_mario & luigi_works & luigi_stack_spring],
+                            [25, mole_mario], [26, mole_mario], [27, mole_mario], [28, mole_mario & luigi_speed],
+                            [29, mole_mario & luigi_speed], [30, mole_mario & luigi_speed], [31, mole_mario & luigi_speed], [32, mole_mario & luigi_speed],
+                            [33, mole_mario & luigi_speed], [34, mole_mario & luigi_speed], [35, mole_mario & luigi_speed], [36, mole_mario & luigi_speed],
+                            [37, mole_mario & luigi_speed], [38, mole_mario & luigi_speed], [39, mole_mario & luigi_speed], [40, mole_mario & luigi_speed],
+                            [41, mole_mario & luigi_speed], [42, mole_mario & luigi_speed], [43, mole_mario & luigi_speed], [44, mole_mario & luigi_speed],
+                            [45, mole_mario & luigi_speed], [46, mole_mario & luigi_works & luigi_stack_spring],
                             [47, mole_mario & luigi_works & luigi_stack_spring], [48, mole_mario & luigi_works & luigi_stack_spring & luigi_stack_pound],
                             [49, mole_mario & luigi_works & luigi_stack_spring & luigi_stack_pound], [50, hammers], [51, hammers],
-                            [52, mole_mario & luigi_works & luigi_stack_spring & luigi_stack_pound], [53, mini_mario | ball_hop],
+                            [52, mole_mario & luigi_works & luigi_stack_spring], [53, mini_mario | ball_hop],
                             [54, mole_mario], [55, mole_mario], [56, mole_mario], [57, mole_mario], [58, mole_mario]],
 
-                           [],
+                           [[7, luigi_sneeze], [8, luigi_sneeze], [9, luigi_sneeze], [10, luigi_sneeze], [11, luigi_sneeze], [12, luigi_sneeze], [13, luigi_sneeze],
+                            [14, luigi_sneeze], [15, luigi_sneeze], [16, luigi_sneeze], [17, luigi_sneeze], [18, luigi_sneeze], [19, luigi_sneeze],
+                            [20, luigi_sneeze], [21, luigi_sneeze], [22, luigi_sneeze], [23, luigi_sneeze], [24, luigi_sneeze], [25, luigi_sneeze],
+                            [26, luigi_sneeze], [27, luigi_sneeze], [28, luigi_sneeze], [29, luigi_sneeze], [30, luigi_sneeze]],
                            
                            [[1, mini_mario]],
                            
@@ -348,7 +372,7 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                            [],
                            
                            [[1, side_drill | ball_hop], [2, side_drill], [8, mini_mario], [11, mini_mario & ball_hop], [12, side_drill], [13, side_drill], [14, side_drill],
-                            [16, side_drill], [20, luigi_works], [21, luigi_works], [22, side_drill & luigi_works & luigi_cone_jump],
+                            [16, side_drill], [21, luigi_tube], [22, side_drill & luigi_works & luigi_cone_jump],
                             [23, side_drill], [24, side_drill], [25, side_drill], [26, side_drill], [27, side_drill], [28, mini_mario & spin_jump & ball_hop],
                             [29, mini_mario & mole_mario], [30, mini_mario & mole_mario], [31, side_drill & mole_mario], [32, side_drill & mole_mario],
                             [33, mole_mario], [34, mole_mario]],
@@ -361,50 +385,59 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             [26, has_all_eggs & luigi_cone_jump], [27, has_two_eggs], [28, has_two_eggs]],
                             
                            [[7, spin_jump], [8, spin_jump], [9, spin_jump], [10, side_drill], [11, side_drill], [12, side_drill], [13, side_drill], [14, side_drill],
-                            [15, spin_jump], [16, spin_jump], [17, spin_jump], [18, side_drill & luigi_works], [19, spin_jump], [20, spin_jump],
+                            [15, spin_jump], [16, spin_jump], [17, spin_jump], [18, side_drill & luigi_speed], [19, spin_jump], [20, spin_jump],
                             [21, mole_mario], [22, mole_mario], [23, spin_jump & mole_mario], [24, side_drill & mole_mario]],
                             
-                           [[9, mole_mario], [10, mole_mario], [14, mole_mario], [15, mole_mario], [16, mini_mario & mole_mario], [17, mini_mario & mole_mario], [18, mole_mario],
-                            [29, mole_mario], [30, mole_mario], [31, mole_mario], [32, mole_mario], [33, mole_mario], [34, mole_mario], [35, mole_mario],
-                            [36, mole_mario], [37, mole_mario], [38, mole_mario], [39, mole_mario], [40, mole_mario], [41, mole_mario], [42, mole_mario], [43, mole_mario]],
+                           [[3, luigi_stache], [4, luigi_stache], [5, luigi_stache], [6, luigi_stache], [7, luigi_stache], [8, luigi_stache],
+                            [9, mole_mario & luigi_stache & luigi_sneeze], [10, mole_mario & luigi_stache & luigi_sneeze], [11, luigi_stache],
+                            [12, luigi_stache], [13, luigi_stache], [14, mole_mario & luigi_stache & luigi_sneeze], [15, mole_mario & luigi_stache & luigi_sneeze],
+                            [16, mini_mario & mole_mario & luigi_stache & luigi_sneeze], [17, mini_mario & mole_mario & luigi_stache & luigi_sneeze], 
+                            [18, mole_mario & luigi_stache & luigi_sneeze], [21, luigi_stache], [22, luigi_stache], [23, luigi_stache], [24, luigi_stache], [25, luigi_stache],
+                            [29, mole_mario & luigi_stache & luigi_sneeze], [30, mole_mario & luigi_stache & luigi_sneeze], [31, mole_mario & luigi_stache & luigi_sneeze], 
+                            [32, mole_mario & luigi_stache & luigi_sneeze], [33, mole_mario & luigi_stache & luigi_sneeze], [34, mole_mario & luigi_stache & luigi_sneeze], 
+                            [35, mole_mario & luigi_stache & luigi_sneeze],
+                            [36, mole_mario & luigi_stache], [37, mole_mario & luigi_stache & luigi_sneeze], [38, mole_mario & luigi_stache & luigi_sneeze], 
+                            [39, mole_mario & luigi_stache & luigi_sneeze], [40, mole_mario & luigi_stache & luigi_sneeze], [41, mole_mario & luigi_stache & luigi_sneeze], 
+                            [42, mole_mario & luigi_stache & luigi_sneeze], [43, mole_mario & luigi_stache & luigi_sneeze]],
                             
-                           [[1, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [17, luigi_stack_spring & luigi_stack_pound], [20, luigi_stack_spring & luigi_stack_pound],
-                            [22, luigi_stack_spring & luigi_stack_pound], [24, luigi_stack_spring & luigi_stack_pound], [25, luigi_stack_spring & luigi_cone_jump],
-                            [26, luigi_stack_spring & luigi_stack_pound], [28, luigi_stack_spring & luigi_stack_pound], [29, luigi_stack_spring & luigi_stack_pound],
-                            [30, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [31, luigi_stack_spring & luigi_stack_pound],
-                            [32, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [33, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
-                            [34, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [35, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
-                            [36, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [37, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
-                            [38, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [39, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
-                            [40, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [41, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
-                            [42, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [43, luigi_stack_spring & luigi_stack_pound & luigi_cone_jump]],
+                           [[1, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [17, luigi_works & luigi_stack_spring & luigi_stack_pound],
+                            [20, luigi_works & luigi_stack_spring & luigi_stack_pound], [22, luigi_works & luigi_stack_spring & luigi_stack_pound], 
+                            [24, luigi_works & luigi_stack_spring & luigi_stack_pound], [25, luigi_works & luigi_stack_spring & luigi_cone_jump],
+                            [26, luigi_works & luigi_stack_spring & luigi_stack_pound], [28, luigi_works & luigi_stack_spring & luigi_stack_pound], [29, luigi_works & luigi_stack_spring & luigi_stack_pound],
+                            [30, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [31, luigi_works & luigi_stack_spring & luigi_stack_pound],
+                            [32, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [33, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
+                            [34, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [35, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
+                            [36, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [37, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
+                            [38, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [39, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
+                            [40, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [41, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump],
+                            [42, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump], [43, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_cone_jump]],
                             
                            [[1, spin_jump], [2, spin_jump], [5, spin_jump], [8, spin_jump], [11, mini_mario], [12, mini_mario], [13, mini_mario], [14, mini_mario],
-                            [20, hammers], [24, hammers], [25, luigi_works & hammers & spin_jump], [26, luigi_works & hammers & spin_jump], [27, luigi_works & hammers & spin_jump],
-                            [28, luigi_works & hammers & spin_jump], [29, luigi_works & hammers & spin_jump], [30, luigi_works & hammers & spin_jump], [31, luigi_works & hammers & spin_jump],
-                            [32, luigi_works & hammers & spin_jump], [33, luigi_works & hammers & spin_jump], [34, luigi_works & hammers & spin_jump], [35, luigi_works & hammers & spin_jump],
-                            [36, luigi_works & hammers & spin_jump], [37, luigi_works & hammers & spin_jump], [38, luigi_works & hammers & spin_jump], [39, luigi_works & hammers & spin_jump],
-                            [40, luigi_works & hammers & spin_jump], [41, luigi_works & hammers & spin_jump], [42, luigi_works & hammers & spin_jump], [43, luigi_works & hammers & spin_jump],
+                            [20, hammers], [24, hammers], [25, luigi_swim & hammers & spin_jump], [26, luigi_swim & hammers & spin_jump], [27, luigi_swim & hammers & spin_jump],
+                            [28, luigi_swim & hammers & spin_jump], [29, luigi_swim & hammers & spin_jump], [30, luigi_swim & hammers & spin_jump], [31, luigi_swim & hammers & spin_jump],
+                            [32, luigi_swim & hammers & spin_jump], [33, luigi_swim & hammers & spin_jump], [34, luigi_swim & hammers & spin_jump], [35, luigi_swim & hammers & spin_jump],
+                            [36, luigi_swim & hammers & spin_jump], [37, luigi_swim & hammers & spin_jump], [38, luigi_swim & hammers & spin_jump], [39, luigi_swim & hammers & spin_jump],
+                            [40, luigi_swim & hammers & spin_jump], [41, luigi_swim & hammers & spin_jump], [42, luigi_swim & hammers & spin_jump], [43, luigi_swim & hammers & spin_jump],
                             [44, mole_mario], [45, mole_mario], [46, mole_mario]],
                             
-                           [[15, hammers], [16, hammers], [18, hammers], [19, hammers], [20, hammers], [30, hammers, luigi_works], [31, hammers, luigi_works],
-                            [32, hammers, luigi_works], [33, hammers, luigi_works], [34, hammers, luigi_works], [35, hammers, luigi_works], [36, hammers, luigi_works],
-                            [37, hammers, luigi_works], [38, hammers, luigi_works],
+                           [[15, hammers], [16, hammers], [18, hammers], [19, hammers], [20, hammers], [30, hammers, luigi_stache], [31, hammers, luigi_stache],
+                            [32, hammers, luigi_stache], [33, hammers, luigi_stache], [34, hammers, luigi_propeller], [35, hammers, luigi_propeller], [36, hammers, luigi_propeller],
+                            [37, hammers, luigi_propeller], [38, hammers, luigi_propeller],
                             [39, mole_mario], [40, mole_mario], [41, mole_mario], [42, mole_mario], [43, mole_mario], [44, mole_mario]],
                             
-                           [[7, mini_mario], [8, mini_mario],
+                           [[7, mini_mario], [8, mini_mario], [10, luigi_swim], [11, luigi_swim], [12, luigi_speed],
                             [16, mole_mario], [17, mole_mario], [18, mole_mario], [19, mole_mario], [20, mole_mario], [21, mole_mario], [22, mole_mario],
                             [23, mole_mario], [24, mole_mario]],
                             
                            []]
 
-    shop_logic_info = [[5, luigi_works], [8, luigi_works & luigi_stack_spring & luigi_stack_pound], [12, luigi_works & mole_mario], [17, luigi_works]]
+    shop_logic_info = [[5, luigi_sneeze], [8, luigi_works & luigi_stack_spring & luigi_stack_pound], [12, mole_mario]]
     
     #Updates certain indexes in the location info if reduce mini mario requirements is turned on
     if world.options.reduce_mini:
-        del location_logic_info[4][46]
-        location_logic_info[4][61] = [80, mole_mario]
-        location_logic_info[4][62] = [81, mole_mario & ball_hop]
+        del location_logic_info[4][45]
+        location_logic_info[4][65] = [80, mole_mario]
+        location_logic_info[4][66] = [81, mole_mario & ball_hop]
         del location_logic_info[6][7]
         del location_logic_info[6][7]
         del location_logic_info[6][7]
@@ -428,7 +461,7 @@ def set_all_location_rules(world: MLDTWorld) -> None:
     if world.options.shopsanity:
         for s in shop_logic_info:
             for i in range(8):
-                location_name = list(world.location_name_to_id.keys())[list(world.location_name_to_id.values()).index(3000 + s[0]*8 + i)] #Gets the location name from the ID
+                location_name = list(world.location_name_to_id.keys())[list(world.location_name_to_id.values()).index(3000 + s[0]*8 + i + 1)] #Gets the location name from the ID
                 current_location = world.get_location(location_name)
                 world.set_rule(current_location, s[1])
 

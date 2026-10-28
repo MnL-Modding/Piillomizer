@@ -72,6 +72,20 @@ class ShopsanityEnable(Choice):
     # Choice options must define an explicit default value.
     default = option_off
 
+class StartPos(Choice):
+    """
+    Allows you to choose whether you spawn in front of Pi'illo Castle, under the Blimport Bridge, or past the Mushrise Park Gate
+    """
+
+    display_name = "Starting Region"
+
+    option_blimport = "Blimport"
+    option_mushrise = "Mushrise Park"
+    option_dozing = "Dozing Sands"
+
+    # Choice options must define an explicit default value.
+    default = option_blimport
+
 # We must now define a dataclass inheriting from PerGameCommonOptions that we put all our options in.
 # This is in the format "option_name_in_snake_case: OptionClassName".
 @dataclass
@@ -80,13 +94,13 @@ class MLDTOptions(PerGameCommonOptions):
     reduce_mini: ReduceMini
     reduce_ball_skips: ReduceBall
     shopsanity: ShopsanityEnable
-
+    start_pos: StartPos
 
 # If we want to group our options by similar type, we can do so as well. This looks nice on the website.
 option_groups = [
     OptionGroup(
         "Gameplay Options",
-        [Hammer, ReduceMini, ReduceBall, ShopsanityEnable],
+        [Hammer, ReduceMini, ReduceBall, ShopsanityEnable, StartPos],
     ),
 ]
 
@@ -96,12 +110,14 @@ option_presets = {
         "second_hammer": -1,
         "reduce_mini": False,
         "reduce_ball_skips": True,
-        "shopsanity": False
+        "shopsanity": False,
+        "start_pos": "Blimport"
     },
     "creator's preset": {
         "second_hammer": 1,
         "reduce_mini": True,
         "reduce_ball_skips": True,
-        "shopsanity": True
+        "shopsanity": True,
+        "start_pos": "Mushrise Park"
     },
 }

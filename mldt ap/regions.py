@@ -103,12 +103,18 @@ def connect_regions(world: MLDTWorld) -> None:
     # An even easier way is to use the region.connect helper.
 
     blimport.connect(piillo_castle, "Blimport to Pi'illo Castle")
-    blimport.connect(blimport_underground, "Blimport to Blimport Underground")
-    blimport.connect(mushrise_park, "Blimport to Mushrise Park")
+    mushrise_park.connect(blimport_underground, "Mushrise Park to Blimport Underground")
+    if world.options.start_pos.value == "Blimport":
+        blimport.connect(mushrise_park, "Blimport to Mushrise Park")
+    else:
+        mushrise_park.connect(blimport, "Blimport to Mushrise Park")
     blimport.connect(mount_pajamaja_entrance, "Blimport to Mount Pajamaja")
     piillo_castle.connect(piillo_castle_deep, "Pi'illo Castle to Pi'illo Castle Dream's Deep")
     mushrise_park.connect(mushrise_hammer, "Mushrise Park to Hammer Area")
-    mushrise_park.connect(past_gate, "Mushrise Park to Dozing/Driftwood Outskirts")
+    if world.options.start_pos.value == "Dozing Sands":
+        past_gate.connect(mushrise_park, "Mushrise Park to Dozing/Driftwood Outskirts")
+    else:
+        mushrise_park.connect(past_gate, "Mushrise Park to Dozing/Driftwood Outskirts")
     mushrise_park.connect(wakeport, "Mushrise Park to Wakeport")
     mushrise_park.connect(somnom_woods, "Mushrise Park to Somnom Woods")
     mushrise_park.connect(neo_castle, "Mushrise Park to Neo Bowser Castle")
