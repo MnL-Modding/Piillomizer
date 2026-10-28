@@ -189,7 +189,8 @@ def randomize(window):
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
                                window.boss15.get(), window.boss16.get()],
-                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), window.shop_toggle.get(), window.start_pos]]
+                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), window.shop_toggle.get(), window.start_pos,
+                               window.enemy_clear.get()]]
 
     # Begins randomization
     randomize_main.randomize_data(window.romfs, window.enemy_stats, window.random_settings, seed, [])
@@ -272,7 +273,8 @@ def repack_ap(window):
                               [window.boss1.get(), window.boss2.get(), window.boss3.get(), window.boss4.get(), window.boss5.get(), window.boss6.get(), window.boss7.get(),
                                window.boss8.get(), window.boss9.get(), window.boss10.get(), window.boss11.get(), window.boss12.get(), window.boss13.get(), window.boss14.get(),
                                window.boss15.get(), window.boss16.get()],
-                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), 0, 0]]
+                              [window.hammer, window.warp_setting.get(), window.stat_setting.get(), window.disable_scale.get(), 0, 0,
+                               window.enemy_clear.get()]]
 
     #Reads the dat file
     ap_file = fd.askopenfilename(
@@ -529,6 +531,7 @@ def main():
     window.start_setting = tk.StringVar()
     window.start_setting.set("Blimport")
     window.start_options = ["Blimport", "Mushrise Park", "Dozing Sands"]
+    window.enemy_clear = tk.IntVar()
 
     window.seed = tk.StringVar()
 
@@ -1235,6 +1238,16 @@ def main():
         *window.start_options
     )
     window.start_chooser.place(x=228, y=250)
+
+    #Allows you to clear every enemy on the field
+    window.clear_enemies = ttk.Checkbutton(
+        tabQOL,
+        text = "Defeat All Field Enemies\n(Start with 99 of each DX bean)",
+        variable = window.enemy_clear,
+        onvalue = 1,
+        offvalue = 0
+    )
+    window.clear_enemies.place(x=120, y=220)
 
     #Run the application loop
     window.mainloop()

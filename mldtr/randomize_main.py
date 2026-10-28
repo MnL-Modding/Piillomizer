@@ -321,6 +321,8 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
 
         if stat_mult[0] < 0:
             stat_mult[0] = 0xFFFF
+        if settings[3][6] == 1:
+            stat_mult[1] = 10
 
         #Sets base stats to be added on, creating a custom level curve
         #[Level, HP, POW, DEF, SPEED, EXP, COINS]
@@ -767,13 +769,19 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                 except ValueError:
                                     #print(enemy_logic[i][j][0])
                                     enemy_added.append(boss_logic[i][j][0])
+                                    if settings[3][5] == 0:
+                                        boss_offset = 1
+                                    elif settings[3][5] == 1:
+                                        boss_offset = 5
+                                    else:
+                                        boss_offset = 3
                                     if stat_mult[0] < 0xFFFF:
                                         new_lev = int(init_boss_stats[0] + ((len(new_enemy_stats) // 2.5) + 1))
                                     else:
                                         new_lev = 60
-                                    new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + (len(new_enemy_stats) * 24)), int(init_boss_stats[2] + (len(new_enemy_stats) * 3 * stat_mult[0])),
-                                                            int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int((init_boss_stats[5] + (len(new_enemy_stats) * 150 * stat_mult[1])) / 2),
-                                                            int(init_boss_stats[6] + (len(new_enemy_stats))), 0, 0, 0, 0, 0, new_lev])
+                                    new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + ((len(new_enemy_stats)-boss_offset) * 28)), int(init_boss_stats[2] + ((len(new_enemy_stats)-boss_offset) * 5 * stat_mult[0])),
+                                                            int(init_boss_stats[3] + ((len(new_enemy_stats)-boss_offset) * 3)), int(init_boss_stats[4] + ((len(new_enemy_stats)-boss_offset) // 1.5)), int((init_boss_stats[5] + ((len(new_enemy_stats)-boss_offset) * 150 * stat_mult[1])) / 2),
+                                                            int(init_boss_stats[6] + (len(new_enemy_stats)-boss_offset)), 0, 0, 0, 0, 0, new_lev])
 
                                     for stat in range(len(new_enemy_stats[-1])):
                                         if new_enemy_stats[-1][stat] < 1:
@@ -790,7 +798,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                                                 new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                                 new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
                                     elif new_enemy_stats[-1][0] == 17 or new_enemy_stats[-1][0] == 128:
-                                        new_enemy_stats[-1][1] //= 4
+                                        new_enemy_stats[-1][1] //= 6
                                         new_enemy_stats[-1][5] //= 4
                                         new_enemy_stats[-1][6] //= 4
                                         if new_enemy_stats[-1][0] == 128:
@@ -816,26 +824,6 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                                                 new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                                 new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
                                         new_enemy_stats.append([147, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                                new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                        new_enemy_stats.append([148, new_enemy_stats[-1][1] // 2, new_enemy_stats[-1][2] // 4, new_enemy_stats[-1][3] // 3,
-                                                                new_enemy_stats[-1][4] + 10, new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                        new_enemy_stats.append([149, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                                new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                        new_enemy_stats.append([150, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                                new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                        new_enemy_stats.append([151, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                                new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                        new_enemy_stats.append([152, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
                                                                 new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
                                                                 new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                                 new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
@@ -1562,13 +1550,19 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                     except ValueError:
                                         #print(enemy_logic[i][j][0])
                                         enemy_added.append(boss_logic[i][j][0])
+                                        if settings[3][5] == 0:
+                                            boss_offset = 1
+                                        elif settings[3][5] == 1:
+                                            boss_offset = 4
+                                        else:
+                                            boss_offset = 3
                                         if stat_mult[0] < 0xFFFF:
                                             new_lev = int(init_boss_stats[0] + ((len(new_enemy_stats) // 2.5) + 1))
                                         else:
                                             new_lev = 60
-                                        new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + (len(new_enemy_stats) * 24)), int(init_boss_stats[2] + (len(new_enemy_stats) * 3 * stat_mult[0])),
-                                                                int(init_boss_stats[3] + (len(new_enemy_stats) * 3)), int(init_boss_stats[4] + (len(new_enemy_stats) // 1.5)), int((init_boss_stats[5] + (len(new_enemy_stats) * 150 * stat_mult[1])) / 2),
-                                                                int(init_boss_stats[6] + (len(new_enemy_stats))), 0, 0, 0, 0, 0, new_lev])
+                                        new_enemy_stats.append([boss_logic[i][j][0], int(init_boss_stats[1] + ((len(new_enemy_stats)-boss_offset) * 28)), int(init_boss_stats[2] + ((len(new_enemy_stats)-boss_offset) * 5 * stat_mult[0])),
+                                                                int(init_boss_stats[3] + ((len(new_enemy_stats)-boss_offset) * 4)), int(init_boss_stats[4] + ((len(new_enemy_stats)-boss_offset) // 1.5)), int((init_boss_stats[5] + ((len(new_enemy_stats)-boss_offset) * 150 * stat_mult[1])) / 2),
+                                                                int(init_boss_stats[6] + (len(new_enemy_stats)-boss_offset)), 0, 0, 0, 0, 0, new_lev])
 
                                         for stat in range(len(new_enemy_stats[-1])):
                                             if new_enemy_stats[-1][stat] < 1:
@@ -1585,7 +1579,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                                                     new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                                     new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
                                         elif new_enemy_stats[-1][0] == 17 or new_enemy_stats[-1][0] == 128:
-                                            new_enemy_stats[-1][1] //= 4
+                                            new_enemy_stats[-1][1] //= 6
                                             new_enemy_stats[-1][5] //= 4
                                             new_enemy_stats[-1][6] //= 4
                                             if new_enemy_stats[-1][0] == 128:
@@ -1611,26 +1605,6 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                                                     new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                                     new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
                                             new_enemy_stats.append([147, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                                    new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                    new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                    new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                            new_enemy_stats.append([148, new_enemy_stats[-1][1] // 2, new_enemy_stats[-1][2] // 4, new_enemy_stats[-1][3] // 3,
-                                                                    new_enemy_stats[-1][4] + 10, new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                    new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                    new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                            new_enemy_stats.append([149, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                                    new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                    new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                    new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                            new_enemy_stats.append([150, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                                    new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                    new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                    new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                            new_enemy_stats.append([151, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
-                                                                    new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
-                                                                    new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
-                                                                    new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])
-                                            new_enemy_stats.append([152, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
                                                                     new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
                                                                     new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],
                                                                     new_enemy_stats[-1][10], new_enemy_stats[-1][11], new_enemy_stats[-1][12]])

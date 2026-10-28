@@ -1,6 +1,5 @@
 import random
 
-from mnlscript.tools.decompiler.dt.command_matchers import join_thread
 from pymsbmnl import LMSDocument, msbt_from_file
 from mnllib.n3ds import fs_std_romfs_path
 from mnllib import Subroutine, RawDataCommand, CodeCommand, Variable
@@ -10,7 +9,7 @@ from mnlscript import CodeCommandWithOffsets, emit_command, update_commands_with
 from mnlscript.dt import PLACEHOLDER_OFFSET, Variables, change_room, MusicFlag, set_action_icons_shown, \
     set_actor_attribute, Actors, tint_screen, set_blocked_buttons, ButtonFlags, set_movement_multipliers, \
     set_touches_blocked, branch_if, TextboxSoundsPreset, say, wait, Globals, call, branch, TextboxAlignment, \
-    add_in_place, start_battle, WorldType, Transition, Sound, TextboxTailType, ActorAttribute, Variable
+    add_in_place, start_battle, WorldType, Transition, Sound, TextboxTailType, ActorAttribute, Variable, get_actor_attribute
 from typing import cast
 from tqdm import tqdm
 import math
@@ -568,6 +567,8 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             Variables[0xC0B7] = 1.0 #Kamek 2 is defeated
             #Variables[0xC451] = 1.0 #Kamek 3's magic is borked
             Variables[0xC455] = 1.0 #Flame pipe introduction
+            Variables[0xB052] = 0.0 #Sets the amount of items received to 0
+            Variables[0xB053] = 0.0 #Sets the amount of items received to 0
             Variables[0xE00B] = 1.0 #Gives Luiginary stack
             Variables[0xE00C] = 1.0 #Gives Luiginary tornado (but none of its abilities)
             if len(ap_array) > 0 and settings[3][4] == 1:
@@ -673,6 +674,13 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             Variables[0xC0BF] = settings[2][13]
             Variables[0xC0CA] = settings[2][14]
             Variables[0xC45C] = settings[2][15]
+            if settings[3][6] == 1:
+                emit_command(0x0033, [0x101D, 99], Variables[0x3000])
+                emit_command(0x0033, [0x101E, 99], Variables[0x3000])
+                emit_command(0x0033, [0x101F, 99], Variables[0x3000])
+                emit_command(0x0033, [0x1020, 99], Variables[0x3000])
+                emit_command(0x0033, [0x1021, 99], Variables[0x3000])
+                emit_command(0x0033, [0x1022, 99], Variables[0x3000])
             if settings[3][5] == 0:
                 change_room(0x001c, position=(800.0, 80.0, 800.0), init_sub=-0x01, facing=8)
             elif settings[3][5] == 1:
@@ -824,6 +832,11 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
         #Clears the enemies in some Wakeport rooms to prevent crashes
         fevent_manager.fevent_scripts[0x109] = (fevent_manager.fevent_scripts[0x109][0], None)
         fevent_manager.fevent_scripts[0x039] = (fevent_manager.fevent_scripts[0x039][0], None)
+
+        #Clears enemies in every room if the setting is turned on
+        if settings[3][6] == 1:
+            for e in range(0x2B0):
+                fevent_manager.fevent_scripts[e] = (fevent_manager.fevent_scripts[e][0], None)
 
         #Blocks Dream World in the Summit until you have the needed abilities
         #script = fevent_manager.parsed_script(0x007F, 0)
@@ -3007,12 +3020,18 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                     branch_if(Variables[i[5]], '==', 1.0, 'label_0')
                     Variables[i[5]] = 1.0
                 else:
-                    set_actor_attribute(Variables[0x7007], 0x00, 0.0)
-                    set_actor_attribute(Variables[0x7007], 0x01, 0.0)
+                    #set_actor_attribute(Variables[0x7007], 0x00, 0.0)
+                    #set_actor_attribute(Variables[0x7007], 0x01, 0.0)
                     branch_if(Variables[i[5]], '==', 1.0, 'label_0')
                     label('label_loop', manager=fevent_manager)
+                    get_actor_attribute(Actors.MARIO, ActorAttribute.X_POSITION, res=Variables[0x1000])
+                    branch_if(Variables[0x1000], '>', i[2] + 0x10, 'label_0')
+                    branch_if(Variables[0x1000], '<', i[2] - 0x10, 'label_0')
+                    get_actor_attribute(Actors.MARIO, ActorAttribute.Z_POSITION, res=Variables[0x1000])
+                    branch_if(Variables[0x1000], '>', i[4] + 0x10, 'label_0')
+                    branch_if(Variables[0x1000], '<', i[4] - 0x10, 'label_0')
                     branch_if(Variables[i[5]], '==', 1.0, 'item_check')
-                    wait(1)
+                    wait(5)
                     branch('label_loop')
 
                     label('item_check', manager=fevent_manager)
@@ -3197,11 +3216,10 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                 except ValueError:
                     script.header.sprite_groups.append(block_sprite)
                     sprite_index = len(script.header.sprite_groups) - 1
-                if i[1] != 0x35 or bean_35 > 0x23:
-                    script.header.actors.append((i[3]*0x10000 + i[2], i[4], (len(script.subroutines)-1)*0x10000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143))
-                else:
-                    script.header.actors[bean_35] = (i[3]*0x10000 + i[2], i[4], (len(script.subroutines)-1)*0x10000 + sprite_index, 0xFFFFFFFF, len(script.subroutines)-1, 0x748143)
-                    bean_35 += 1
+                new_y = i[3]
+                #if i[3] > 0:
+                #    new_y += 1
+                script.header.triggers.append((((i[4] - 0x10) * 0x10000) + (i[2] - 0x10), ((i[4] + 0x10) * 0x10000) + (i[2] + 0x10), 0, 0, ((new_y + 0x10) * 0x10000) + new_y, len(script.subroutines)-1, 0x78022))
 
             #Recompiles things
             update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
