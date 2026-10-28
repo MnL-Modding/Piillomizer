@@ -26,12 +26,11 @@ class Hammer(Choice):
 
     display_name = "Hammer"
 
-    option_random_hammer = -1
     option_mini_mario = 0
     option_mole_mario = 1
 
     # Choice options must define an explicit default value.
-    default = option_random_hammer
+    default = "random"
     
 class ReduceMini(Choice):
     """
@@ -107,7 +106,7 @@ option_groups = [
 # Finally, we can define some option presets if we want the player to be able to quickly choose a specific "mode".
 option_presets = {
     "normal": {
-        "second_hammer": -1,
+        "second_hammer": "random",
         "reduce_mini": False,
         "reduce_ball_skips": True,
         "shopsanity": False,
