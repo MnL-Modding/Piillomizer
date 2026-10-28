@@ -63,7 +63,7 @@ class N3DSAdapter:
     - process selection and read/write semantics
     """
 
-    PACKET_VERSION: int = 1
+    packet_version: int
     HEADER_SIZE: int = 0x10
     MAX_PACKET_SIZE: int = 0x410
     TIMEOUT: float = 1.0
@@ -87,7 +87,7 @@ class N3DSAdapter:
             try:
                 request_id = self.id
                 self.id = (self.id + 1) & 0xffffffff
-                request = struct.pack("=IIII", self.PACKET_VERSION, request_id, request_type, len(request_data))
+                request = struct.pack("=IIII", self.packet_version, request_id, request_type, len(request_data))
                 request += request_data
                 await asyncio.wait_for(loop.sock_sendall(self.sock, request), self.TIMEOUT)
                 for _ in range(16):
@@ -99,7 +99,7 @@ class N3DSAdapter:
                     except Exception as e:
                         logger.debug("_send_packet: bad header unpack: %s", e)
                         continue
-                    if version == self.PACKET_VERSION and id == request_id and response_type == request_type:
+                    if version == self.packet_version and id == request_id and response_type == request_type:
                         return response[self.HEADER_SIZE:]
             except Exception:
                 continue
@@ -161,11 +161,20 @@ class N3DSAdapter:
                 port = 45987
         self.sock.connect((host, port))
         self.sock.setblocking(False)
-        try:
-            await self._send_packet(0, b"", 0)
-            return await self._set_process(title)
-        except ConnectionError:
-            return False
+        self.packet_version = 2
+        while self.packet_version > 0:
+            try:
+                if host == "127.0.0.1":
+                    response = await self._send_packet(4, struct.pack("=II", 0, 0), 4)
+                    if response:
+                        return await self._set_process(title)
+                else:
+                    await self._send_packet(0, b"", 0)
+                    return await self._set_process(title)
+            except ConnectionError:
+                pass
+            self.packet_version -= 1
+        return False
 
     def disconnect(self):
         if hasattr(self, 'sock') and self.sock:
@@ -263,6 +272,100 @@ class MLDTCommandProcessor(ClientCommandProcessor):
         self.output(f"DeathLink mode set to '{mode}'. Tags are now {sorted(self.ctx.tags)}.")
         return True
 
+    def _cmd_debug(self, subcommand: str = "", value: str = ""):
+        """Debug tools. Usage: /debug setitemcount [number]  |  /debug unfreeze"""
+        subcommand = subcommand.strip().lower()
+
+        if subcommand == "":
+            self.output("Debug commands:")
+            self.output("  /debug setitemcount [number] - set the game's received-item counter to "
+                        "[number]. Without a number, reports how many items Archipelago has to send "
+                        "vs. what the game currently shows. For debug purposes only, please do not use.")
+            self.output("  /debug unfreeze               - reset the item-write flag. Use this if "
+                        "receiving an item (e.g. an attack piece beyond what the game has room for) "
+                        "froze the game.")
+            return True
+
+        handler = getattr(self.ctx, "mldt_handler", None)
+        if handler is None or not getattr(self.ctx, "interface_connected", False) or not handler.ram_offset:
+            self.output("Not connected to the game yet -- can't run debug commands.")
+            return False
+
+        if subcommand == "setitemcount":
+            low_addr = handler.ram_offset + 0x43C + 0x52
+            high_addr = handler.ram_offset + 0x43C + 0x53
+
+            if value.strip() == "":
+                async_start(
+                    _debug_report_itemcount(self.ctx, handler, low_addr, high_addr, self.output),
+                    name="debug_report_itemcount",
+                )
+                return True
+
+            try:
+                count = int(value.strip())
+            except ValueError:
+                self.output(f"'{value}' isn't a valid whole number.")
+                return False
+
+            if not (0 <= count <= 0xFFFF):
+                self.output("Item count has to be between 0 and 65535.")
+                return False
+
+            async_start(
+                _debug_set_itemcount(self.ctx, handler, low_addr, high_addr, count, self.output),
+                name="debug_set_itemcount",
+            )
+            return True
+
+        if subcommand == "unfreeze":
+            write_addr = handler.ram_offset + 0x43C + 0x51
+            async_start(_debug_unfreeze(self.ctx, handler, write_addr, self.output), name="debug_unfreeze")
+            return True
+
+        self.output(f"Unknown debug command '{subcommand}'. Use /debug for the list of commands.")
+        return False
+
+
+async def _debug_report_itemcount(ctx, handler, low_addr: int, high_addr: int, output) -> None:
+    """Report how many items Archipelago has to send."""
+    total_to_send = len(ctx.items_received)
+    try:
+        game_low = int.from_bytes(await ctx.interface.read(low_addr, 1), byteorder='little')
+        game_high = int.from_bytes(await ctx.interface.read(high_addr, 1), byteorder='little')
+        game_count = game_low + game_high * 0x100
+        output(
+            f"Archipelago has {total_to_send} item(s) to send this session. "
+            f"Your save currently shows {game_count} received (client-tracked count: {handler.current_items_received})."
+        )
+    except Exception:
+        logger.debug("Debug: failed to read in-game item count", exc_info=True)
+        output(f"Archipelago has {total_to_send} item(s) to send this session. "
+               f"(Couldn't read the in-game count right now.)")
+
+
+async def _debug_set_itemcount(ctx, handler, low_addr: int, high_addr: int, count: int, output) -> None:
+    """Write `count` into the game's received-item counter (low byte + high byte * 0x100)."""
+    try:
+        await ctx.interface.write(low_addr, bytes([count % 0x100]))
+        await ctx.interface.write(high_addr, bytes([count // 0x100]))
+        handler.current_items_received = count
+        logger.info("Debug: set in-game received item count to %d.", count)
+        output(f"Set the item count to {count}.")
+    except Exception:
+        logger.warning("Debug: failed to write item count %d to the game.", count, exc_info=True)
+        output(f"Failed to write {count} to the game -- try again.")
+
+
+async def _debug_unfreeze(ctx, handler, write_addr: int, output) -> None:
+    """Reset the item-write address to 0, clearing a freeze caused by an out-of-range (attack piece) received item."""
+    try:
+        await ctx.interface.write(write_addr, bytes([0]))
+        logger.info("Debug: item-write address reset to 0.")
+        output("Item-write address reset to 0.")
+    except Exception:
+        logger.warning("Debug: failed to reset the item-write address.", exc_info=True)
+        output("Failed to reset the item-write address -- try again.")
 
 
 class StandaloneMLDTClient:
@@ -402,9 +505,12 @@ class StandaloneMLDTClient:
     async def validate_rom(self, ctx) -> bool:
         """Read the ROM header through the Azahar adapter directly.
 
-        This is intentionally a low-friction sanity check: if Azahar returns zeroed
-        memory, we still keep the known-good Dream Team base and continue. The
-        goal is a working client, not a perfect BizHawk-compatible ROM validator.
+        Changed so that validation must succeed before any region-dependent address is used.
+        No fallbacks if it fails to find the version.
+        (Currently it seems that a na_variant_2 rom will always be turned into a na_variant_1 
+        by the mod, so I cannot confirm if that version is detecting properly if i'm wrong.
+        Vanilla 1.1 game has a different header than whats found in the bizhawk version,
+        but will keep for compatibility.)
         """
         print("StandaloneMLDTClient: validating ROM via Azahar adapter")
         #logger.info("StandaloneMLDTClient: validating ROM via Azahar adapter")
@@ -413,13 +519,14 @@ class StandaloneMLDTClient:
             #print(f"StandaloneMLDTClient.validate_rom: reading System Bus at {probe_addr:#x}")
             #logger.info("StandaloneMLDTClient.validate_rom: reading System Bus at %#x", probe_addr)
             rom_info = await ctx.interface.read(probe_addr, 256)
-            print(f"StandaloneMLDTClient.validate_rom: rom_info_len={len(rom_info)} first64={rom_info[:64].hex()}")
+            print(f"StandaloneMLDTClient.validate_rom: rom_info_len={len(rom_info)} fullheader={rom_info[:256].hex()}")
             #logger.info("StandaloneMLDTClient.validate_rom: System Bus bytes=%s", rom_info[:16].hex())
             #logger.info("StandaloneMLDTClient.validate_rom: rom_info_len=%d first64=%s", len(rom_info), rom_info[:64].hex())
 
 
             na_variant_1 = bytes.fromhex('07 00 00 EB 2A 10 00 EB 57 12 00 EB 45 10 00 EB 65 02 00 FA 19 10 00 EB 3A 10 00 EB 5D 0F 00 EB 5A 0F 00 EA 14 00 9F E5 14 10 9F E5 00 20 A0 E3 01 00 50 E1 04 20 80 34 FC FF FF 3A 1E FF 2F E1 A8 14 6E 00 1C 21 71 00 7C B5 15 00 0C 00 1A 00 00 29 00 90 02 D0 61 00 08 18 80 1E 0B 4B 7B 44 69 46 01 90 28 00 00 F0 BE F8 05 00 00 2C 06 D0 69 46 01 98 80 1C 01 90 00 20 00 F0 C7 F8 A5 42 02 D3 00 20 C0 43 7C BD 28 00 7C BD AB 01 00 00 00 21 01 E0 49 1C 80 1C 02 88 00 2A FA D1 08 00 70 47 FF FF 70 47 C0 46 01 C0 8F E2 1C FF 2F E1 F7 B5 00 26 75 29 10 68 00 99 14 A5 11 D0 FD F1 23 FF 00 28 02 DA 40 42 11 A5 08 E0 00 99 09 68 8A 07 01 D5 0F A5 02 E0 49 07 04 D5 0E A5 01 26 01 E0 FD F1 1C FF 00 9F 00 24 24 37 04 E0 FD F1 22 EF 30 31 39 55 64 1C 00 28 F8 D1 00 98 33 00')
             na_variant_2 = bytes.fromhex('07 00 00 EB 2A 10 00 EB 57 12 00 EB 45 10 00 EB 65 02 00 FA 19 10 00 EB 3A 10 00 EB 5D 0F 00 EB 5A 0F 00 EA 14 00 9F E5 14 10 9F E5 00 20 A0 E3 01 00 50 E1 04 20 80 34 FC FF FF 3A 1E FF 2F E1 A8 14 6E 00 24 21 71 00 7C B5 15 00 0C 00 1A 00 00 29 00 90 02 D0 61 00 08 18 80 1E 0B 4B 7B 44 69 46 01 90 28 00 00 F0 BE F8 05 00 00 2C 06 D0 69 46 01 98 80 1C 01 90 00 20 00 F0 C7 F8 A5 42 02 D3 00 20 C0 43 7C BD 28 00 7C BD AB 01 00 00 00 21 01 E0 49 1C 80 1C 02 88 00 2A FA D1 08 00 70 47 FF FF 70 47 C0 46 01 C0 8F E2 1C FF 2F E1 F7 B5 00 26 75 29 10 68 00 99 14 A5 11 D0 FD F1 09 FF 00 28 02 DA 40 42 11 A5 08 E0 00 99 09 68 8A 07 01 D5 0F A5 02 E0 49 07 04 D5 0E A5 01 26 01 E0 FD F1 02 FF 00 9F 00 24 24 37 04 E0 FD F1 08 EF 30 31 39 55 64 1C 00 28 F8 D1 00 98 33 00')
+            na_variant_3 = bytes.fromhex('07 00 00 eb 2a 10 00 eb 57 12 00 eb 45 10 00 eb 65 02 00 fa 19 10 00 eb 3a 10 00 eb 5d 0f 00 eb 5a 0f 00 ea 14 00 9f e5 14 10 9f e5 00 20 a0 e3 01 00 50 e1 04 20 80 34 fc ff ff 3a 1e ff 2f e1 a8 14 6e 00 1c 21 71 00 7c b5 15 00 0c 00 1a 00 00 29 00 90 02 d0 61 00 08 18 80 1e 0b 4b 7b 44 69 46 01 90 28 00 00 f0 be f8 05 00 00 2c 06 d0 69 46 01 98 80 1c 01 90 00 20 00 f0 c7 f8 a5 42 02 d3 00 20 c0 43 7c bd 28 00 7c bd ab 01 00 00 00 21 01 e0 49 1c 80 1c 02 88 00 2a fa d1 08 00 70 47 ff ff 70 47 c0 46 01 c0 8f e2 1c ff 2f e1 f7 b5 00 26 75 29 10 68 00 99 14 a5 11 d0 fd f1 a1 ff 00 28 02 da 40 42 11 a5 08 e0 00 99 09 68 8a 07 01 d5 0f a5 02 e0 49 07 04 d5 0e a5 01 26 01 e0 fd f1 9a ff 00 9f 00 24 24 37 04 e0 fd f1 a0 ef 30 31 39 55 64 1c 00 28 f8 d1 00 98 33 00') #Just incase the patched game does have this header.
             pal_variant_1 = bytes.fromhex('07 00 00 EB 2A 10 00 EB 57 12 00 EB 45 10 00 EB 65 02 00 FA 19 10 00 EB 3A 10 00 EB 5D 0F 00 EB 5A 0F 00 EA 14 00 9F E5 14 10 9F E5 00 20 A0 E3 01 00 50 E1 04 20 80 34 FC FF FF 3A 1E FF 2F E1 A8 24 6E 00 1C 31 71 00 7C B5 15 00 0C 00 1A 00 00 29 00 90 02 D0 61 00 08 18 80 1E 0B 4B 7B 44 69 46 01 90 28 00 00 F0 BE F8 05 00 00 2C 06 D0 69 46 01 98 80 1C 01 90 00 20 00 F0 C7 F8 A5 42 02 D3 00 20 C0 43 7C BD 28 00 7C BD AB 01 00 00 00 21 01 E0 49 1C 80 1C 02 88 00 2A FA D1 08 00 70 47 FF FF 70 47 C0 46 01 C0 8F E2 1C FF 2F E1 F7 B5 00 26 75 29 10 68 00 99 14 A5 11 D0 FD F1 FB FE 00 28 02 DA 40 42 11 A5 08 E0 00 99 09 68 8A 07 01 D5 0F A5 02 E0 49 07 04 D5 0E A5 01 26 01 E0 FD F1 F4 FE 00 9F 00 24 24 37 04 E0 FD F1 FA EE 30 31 39 55 64 1C 00 28 F8 D1 00 98 33 00')
 
             na_offset = AZAHAR_RAM_OFFSETS[TITLE_IDS["E"]]
@@ -436,7 +543,7 @@ class StandaloneMLDTClient:
             fallback_dream_val, fallback_real_val = DEATHLINK_BATTLE_VALUES.get(detected_title_id, (na_dream_val, na_real_val))
 
 
-            if rom_info in (na_variant_1, na_variant_2):
+            if rom_info in (na_variant_1, na_variant_2, na_variant_3):
                 self.ram_offset = fallback_offset
                 self.deathlink_ram_offset = fallback_deathlink_offset
                 self.death_link_dream_val = fallback_dream_val
@@ -451,23 +558,13 @@ class StandaloneMLDTClient:
                 #logger.info("StandaloneMLDTClient.validate_rom: matched PAL ROM header -> ram_offset=%#x", self.ram_offset)
                 print(f"StandaloneMLDTClient.validate_rom: matched PAL ROM header -> ram_offset={self.ram_offset} deathlink_ram_offset={self.deathlink_ram_offset}")
             else:
-                print(f"StandaloneMLDTClient.validate_rom: ROM header did not match known MLDT signatures; defaulting to NA; first64={rom_info[:64].hex()}")
-                #logger.warning("StandaloneMLDTClient.validate_rom: ROM header did not match known MLDT signatures; defaulting to NA; first64=%s", rom_info[:64].hex())
-                self.ram_offset = na_offset
-                self.deathlink_ram_offset = na_deathlink_offset
-                self.death_link_dream_val = na_dream_val
-                self.death_link_real_val = na_real_val
-                #logger.warning("StandaloneMLDTClient.validate_rom: using MLDT fallback ram_offset=%#x", self.ram_offset)
+                print(f"StandaloneMLDTClient.validate_rom: ROM header did not match a known MLDT signature; waiting for confirmation; first64={rom_info[:64].hex()}")
+                return False
         except Exception as e:
             print(f"Standalone validate_rom: adapter read failed: {e!r}")
             logger.warning("Standalone validate_rom: adapter read failed: %s", e)
             logger.debug("Standalone validate_rom: adapter read failed", exc_info=True)
-            fallback_title_id = getattr(ctx, "title_id", TITLE_IDS["E"])
-            self.ram_offset = AZAHAR_RAM_OFFSETS.get(fallback_title_id, AZAHAR_RAM_OFFSETS[TITLE_IDS["E"]])
-            self.deathlink_ram_offset = DEATHLINK_RAM_OFFSETS.get(fallback_title_id, DEATHLINK_RAM_OFFSETS[TITLE_IDS["E"]])
-            self.death_link_dream_val, self.death_link_real_val = DEATHLINK_BATTLE_VALUES.get(
-                fallback_title_id, DEATHLINK_BATTLE_VALUES[TITLE_IDS["E"]])
-            #logger.warning("StandaloneMLDTClient.validate_rom: using MLDT fallback ram_offset=%#x after exception", self.ram_offset)
+            return False
 
         ctx.game = "Mario and Luigi Dream Team"
         ctx.items_handling = 0b001
@@ -523,13 +620,13 @@ class StandaloneMLDTClient:
         # A death-flag flip alone isn't trustworthy -- fleeing a battle can trip it
         # momentarily even though the bro is fine. Only treat him as dead once both the
         # flag says so *and* his HP has actually hit 0.
-        mario_alive = not (mario_dead_flag and mario_hp == 0)
+        mario_alive = not (in_battle and mario_dead_flag and mario_hp == 0)
         if in_dream_battle:
             luigi_alive = None
         else:
             luigi_dead_flag = int.from_bytes(await ctx.interface.read(luigi_dead_addr, 1), byteorder='little') == 0
             luigi_hp = int.from_bytes(await ctx.interface.read(luigi_hp_addr, 2), byteorder='little')
-            luigi_alive = not (luigi_dead_flag and luigi_hp == 0)
+            luigi_alive = not (in_battle and luigi_dead_flag and luigi_hp == 0)
 
         # Track when the current battle started, so the arm step below can hold off
         # writing wear/turn for a few seconds after a battle begins.
@@ -550,13 +647,13 @@ class StandaloneMLDTClient:
         mario_kill_just_landed = False
         luigi_kill_just_landed = False
         if self.death_link_pending_wear_revert_mario is not None and not mario_alive:
-            await ctx.interface.write(mario_wear_addr, bytes([self.death_link_pending_wear_revert_mario]))
+            if self.death_link_pending_wear_revert_mario != -1: await ctx.interface.write(mario_wear_addr, bytes([self.death_link_pending_wear_revert_mario]))
             self.death_link_pending_wear_revert_mario = None
             self.death_link_armed_this_encounter_mario = False
             mario_kill_just_landed = True
             #logger.info("DeathLink: Mario's triggered kill landed -- restored his equipment.")
         if not in_dream_battle and self.death_link_pending_wear_revert_luigi is not None and luigi_alive is False:
-            await ctx.interface.write(luigi_wear_addr, bytes([self.death_link_pending_wear_revert_luigi]))
+            if self.death_link_pending_wear_revert_luigi != -1: await ctx.interface.write(luigi_wear_addr, bytes([self.death_link_pending_wear_revert_luigi]))
             self.death_link_pending_wear_revert_luigi = None
             self.death_link_armed_this_encounter_luigi = False
             luigi_kill_just_landed = True
@@ -584,6 +681,7 @@ class StandaloneMLDTClient:
         )
         if self.death_link_pending_wear_revert_mario is not None and mario_alive and in_battle \
                 and battle_settled and not self.death_link_armed_this_encounter_mario:
+            if self.death_link_pending_wear_revert_mario == -1: self.death_link_pending_wear_revert_mario = (await ctx.interface.read(mario_wear_addr, 1))[0]
             await ctx.interface.write(mario_wear_addr, bytes([DEATHLINK_HERO_WEAR_VALUE]))
             await ctx.interface.write(mario_turn_addr, bytes([DEATHLINK_KILL_TURN_COUNT]))
             self.death_link_armed_this_encounter_mario = True
@@ -591,6 +689,7 @@ class StandaloneMLDTClient:
                 logger.info("DeathLink debug: (re-)armed Mario's kill for this battle")
         if not in_dream_battle and self.death_link_pending_wear_revert_luigi is not None and luigi_alive and in_battle \
                 and battle_settled and not self.death_link_armed_this_encounter_luigi:
+            if self.death_link_pending_wear_revert_luigi == -1: self.death_link_pending_wear_revert_luigi = (await ctx.interface.read(luigi_wear_addr, 1))[0]
             await ctx.interface.write(luigi_wear_addr, bytes([DEATHLINK_HERO_WEAR_VALUE]))
             await ctx.interface.write(luigi_turn_addr, bytes([DEATHLINK_KILL_TURN_COUNT]))
             self.death_link_armed_this_encounter_luigi = True
@@ -671,13 +770,13 @@ class StandaloneMLDTClient:
 
 
         if kill_mario and mario_alive and self.death_link_pending_wear_revert_mario is None:
-            original_wear = (await ctx.interface.read(mario_wear_addr, 1))[0]
+            original_wear = -1
             self.death_link_pending_wear_revert_mario = original_wear
         else:
             kill_mario = False
 
         if kill_luigi and not in_dream_battle and luigi_alive and self.death_link_pending_wear_revert_luigi is None:
-            original_wear = (await ctx.interface.read(luigi_wear_addr, 1))[0]
+            original_wear = -1
             self.death_link_pending_wear_revert_luigi = original_wear
         else:
             kill_luigi = False
@@ -694,8 +793,8 @@ class StandaloneMLDTClient:
 
         azahar_ram_offset = self.ram_offset
         azahar_item_write_addr = azahar_ram_offset + 0x43C + 0x51      # 0x6e815d
-        azahar_item_count_low = azahar_ram_offset + 0x43C + 0x4D      # 0x6e8159
-        azahar_item_count_high = azahar_ram_offset + 0x43C + 0x4E     # 0x6e815a
+        azahar_item_count_low = azahar_ram_offset + 0x43C + 0x52      # 0x6e8159
+        azahar_item_count_high = azahar_ram_offset + 0x43C + 0x53     # 0x6e815a
         azahar_file_loaded_addr = azahar_ram_offset + 0x1             # 0x6e7cd1
         azahar_block_data_addr = azahar_ram_offset + 0xB8             # 0x6e7d88
         azahar_shop_enabled_addr = azahar_ram_offset + 0x278 + 0x1BE  # shop check
@@ -757,13 +856,24 @@ class StandaloneMLDTClient:
                     and (time.time() - self.file_loaded_time) >= FILE_LOAD_SETTLE_DELAY
                 )
 
-                if items_ready:
+                if items_ready and in_game:
                     try:
                         game_received_count = int.from_bytes(await ctx.interface.read(azahar_item_count_low, 1), byteorder='little') + (
                             int.from_bytes(await ctx.interface.read(azahar_item_count_high, 1), byteorder='little') * 0x100
                         )
                         if game_received_count > self.current_items_received:
                             self.current_items_received = game_received_count
+                        elif game_received_count < self.current_items_received:
+                            logger.info(
+                                "Detected save reload (item counter dropped from %d to %d); resyncing",
+                                self.current_items_received, game_received_count,
+                            )
+                            self.current_items_received = game_received_count
+                            self.prev_data = 0
+                            self.prev_shop = 0
+                            self.shop_on = False
+                            self.block_sent_locations = set()
+                            self.shop_sent_locations = set()
                         elif self.current_items_received > len(ctx.items_received):
                             self.current_items_received = len(ctx.items_received)
                     except Exception:
@@ -772,44 +882,38 @@ class StandaloneMLDTClient:
                     if self.current_items_received > len(ctx.items_received):
                         self.current_items_received = len(ctx.items_received)
                     #logger.debug("item write check: current_items_received=%s len(items_received)=%s receive_buffer=%s", self.current_items_received, len(ctx.items_received), self.receive_buffer)
-                    if self.current_items_received != len(ctx.items_received):
+                    if self.current_items_received != len(ctx.items_received) and self.receive_buffer == 0:
                         new_items = ctx.items_received
-                        for n in range(len(new_items) - self.current_items_received):
-                            rn = n + self.current_items_received
-                            if self.receive_buffer == 0:
-                                to_write = 0
-                                if new_items[rn].item > 23 and new_items[rn].item < 239:
-                                    to_write = new_items[rn].item - 23
-                                elif new_items[rn].item < 239:
-                                    to_write = new_items[rn].item + 215
-                                else:
-                                    to_write = new_items[rn].item
-                                #logger.debug("Writing item %s -> emulator (to_write=%s)", new_items[rn].item, to_write)
-                                #logger.debug("item write targets: addr=%#x count_low=%#x count_high=%#x", azahar_item_write_addr, azahar_item_count_low, azahar_item_count_high)
-                                #logger.debug("Attempting write: addr=%#x data=%s", azahar_item_write_addr, bytes([to_write]).hex())
-                                # read-before for diagnostics
-                                #try:
-                                    #before = await ctx.interface.read(azahar_item_write_addr, 1)
-                                    #logger.debug("Before write at %#x: %s", azahar_item_write_addr, before.hex())
-                                #except Exception:
-                                    #logger.debug("Read-before failed", exc_info=True)
-                                await ctx.interface.write(azahar_item_write_addr, bytes([to_write]))
-                                # verify write by reading back
-                                #try:
-                                    #read_back = await ctx.interface.read(azahar_item_write_addr, 1)
-                                    #logger.info("Wrote %s to %#x, read-back=%s", to_write, azahar_item_write_addr, read_back.hex())
-                                #except Exception:
-                                    #logger.debug("Read-back failed after write", exc_info=True)
-                                self.current_items_received += 1
-                                await ctx.interface.write(azahar_item_count_low, bytes([self.current_items_received % 0x100]))
-                                await ctx.interface.write(azahar_item_count_high, bytes([self.current_items_received // 0x100]))
-                                self.receive_buffer = 2
+                        rn = self.current_items_received
+                        to_write = 0
+                        if new_items[rn].item > 23 and new_items[rn].item < 239:
+                            to_write = new_items[rn].item - 23
+                        elif new_items[rn].item < 239:
+                            to_write = new_items[rn].item + 215
+                        else:
+                            to_write = new_items[rn].item
+                        #logger.debug("Writing item %s -> emulator (to_write=%s)", new_items[rn].item, to_write)
+                        await ctx.interface.write(azahar_item_write_addr, bytes([to_write]))
 
-                    # Handle cooldown / buffer
+                        read_back = int.from_bytes(await ctx.interface.read(azahar_item_write_addr, 1), byteorder='little')
+                        if read_back == to_write:
+                            self.receive_buffer = 1
+                        elif read_back == 0:
+                            self.current_items_received += 1
+                            await ctx.interface.write(azahar_item_count_low, bytes([self.current_items_received % 0x100]))
+                            await ctx.interface.write(azahar_item_count_high, bytes([self.current_items_received // 0x100]))
+                            self.receive_buffer = 0
+                        #else:
+                            #logger.debug("Item write did not land (read-back mismatch); retrying next tick")
+
+
                     if self.receive_buffer > 0:
                         has_been_reset = int.from_bytes(await ctx.interface.read(azahar_item_write_addr, 1), byteorder='little')
                         if has_been_reset == 0:
-                            self.receive_buffer -= 1
+                            self.current_items_received += 1
+                            await ctx.interface.write(azahar_item_count_low, bytes([self.current_items_received % 0x100]))
+                            await ctx.interface.write(azahar_item_count_high, bytes([self.current_items_received // 0x100]))
+                            self.receive_buffer = 0
                 #else:
                     #logger.debug("Save file not yet settled; holding off on item sync")
 
@@ -1031,6 +1135,14 @@ class MLDTClientContext(CommonContext):
         self.death_link_debug = False  # set via /deathlink debug
         self.pending_deathlink_kill = False  # set by on_deathlink(); consumed by the game watcher
 
+    def make_gui(self):
+        from kvui import GameManager
+
+        class MLDTGameManager(GameManager):
+            base_title = "Mario & Luigi: Dream Team Azahar/3ds Client"
+
+        return MLDTGameManager
+
     def on_deathlink(self, data: dict) -> None:
         #logger.info(f"DeathLink: packet received from server (mode={self.death_link_mode}): {data}")
         if self.death_link_mode == "off":
@@ -1054,6 +1166,7 @@ async def game_watcher(ctx: MLDTClientContext, title_id, connect_addr: str) -> N
     """
     global triple_addr, is_3ds
     handler = StandaloneMLDTClient()
+    ctx.mldt_handler = handler
     while not ctx.exit_event.is_set():
         try:
             ctx.invalid = False
@@ -1107,7 +1220,10 @@ async def game_watcher(ctx: MLDTClientContext, title_id, connect_addr: str) -> N
                 ctx.initial_delay = False
 
 
-            await handler.validate_rom(ctx)
+            if not await handler.validate_rom(ctx):
+                print("ROM region is not confirmed; waiting before scanning game memory")
+                await asyncio.sleep(1)
+                continue
 
             try:
                 if ctx.server is not None and not ctx.server.socket.closed and ctx.auth is None:

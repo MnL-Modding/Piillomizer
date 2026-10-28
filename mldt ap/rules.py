@@ -276,11 +276,11 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             
                            [[1, ball_hop], [2, ball_hop], [4, hammers | spin_jump | ball_hop], [5, hammers], [6, hammers],
                             [7, hammers], [11, has_gate & mini_mario], [12, hammers], [16, side_drill], [19, side_drill],
-                            [22, hammers], [23, hammers], [25, luigi_sneeze], [26, luigi_sneeze], [27, luigi_sneeze], [28, luigi_sneeze],
+                            [23, hammers], [24, hammers], [25, luigi_sneeze], [26, luigi_sneeze], [27, luigi_sneeze], [28, luigi_sneeze],
                             [29, luigi_sneeze], [30, luigi_sneeze], [31, luigi_sneeze], [32, luigi_sneeze], [33, luigi_sneeze], [34, luigi_sneeze],
                             [35, luigi_sneeze & luigi_stache], [36, luigi_sneeze & luigi_stache], [37, luigi_sneeze & luigi_stache],
                             [38, luigi_sneeze & luigi_stache], [39, luigi_sneeze & luigi_stache],
-                            [40, luigi_sneeze], [41, luigi_sneeze], [42, luigi_sneeze], [43, luigi_sneeze], [44, luigi_sneeze],
+                            [40, luigi_sneeze], [41, luigi_sneeze], [42, luigi_sneeze], [43, luigi_sneeze], [44, luigi_sneeze & luigi_stache],
                             [45, luigi_sneeze], [46, luigi_sneeze & luigi_stache], [47, luigi_sneeze & luigi_stache], [48, luigi_sneeze & luigi_stache],
                             [50, luigi_sneeze & luigi_stache], [51, luigi_sneeze & luigi_stache], [52, luigi_sneeze & luigi_stache], [53, spin_jump], 
                             [54, luigi_sneeze & luigi_stache], [55, mini_mario], [56, spin_jump | ball_hop], [57, spin_jump & ball_hop], [58, ball_hop], 
@@ -298,7 +298,7 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             
                            [[2, mole_mario], [3, mini_mario], [4, mole_mario], [5, mini_mario], [6, has_first_dozite], [7, mole_mario], 
                             [9, mini_mario], [11, mini_mario], [12, mini_mario], [13, mini_mario], [14, mini_mario], [15, mini_mario], [16, mini_mario], [17, mini_mario],
-                            [19, spin_jump | ball_hop], [20, (mini_mario & side_drill) | ball_hop], [21, (side_drill | ball_hop) & mini_mario],
+                            [18, spin_jump | ball_hop], [20, (mini_mario & side_drill) | ball_hop], [21, (side_drill | ball_hop) & mini_mario],
                             [22, (mini_mario & side_drill) | (hammers & ball_hop)], [23, (mini_mario & side_drill) | (hammers & ball_hop)],
                             [30, has_first_dozite & ball_hop], [31, has_first_dozite], [34, luigi_works], [35, (mini_mario & side_drill) | (hammers & ball_hop)],
                             [36, (mini_mario & side_drill) | (hammers & ball_hop)], [37, (mini_mario & side_drill) | (hammers & ball_hop)],
@@ -309,7 +309,7 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                            [[1, mole_mario], [2, mole_mario], [3, mole_mario], [4, mole_mario], [17, mini_mario], [18, mini_mario],
                             [19, mini_mario], [20, mini_mario], [21, mini_mario], [22, mini_mario], [24, mini_mario], [25, ball_hop],
                             [26, mole_mario], [29, mini_mario], [30, ball_hop], [32, luigi_drill], [33, luigi_drill], [34, luigi_sneeze],
-                            [35, luigi_sneeze], [38, luigi_drill], [39, luigi_stache], [44, mole_mario], [45, mole_mario], [46, mole_mario],
+                            [35, luigi_sneeze], [36, mole_mario], [37, mole_mario], [38, luigi_drill], [39, luigi_stache], [44, mole_mario], [45, mole_mario], [46, mole_mario],
                             [47, mole_mario], [48, mole_mario], [51, mini_mario],
                             [52, mole_mario], [53, mole_mario], [54, mole_mario], [55, mole_mario], [56, mole_mario], [57, mole_mario],
                             [58, mole_mario], [59, mole_mario], [60, mole_mario], [61, mole_mario], [62, mole_mario], [63, mole_mario],
@@ -431,24 +431,25 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             
                            []]
 
-    shop_logic_info = [[5, luigi_sneeze], [8, luigi_works & luigi_stack_spring & luigi_stack_pound], [12, mole_mario]]
+    shop_logic_info = [[5, luigi_sneeze], [8, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_drill], [12, mole_mario], [18, has_neo_bowser_access & mini_mario]]
     
     #Updates certain indexes in the location info if reduce mini mario requirements is turned on
     if world.options.reduce_mini:
         del location_logic_info[4][45]
-        location_logic_info[4][65] = [80, mole_mario]
-        location_logic_info[4][66] = [81, mole_mario & ball_hop]
+        location_logic_info[4][-2] = [80, mole_mario]
+        location_logic_info[4][-1] = [81, mole_mario & ball_hop]
         del location_logic_info[6][7]
         del location_logic_info[6][7]
         del location_logic_info[6][7]
-        location_logic_info[6][13] = [22, hammers & (ball_hop | side_drill)]
-        location_logic_info[6][14] = [23, hammers & (ball_hop | side_drill)]
+        location_logic_info[6][14] = [22, hammers & (ball_hop | side_drill)]
+        location_logic_info[6][15] = [23, hammers & (ball_hop | side_drill)]
         location_logic_info[6][19] = [35, hammers & (ball_hop | side_drill)]
         location_logic_info[6][20] = [36, hammers & (ball_hop | side_drill)]
         location_logic_info[6][21] = [37, hammers & (ball_hop | side_drill)]
         location_logic_info[6][22] = [38, hammers & (ball_hop | side_drill)]
         location_logic_info[6][30] = [46, mole_mario & side_drill]
         location_logic_info[6][31] = [47, mole_mario & (ball_hop | side_drill)]
+        shop_logic_info[-1] = [18, has_neo_bowser_access]
     
     #Sets the logic to the locations
     for r in range(len(location_logic_info)):

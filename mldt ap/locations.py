@@ -1182,7 +1182,7 @@ def create_regular_locations(world: MLDTWorld) -> None:
             elif i % 1000 <= 144:
                 locations_to_add[16][l] = i
             elif i % 1000 <= 152:
-                locations_to_add[21][l] = i
+                locations_to_add[4][l] = i
             else:
                 locations_to_add[24][l] = i
 

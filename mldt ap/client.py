@@ -28,6 +28,7 @@ class MLDTClient(BizHawkClient):
     receive_buffer = 0
     current_items_received = 0
     prev_checked_len = 0
+    key_item_ids = [0xE002]
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         try:
@@ -161,10 +162,10 @@ class MLDTClient(BizHawkClient):
                     #Updates the current items to match up with the amount of items that have been received
                     self.current_items_received = int.from_bytes((await bizhawk.read(
                         ctx.bizhawk_ctx,
-                        [(self.ram_offset + 0x43C + 0x4D, 1, "FCRAM")]
+                        [(self.ram_offset + 0x43C + 0x52, 1, "FCRAM")]
                     ))[0], byteorder = 'little') + (int.from_bytes((await bizhawk.read(
                         ctx.bizhawk_ctx,
-                        [(self.ram_offset + 0x43C + 0x4E, 1, "FCRAM")]
+                        [(self.ram_offset + 0x43C + 0x53, 1, "FCRAM")]
                     ))[0], byteorder = 'little') * 0x100)
 
                     self.prev_check_len = len(ctx.checked_locations)
@@ -247,11 +248,32 @@ class MLDTClient(BizHawkClient):
                                 to_write = new_items[rn].item + 215
                             else:
                                 to_write = new_items[rn].item
+                            #if new_items[rn].item < 24:
+                            #    item_index = new_items[rn].item
+                            #    item_to_write = self.key_item_ids[item_index]
+                            #    item_ram_offset = 0
+                            #    item_bit = item_to_write % 8
+                            #    new_item_byte = int.from_bytes((await bizhawk.read(
+                            #        ctx.bizhawk_ctx,
+                            #        [(self.ram_offset + item_ram_offset + ((item_to_write % 0x1000) // 8), 1, "FCRAM")]
+                            #    ))[0], byteorder = 'little')
+                            #    if item_to_write == 0xE002:
+                            #        if new_item_byte % 2 == 0:
+                            #            if (new_item_byte >> 1) % 2 == 0:
+                            #                item_bit = 1
+                            #            else:
+                            #                item_bit = 2
+                            #        else:
+                            #            item_bit = 0
+                            #    if (new_item_byte >> item_bit) % 2 == 0 and item_to_write // 0x1000 != 0xB:
+                            #        new_item_byte += 2 ** item_bit
+                            #    await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + item_ram_offset + ((item_to_write % 0x1000) // 8),
+                            #                                            bytes([new_item_byte]), "FCRAM")])
                             await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x51, bytes([to_write]), "FCRAM")])
                             self.current_items_received += 1
-                            await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x4D, 
+                            await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x52, 
                                                                 bytes([self.current_items_received % 0x100]), "FCRAM")])
-                            await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x4E, 
+                            await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x53, 
                                                                 bytes([self.current_items_received // 0x100]), "FCRAM")])
                             self.receive_buffer = 2
                 
