@@ -162,10 +162,10 @@ class MLDTClient(BizHawkClient):
                     #Updates the current items to match up with the amount of items that have been received
                     self.current_items_received = int.from_bytes((await bizhawk.read(
                         ctx.bizhawk_ctx,
-                        [(self.ram_offset + 0x43C + 0x52, 1, "FCRAM")]
+                        [(self.ram_offset + 0x43C + 0x166, 1, "FCRAM")]
                     ))[0], byteorder = 'little') + (int.from_bytes((await bizhawk.read(
                         ctx.bizhawk_ctx,
-                        [(self.ram_offset + 0x43C + 0x53, 1, "FCRAM")]
+                        [(self.ram_offset + 0x43C + 0x167, 1, "FCRAM")]
                     ))[0], byteorder = 'little') * 0x100)
 
                     self.prev_check_len = len(ctx.checked_locations)
@@ -271,9 +271,9 @@ class MLDTClient(BizHawkClient):
                             #                                            bytes([new_item_byte]), "FCRAM")])
                             await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x51, bytes([to_write]), "FCRAM")])
                             self.current_items_received += 1
-                            await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x52, 
+                            await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x166, 
                                                                 bytes([self.current_items_received % 0x100]), "FCRAM")])
-                            await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x53, 
+                            await bizhawk.write(ctx.bizhawk_ctx, [(self.ram_offset + 0x43C + 0x167, 
                                                                 bytes([self.current_items_received // 0x100]), "FCRAM")])
                             self.receive_buffer = 2
                 

@@ -292,8 +292,8 @@ class MLDTCommandProcessor(ClientCommandProcessor):
             return False
 
         if subcommand == "setitemcount":
-            low_addr = handler.ram_offset + 0x43C + 0x52
-            high_addr = handler.ram_offset + 0x43C + 0x53
+            low_addr = handler.ram_offset + 0x43C + 0x166
+            high_addr = handler.ram_offset + 0x43C + 0x167
 
             if value.strip() == "":
                 async_start(
@@ -792,9 +792,9 @@ class StandaloneMLDTClient:
             return
 
         azahar_ram_offset = self.ram_offset
-        azahar_item_write_addr = azahar_ram_offset + 0x43C + 0x51      # 0x6e815d
-        azahar_item_count_low = azahar_ram_offset + 0x43C + 0x52      # 0x6e8159
-        azahar_item_count_high = azahar_ram_offset + 0x43C + 0x53     # 0x6e815a
+        azahar_item_write_addr = azahar_ram_offset + 0x43C + 0x51     # 0x6e815d
+        azahar_item_count_low = azahar_ram_offset + 0x43C + 0x166     # 0x6e8159
+        azahar_item_count_high = azahar_ram_offset + 0x43C + 0x167    # 0x6e815a
         azahar_file_loaded_addr = azahar_ram_offset + 0x1             # 0x6e7cd1
         azahar_block_data_addr = azahar_ram_offset + 0xB8             # 0x6e7d88
         azahar_shop_enabled_addr = azahar_ram_offset + 0x278 + 0x1BE  # shop check

@@ -1589,10 +1589,22 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
             for s in range(len(shop_data)):
                 if len(ap_array) > 0:
                     try:
-                        if len(shop_data[s][1][0]) < 25:
-                            shop_inv.append([ap_array[2][shop_data[s][1][1] - 1] + "'s " + shop_data[s][1][0], shop_data[s][2]])
-                        else:
-                            shop_inv.append([ap_array[2][shop_data[s][1][1] - 1] + "'s\n" + shop_data[s][1][0], shop_data[s][2]])
+                        #if len(shop_data[s][1][0]) < 25:
+                        #    shop_inv.append([ap_array[2][shop_data[s][1][1] - 1] + "'s " + shop_data[s][1][0], shop_data[s][2]])
+                        #else:
+                        #    shop_inv.append([ap_array[2][shop_data[s][1][1] - 1] + "'s\n" + shop_data[s][1][0], shop_data[s][2]])
+                        ap_item = ap_array[2][shop_data[s][1][1] - 1] + "'s " + shop_data[s][1][0]
+                        new_ap_item = ""
+                        needs_break = 0
+                        for c in ap_item:
+                            needs_break += 1
+                            if c == " " and needs_break > 25:
+                                new_ap_item += "\n"
+                                needs_break = 0
+                            else:
+                                new_ap_item += c
+                        #print(new_ap_item)
+                        shop_inv.append([new_ap_item, shop_data[s][2]])
                     except TypeError:
                         shop_inv.append([shop_data[s][1], shop_data[s][2]])
                 else:
@@ -1682,7 +1694,8 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                     say_text += "[Option]" + item_names[(shop_inv[p+4][0] // 0x2000) % 0x1000][int(shop_inv[p+4][0] / 2) % 0x100]
                             except TypeError:
                                 #print(shop_inv[p+4][0])
-                                say_text += "[Option]" + shop_inv[p+4][0]
+                                ap_item = shop_inv[p+4][0]
+                                say_text += "[Option]" + ap_item
                             say_text += " - " + str(shop_inv[p+4][1]) + " coins\n"
                         say_text += "[Option]Previous Page\n[Option]Close"
                         label('label_1', manager=fevent_manager)
@@ -2271,10 +2284,9 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                 label('label_' + str(b + (a*11)), manager=fevent_manager)
 
                             for b in range(5):
-                                if b < 4 or a < len(ap_array[4])-1:
-                                    branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'label_' + str(b + 5 + (a*11)))
-                                else:
-                                    branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'label_last')
+                                if b == 4 and a == len(ap_array[4])-1:
+                                    branch_if(Variables[attacks[curr_attack][1]+1], '==', (2 ** b) - 1, 'label_last')
+                                branch_if(Variables[attacks[curr_attack][1]+1], '>', (2 ** b) - 1, 'label_' + str(b + 5 + (a*11)))
                                 Variables[attacks[curr_attack][1]+1] |= 2 ** b
                                 if b == 4:
                                     Variables[attacks[curr_attack][0]] = 1.0
@@ -2420,6 +2432,8 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
 
                     label('label_9', manager=fevent_manager)
                     text_to_print = "[DelayOff]Current Room Stats\n"
+                    #Variables[0x6000] = 0x30000002
+                    #text_to_print += "[Var2 0000 digits=0]"
                     Variables[0x6000] = 0.0
                     Variables[0x6001] = 0.0
                     Variables[0x6002] = 0.0

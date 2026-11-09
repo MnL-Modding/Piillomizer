@@ -331,7 +331,8 @@ def repack_ap(window):
 
         #Puts in the item name data for the other player's items
         for o in ap_data[1]:
-            name_id = int.from_bytes(data_reader.read(1))
+            name_id = int.from_bytes(data_reader.read(1)) * 0x100
+            name_id += int.from_bytes(data_reader.read(1))
             new_name = list(data_reader.read(o[2]))
             ap_data[0][o[0]][o[1]] = ["", name_id]
             for n in new_name:
@@ -345,7 +346,8 @@ def repack_ap(window):
 
         #Puts in the item name data for the other player's shop items
         for o in ap_data[6]:
-            name_id = int.from_bytes(data_reader.read(1))
+            name_id = int.from_bytes(data_reader.read(1)) * 0x100
+            name_id += int.from_bytes(data_reader.read(1))
             new_name = list(data_reader.read(o[1]))
             ap_data[5][o[0]][1] = ["", name_id]
             for n in new_name:
@@ -358,7 +360,8 @@ def repack_ap(window):
             #print(ap_data[5][o[0]][1][0])
 
         #Gets the player names
-        current_byte = int.from_bytes(data_reader.read(1))
+        current_byte = int.from_bytes(data_reader.read(1)) * 0x100
+        current_byte += int.from_bytes(data_reader.read(1))
         for p in range(current_byte):
             player_name_len = int.from_bytes(data_reader.read(1))
             player_name_list = list(data_reader.read(player_name_len))

@@ -278,13 +278,15 @@ class MLDTWorld(World):
             name_data.append(name)
 
         for name in name_data:
-            recomp_data.append(name[1])
+            recomp_data.append(name[1] // 0x100)
+            recomp_data.append(name[1] % 0x100)
             for char in name[0]:
                 raw_char = ord(char)
                 recomp_data.append(raw_char)
         
         #Adds the player names to the file
-        recomp_data.append(len(self.multiworld.player_name.items()))
+        recomp_data.append(len(self.multiworld.player_name.items()) // 0x100)
+        recomp_data.append(len(self.multiworld.player_name.items()) % 0x100)
         for pn, name in self.multiworld.player_name.items():
             recomp_data.append(len(name))
             #print(recomp_data[-1])
