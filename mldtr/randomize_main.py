@@ -802,6 +802,7 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                                         new_enemy_stats[-1][5] //= 4
                                         new_enemy_stats[-1][6] //= 4
                                         if new_enemy_stats[-1][0] == 128:
+                                            new_enemy_stats[-1][3] //= 2
                                             new_enemy_stats.append([129, new_enemy_stats[-1][1], new_enemy_stats[-1][2], new_enemy_stats[-1][3],
                                                                     new_enemy_stats[-1][4], new_enemy_stats[-1][5], new_enemy_stats[-1][6],
                                                                     new_enemy_stats[-1][7], new_enemy_stats[-1][8], new_enemy_stats[-1][9],

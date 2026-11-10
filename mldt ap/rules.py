@@ -420,9 +420,9 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             [40, luigi_swim & hammers & spin_jump], [41, luigi_swim & hammers & spin_jump], [42, luigi_swim & hammers & spin_jump], [43, luigi_swim & hammers & spin_jump],
                             [44, mole_mario], [45, mole_mario], [46, mole_mario]],
                             
-                           [[15, hammers], [16, hammers], [18, hammers], [19, hammers], [20, hammers], [30, hammers, luigi_stache], [31, hammers, luigi_stache],
-                            [32, hammers, luigi_stache], [33, hammers, luigi_stache], [34, hammers, luigi_propeller], [35, hammers, luigi_propeller], [36, hammers, luigi_propeller],
-                            [37, hammers, luigi_propeller], [38, hammers, luigi_propeller],
+                           [[15, hammers], [16, hammers], [18, hammers], [19, hammers], [20, hammers], [30, hammers & luigi_stache], [31, hammers & luigi_stache],
+                            [32, hammers & luigi_stache], [33, hammers & luigi_stache], [34, hammers & luigi_propeller], [35, hammers & luigi_propeller], [36, hammers & luigi_propeller],
+                            [37, hammers & luigi_propeller], [38, hammers & luigi_propeller],
                             [39, mole_mario], [40, mole_mario], [41, mole_mario], [42, mole_mario], [43, mole_mario], [44, mole_mario]],
                             
                            [[7, mini_mario], [8, mini_mario], [10, luigi_swim], [11, luigi_swim], [12, luigi_speed],
@@ -431,7 +431,7 @@ def set_all_location_rules(world: MLDTWorld) -> None:
                             
                            []]
 
-    shop_logic_info = [[5, luigi_sneeze], [8, luigi_works & luigi_stack_spring & luigi_stack_pound & luigi_drill], [12, mole_mario], [18, has_neo_bowser_access & mini_mario]]
+    shop_logic_info = [[5, luigi_sneeze], [8, luigi_works & luigi_drill], [12, mole_mario], [18, has_neo_bowser_access & mini_mario]]
     
     #Updates certain indexes in the location info if reduce mini mario requirements is turned on
     if world.options.reduce_mini:
