@@ -3,7 +3,8 @@ import random
 from pymsbmnl import LMSDocument, msbt_from_file
 from mnllib.n3ds import fs_std_romfs_path
 from mnllib import Subroutine, RawDataCommand, CodeCommand, Variable
-from mnllib.dt import FEventScriptManager, FMES_NUMBER_OF_CHUNKS, MESSAGE_DIR_PATH, DTLMSAdapter, read_msbt_archive, write_msbt_archive
+from mnllib.dt import FEventScriptManager, FMES_NUMBER_OF_CHUNKS, MESSAGE_DIR_PATH, DTLMSAdapter, read_msbt_archive, \
+    write_msbt_archive
 from mnlscript import CodeCommandWithOffsets, emit_command, update_commands_with_offsets, Screen, label, \
     SubroutineExt
 from mnlscript.dt import PLACEHOLDER_OFFSET, Variables, change_room, MusicFlag, set_action_icons_shown, \
@@ -826,6 +827,14 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
         #Fixes a weird quirk with Dreamy Driftwood Shore giving you Luiginary Works
         script = fevent_manager.parsed_script(0x00D3, 0)
         script.subroutines[0xb8].commands[-17] = CodeCommandWithOffsets(0x000E, [1.0], Variable(0xC000))
+        update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
+
+        #Stops one of the Broque Madame cutscenes from playing
+        script = fevent_manager.parsed_script(0x0046, 0)
+        cast(SubroutineExt, script.subroutines[0x6d]).labels = {
+            'label_0': 0xC9,
+        }
+        script.subroutines[0x6d].commands[11] = CodeCommandWithOffsets(0x0002, [0x0, Variables[0xC000], 1.0, 0x01, PLACEHOLDER_OFFSET], offset_arguments={4: 'label_0'})
         update_commands_with_offsets(fevent_manager, script.subroutines, len(script.header.to_bytes(fevent_manager)))
 
         #Clears the enemies in some Wakeport rooms to prevent crashes
@@ -2094,7 +2103,9 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                            [0x265, 0xE015], [0x267, 0xCDC0], [0x269, 0xCDC4], [0x26A, 0xCDC0], [0x26C, 0xCDC3], [0x26D, 0xCDC0],
                            [0x270, 0xCDC0], [0x272, 0xCDC0], [0x274, 0xCDC0], [0x275, 0xCDC0], [0x276, 0xCDC0], [0x279, 0xCDC0],
                            [0x28F, 0xCDC0], [0x290, 0xCDC0], [0x294, 0xCDC0]]
-        current_work = 0
+        attack_text = []
+        for a in range(0x2B0):
+            attack_text.append(0x00)
 
         # Adds the quick warp and tracker features to every room that needs it
         for s in range(0x2B0):
@@ -2303,6 +2314,8 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                 if p % 5 > 0:
                                     Variables[0x1000] >>= (p % 5)
                                 Variables[0x6003] += Variables[0x1000]
+                            if a == 0:
+                                attack_text[s] = len(Globals.text_chunks[default_language_message_path.name][s].messages)
                             say(None, TextboxSoundsPreset.SILENT,
                                 "[DelayOff]You received Attack Piece number [Color #2C65FF][Var 0003 digits=2][Color #000000]\n" +
                                 " for the [Color #2C65FF]" + attack_names[curr_attack] +"[Color #000000]![Pause 20]",
@@ -3115,10 +3128,14 @@ def pack(input_folder, repack_data, settings, shop_data, new_item_locals, ap_arr
                                 if p % 5 > 0:
                                     Variables[0x1000] >>= (p % 5)
                                 Variables[0x6003] += Variables[0x1000]
-                            say(None, TextboxSoundsPreset.SILENT,
-                                "[DelayOff]You received Attack Piece number [Color #2C65FF][Var 0003 digits=2][Color #000000]\n" +
-                                " for the [Color #2C65FF]" + attack_names[curr_attack] + "[Color #000000]![Pause 45]",
-                                offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                            if attack_text[i[1]] > 0:
+                                say(None, TextboxSoundsPreset.SILENT, attack_text[i[1]] + a,
+                                    offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
+                            else:
+                                say(None, TextboxSoundsPreset.SILENT,
+                                    "[DelayOff]You received Attack Piece number [Color #2C65FF][Var 0003 digits=2][Color #000000]\n" +
+                                    " for the [Color #2C65FF]" + attack_names[curr_attack] + "[Color #000000]![Pause 45]",
+                                    offset=(0.0, 0.0, 0.0), anim=None, post_anim=None, alignment=TextboxAlignment.TOP_CENTER)
                             branch('label_last')
 
                             label('attack_' + str(((a+1)*11)-1), manager=fevent_manager)
