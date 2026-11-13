@@ -7,6 +7,7 @@ from rule_builder.rules import Has, HasAll, Rule
 
 if TYPE_CHECKING:
     from .world import MLDTWorld
+from .options import Hammer
 
 HAS_KEY = Has("Key")  # Hmm, what could this be? A little foreshadowing perhaps? :) You'll find out if you keep reading!
 
@@ -16,10 +17,6 @@ def set_all_rules(world: MLDTWorld) -> None:
     # we need to define rules for our Entrances and Locations.
     # Note: Regions do not have rules, the Entrances connecting them do!
     # We'll do entrances first, then locations, and then finally we set our victory condition.
-
-    #Sets the second progressive hammer to a random hammer if that option is chosen
-    if world.options.second_hammer == -1:
-        world.options.second_hammer.value = world.random.randint(0, 1)
     set_all_entrance_rules(world)
     set_all_location_rules(world)
     set_completion_condition(world)
@@ -54,8 +51,10 @@ def set_all_entrance_rules(world: MLDTWorld) -> None:
     neo_bowser_flame_to_dream = world.get_entrance("Neo Bowser Castle Flames to Neo Bowser Castle Dream")
 
     hammers = Has("Progressive Hammers")
-    mini_mario = Has("Progressive Hammers", count=(2 + world.options.second_hammer))
-    mole_mario = Has("Progressive Hammers", count=(3 - world.options.second_hammer))
+    second_hammer_0 = OptionFilter(Hammer, 0)
+    second_hammer_1 = OptionFilter(Hammer, 1)
+    mini_mario = (second_hammer_0 & Has("Progressive Hammers", count=2)) | (second_hammer_1 & Has("Progressive Hammers", count=3))
+    mole_mario = (second_hammer_0 & Has("Progressive Hammers", count=3)) | (second_hammer_1 & Has("Progressive Hammers", count=2))
     spin_jump = Has("Progressive Spin")
     side_drill = Has("Progressive Spin", count=2)
     ball_hop = Has("Ball Hop")
@@ -225,8 +224,10 @@ def set_all_location_rules(world: MLDTWorld) -> None:
     # Since combat is a bit more complicated, we'll use this chance to cover some advanced access rule concepts.
 
     hammers = Has("Progressive Hammers")
-    mini_mario = Has("Progressive Hammers", count=(2 + world.options.second_hammer))
-    mole_mario = Has("Progressive Hammers", count=(3 - world.options.second_hammer))
+    second_hammer_0 = OptionFilter(Hammer, 0)
+    second_hammer_1 = OptionFilter(Hammer, 1)
+    mini_mario = (second_hammer_0 & Has("Progressive Hammers", count=2)) | (second_hammer_1 & Has("Progressive Hammers", count=3))
+    mole_mario = (second_hammer_0 & Has("Progressive Hammers", count=3)) | (second_hammer_1 & Has("Progressive Hammers", count=2))
     spin_jump = Has("Progressive Spin")
     side_drill = Has("Progressive Spin", count=2)
     ball_hop = Has("Ball Hop")
