@@ -686,7 +686,8 @@ def randomize_data(input_folder, stat_mult, settings, seed, ap_array):
                     else:
                         key_item_check[26] += 1
                 else:
-                    key_item_check[27] += 1
+                    key_item_check[k+5] += 1
+                #print(key_item_check)
                 #Randomizes enemy stats
                 while i < len(enemy_logic):
                     if len(enemy_logic) > 0 and is_available(area_logic[i], key_item_check, settings):
